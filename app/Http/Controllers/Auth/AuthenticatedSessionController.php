@@ -29,6 +29,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        if (auth()->user()->rol === 'inactivo') {
+
+            Auth::logout();
+
+            return back()->withErrors([
+                'login' => 'Tu cuenta está pendiente de aprobación por un administrador.'
+            ]);
+        }
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

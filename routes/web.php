@@ -32,6 +32,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Rutas protegidas por rol
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin',);
+});
+
+Route::middleware(['auth', 'role:admin,coordinador'])->group(function () {
+    Route::get('/panel',);
+});
+
+Route::middleware(['auth', 'role:tecnico'])->group(function () {
+    Route::get('/tecnico', );
+});
+
 require __DIR__.'/auth.php';
 
 //rutas para el home

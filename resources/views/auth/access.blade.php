@@ -116,8 +116,15 @@
 
 <body>
 
+@error('username')
+    <small class="text-danger">{{ $message }}</small>
+@enderror
+
 @php
-    $flip = request()->routeIs('register') || $errors->any();
+    $flip = request()->routeIs('register') 
+        || $errors->has('username') 
+        || $errors->has('nombre') 
+        || $errors->has('apellido');
 @endphp
 
 <section>
@@ -190,7 +197,7 @@
                         <div class="col-md-6 p-4 p-xl-5 bg-white">
                             <h3 class="fw-bold mb-3">Registro</h3>
 
-                            @if ($errors->any())
+                            @if ($errors->has('username') || $errors->has('email') || $errors->has('nombre') || $errors->has('apellido'))
                                 <div class="alert alert-danger py-2">
                                     <ul class="mb-0 ps-3">
                                         @foreach ($errors->all() as $error)
@@ -205,7 +212,7 @@
 
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <input type="text" name="username" class="form-control" placeholder="Usuario" required>
+                                        <input type="text" name="username" value="{{ old('username') }}" class="form-control" placeholder="Usuario">
                                     </div>
 
                                     <div class="col-sm-6">
@@ -213,19 +220,19 @@
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirmar" required>
+                                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirmar Contraseña" required>
                                     </div>
 
                                     <div class="col-12">
-                                        <input type="email" name="email" class="form-control" placeholder="Correo Electrónico" required>
+                                        <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="Correo Electrónico">
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+                                        <input type="text" name="nombre" value="{{ old('nombre') }}" class="form-control" placeholder="Nombre">
                                     </div>
 
                                     <div class="col-sm-6">
-                                        <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
+                                        <input type="text" name="apellido" value="{{ old('apellido') }}" class="form-control" placeholder="Apellido">                                    
                                     </div>
                                 </div>
 

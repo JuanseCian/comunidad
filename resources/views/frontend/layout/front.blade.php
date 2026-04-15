@@ -147,6 +147,11 @@
                         <i class="bi bi-bar-chart"></i> Estadísticas
                     </a>
                 </li>
+                @auth
+                    @if(auth()->user()->rol === 'admin')
+                        <a href="">Panel Admin</a>
+                    @endif
+                @endauth
 
                 @auth
                 <li class="nav-item ms-lg-auto search-container">
