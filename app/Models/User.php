@@ -1,68 +1,70 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+/**
+ * Class User
+ * 
+ * @property int $id
+ * @property string|null $username
+ * @property string $nombre
+ * @property string $apellido
+ * @property string $email
+ * @property string $password
+ * @property int|null $rol_id
+ * @property string|null $remember_token
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
+ * @property Role|null $role
+ * @property Collection|Adjunto[] $adjuntos
+ * @property Collection|AdjuntosDescarga[] $adjuntos_descargas
+ *
+ * @package App\Models
+ */
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+	protected $table = 'users';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'username',
-        'nombre',
-        'apellido',
-        'email',
-        'password',
-        'rol',
-    ];
+	protected $casts = [
+		'rol_id' => 'int'
+	];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	protected $hidden = [
+		'password',
+		'remember_token'
+	];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+	protected $fillable = [
+		'username',
+		'nombre',
+		'apellido',
+		'email',
+		'password',
+		'rol_id',
+		'remember_token'
+	];
 
-    public function esAdmin()
-    {
-        return $this->rol === 'admin';
-    }
+	public function role()
+	{
+		return $this->belongsTo(Role::class, 'rol_id');
+	}
 
-    public function esTecnico()
-    {
-        return $this->rol === 'tecnico';
-    }
+	public function adjuntos()
+	{
+		return $this->hasMany(Adjunto::class, 'subido_por');
+	}
 
-    public function esCoordinador()
-    {
-        return $this->rol === 'coordinador';
-    }
-
-    public function estaActivo()
-    {
-        return $this->rol !== 'inactivo';
-    }
+	public function adjuntos_descargas()
+	{
+		return $this->hasMany(AdjuntosDescarga::class, 'usuario_id');
+	}
 }
