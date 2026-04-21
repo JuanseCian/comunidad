@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 21-04-2026 a las 19:29:31
+-- Tiempo de generación: 21-04-2026 a las 21:48:05
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -310,6 +310,15 @@ CREATE TABLE `domicilio` (
   `piso` varchar(5) DEFAULT NULL,
   `dpto` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `domicilio`
+--
+
+INSERT INTO `domicilio` (`id`, `municipio`, `localidad`, `barrio_id`, `calle`, `numero`, `piso`, `dpto`) VALUES
+(1, NULL, NULL, 33, 'paraguay 1', '384', NULL, NULL),
+(2, NULL, NULL, 71, 'paraguay 1', '384', NULL, NULL),
+(3, NULL, NULL, 99, 'paraguay 1', '384', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -770,6 +779,7 @@ CREATE TABLE `personas` (
   `fecha_nacimiento` date DEFAULT NULL,
   `documento_id` bigint UNSIGNED DEFAULT NULL,
   `dni` varchar(20) DEFAULT NULL,
+  `cuil` varchar(20) DEFAULT NULL,
   `sexo_id` bigint UNSIGNED DEFAULT NULL,
   `domicilio_id` bigint UNSIGNED DEFAULT NULL,
   `provincia_id` bigint UNSIGNED DEFAULT NULL,
@@ -781,8 +791,16 @@ CREATE TABLE `personas` (
   `grupo_sanguineo` varchar(5) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `sede_origen_id` bigint UNSIGNED DEFAULT NULL
+  `sede_origen_id` bigint UNSIGNED DEFAULT NULL,
+  `estado_civil_id` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `personas`
+--
+
+INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`) VALUES
+(3, 'hernan', 'vilchez', 'hernanvilchez8@gmail.com', '2026-04-08', 1, '41145735', '22222222222222', 1, 3, 1, 2, NULL, '03364367123', 1, 1, 'A-', '2026-04-21 23:04:44', '2026-04-21 23:04:44', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1009,6 +1027,14 @@ CREATE TABLE `sexo` (
   `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `sexo`
+--
+
+INSERT INTO `sexo` (`id`, `nombre`) VALUES
+(1, 'Hombre'),
+(2, 'Mujer');
 
 -- --------------------------------------------------------
 
@@ -1284,7 +1310,8 @@ ALTER TABLE `personas`
   ADD KEY `fk_persona_provincia` (`provincia_id`),
   ADD KEY `fk_persona_nivel` (`nivel_estudio_id`),
   ADD KEY `fk_personas_sede` (`sede_origen_id`),
-  ADD KEY `idx_personas_nombre_apellido` (`apellido`,`nombre`);
+  ADD KEY `idx_personas_nombre_apellido` (`apellido`,`nombre`),
+  ADD KEY `fk_personas_estado_civil` (`estado_civil_id`);
 
 --
 -- Indices de la tabla `persona_beneficio`
@@ -1447,7 +1474,7 @@ ALTER TABLE `discapacidad`
 -- AUTO_INCREMENT de la tabla `domicilio`
 --
 ALTER TABLE `domicilio`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `enfermedades`
@@ -1507,7 +1534,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_beneficio`
@@ -1549,7 +1576,7 @@ ALTER TABLE `sedes`
 -- AUTO_INCREMENT de la tabla `sexo`
 --
 ALTER TABLE `sexo`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `situacion_ocupacional`
@@ -1664,6 +1691,7 @@ ALTER TABLE `personas`
   ADD CONSTRAINT `fk_persona_nivel` FOREIGN KEY (`nivel_estudio_id`) REFERENCES `niveles_estudio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_provincia` FOREIGN KEY (`provincia_id`) REFERENCES `provincia` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`sexo_id`) REFERENCES `sexo` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_personas_estado_civil` FOREIGN KEY (`estado_civil_id`) REFERENCES `estado_civil` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_personas_sede` FOREIGN KEY (`sede_origen_id`) REFERENCES `sedes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --

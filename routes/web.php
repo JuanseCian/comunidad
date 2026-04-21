@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PersonaController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/personas/create', [PersonaController::class, 'create'])->name('personas.create');
+Route::post('/personas', [PersonaController::class, 'store'])->name('personas.store');
 
 //RUTAS DEL BACKEND
 require __DIR__.'/auth.php';
