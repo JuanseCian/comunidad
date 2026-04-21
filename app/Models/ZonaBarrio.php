@@ -28,6 +28,12 @@ class ZonaBarrio extends Model
 		'nombre'
 	];
 
+
+	public function localidad()
+	{
+		return $this->belongsTo(Localidad::class);
+	}
+
 	public function barrios()
 	{
 		return $this->hasMany(Barrio::class);

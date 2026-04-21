@@ -19,7 +19,16 @@ class CheckRole
             return redirect()->route('login');
         }
 
-        if (!in_array(auth()->user()->rol, $roles)) {
+        $user = auth()->user();
+
+        // Bloquear inactivos directamente
+        if ($user->rol_id == 4) {
+            auth()->logout();
+            return redirect()->route('login')
+                ->withErrors('Tu cuenta está inactiva. Esperá aprobación.');
+        }
+
+        if (!in_array($user->rol_id, $roles)) {
             abort(403);
         }
 

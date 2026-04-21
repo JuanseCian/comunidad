@@ -44,11 +44,11 @@ class RegisteredUserController extends Controller
             'apellido' => $request->apellido,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'rol' => 'inactivo',
+            'rol_id' => 4,
         ]);
 
-        Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('login')
+            ->with('success', 'Registro exitoso. Esperá aprobación del administrador.');
     }
 }

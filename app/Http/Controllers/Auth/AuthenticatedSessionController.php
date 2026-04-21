@@ -23,22 +23,35 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $request->validate([
+            'login' => ['required', 'string'],
+            'password' => ['required'],
+        ]);
 
-        $request->session()->regenerate();
+        $login = $request->input('login');
 
-        if (auth()->user()->rol === 'inactivo') {
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-            Auth::logout();
+        if (Auth::attempt([$field => $login, 'password' => $request->password])) {
 
-            return back()->withErrors([
-                'login' => 'Tu cuenta está pendiente de aprobación por un administrador.'
-            ]);
+            if (auth()->user()->rol_id == 4) {
+                Auth::logout();
+
+                return back()->withErrors([
+                    'login' => 'Tu cuenta está pendiente de aprobación.'
+                ]);
+            }
+
+            $request->session()->regenerate();
+
+            return redirect()->intended('/home');
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return back()->withErrors([
+            'login' => 'Credenciales incorrectas.'
+        ]);
     }
 
     /**

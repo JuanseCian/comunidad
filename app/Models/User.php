@@ -1,70 +1,58 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
+// 1. Cambiamos la importación base
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class User
- * 
- * @property int $id
- * @property string|null $username
- * @property string $nombre
- * @property string $apellido
- * @property string $email
- * @property string $password
- * @property int|null $rol_id
- * @property string|null $remember_token
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * 
- * @property Role|null $role
- * @property Collection|Adjunto[] $adjuntos
- * @property Collection|AdjuntosDescarga[] $adjuntos_descargas
- *
- * @package App\Models
+ * ... (tus anotaciones de propiedades se mantienen igual)
  */
-class User extends Model
+class User extends Authenticatable // 2. Ahora extiende de Authenticatable
 {
-	protected $table = 'users';
+    use HasFactory, Notifiable; // Traits necesarios para notificaciones y factories
 
-	protected $casts = [
-		'rol_id' => 'int'
-	];
+    protected $table = 'users';
 
-	protected $hidden = [
-		'password',
-		'remember_token'
-	];
+    protected $casts = [
+        'rol_id' => 'int',
+        'email_verified_at' => 'datetime', // Recomendado si usas verificación
+    ];
 
-	protected $fillable = [
-		'username',
-		'nombre',
-		'apellido',
-		'email',
-		'password',
-		'rol_id',
-		'remember_token'
-	];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-	public function role()
+    protected $fillable = [
+        'username',
+        'nombre',
+        'apellido',
+        'email',
+        'password',
+        'rol_id',
+        'remember_token'
+    ];
+
+    // --- Tus Relaciones se mantienen intactas ---
+
+    public function rol()
 	{
 		return $this->belongsTo(Role::class, 'rol_id');
 	}
 
-	public function adjuntos()
-	{
-		return $this->hasMany(Adjunto::class, 'subido_por');
-	}
+    public function adjuntos()
+    {
+        return $this->hasMany(Adjunto::class, 'subido_por');
+    }
 
-	public function adjuntos_descargas()
-	{
-		return $this->hasMany(AdjuntosDescarga::class, 'usuario_id');
-	}
-}
+    public function adjuntos_descargas()
+    {
+        return $this->hasMany(AdjuntosDescarga::class, 'usuario_id');
+    }
+}	

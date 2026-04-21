@@ -116,6 +116,12 @@
 
 <body>
 
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 @error('username')
     <small class="text-danger">{{ $message }}</small>
 @enderror
@@ -148,9 +154,11 @@
                         <div class="col-md-6 p-4 p-xl-5 bg-white d-flex flex-column justify-content-center">
                             <h3 class="fw-bold mb-4">Iniciar Sesión</h3>
 
-                            @error('login')
-                                <div class="alert alert-danger py-2">{{ $message }}</div>
-                            @enderror
+                            @if ($errors->any())
+                                <div class="alert alert-danger py-2">
+                                    {{ $errors->first() }}
+                                </div>
+                            @endif
 
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf

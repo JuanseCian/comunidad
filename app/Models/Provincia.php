@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class Provincium extends Model
+class Provincia extends Model
 {
 	use SoftDeletes;
 	protected $table = 'provincia';

@@ -32,20 +32,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rutas protegidas por rol
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin',);
-});
 
-Route::middleware(['auth', 'role:admin,coordinador'])->group(function () {
-    Route::get('/panel',);
-});
-
-Route::middleware(['auth', 'role:tecnico'])->group(function () {
-    Route::get('/tecnico', );
-});
-
+//RUTAS DEL BACKEND
 require __DIR__.'/auth.php';
+//rutas para los roles
+require __DIR__.'/roles.php';
+//rutas para BackHome
+require __DIR__.'/back-home.php';
+//rutas para provincias
+require __DIR__.'/provincia.php';
+//rutas para localidades
+require __DIR__.'/localidad.php';
 
+//rutas para zonas y barrios
+require __DIR__.'/zona-barrio.php';
+
+
+//RUTAS DEL FRONTEND
 //rutas para el home
 require __DIR__.'/home.php';
