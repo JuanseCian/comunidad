@@ -18,21 +18,36 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $nombre
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property int|null $updated_by
+ * @property int|null $deleted_by
  * @property string|null $deleted_at
  * 
+ * @property User|null $user
  * @property Collection|Localidad[] $localidads
  * @property Collection|Persona[] $personas
  *
  * @package App\Models
  */
-class Provincia extends Model
+class Provincium extends Model
 {
 	use SoftDeletes;
 	protected $table = 'provincia';
 
-	protected $fillable = [
-		'nombre'
+	protected $casts = [
+		'updated_by' => 'int',
+		'deleted_by' => 'int'
 	];
+
+	protected $fillable = [
+		'nombre',
+		'updated_by',
+		'deleted_by'
+	];
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'updated_by');
+	}
 
 	public function localidads()
 	{

@@ -21,7 +21,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
+ * @property int|null $updated_by
+ * @property int|null $deleted_by
  * 
+ * @property User|null $user
  * @property Provincium|null $provincium
  * @property Collection|Barrio[] $barrios
  * @property Collection|Persona[] $personas
@@ -35,23 +38,27 @@ class Localidad extends Model
 
 	protected $casts = [
 		'codigo_postal' => 'int',
-		'provincia_id' => 'int'
+		'provincia_id' => 'int',
+		'updated_by' => 'int',
+		'deleted_by' => 'int'
 	];
 
 	protected $fillable = [
 		'nombre',
 		'codigo_postal',
-		'provincia_id'
+		'provincia_id',
+		'updated_by',
+		'deleted_by'
 	];
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'updated_by');
+	}
 
 	public function provincium()
 	{
 		return $this->belongsTo(Provincium::class, 'provincia_id');
-	}
-
-	public function provincia()
-	{
-		return $this->belongsTo(Provincia::class);
 	}
 
 	public function barrios()

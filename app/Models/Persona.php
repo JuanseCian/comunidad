@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $grupo_sanguineo
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property int|null $sede_origen_id
  * 
  * @property Barrio|null $barrio
  * @property TipoDocumento|null $tipo_documento
@@ -39,8 +40,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property NivelesEstudio|null $niveles_estudio
  * @property Provincium|null $provincium
  * @property Sexo|null $sexo
+ * @property Sede|null $sede
+ * @property Collection|Atencione[] $atenciones
  * @property Collection|Cud[] $cuds
  * @property Collection|GrupoFamiliar[] $grupo_familiars
+ * @property Collection|Beneficio[] $beneficios
+ * @property Collection|PersonaPrograma[] $persona_programas
  *
  * @package App\Models
  */
@@ -57,7 +62,8 @@ class Persona extends Model
 		'localidad_id' => 'int',
 		'barrio_id' => 'int',
 		'nivel_estudio_id' => 'int',
-		'trabaja' => 'bool'
+		'trabaja' => 'bool',
+		'sede_origen_id' => 'int'
 	];
 
 	protected $fillable = [
@@ -75,7 +81,8 @@ class Persona extends Model
 		'telefono',
 		'nivel_estudio_id',
 		'trabaja',
-		'grupo_sanguineo'
+		'grupo_sanguineo',
+		'sede_origen_id'
 	];
 
 	public function barrio()
@@ -113,6 +120,16 @@ class Persona extends Model
 		return $this->belongsTo(Sexo::class);
 	}
 
+	public function sede()
+	{
+		return $this->belongsTo(Sede::class, 'sede_origen_id');
+	}
+
+	public function atenciones()
+	{
+		return $this->hasMany(Atencione::class);
+	}
+
 	public function cuds()
 	{
 		return $this->hasMany(Cud::class);
@@ -121,5 +138,17 @@ class Persona extends Model
 	public function grupo_familiars()
 	{
 		return $this->hasMany(GrupoFamiliar::class);
+	}
+
+	public function beneficios()
+	{
+		return $this->belongsToMany(Beneficio::class, 'persona_beneficio')
+					->withPivot('id', 'fecha_otorgamiento', 'fecha_vencimiento', 'monto', 'activo', 'observaciones', 'registrado_por')
+					->withTimestamps();
+	}
+
+	public function persona_programas()
+	{
+		return $this->hasMany(PersonaPrograma::class);
 	}
 }

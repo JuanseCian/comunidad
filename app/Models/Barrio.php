@@ -19,13 +19,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $localidad_id
  * @property int|null $zona_barrio_id
  * @property Carbon|null $created_at
+ * @property int|null $updated_by
+ * @property int|null $deleted_by
  * @property Carbon|null $updated_at
  * @property string|null $deleted_at
  * 
+ * @property User|null $user
  * @property Localidad $localidad
  * @property ZonaBarrio|null $zona_barrio
  * @property Collection|Domicilio[] $domicilios
  * @property Collection|Persona[] $personas
+ * @property Collection|Sede[] $sedes
  *
  * @package App\Models
  */
@@ -36,14 +40,23 @@ class Barrio extends Model
 
 	protected $casts = [
 		'localidad_id' => 'int',
-		'zona_barrio_id' => 'int'
+		'zona_barrio_id' => 'int',
+		'updated_by' => 'int',
+		'deleted_by' => 'int'
 	];
 
 	protected $fillable = [
 		'nombre',
 		'localidad_id',
-		'zona_barrio_id'
+		'zona_barrio_id',
+		'updated_by',
+		'deleted_by'
 	];
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'updated_by');
+	}
 
 	public function localidad()
 	{
@@ -63,5 +76,10 @@ class Barrio extends Model
 	public function personas()
 	{
 		return $this->hasMany(Persona::class);
+	}
+
+	public function sedes()
+	{
+		return $this->hasMany(Sede::class);
 	}
 }

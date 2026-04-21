@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class GrupoFamiliar
@@ -35,7 +36,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $condicion_inactividad_id
  * @property int|null $categoria_ocupacional_id
  * @property float|null $ingresos
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property int|null $created_by
+ * @property int|null $updated_by
+ * @property string|null $deleted_at
+ * @property int|null $deleted_by
  * 
+ * @property User|null $user
  * @property CategoriaOcupacional|null $categoria_ocupacional
  * @property Cobertura|null $cobertura
  * @property Discapacidad|null $discapacidad
@@ -51,8 +59,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class GrupoFamiliar extends Model
 {
+	use SoftDeletes;
 	protected $table = 'grupo_familiar';
-	public $timestamps = false;
 
 	protected $casts = [
 		'persona_id' => 'int',
@@ -72,7 +80,10 @@ class GrupoFamiliar extends Model
 		'situacion_ocupacional_id' => 'int',
 		'condicion_inactividad_id' => 'int',
 		'categoria_ocupacional_id' => 'int',
-		'ingresos' => 'float'
+		'ingresos' => 'float',
+		'created_by' => 'int',
+		'updated_by' => 'int',
+		'deleted_by' => 'int'
 	];
 
 	protected $fillable = [
@@ -97,8 +108,16 @@ class GrupoFamiliar extends Model
 		'situacion_ocupacional_id',
 		'condicion_inactividad_id',
 		'categoria_ocupacional_id',
-		'ingresos'
+		'ingresos',
+		'created_by',
+		'updated_by',
+		'deleted_by'
 	];
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'updated_by');
+	}
 
 	public function categoria_ocupacional()
 	{

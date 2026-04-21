@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property string $nombre
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * 
  * @property Collection|Barrio[] $barrios
  *
@@ -22,17 +25,10 @@ use Illuminate\Database\Eloquent\Model;
 class ZonaBarrio extends Model
 {
 	protected $table = 'zona_barrio';
-	public $timestamps = false;
 
 	protected $fillable = [
 		'nombre'
 	];
-
-
-	public function localidad()
-	{
-		return $this->belongsTo(Localidad::class);
-	}
 
 	public function barrios()
 	{

@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property string $nombre
+ * 
+ * @property Collection|PersonaPrograma[] $persona_programas
  *
  * @package App\Models
  */
@@ -24,4 +27,9 @@ class ProgramasAsistencium extends Model
 	protected $fillable = [
 		'nombre'
 	];
+
+	public function persona_programas()
+	{
+		return $this->hasMany(PersonaPrograma::class, 'programa_id');
+	}
 }
