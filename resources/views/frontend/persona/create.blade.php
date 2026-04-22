@@ -1,288 +1,365 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alta de persona — Comunidad</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+@extends('frontend.layout.front')
 
-:root {
-  --bg:#F5F3EE;--surface:#FFFFFF;--border:#E0DDD6;--border-md:#C8C4BB;
-  --text:#1A1916;--muted:#6B6860;--accent:#2D5A3D;
-  --accent-lt:#EAF0EB;--accent-brd:#B8CFC0;
-  --danger:#8B2E2E;--danger-lt:#FBF0F0;--warn-brd:#D4A5A5;
-  --radius:10px;--radius-lg:16px;
-  --serif:'Instrument Serif',Georgia,serif;
-  --sans:'DM Sans',system-ui,sans-serif;
-  --transition:160ms ease;
-}
+@section('title', 'Nueva Persona')
 
-body{font-family:var(--sans);background:var(--bg);color:var(--text);padding:2rem}
-.page{max-width:760px;margin:auto}
+@section('content')
 
-.page-header{margin-bottom:2rem}
-.page-header h1{font-family:var(--serif);font-size:2rem}
-
-.alert{padding:12px;border-radius:var(--radius);margin-bottom:1rem}
-.alert-success{background:var(--accent-lt);border:1px solid var(--accent-brd)}
-.alert-danger{background:var(--danger-lt);border:1px solid var(--warn-brd)}
-
-.section{background:#fff;border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:1rem}
-.section-header{padding:16px;border-bottom:1px solid var(--border)}
-.section-body{padding:20px}
-
-.grid{display:grid;gap:16px}
-.grid-2{grid-template-columns:1fr 1fr}
-.col-span-2{grid-column:span 2}
-
-label{font-size:12px;color:var(--muted);text-transform:uppercase}
-
-input,select{
-height:40px;padding:0 10px;border:1px solid var(--border-md);
-border-radius:var(--radius);width:100%;
-}
-
-.btn{padding:10px 20px;border:none;border-radius:var(--radius);cursor:pointer}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-ghost{background:transparent;border:1px solid var(--border-md)}
-</style>
-</head>
-<body>
-
-<div class="page">
-
-<div class="page-header">
-<h1>Nueva persona</h1>
-<p>Completá los datos del titular para registrarlo en el sistema.</p>
+{{-- ── HEADER ── --}}
+<div style="background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2rem 0 1.5rem;">
+    <div class="container">
+        <p style="font-size:12px; font-weight:700; color:#0879a8; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:4px;">
+            <a href="{{ route('dashboard') }}" style="color:#0879a8; text-decoration:none;">Inicio</a>
+            <span style="opacity:.4; margin:0 6px;">/</span>
+            <a href="{{ route('personas.index') }}" style="color:#0879a8; text-decoration:none;">Personas</a>
+            <span style="opacity:.4; margin:0 6px;">/</span>
+            Nueva persona
+        </p>
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(1.4rem,3vw,2rem); color:#0f172a; margin:0 0 4px; line-height:1.2;">
+            Nueva Persona
+        </h1>
+        <p style="color:#536070; font-size:13.5px; font-weight:500; margin:0;">
+            Completá los datos del titular para registrarlo en el sistema.
+        </p>
+    </div>
 </div>
 
-@if(session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
-@endif
+<div class="container py-4">
+<div style="max-width:760px; margin:0 auto;">
 
-@if($errors->any())
-<div class="alert alert-danger">
-<ul>
-@foreach($errors->all() as $error)
-<li>{{ $error }}</li>
-@endforeach
-</ul>
-</div>
-@endif
+    {{-- ── Alerts ── --}}
+    @if(session('success'))
+    <div style="background:#e8f9f5; border:1px solid #9fe1cb; border-radius:12px; padding:13px 18px; margin-bottom:1.25rem; color:#0e8a70; font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:10px;">
+        <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+    </div>
+    @endif
 
-<form method="POST" action="{{ route('personas.store') }}">
-@csrf
+    @if($errors->any())
+    <div style="background:#fff5f5; border:1px solid #fca5a5; border-radius:12px; padding:13px 18px; margin-bottom:1.25rem; color:#b91c1c; font-size:13.5px;">
+        <div style="display:flex; align-items:center; gap:8px; font-weight:700; margin-bottom:6px;">
+            <i class="bi bi-exclamation-circle-fill"></i> Corregí los siguientes errores:
+        </div>
+        <ul style="margin:0; padding-left:1.4rem;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
-<div class="section">
-<div class="section-header">Datos personales</div>
-<div class="section-body">
-<div class="grid grid-2">
+    <form method="POST" action="{{ route('personas.store') }}">
+    @csrf
 
-<div>
-<label>Apellido *</label>
-<input type="text" name="apellido" value="{{ old('apellido') }}">
+    {{-- ══════════════════════════════════════
+         SECCIÓN 1: Datos personales
+    ══════════════════════════════════════ --}}
+    <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
+        <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
+            <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">1</div>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#0f172a;">Datos personales</span>
+            <span style="font-size:12px; color:#94a3b4; margin-left:auto;">Información básica del titular</span>
+        </div>
+        <div style="padding:22px;">
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Apellido <span style="color:#e53e3e;">*</span></label>
+                    <input type="text" name="apellido" value="{{ old('apellido') }}"
+                           placeholder="Ej: García"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Nombre <span style="color:#e53e3e;">*</span></label>
+                    <input type="text" name="nombre" value="{{ old('nombre') }}"
+                           placeholder="Ej: María José"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Tipo de documento</label>
+                    <select name="documento_id"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                        <option value="">— Seleccionar —</option>
+                        @foreach($tipos_doc as $item)
+                            <option value="{{ $item->id }}" {{ old('documento_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">DNI <span style="color:#e53e3e;">*</span></label>
+                    <input type="text" name="dni" value="{{ old('dni') }}"
+                           placeholder="Ej: 30123456"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">CUIL</label>
+                    <input type="text" name="cuil" value="{{ old('cuil') }}"
+                           placeholder="Ej: 20-30123456-4"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Sexo</label>
+                    <select name="sexo_id"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                        <option value="">— Seleccionar —</option>
+                        @foreach($sexos as $item)
+                            <option value="{{ $item->id }}" {{ old('sexo_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Estado civil</label>
+                    <select name="estado_civil_id"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                        <option value="">— Seleccionar —</option>
+                        @foreach($estados_civiles as $item)
+                            <option value="{{ $item->id }}" {{ old('estado_civil_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Fecha de nacimiento</label>
+                    <input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Grupo sanguíneo</label>
+                    <select name="grupo_sanguineo"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                        <option value="">— Seleccionar —</option>
+                        @foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-','NS/NR'] as $gs)
+                            <option value="{{ $gs }}" {{ old('grupo_sanguineo') == $gs ? 'selected' : '' }}>{{ $gs }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Nivel de estudio</label>
+                    <select name="nivel_estudio_id"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                        <option value="">— Seleccionar —</option>
+                        @foreach($niveles as $item)
+                            <option value="{{ $item->id }}" {{ old('nivel_estudio_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#f8fffe; border:1px solid #d0eee7; border-radius:10px;">
+                        <div>
+                            <div style="font-size:14px; font-weight:600; color:#0f172a;">Trabaja actualmente</div>
+                            <div style="font-size:12px; color:#536070; margin-top:1px;">Indicar si el titular tiene actividad laboral</div>
+                        </div>
+                        <label style="position:relative; display:inline-block; width:42px; height:24px; margin:0; cursor:pointer;">
+                            <input type="checkbox" name="trabaja" value="1" {{ old('trabaja') ? 'checked' : '' }}
+                                   style="opacity:0; width:0; height:0; position:absolute;"
+                                   onchange="this.nextElementSibling.style.background = this.checked ? '#0d92c2' : '#c8c4bb'; this.nextElementSibling.querySelector('span').style.transform = this.checked ? 'translateX(18px)' : 'translateX(0)'">
+                            <div style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                                <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════
+         SECCIÓN 2: Contacto
+    ══════════════════════════════════════ --}}
+    <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
+        <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
+            <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">2</div>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#0f172a;">Contacto</span>
+            <span style="font-size:12px; color:#94a3b4; margin-left:auto;">Teléfono y correo electrónico</span>
+        </div>
+        <div style="padding:22px;">
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Teléfono</label>
+                    <input type="tel" name="telefono" value="{{ old('telefono') }}"
+                           placeholder="Ej: 336 4123456"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Correo electrónico</label>
+                    <input type="email" name="correo" value="{{ old('correo') }}"
+                           placeholder="Ej: nombre@email.com"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════
+         SECCIÓN 3: Domicilio
+    ══════════════════════════════════════ --}}
+    <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
+        <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
+            <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">3</div>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#0f172a;">Domicilio</span>
+            <span style="font-size:12px; color:#94a3b4; margin-left:auto;">Dirección actual de residencia</span>
+        </div>
+        <div style="padding:22px;">
+            <div class="row g-3">
+
+                <div class="col-12">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Provincia</label>
+                    <select name="provincia_id"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                        <option value="">— Seleccionar —</option>
+                        @foreach($provincias as $item)
+                            <option value="{{ $item->id }}" {{ old('provincia_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Localidad</label>
+                    <select name="localidad_id"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                        <option value="">— Seleccionar —</option>
+                        @foreach($localidades as $item)
+                            <option value="{{ $item->id }}" {{ old('localidad_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Barrio</label>
+                    <select name="barrio_id"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                        <option value="">— Seleccionar —</option>
+                        @foreach($barrios as $item)
+                            <option value="{{ $item->id }}" {{ old('barrio_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Calle</label>
+                    <input type="text" name="calle" value="{{ old('calle') }}"
+                           placeholder="Nombre de la calle"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-4">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Número</label>
+                    <input type="text" name="numero" value="{{ old('numero') }}"
+                           placeholder="Ej: 1234"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-4">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Piso</label>
+                    <input type="text" name="piso" value="{{ old('piso') }}"
+                           placeholder="Ej: 2"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-4">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Dpto</label>
+                    <input type="text" name="dpto" value="{{ old('dpto') }}"
+                           placeholder="Ej: A"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════
+         SECCIÓN 4: Sistema
+    ══════════════════════════════════════ --}}
+    <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
+        <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
+            <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">4</div>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#0f172a;">Sistema</span>
+            <span style="font-size:12px; color:#94a3b4; margin-left:auto;">Datos administrativos internos</span>
+        </div>
+        <div style="padding:22px;">
+            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Sede de origen</label>
+            <select name="sede_origen_id"
+                    style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                    onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                <option value="">— Seleccionar —</option>
+                @foreach($sedes as $item)
+                    <option value="{{ $item->id }}" {{ old('sede_origen_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                @endforeach
+            </select>
+            <p style="font-size:11.5px; color:#94a3b4; margin-top:5px; margin-bottom:0;">Sede desde donde se registra esta persona.</p>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════
+         ACCIONES
+    ══════════════════════════════════════ --}}
+    <div style="display:flex; align-items:center; justify-content:space-between; padding-top:1rem; border-top:1px solid #e0ddd6; margin-top:.5rem;">
+        <a href="{{ route('personas.index') }}" style="height:42px; padding:0 20px; background:white; color:#536070; border:1px solid #c8c4bb; border-radius:10px; font-family:inherit; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:7px; text-decoration:none; transition:background .15s;" onmouseover="this.style.background='#f5f3ee'" onmouseout="this.style.background='white'">
+            <i class="bi bi-arrow-left" style="font-size:13px;"></i> Cancelar
+        </a>
+        <button type="submit" style="height:42px; padding:0 28px; background:linear-gradient(135deg,#0d92c2,#1aaad8); color:white; border:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:opacity .2s; box-shadow:0 4px 14px rgba(13,146,194,.3);" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+            <i class="bi bi-person-check-fill"></i> Guardar persona
+        </button>
+    </div>
+
+    </form>
+</div>
 </div>
 
-<div>
-<label>Nombre *</label>
-<input type="text" name="nombre" value="{{ old('nombre') }}">
-</div>
+{{-- Inicializar toggle de "Trabaja" según valor actual --}}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const chk = document.querySelector('input[name="trabaja"]');
+    if (chk) {
+        const track = chk.nextElementSibling;
+        const thumb = track.querySelector('span');
+        if (chk.checked) {
+            track.style.background = '#0d92c2';
+            thumb.style.transform  = 'translateX(18px)';
+        }
+    }
+});
+</script>
 
-<div>
-<label>Tipo de documento</label>
-<select name="documento_id">
-<option value="">Seleccionar</option>
-@foreach($tipos_doc as $item)
-<option value="{{ $item->id }}" {{ old('documento_id') == $item->id ? 'selected' : '' }}>
-{{ $item->nombre }}
-</option>
-@endforeach
-</select>
-</div>
-
-<div>
-<label>DNI *</label>
-<input type="text" name="dni" value="{{ old('dni') }}">
-</div>
-<div>
-<label>CUIL</label>
-<input type="text" name="cuil" value="{{ old('cuil') }}">
-</div>
-<div>
-<label>Sexo</label>
-<select name="sexo_id">
-<option value="">Seleccionar</option>
-@foreach($sexos as $item)
-<option value="{{ $item->id }}" {{ old('sexo_id') == $item->id ? 'selected' : '' }}>
-{{ $item->nombre }}
-</option>
-@endforeach
-</select>
-</div>
-<div>
-<label>Estado civil</label>
-<select name="estado_civil_id">
-<option value="">Seleccionar</option>
-@foreach($estados_civiles as $item)
-<option value="{{ $item->id }}" {{ old('estado_civil_id') == $item->id ? 'selected' : '' }}>
-{{ $item->nombre }}
-</option>
-@endforeach
-</select>
-</div>
-<div>
-<label>Fecha de nacimiento</label>
-<input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}">
-</div>
-
-<div>
-<label>Grupo sanguíneo</label>
-<select name="grupo_sanguineo">
-<option value="">Seleccionar</option>
-@foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-','NS/NR'] as $gs)
-<option value="{{ $gs }}" {{ old('grupo_sanguineo') == $gs ? 'selected' : '' }}>{{ $gs }}</option>
-@endforeach
-</select>
-</div>
-
-<div>
-<label>Nivel de estudio</label>
-<select name="nivel_estudio_id">
-<option value="">Seleccionar</option>
-@foreach($niveles as $item)
-<option value="{{ $item->id }}" {{ old('nivel_estudio_id') == $item->id ? 'selected' : '' }}>
-{{ $item->nombre }}
-</option>
-@endforeach
-</select>
-</div>
-
-</div>
-
-<div style="margin-top:15px">
-<label>
-<input type="checkbox" name="trabaja" value="1" {{ old('trabaja') ? 'checked' : '' }}>
-Trabaja actualmente
-</label>
-</div>
-
-</div>
-</div>
-
-<div class="section">
-<div class="section-header">Contacto</div>
-<div class="section-body">
-<div class="grid grid-2">
-
-<div>
-<label>Teléfono</label>
-<input type="tel" name="telefono" value="{{ old('telefono') }}">
-</div>
-
-<div>
-<label>Correo</label>
-<input type="email" name="correo" value="{{ old('correo') }}">
-</div>
-
-</div>
-</div>
-</div>
-<div class="section">
-<div class="section-header">Domicilio</div>
-<div class="section-body">
-<div class="grid grid-2">
-
-<div class="col-span-2">
-<label>Provincia</label>
-<select name="provincia_id">
-<option value="">Seleccionar</option>
-@foreach($provincias as $item)
-<option value="{{ $item->id }}" {{ old('provincia_id') == $item->id ? 'selected' : '' }}>
-{{ $item->nombre }}
-</option>
-@endforeach
-</select>
-</div>
-
-<div class="col-span-2">
-<label>Localidad</label>
-<select name="localidad_id">
-<option value="">Seleccionar</option>
-@foreach($localidades as $item)
-<option value="{{ $item->id }}" {{ old('localidad_id') == $item->id ? 'selected' : '' }}>
-{{ $item->nombre }}
-</option>
-@endforeach
-</select>
-</div>
-
-<div class="col-span-2">
-<label>Barrio</label>
-<select name="barrio_id">
-<option value="">Seleccionar</option>
-@foreach($barrios as $item)
-<option value="{{ $item->id }}" {{ old('barrio_id') == $item->id ? 'selected' : '' }}>
-{{ $item->nombre }}
-</option>
-@endforeach
-</select>
-</div>
-
-<div class="col-span-2">
-<label>Calle</label>
-<input type="text" name="calle" value="{{ old('calle') }}">
-</div>
-
-<div>
-<label>Número</label>
-<input type="text" name="numero" value="{{ old('numero') }}">
-</div>
-
-<div>
-<label>Piso</label>
-<input type="text" name="piso" value="{{ old('piso') }}">
-</div>
-
-<div>
-<label>Dpto</label>
-<input type="text" name="dpto" value="{{ old('dpto') }}">
-</div>
-
-</div>
-</div>
-</div>
-
-<div class="section">
-<div class="section-header">Sistema</div>
-<div class="section-body">
-
-<div>
-<label>Sede de origen</label>
-<select name="sede_origen_id">
-<option value="">Seleccionar</option>
-@foreach($sedes as $item)
-<option value="{{ $item->id }}" {{ old('sede_origen_id') == $item->id ? 'selected' : '' }}>
-{{ $item->nombre }}
-</option>
-@endforeach
-</select>
-</div>
-
-</div>
-</div>
-
-<div style="display:flex;justify-content:space-between;margin-top:20px">
-
-<button type="submit" class="btn btn-primary">Guardar persona</button>
-</div>
-
-</form>
-
-</div>
-
-</body>
-</html>
+@endsection
