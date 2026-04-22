@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class ProgramasAsistencium extends Model
+class ProgramasAsistencia extends Model
 {
 	protected $table = 'programas_asistencia';
 	public $timestamps = false;

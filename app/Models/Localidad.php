@@ -56,9 +56,9 @@ class Localidad extends Model
 		return $this->belongsTo(User::class, 'updated_by');
 	}
 
-	public function provincium()
+	public function provincia()
 	{
-		return $this->belongsTo(Provincium::class, 'provincia_id');
+		return $this->belongsTo(provincia::class, 'provincia_id');
 	}
 
 	public function barrios()

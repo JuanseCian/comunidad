@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PersonaController;
-use App\Http\Controllers\GrupoFamiliarController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,19 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-     // Personas
-    Route::get('/personas',          [PersonaController::class, 'index'])->name('personas.index');
-    Route::get('/personas/create',   [PersonaController::class, 'create'])->name('personas.create');
-    Route::post('/personas',         [PersonaController::class, 'store'])->name('personas.store');
-    Route::get('/personas/{persona}', [PersonaController::class, 'show'])->name('personas.show');
- 
-    // Grupo familiar (anidado bajo personas)
-    Route::get('/personas/{persona}/grupo-familiar/create', [GrupoFamiliarController::class, 'create'])->name('personas.grupo-familiar.create');
-    Route::post('/personas/{persona}/grupo-familiar',       [GrupoFamiliarController::class, 'store'])->name('personas.grupo-familiar.store');
 });
-
-
 
 //RUTAS DEL BACKEND
 require __DIR__.'/auth.php';
@@ -55,11 +41,23 @@ require __DIR__.'/back-home.php';
 require __DIR__.'/provincia.php';
 //rutas para localidades
 require __DIR__.'/localidad.php';
-
 //rutas para zonas y barrios
 require __DIR__.'/zona-barrio.php';
-
+//rutas para barrios
+require __DIR__.'/barrio.php';
+//rutas para enfermedades
+require __DIR__.'/enfermedad.php';
+//rutas para estados civiles
+require __DIR__.'/estado-civil.php';
+//rutas para niveles de estudio
+require __DIR__.'/niveles-estudio.php';
+//rutas para beneficios
+require __DIR__.'/beneficio.php';
+//rutas para programas de asistencia
+require __DIR__.'/programa-asistencia.php';
 
 //RUTAS DEL FRONTEND
 //rutas para el home
 require __DIR__.'/home.php';
+//rutas para personas
+require __DIR__.'/persona.php';
