@@ -16,18 +16,42 @@ use App\Models\localidad;
 
 class PersonaController extends Controller
 {
-    public function index()
-{
-    $personas = Persona::with([
-        'provincia',
-        'localidad',
-        'estadoCivil'
-    ])
-    ->orderBy('apellido')
-    ->paginate(10);
-
-    return view('frontend.persona.index', compact('personas'));
-}
+   public function index(Request $request)
+    {
+        $query = Persona::with([
+            'tipoDocumento',
+            'sexo',
+            'localidad',
+            'domicilio.barrio',
+            'sedeOrigen',
+            'grupoFamiliar',
+        ]);
+ 
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function ($sql) use ($q) {
+                $sql->where('nombre',   'like', "%{$q}%")
+                    ->orWhere('apellido', 'like', "%{$q}%")
+                    ->orWhere('dni',      'like', "%{$q}%");
+            });
+        }
+ 
+        if ($request->filled('sede_id')) {
+            $query->where('sede_origen_id', $request->sede_id);
+        }
+ 
+        if ($request->filled('barrio_id')) {
+            $query->whereHas('domicilio', function ($sql) use ($request) {
+                $sql->where('barrio_id', $request->barrio_id);
+            });
+        }
+ 
+        $personas = $query->orderBy('apellido')->orderBy('nombre')->paginate(20)->withQueryString();
+        $sedes    = Sede::orderBy('nombre')->get();
+        $barrios  = Barrio::orderBy('nombre')->get();
+ 
+        return view('frontend.persona.index', compact('personas', 'sedes', 'barrios'));
+    }
     public function create()
     {
         return view('frontend.persona.create', [
