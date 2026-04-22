@@ -48,7 +48,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Cobertura|null $cobertura
  * @property Discapacidad|null $discapacidad
  * @property TipoDocumento|null $tipo_documento
- * @property Enfermedad|null $enfermedad
+ * @property Enfermedade|null $enfermedade
  * @property EstadoCivil|null $estado_civil
  * @property CondicionInactividad|null $condicion_inactividad
  * @property Persona $persona
@@ -139,9 +139,9 @@ class GrupoFamiliar extends Model
 		return $this->belongsTo(TipoDocumento::class, 'documento_id');
 	}
 
-	public function enfermedad()
+	public function enfermedade()
 	{
-		return $this->belongsTo(Enfermedad::class, 'enfermedad_id');
+		return $this->belongsTo(Enfermedade::class, 'enfermedad_id');
 	}
 
 	public function estado_civil()
