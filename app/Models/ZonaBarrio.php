@@ -34,4 +34,6 @@ class ZonaBarrio extends Model
 	{
 		return $this->hasMany(Barrio::class);
 	}
+
+
 }

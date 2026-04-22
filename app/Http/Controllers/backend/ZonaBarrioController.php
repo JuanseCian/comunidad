@@ -3,48 +3,63 @@
 namespace App\Http\Controllers\backend;
 
 use App\Models\ZonaBarrio;
-use App\Models\Localidad;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
 
 class ZonaBarrioController extends Controller
 {
     public function index()
     {
-        $zonas = ZonaBarrio::with('localidad')->get();
+        $zonas = ZonaBarrio::all();
         return view('backend.zonas.index', compact('zonas'));
     }
 
     public function create()
     {
-        $localidades = Localidad::all();
-        return view('backend.zonas.create', compact('localidades'));
+        return view('backend.zonas.create');
     }
 
     public function store(Request $request)
     {
-        ZonaBarrio::create($request->all());
-        return redirect()->route('zonas-barrios.index');
+        $request->validate([
+            'nombre' => 'required|max:100',
+        ]);
+
+        ZonaBarrio::create([
+            'nombre' => $request->nombre
+        ]);
+
+        return redirect()->route('zonas-barrios.index')
+                         ->with('success', 'Zona creada correctamente');
     }
 
     public function edit($id)
     {
         $zona = ZonaBarrio::findOrFail($id);
-        $localidades = Localidad::all();
-        return view('backend.zonas.edit', compact('zona', 'localidades'));
+        return view('backend.zonas.edit', compact('zona'));
     }
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nombre' => 'required|max:100',
+        ]);
+
         $zona = ZonaBarrio::findOrFail($id);
-        $zona->update($request->all());
-        return redirect()->route('zonas-barrios.index');
+        $zona->update([
+            'nombre' => $request->nombre
+        ]);
+
+        return redirect()->route('zonas-barrios.index')
+                         ->with('success', 'Zona actualizada');
     }
 
     public function destroy($id)
     {
-        ZonaBarrio::destroy($id);
-        return redirect()->route('zonas-barrios.index');
+        $zona = ZonaBarrio::findOrFail($id);
+        $zona->delete();
+
+        return redirect()->route('zonas-barrios.index')
+                         ->with('success', 'Zona eliminada');
     }
 }

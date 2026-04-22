@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class Enfermedade extends Model
+class Enfermedad extends Model
 {
 	protected $table = 'enfermedades';
 	public $timestamps = false;
