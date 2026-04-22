@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\GrupoFamiliarController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,10 +31,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+     // Personas
+    Route::get('/personas',          [PersonaController::class, 'index'])->name('personas.index');
+    Route::get('/personas/create',   [PersonaController::class, 'create'])->name('personas.create');
+    Route::post('/personas',         [PersonaController::class, 'store'])->name('personas.store');
+    Route::get('/personas/{persona}', [PersonaController::class, 'show'])->name('personas.show');
+ 
+    // Grupo familiar (anidado bajo personas)
+    Route::get('/personas/{persona}/grupo-familiar/create', [GrupoFamiliarController::class, 'create'])->name('personas.grupo-familiar.create');
+    Route::post('/personas/{persona}/grupo-familiar',       [GrupoFamiliarController::class, 'store'])->name('personas.grupo-familiar.store');
 });
 
-Route::get('/personas/create', [PersonaController::class, 'create'])->name('personas.create');
-Route::post('/personas', [PersonaController::class, 'store'])->name('personas.store');
+
 
 //RUTAS DEL BACKEND
 require __DIR__.'/auth.php';

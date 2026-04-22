@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 21-04-2026 a las 21:48:05
+-- Tiempo de generación: 22-04-2026 a las 01:15:16
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -245,6 +245,19 @@ CREATE TABLE `categoria_ocupacional` (
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Volcado de datos para la tabla `categoria_ocupacional`
+--
+
+INSERT INTO `categoria_ocupacional` (`id`, `nombre`) VALUES
+(1, 'Patron/Dueño'),
+(2, 'Empl. Domestica'),
+(3, 'Empleado con relac. de dependencia'),
+(4, 'Empleado sin relac. de dependencia'),
+(5, 'Changas'),
+(6, 'Otras'),
+(7, 'NS/NR');
+
 -- --------------------------------------------------------
 
 --
@@ -256,6 +269,18 @@ CREATE TABLE `cobertura` (
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Volcado de datos para la tabla `cobertura`
+--
+
+INSERT INTO `cobertura` (`id`, `nombre`) VALUES
+(1, 'Obra Social'),
+(2, 'Prepaga'),
+(3, 'Mutual'),
+(4, 'Sist. Emerg. Pago'),
+(5, 'Ninguna'),
+(6, 'NS/NR');
+
 -- --------------------------------------------------------
 
 --
@@ -266,6 +291,21 @@ CREATE TABLE `condicion_inactividad` (
   `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `condicion_inactividad`
+--
+
+INSERT INTO `condicion_inactividad` (`id`, `nombre`) VALUES
+(1, 'Menor/Est.'),
+(2, 'Ama de casa'),
+(3, 'Jub/pens.'),
+(4, 'Mayor 65 años s/jub ni pension'),
+(5, 'Discapacitado s/pension'),
+(6, 'Discapacitado S/pension'),
+(7, 'Enfermo'),
+(8, 'No consigue'),
+(9, 'NS/NR');
 
 -- --------------------------------------------------------
 
@@ -293,6 +333,17 @@ CREATE TABLE `discapacidad` (
   `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `discapacidad`
+--
+
+INSERT INTO `discapacidad` (`id`, `nombre`) VALUES
+(1, 'Motora'),
+(2, 'Sensorial'),
+(3, 'Mental'),
+(4, 'Visceral'),
+(5, 'NS/NR');
 
 -- --------------------------------------------------------
 
@@ -795,13 +846,6 @@ CREATE TABLE `personas` (
   `estado_civil_id` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Volcado de datos para la tabla `personas`
---
-
-INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`) VALUES
-(3, 'hernan', 'vilchez', 'hernanvilchez8@gmail.com', '2026-04-08', 1, '41145735', '22222222222222', 1, 3, 1, 2, NULL, '03364367123', 1, 1, 'A-', '2026-04-21 23:04:44', '2026-04-21 23:04:44', NULL, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -1046,6 +1090,16 @@ CREATE TABLE `situacion_ocupacional` (
   `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `situacion_ocupacional`
+--
+
+INSERT INTO `situacion_ocupacional` (`id`, `nombre`) VALUES
+(1, 'Trabajo Formal'),
+(2, 'Trabajo Informal'),
+(3, 'Inactivo'),
+(4, 'NS/NR');
 
 -- --------------------------------------------------------
 
@@ -1444,19 +1498,19 @@ ALTER TABLE `beneficios`
 -- AUTO_INCREMENT de la tabla `categoria_ocupacional`
 --
 ALTER TABLE `categoria_ocupacional`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `cobertura`
 --
 ALTER TABLE `cobertura`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `condicion_inactividad`
 --
 ALTER TABLE `condicion_inactividad`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `cud`
@@ -1468,7 +1522,7 @@ ALTER TABLE `cud`
 -- AUTO_INCREMENT de la tabla `discapacidad`
 --
 ALTER TABLE `discapacidad`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `domicilio`
@@ -1498,7 +1552,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT de la tabla `grupo_familiar`
 --
 ALTER TABLE `grupo_familiar`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `localidad`
@@ -1582,7 +1636,7 @@ ALTER TABLE `sexo`
 -- AUTO_INCREMENT de la tabla `situacion_ocupacional`
 --
 ALTER TABLE `situacion_ocupacional`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_documento`
