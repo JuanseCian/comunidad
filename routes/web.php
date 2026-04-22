@@ -55,7 +55,7 @@ require __DIR__.'/niveles-estudio.php';
 require __DIR__.'/beneficio.php';
 //rutas para programas de asistencia
 require __DIR__.'/programa-asistencia.php';
-
+require __DIR__.'/grupoFamiliar.php';
 //RUTAS DEL FRONTEND
 //rutas para el home
 require __DIR__.'/home.php';

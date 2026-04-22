@@ -156,7 +156,7 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); min-
   <div class="breadcrumb">
     <a href="{{ route('dashboard') }}">Inicio</a>
     <span>/</span>
-    <a href="{{ route('personas.index') }}">Personas</a>
+    
     <span>/</span>
     <span>{{ $persona->apellido }}, {{ $persona->nombre }}</span>
   </div>

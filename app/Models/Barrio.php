@@ -68,7 +68,7 @@ class Barrio extends Model
 		return $this->belongsTo(ZonaBarrio::class, 'zona_barrio_id');
 	}
 	
-	public function domicilios()
+	public function domicilio()
 	{
 		return $this->hasMany(Domicilio::class);
 	}

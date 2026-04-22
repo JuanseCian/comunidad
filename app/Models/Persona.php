@@ -43,8 +43,32 @@ class Persona extends Model
         'trabaja' => 'boolean'
     ];
 
-    public function estadoCivil()
-    {
-        return $this->belongsTo(EstadoCivil::class, 'estado_civil_id');
-    }
+   
+    public function domicilio() {
+    return $this->belongsTo(Domicilio::class);
+}
+
+public function provincia() {
+    return $this->belongsTo(Provincia::class);
+}
+
+public function localidad() {
+    return $this->belongsTo(Localidad::class);
+}
+
+public function estadoCivil() {
+    return $this->belongsTo(EstadoCivil::class);
+}
+
+public function sexo() {
+    return $this->belongsTo(Sexo::class);
+}
+
+public function nivelEstudio() {
+    return $this->belongsTo(NivelesEstudio::class, 'nivel_estudio_id');
+}
+
+public function sedeOrigen() {
+    return $this->belongsTo(Sede::class, 'sede_origen_id');
+}
 }

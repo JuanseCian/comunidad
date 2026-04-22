@@ -159,7 +159,7 @@ input.is-invalid, select.is-invalid { border-color: var(--danger) !important; }
   <div class="breadcrumb">
     <a href="{{ route('dashboard') }}">Inicio</a>
     <span>/</span>
-    <a href="{{ route('personas.index') }}">Personas</a>
+    
     <span>/</span>
     <a href="{{ route('personas.show', $persona) }}">{{ $persona->apellido }}, {{ $persona->nombre }}</a>
     <span>/</span>

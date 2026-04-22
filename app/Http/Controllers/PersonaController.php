@@ -16,6 +16,18 @@ use App\Models\localidad;
 
 class PersonaController extends Controller
 {
+    public function index()
+{
+    $personas = Persona::with([
+        'provincia',
+        'localidad',
+        'estadoCivil'
+    ])
+    ->orderBy('apellido')
+    ->paginate(10);
+
+    return view('frontend.persona.index', compact('personas'));
+}
     public function create()
     {
         return view('frontend.persona.create', [
@@ -83,5 +95,19 @@ class PersonaController extends Controller
     return redirect()
         ->route('personas.create')
         ->with('success', 'Persona registrada correctamente');
+}
+public function show($id)
+{
+    $persona = Persona::with([
+        'domicilio.barrio',
+        'provincia',
+        'localidad',
+        'estadoCivil',
+        'sexo',
+        'nivelEstudio',
+        'sedeOrigen'
+    ])->findOrFail($id);
+
+    return view('frontend.persona.show', compact('persona'));
 }
 }
