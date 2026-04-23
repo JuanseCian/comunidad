@@ -62,24 +62,6 @@
             <div class="row g-3">
 
                 <div class="col-md-6">
-                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Apellido <span style="color:#e53e3e;">*</span></label>
-                    <input type="text" name="apellido" value="{{ old('apellido') }}"
-                           placeholder="Ej: García"
-                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
-                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
-                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
-                </div>
-
-                <div class="col-md-6">
-                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Nombre <span style="color:#e53e3e;">*</span></label>
-                    <input type="text" name="nombre" value="{{ old('nombre') }}"
-                           placeholder="Ej: María José"
-                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
-                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
-                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
-                </div>
-
-                <div class="col-md-6">
                     <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Tipo de documento</label>
                     <select name="documento_id"
                             style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
@@ -99,6 +81,25 @@
                            onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
                            onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
                 </div>
+                
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Apellido <span style="color:#e53e3e;">*</span></label>
+                    <input type="text" name="apellido" value="{{ old('apellido') }}"
+                           placeholder="Ej: García"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Nombre <span style="color:#e53e3e;">*</span></label>
+                    <input type="text" name="nombre" value="{{ old('nombre') }}"
+                           placeholder="Ej: María José"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                </div>
+
 
                 <div class="col-md-6">
                     <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">CUIL</label>
