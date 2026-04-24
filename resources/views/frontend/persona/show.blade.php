@@ -150,6 +150,13 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); min-
 </style>
 </head>
 <body>
+  @if(session('abrirProgramaModal'))
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('modalPrograma').style.display = 'flex';
+});
+</script>
+@endif
 <div class="page">
 
   {{-- Breadcrumb --}}
@@ -486,6 +493,38 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); min-
           <div class="empty-state">Sin atenciones registradas.</div>
         @endif
       </div>
+    </div>
+
+    <div id="modalPrograma" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); align-items:center; justify-content:center; z-index:9999;">
+        <div style="background:white; width:500px; border-radius:14px; padding:22px;">
+            
+            <h3 style="margin-bottom:10px;">Asignar a programa</h3>
+
+            <form method="POST" action="{{ route('persona-programa.store') }}">
+                @csrf
+
+                <input type="hidden" name="persona_id" value="{{ $persona->id }}">
+
+                <label>Programa</label>
+                <select name="programa_id" style="width:100%; margin-bottom:10px;">
+                    @foreach($programas as $prog)
+                        <option value="{{ $prog->id }}">{{ $prog->nombre }}</option>
+                    @endforeach
+                </select>
+
+                <label>Fecha inicio</label>
+                <input type="date" name="fecha_inicio" style="width:100%; margin-bottom:10px;">
+
+                <label>Observaciones</label>
+                <textarea name="observaciones" style="width:100%;"></textarea>
+
+                <div style="margin-top:15px; display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" onclick="document.getElementById('modalPrograma').style.display='none'">Cancelar</button>
+                    <button type="submit">Guardar</button>
+                </div>
+
+            </form>
+        </div>
     </div>
 
   </div>{{-- /grid-layout --}}

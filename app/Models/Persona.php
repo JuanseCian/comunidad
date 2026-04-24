@@ -45,65 +45,65 @@ class Persona extends Model
 
    
     public function domicilio() {
-    return $this->belongsTo(Domicilio::class);
-}
+        return $this->belongsTo(Domicilio::class);
+    }
 
-public function provincia() {
-    return $this->belongsTo(Provincia::class);
-}
+    public function provincia() {
+        return $this->belongsTo(Provincia::class);
+    }
 
-public function localidad() {
-    return $this->belongsTo(Localidad::class);
-}
+    public function localidad() {
+        return $this->belongsTo(Localidad::class);
+    }
 
-public function estadoCivil() {
-    return $this->belongsTo(EstadoCivil::class);
-}
+    public function estadoCivil() {
+        return $this->belongsTo(EstadoCivil::class);
+    }
 
-public function sexo() {
-    return $this->belongsTo(Sexo::class);
-}
+    public function sexo() {
+        return $this->belongsTo(Sexo::class);
+    }
 
-public function nivelEstudio() {
-    return $this->belongsTo(NivelesEstudio::class, 'nivel_estudio_id');
-}
+    public function nivelEstudio() {
+        return $this->belongsTo(NivelesEstudio::class, 'nivel_estudio_id');
+    }
 
 
-public function sedeOrigen() {
-    return $this->belongsTo(Sede::class, 'sede_origen_id');
-}
-public function tipoDocumento()
-{
-    return $this->belongsTo(TipoDocumento::class, 'documento_id');
-}
+    public function sedeOrigen() {
+        return $this->belongsTo(Sede::class, 'sede_origen_id');
+    }
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class, 'documento_id');
+    }
 
-public function barrio()
-{
-    return $this->belongsTo(Barrio::class, 'barrio_id');
-}
+    public function barrio()
+    {
+        return $this->belongsTo(Barrio::class, 'barrio_id');
+    }
 
-public function grupoFamiliar()
-{
-    return $this->hasMany(GrupoFamiliar::class, 'persona_id');
-}
+    public function grupoFamiliar()
+    {
+        return $this->hasMany(GrupoFamiliar::class, 'persona_id');
+    }
 
-public function cud()
-{
-    return $this->hasOne(Cud::class, 'persona_id');
-}
+    public function cud()
+    {
+        return $this->hasOne(Cud::class, 'persona_id');
+    }
 
-public function personaPrograma()
-{
-    return $this->hasMany(PersonaPrograma::class, 'persona_id');
-}
+    public function personaPrograma()
+    {
+        return $this->hasMany(PersonaPrograma::class, 'persona_id');
+    }
 
-public function personaBeneficio()
-{
-    return $this->hasMany(PersonaBeneficio::class, 'persona_id');
-}
+    public function personaBeneficio()
+    {
+        return $this->hasMany(PersonaBeneficio::class, 'persona_id');
+    }
 
-public function atenciones()
-{
-    return $this->hasMany(Atencion::class, 'persona_id');
-}
-}
+    public function atenciones()
+    {
+        return $this->hasMany(Atenciones::class, 'persona_id');
+    }
+    }

@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Http\Controllers\GrupoFamiliarController;
+use App\Http\Controllers\frontend\GrupoFamiliarController;
 
 Route::prefix('personas/{persona}/grupo-familiar')
     ->name('personas.grupo-familiar.')

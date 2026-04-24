@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class Atencione extends Model
+class Atenciones extends Model
 {
 	protected $table = 'atenciones';
 

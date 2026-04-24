@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\frontend;
 
+use App\Http\Controllers\Controller;
 use App\Models\GrupoFamiliar;
 use App\Models\Persona;
 use App\Models\Sexo;
