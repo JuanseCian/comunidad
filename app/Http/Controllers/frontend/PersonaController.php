@@ -54,6 +54,7 @@ class PersonaController extends Controller
  
         return view('frontend.persona.index', compact('personas', 'sedes', 'barrios'));
     }
+    
     public function create()
     {
         return view('frontend.persona.create', [

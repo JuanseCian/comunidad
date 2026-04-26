@@ -57,9 +57,9 @@ class PersonaPrograma extends Model
 		return $this->belongsTo(Persona::class);
 	}
 
-	public function programas_asistencium()
+	public function programa()
 	{
-		return $this->belongsTo(ProgramasAsistencium::class, 'programa_id');
+		return $this->belongsTo(ProgramasAsistencia::class, 'programa_id');
 	}
 
 	public function user()

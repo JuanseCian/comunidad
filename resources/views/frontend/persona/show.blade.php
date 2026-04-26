@@ -150,13 +150,16 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); min-
 </style>
 </head>
 <body>
-  @if(session('abrirProgramaModal'))
+
+
+@if(session('abrirProgramaModal'))
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modalPrograma').style.display = 'flex';
 });
 </script>
 @endif
+
 <div class="page">
 
   {{-- Breadcrumb --}}
@@ -375,7 +378,10 @@ document.addEventListener('DOMContentLoaded', function() {
             @endforeach
           </div>
         @else
-          <div class="empty-state">Sin programas asignados</div>
+          <div class="empty-state">Sin programas asignados</div> 
+          <button onclick="document.getElementById('modalPrograma').style.display='flex'">
+              + Asignar programa
+          </button>
         @endif
       </div>
     </div>
