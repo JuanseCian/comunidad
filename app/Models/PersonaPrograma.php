@@ -45,6 +45,7 @@ class PersonaPrograma extends Model
 	protected $fillable = [
 		'persona_id',
 		'programa_id',
+		'rol',
 		'fecha_inicio',
 		'fecha_fin',
 		'activo',

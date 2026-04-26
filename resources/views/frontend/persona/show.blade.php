@@ -1,522 +1,871 @@
 {{-- resources/views/frontend/persona/show.blade.php --}}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ $persona->apellido }}, {{ $persona->nombre }} — Comunidad</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+@extends('frontend.layout.front')
+
+@section('title', $persona->apellido . ', ' . $persona->nombre . ' — Perfil')
+
+@section('content')
+
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:         #F5F3EE;
-  --surface:    #FFFFFF;
-  --border:     #E0DDD6;
-  --border-md:  #C8C4BB;
-  --text:       #1A1916;
-  --muted:      #6B6860;
-  --accent:     #2D5A3D;
-  --accent-lt:  #EAF0EB;
-  --accent-brd: #B8CFC0;
-  --danger:     #8B2E2E;
-  --danger-lt:  #FBF0F0;
-  --amber:      #7A5C1E;
-  --amber-lt:   #FDF6E7;
-  --amber-brd:  #E8D5A3;
-  --blue:       #1E3A5F;
-  --blue-lt:    #EBF2FA;
-  --blue-brd:   #AECBE8;
-  --radius:     10px;
-  --radius-lg:  16px;
-  --serif:      'Instrument Serif', Georgia, serif;
-  --sans:       'DM Sans', system-ui, sans-serif;
-  --ease:       160ms ease;
-}
-html { font-size: 15px; }
-body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem 5rem; }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-/* ── Layout ── */
-.page { max-width: 860px; margin: 0 auto; }
+    :root {
+        --blue:     #0d92c2;
+        --blue-dk:  #0879a8;
+        --blue-lt:  #e6f5fb;
+        --blue-brd: #b3e0f5;
+        --teal:     #17a385;
+        --teal-lt:  #e8f9f5;
+        --teal-brd: #9fe1cb;
+        --teal-dk:  #0e8a70;
+        --slate:    #536070;
+        --ink:      #0f172a;
+        --muted:    #94a3b4;
+        --border:   #e0ddd6;
+        --border-sm:#f0ede8;
+        --bg:       #f8fafe;
+        --white:    #ffffff;
+        --amber:    #d97706;
+        --amber-lt: #fef9ee;
+        --amber-brd:#fcd98a;
+        --radius:   16px;
+        --sans:     'Plus Jakarta Sans', system-ui, sans-serif;
+        --shadow-sm: 0 2px 12px rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 20px rgba(13,146,194,0.10);
+    }
 
-/* ── Breadcrumb ── */
-.breadcrumb { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
-.breadcrumb a { color: var(--muted); text-decoration: none; }
-.breadcrumb a:hover { color: var(--accent); }
-.breadcrumb span { opacity: .45; }
+    .sp-page { font-family: var(--sans); color: var(--ink); }
 
-/* ── Hero header ── */
-.hero {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px 28px;
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.hero-left { display: flex; align-items: center; gap: 18px; }
-.avatar {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--accent-lt); border: 1px solid var(--accent-brd);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--serif); font-size: 1.4rem; color: var(--accent);
-  flex-shrink: 0;
-}
-.hero-name { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; line-height: 1.1; }
-.hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.pill {
-  font-size: 11.5px; font-weight: 500; padding: 3px 10px;
-  border-radius: 20px; border: 1px solid;
-}
-.pill-gray   { background: var(--bg);       border-color: var(--border-md); color: var(--muted); }
-.pill-green  { background: var(--accent-lt); border-color: var(--accent-brd); color: var(--accent); }
-.pill-amber  { background: var(--amber-lt);  border-color: var(--amber-brd); color: var(--amber); }
-.pill-blue   { background: var(--blue-lt);   border-color: var(--blue-brd); color: var(--blue); }
-.pill-danger { background: var(--danger-lt); border-color: #D4A5A5; color: var(--danger); }
+    /* ── Breadcrumb ── */
+    .sp-breadcrumb {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 12px; color: var(--muted); margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .sp-breadcrumb a { color: var(--muted); text-decoration: none; transition: color .15s; }
+    .sp-breadcrumb a:hover { color: var(--blue); }
+    .sp-breadcrumb span { opacity: .5; }
 
-.hero-actions { display: flex; gap: 8px; flex-shrink: 0; }
-.btn { height: 38px; padding: 0 18px; border-radius: var(--radius); font-family: var(--sans); font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all var(--ease); display: inline-flex; align-items: center; justify-content: center; gap: 7px; text-decoration: none; }
-.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-.btn-primary:hover { background: #245030; }
-.btn-ghost { background: transparent; color: var(--muted); border-color: var(--border-md); }
-.btn-ghost:hover { background: var(--bg); color: var(--text); }
+    /* ── Alert ── */
+    .sp-alert {
+        display: flex; align-items: center; gap: 10px;
+        background: var(--teal-lt); border: 1px solid var(--teal-brd); color: var(--teal-dk);
+        padding: 12px 18px; border-radius: 12px; font-size: 13.5px; font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
 
-/* ── Alerta éxito ── */
-.alert-success { padding: 12px 18px; border-radius: var(--radius); font-size: 13.5px; margin-bottom: 1.25rem; background: var(--accent-lt); border: 1px solid var(--accent-brd); color: var(--accent); display: flex; gap: 10px; align-items: center; }
+    /* ── Hero ── */
+    .sp-hero {
+        background: linear-gradient(135deg, var(--blue-lt) 0%, var(--teal-lt) 100%);
+        border: 1px solid var(--blue-brd);
+        border-radius: 20px;
+        padding: 28px 28px 24px;
+        margin-bottom: 1.5rem;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 20px; flex-wrap: wrap;
+        position: relative; overflow: hidden;
+    }
+    .sp-hero::before {
+        content: '';
+        position: absolute; top: -40px; right: -40px;
+        width: 180px; height: 180px;
+        background: radial-gradient(circle, rgba(13,146,194,.10) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    .sp-avatar {
+        width: 62px; height: 62px; border-radius: 50%; flex-shrink: 0;
+        background: linear-gradient(135deg, var(--blue), var(--teal));
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 1.4rem; color: white;
+        box-shadow: 0 4px 16px rgba(13,146,194,.30);
+    }
+    .sp-hero-name {
+        font-size: clamp(1.25rem, 3vw, 1.7rem);
+        font-weight: 800; color: var(--ink); line-height: 1.15; margin: 0 0 10px;
+    }
 
-/* ── Grid de secciones ── */
-.grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-.col-full { grid-column: span 2; }
-@media (max-width: 640px) { .grid-layout { grid-template-columns: 1fr; } .col-full { grid-column: span 1; } }
+    /* ── Pill badges ── */
+    .sp-pill {
+        display: inline-flex; align-items: center;
+        border-radius: 40px; padding: 3px 11px;
+        font-size: 11.5px; font-weight: 700; border: 1px solid;
+    }
+    .sp-pill-gray   { background: white; border-color: var(--border); color: var(--slate); }
+    .sp-pill-blue   { background: var(--blue-lt); border-color: var(--blue-brd); color: var(--blue-dk); }
+    .sp-pill-teal   { background: var(--teal-lt); border-color: var(--teal-brd); color: var(--teal-dk); }
+    .sp-pill-amber  { background: var(--amber-lt); border-color: var(--amber-brd); color: var(--amber); }
 
-/* ── Sección card ── */
-.section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; height: 100%; }
-.section-header { padding: 13px 20px 11px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.section-title { font-size: 12.5px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
-.section-action { font-size: 12px; color: var(--accent); text-decoration: none; font-weight: 500; }
-.section-action:hover { text-decoration: underline; }
-.section-body { padding: 18px 20px; }
+    /* ── Action buttons ── */
+    .sp-btn-primary {
+        display: inline-flex; align-items: center; gap: 7px;
+        height: 40px; padding: 0 18px; border-radius: 12px;
+        background: linear-gradient(135deg, var(--blue), #1aaad8);
+        color: white; font-family: var(--sans); font-size: 13px; font-weight: 700;
+        text-decoration: none; border: none; cursor: pointer;
+        box-shadow: 0 4px 14px rgba(13,146,194,.28);
+        transition: opacity .2s, transform .15s;
+    }
+    .sp-btn-primary:hover { opacity: .88; transform: translateY(-1px); color: white; }
 
-/* ── Lista de datos ── */
-.data-list { display: flex; flex-direction: column; gap: 0; }
-.data-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
-.data-row:last-child { border-bottom: none; }
-.data-label { color: var(--muted); font-size: 12.5px; flex-shrink: 0; }
-.data-val { color: var(--text); text-align: right; font-weight: 400; }
-.data-val.empty { color: var(--border-md); font-style: italic; }
+    .sp-btn-ghost {
+        display: inline-flex; align-items: center; gap: 7px;
+        height: 40px; padding: 0 18px; border-radius: 12px;
+        background: white; color: var(--slate);
+        font-family: var(--sans); font-size: 13px; font-weight: 600;
+        text-decoration: none; border: 1px solid var(--border);
+        transition: background .15s, color .15s;
+    }
+    .sp-btn-ghost:hover { background: var(--bg); color: var(--ink); }
 
-/* ── Tabla grupo familiar ── */
-.gf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.gf-table th { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); background: var(--bg); }
-.gf-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-.gf-table tr:last-child td { border-bottom: none; }
-.gf-table tr:hover td { background: var(--bg); }
-.gf-relacion { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    /* ── Section card ── */
+    .sp-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        height: 100%;
+        box-shadow: var(--shadow-sm);
+    }
+    .sp-card-header {
+        padding: 13px 20px 12px;
+        border-bottom: 1px solid var(--border-sm);
+        display: flex; align-items: center; justify-content: space-between;
+        background: var(--bg);
+    }
+    .sp-card-header-left { display: flex; align-items: center; gap: 10px; }
+    .sp-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .sp-card-title {
+        font-size: 11px; font-weight: 800; color: var(--slate);
+        text-transform: uppercase; letter-spacing: .07em; margin: 0;
+    }
+    .sp-card-action {
+        font-size: 12px; font-weight: 700; color: var(--blue);
+        text-decoration: none; background: var(--blue-lt);
+        border: 1px solid var(--blue-brd); border-radius: 8px;
+        padding: 3px 10px; transition: background .15s, color .15s;
+    }
+    .sp-card-action:hover { background: var(--blue); color: white; }
+    .sp-card-body { padding: 18px 20px; }
 
-/* ── Estado vacío ── */
-.empty-state { text-align: center; padding: 28px 20px; color: var(--muted); font-size: 13.5px; }
-.empty-state a { color: var(--accent); text-decoration: none; font-weight: 500; }
-.empty-state a:hover { text-decoration: underline; }
+    /* ── Data rows ── */
+    .sp-data-row {
+        display: flex; justify-content: space-between; align-items: baseline;
+        gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border-sm);
+        font-size: 13.5px;
+    }
+    .sp-data-row:last-child { border-bottom: none; }
+    .sp-label { color: var(--muted); font-size: 12.5px; flex-shrink: 0; font-weight: 500; }
+    .sp-val { color: var(--ink); font-weight: 600; text-align: right; }
+    .sp-val-empty { color: #c8c4bb; font-style: italic; font-weight: 400; text-align: right; }
 
-/* ── Programas / beneficios ── */
-.tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
-.tag { font-size: 12.5px; padding: 4px 12px; border-radius: 20px; border: 1px solid; }
+    /* ── Badge counter ── */
+    .sp-count {
+        background: var(--blue-lt); border: 1px solid var(--blue-brd);
+        color: var(--blue-dk); border-radius: 20px;
+        padding: 1px 8px; font-size: 11px; font-weight: 700; margin-left: 6px;
+    }
 
-/* ── Atenciones ── */
-.atencion-row { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start; }
-.atencion-row:last-child { border-bottom: none; }
-.atencion-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
-.atencion-tipo { font-size: 12px; font-weight: 500; color: var(--accent); text-transform: capitalize; }
-.atencion-fecha { font-size: 11.5px; color: var(--muted); margin-left: auto; white-space: nowrap; }
-.atencion-desc { font-size: 13px; color: var(--text); margin-top: 3px; line-height: 1.5; }
-.atencion-usuario { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+    /* ── Family table ── */
+    .sp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .sp-table thead tr { background: var(--bg); }
+    .sp-table th {
+        font-size: 10.5px; font-weight: 800; color: var(--slate);
+        text-transform: uppercase; letter-spacing: .06em;
+        padding: 10px 16px; text-align: left;
+        border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .sp-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-sm); vertical-align: middle; }
+    .sp-table tbody tr:last-child td { border-bottom: none; }
+    .sp-table tbody tr { transition: background .12s; }
+    .sp-table tbody tr:hover td { background: var(--bg); }
 
-/* ── CUD ── */
-.cud-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; padding: 4px 12px; border-radius: 20px; }
+    /* ── CUD badge ── */
+    .sp-badge-yes { background: var(--teal-lt); border: 1px solid var(--teal-brd); color: var(--teal-dk); border-radius: 20px; padding: 3px 10px; font-size: 11.5px; font-weight: 700; }
+    .sp-badge-no  { background: var(--bg); border: 1px solid var(--border); color: var(--slate); border-radius: 20px; padding: 3px 10px; font-size: 11.5px; font-weight: 600; }
 
-/* ── Animación ── */
-@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-.page > * { animation: fadeUp .3s ease both; }
-.page > *:nth-child(1){animation-delay:.00s}
-.page > *:nth-child(2){animation-delay:.04s}
-.page > *:nth-child(3){animation-delay:.08s}
-.page > *:nth-child(4){animation-delay:.12s}
-.page > *:nth-child(5){animation-delay:.16s}
+    /* ── Tag list ── */
+    .sp-tag-green { background: var(--teal-lt); border: 1px solid var(--teal-brd); color: var(--teal-dk); border-radius: 20px; padding: 4px 13px; font-size: 12.5px; font-weight: 700; }
+    .sp-tag-blue  { background: var(--blue-lt); border: 1px solid var(--blue-brd); color: var(--blue-dk); border-radius: 20px; padding: 4px 13px; font-size: 12.5px; font-weight: 700; }
+
+    /* ── Atención ── */
+    .sp-att-row {
+        display: flex; gap: 14px; align-items: flex-start;
+        padding: 14px 0; border-bottom: 1px solid var(--border-sm);
+    }
+    .sp-att-row:last-child { border-bottom: none; }
+    .sp-att-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--teal); margin-top: 5px; flex-shrink: 0; }
+
+    /* ── Empty state ── */
+    .sp-empty { text-align: center; padding: 30px 20px; color: var(--muted); font-size: 13.5px; }
+    .sp-empty-icon {
+        width: 46px; height: 46px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 12px; font-size: 20px;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .sp-anim { animation: fadeUp .35s ease both; }
+    .sp-anim-1 { animation-delay: .00s; }
+    .sp-anim-2 { animation-delay: .05s; }
+    .sp-anim-3 { animation-delay: .10s; }
+    .sp-anim-4 { animation-delay: .15s; }
+    .sp-anim-5 { animation-delay: .20s; }
+    .sp-anim-6 { animation-delay: .25s; }
 </style>
-</head>
-<body>
 
-  @if(session('abrirProgramaModal'))
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('modalPrograma').style.display = 'flex';
-  });
-  </script>
-  @endif
+@if(session('abrirProgramaModal'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('modalPrograma').style.display = 'flex';
+    });
+</script>
+@endif
 
-  <div class="page">
-    {{-- Breadcrumb --}}
-    <div class="breadcrumb">
-      <a href="{{ route('home') }}">Inicio</a>
-      <span>/</span>
-      <span>Gestión Social</span>
-      <span>/</span>
-      <span>{{ $persona->apellido }}, {{ $persona->nombre }}</span>
-    </div>
+<div class="sp-page">
 
-    {{-- Flash --}}
-    @if(session('success'))
-      <div class="alert-success">
-        <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
-      </div>
-    @endif
+    {{-- ── HERO SECTION ── --}}
+    <section style="background: linear-gradient(135deg, var(--blue-lt, #e6f5fb) 0%, var(--teal-lt, #e8f9f5) 100%); border-bottom: 1px solid #d0eee7; padding: 2rem 0 1.75rem;">
+        <div class="container">
 
-    {{-- Hero --}}
-    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-top:8px; margin-bottom: 1.5rem;">
-        <div style="display:flex; align-items:center; gap:16px;">
-            {{-- Avatar --}}
-            <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#17a385); display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.3rem; color:white; flex-shrink:0; box-shadow:0 4px 14px rgba(13,146,194,.25);">
-                {{ strtoupper(substr($persona->nombre, 0, 1)) }}{{ strtoupper(substr($persona->apellido, 0, 1)) }}
-            </div>
-            <div>
-                <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(1.3rem,3vw,1.8rem); color:#0f172a; margin:0 0 8px; line-height:1.2;">
-                    {{ $persona->apellido }}, {{ $persona->nombre }}
-                </h1>
-                <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                    @if($persona->tipoDocumento)
-                        <span style="background:white; border:1px solid #c8c4bb; color:#536070; border-radius:20px; padding:3px 10px; font-size:11.5px; font-weight:600;">{{ $persona->tipoDocumento->nombre }} {{ $persona->dni }}</span>
-                    @endif
-                    @if($persona->sexo)
-                        <span style="background:white; border:1px solid #c8c4bb; color:#536070; border-radius:20px; padding:3px 10px; font-size:11.5px; font-weight:600;">{{ $persona->sexo->nombre }}</span>
-                    @endif
-                    @if($persona->fecha_nacimiento)
-                        <span style="background:white; border:1px solid #c8c4bb; color:#536070; border-radius:20px; padding:3px 10px; font-size:11.5px; font-weight:600;">{{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->age }} años</span>
-                    @endif
-                    @if($persona->sedeOrigen)
-                        <span style="background:#e6f5fb; border:1px solid #b3e0f5; color:#0879a8; border-radius:20px; padding:3px 10px; font-size:11.5px; font-weight:700;">{{ $persona->sedeOrigen->nombre }}</span>
-                    @endif
-                    @if($persona->trabaja)
-                        <span style="background:#e6f5fb; border:1px solid #b3e0f5; color:#0879a8; border-radius:20px; padding:3px 10px; font-size:11.5px; font-weight:700;">Trabaja</span>
-                    @endif
+            {{-- Breadcrumb --}}
+            <nav class="sp-breadcrumb sp-anim sp-anim-1">
+                <a href="{{ route('home') }}">Inicio</a>
+                <span>/</span>
+                <a href="{{ route('personas.index') }}">Personas</a>
+                <span>/</span>
+                <span style="color: #536070; font-weight: 600;">{{ $persona->apellido }}, {{ $persona->nombre }}</span>
+            </nav>
+
+            {{-- Flash --}}
+            @if(session('success'))
+                <div class="sp-alert sp-anim sp-anim-1">
+                    <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
                 </div>
-            </div>
-        </div>
-        <div style="display:flex; gap:8px; flex-shrink:0;">
-            <a href="{{ route('personas.grupo-familiar.create', $persona) }}" style="height:38px; padding:0 16px; background:linear-gradient(135deg,#0d92c2,#1aaad8); color:white; text-decoration:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:13px; display:inline-flex; align-items:center; gap:7px; box-shadow:0 4px 12px rgba(13,146,194,.25); transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-                <i class="bi bi-person-plus-fill"></i> Agregar integrante
-            </a>
-            <a href="{{ route('personas.create') }}" style="height:38px; padding:0 16px; background:white; color:#536070; text-decoration:none; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:7px; border:1px solid #c8c4bb; transition:background .15s;" onmouseover="this.style.background='#f5f3ee'" onmouseout="this.style.background='white'">
-                <i class="bi bi-person-plus"></i> Nueva persona
-            </a>
-        </div>
-    </div>
+            @endif
 
-    <div class="row g-3">
-        {{-- ── Datos personales ── --}}
-        <div class="col-md-6">
-            <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden; height:100%;">
-                <div style="padding:13px 20px 11px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:10px;">
-                    <div style="width:6px; height:6px; border-radius:50%; background:#0d92c2; flex-shrink:0;"></div>
-                    <span style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">Datos personales</span>
-                </div>
-                <div style="padding:18px 20px;">
-                    @foreach([
-                        ['Correo',           $persona->correo ?? null],
-                        ['Teléfono',         $persona->telefono ?? null],
-                        ['Fecha de nac.',    $persona->fecha_nacimiento ? \Carbon\Carbon::parse($persona->fecha_nacimiento)->format('d/m/Y') : null],
-                        ['CUIL',             $persona->cuil ?? null],
-                        ['Grupo sanguíneo',  $persona->grupo_sanguineo ?? null],
-                        ['Nivel de estudio', $persona->nivelEstudio?->nombre ?? null],
-                    ] as [$label, $val])
-                    <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:9px 0; border-bottom:1px solid #f0ede8; font-size:13.5px;">
-                        <span style="color:#94a3b4; font-size:12.5px; flex-shrink:0;">{{ $label }}</span>
-                        <span style="{{ !$val ? 'color:#c8c4bb; font-style:italic;' : 'color:#0f172a; font-weight:500; text-align:right;' }}">{{ $val ?? '—' }}</span>
+            <div class="sp-anim sp-anim-2" style="display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
+
+                {{-- Avatar + nombre --}}
+                <div style="display:flex; align-items:center; gap:18px;">
+                    <div class="sp-avatar">
+                        {{ strtoupper(substr($persona->nombre, 0, 1)) }}{{ strtoupper(substr($persona->apellido, 0, 1)) }}
                     </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-
-        {{-- ── Domicilio ── --}}
-        <div class="col-md-6">
-            <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden; height:100%;">
-                <div style="padding:13px 20px 11px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:10px;">
-                    <div style="width:6px; height:6px; border-radius:50%; background:#17a385; flex-shrink:0;"></div>
-                    <span style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">Domicilio</span>
-                </div>
-                <div style="padding:18px 20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:9px 0; border-bottom:1px solid #f0ede8; font-size:13.5px;">
-                        <span style="color:#94a3b4; font-size:12.5px;">Provincia</span>
-                        <span style="{{ !$persona->provincia ? 'color:#c8c4bb; font-style:italic;' : 'color:#0f172a; font-weight:500;' }}">{{ $persona->provincia?->nombre ?? '—' }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:9px 0; border-bottom:1px solid #f0ede8; font-size:13.5px;">
-                        <span style="color:#94a3b4; font-size:12.5px;">Localidad</span>
-                        <span style="{{ !$persona->localidad ? 'color:#c8c4bb; font-style:italic;' : 'color:#0f172a; font-weight:500;' }}">{{ $persona->localidad?->nombre ?? '—' }}</span>
-                    </div>
-                    @if($persona->domicilio)
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:9px 0; border-bottom:1px solid #f0ede8; font-size:13.5px;">
-                            <span style="color:#94a3b4; font-size:12.5px;">Barrio</span>
-                            <span style="{{ !$persona->domicilio->barrio ? 'color:#c8c4bb; font-style:italic;' : 'color:#0f172a; font-weight:500;' }}">{{ $persona->domicilio->barrio?->nombre ?? '—' }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:9px 0; border-bottom:1px solid #f0ede8; font-size:13.5px;">
-                            <span style="color:#94a3b4; font-size:12.5px;">Calle</span>
-                            <span style="{{ !$persona->domicilio->calle ? 'color:#c8c4bb; font-style:italic;' : 'color:#0f172a; font-weight:500;' }}">
-                                {{ $persona->domicilio->calle ? $persona->domicilio->calle . ' ' . ($persona->domicilio->numero ?? '') : '—' }}
-                            </span>
-                        </div>
-                        @if($persona->domicilio->piso || $persona->domicilio->dpto)
-                            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:9px 0; font-size:13.5px;">
-                                <span style="color:#94a3b4; font-size:12.5px;">Piso / Dpto</span>
-                                <span style="color:#0f172a; font-weight:500;">{{ $persona->domicilio->piso }} {{ $persona->domicilio->dpto }}</span>
-                            </div>
-                        @endif
-                    @else
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:9px 0; font-size:13.5px;">
-                            <span style="color:#94a3b4; font-size:12.5px;">Dirección</span>
-                            <span style="color:#c8c4bb; font-style:italic;">Sin domicilio registrado</span>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        {{-- ── CUD ── --}}
-        <div class="col-md-6">
-            <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden; height:100%;">
-                <div style="padding:13px 20px 11px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:10px;">
-                    <div style="width:6px; height:6px; border-radius:50%; background:#f59e0b; flex-shrink:0;"></div>
-                    <span style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">CUD — Discapacidad</span>
-                </div>
-                <div style="padding:18px 20px;">
-                    @if($persona->cud)
-                        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid #f0ede8; font-size:13.5px;">
-                            <span style="color:#94a3b4; font-size:12.5px;">Tiene CUD</span>
-                            @if($persona->cud->tiene_cud)
-                                <span style="background:#e8f9f5; border:1px solid #9fe1cb; color:#0e8a70; border-radius:20px; padding:3px 10px; font-size:11.5px; font-weight:700;">Sí</span>
-                            @else
-                                <span style="background:#f5f3ee; border:1px solid #c8c4bb; color:#536070; border-radius:20px; padding:3px 10px; font-size:11.5px; font-weight:600;">No</span>
+                    <div>
+                        <h1 class="sp-hero-name">{{ $persona->apellido }}, {{ $persona->nombre }}</h1>
+                        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                            @if($persona->tipoDocumento)
+                                <span class="sp-pill sp-pill-gray">{{ $persona->tipoDocumento->nombre }} {{ $persona->dni }}</span>
+                            @endif
+                            @if($persona->sexo)
+                                <span class="sp-pill sp-pill-gray">{{ $persona->sexo->nombre }}</span>
+                            @endif
+                            @if($persona->fecha_nacimiento)
+                                <span class="sp-pill sp-pill-gray">{{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->age }} años</span>
+                            @endif
+                            @if($persona->sedeOrigen)
+                                <span class="sp-pill sp-pill-blue"><i class="bi bi-geo-alt-fill" style="font-size:10px; margin-right:3px;"></i>{{ $persona->sedeOrigen->nombre }}</span>
+                            @endif
+                            @if($persona->trabaja)
+                                <span class="sp-pill sp-pill-teal"><i class="bi bi-briefcase-fill" style="font-size:10px; margin-right:3px;"></i>Trabaja</span>
                             @endif
                         </div>
-                        @if($persona->cud->tiene_cud)
-                            <div style="display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid #f0ede8; font-size:13.5px;">
-                                <span style="color:#94a3b4; font-size:12.5px;">Número</span>
-                                <span style="color:#0f172a; font-weight:500;">{{ $persona->cud->numero_cud ?? '—' }}</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid #f0ede8; font-size:13.5px;">
-                                <span style="color:#94a3b4; font-size:12.5px;">Emisión</span>
-                                <span style="color:#0f172a; font-weight:500;">{{ $persona->cud->fecha_emision ? \Carbon\Carbon::parse($persona->cud->fecha_emision)->format('d/m/Y') : '—' }}</span>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; gap:12px; padding:9px 0; font-size:13.5px;">
-                                <span style="color:#94a3b4; font-size:12.5px;">Vencimiento</span>
-                                <span style="color:#0f172a; font-weight:500;">{{ $persona->cud->fecha_vencimiento ? \Carbon\Carbon::parse($persona->cud->fecha_vencimiento)->format('d/m/Y') : '—' }}</span>
-                            </div>
-                        @endif
-                    @else
-                        <div style="text-align:center; padding:24px 0; color:#94a3b4; font-size:13.5px;">Sin registro de CUD</div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        {{-- ── Programas (Corregido a la grilla) ── --}}
-        <div class="col-md-6">
-            <div class="section">
-                <div class="section-header">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:6px; height:6px; border-radius:50%; background:#2D5A3D; flex-shrink:0;"></div>
-                        <span class="section-title" style="margin:0;">Programas de asistencia</span>
                     </div>
-                    <button onclick="document.getElementById('modalPrograma').style.display='flex'" style="background:none; border:none; cursor:pointer;" class="section-action">+ Asignar</button>
                 </div>
-                <div class="section-body">
-                    @if($persona->personaPrograma && $persona->personaPrograma->count())
-                        <div class="tag-list">
-                            @foreach($persona->personaPrograma as $pp)
-                                <span class="tag pill-green">{{ $pp->programa->nombre }}</span>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="empty-state">Sin programas asignados</div>
-                    @endif
-                </div>
-            </div>
-        </div>
 
-        {{-- ── Beneficios ── --}}
-        <div class="col-md-12">
-            <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden;">
-                <div style="padding:13px 20px 11px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:10px;">
-                    <div style="width:6px; height:6px; border-radius:50%; background:#17a385; flex-shrink:0;"></div>
-                    <span style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">Beneficios</span>
-                </div>
-                <div style="padding:18px 20px;">
-                    @if($persona->personaBeneficio && $persona->personaBeneficio->count())
-                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                            @foreach($persona->personaBeneficio as $pb)
-                                <span style="background:#e8f9f5; border:1px solid #9fe1cb; color:#0e8a70; border-radius:20px; padding:4px 12px; font-size:12.5px; font-weight:700;">{{ $pb->beneficio->nombre }}</span>
-                            @endforeach
-                        </div>
-                    @else
-                        <div style="text-align:center; padding:24px 0; color:#94a3b4; font-size:13.5px;">Sin beneficios asignados</div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        {{-- ── Grupo familiar ── --}}
-        <div class="col-12">
-            <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden;">
-                <div style="padding:13px 20px 11px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; justify-content:space-between;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:6px; height:6px; border-radius:50%; background:#0d92c2; flex-shrink:0;"></div>
-                        <span style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">
-                            Grupo familiar
-                            @if($persona->grupoFamiliar && $persona->grupoFamiliar->count())
-                                <span style="background:#e6f5fb; border:1px solid #b3e0f5; color:#0879a8; border-radius:20px; padding:1px 8px; font-size:11px; margin-left:6px;">{{ $persona->grupoFamiliar->count() }}</span>
-                            @endif
-                        </span>
-                    </div>
-                    <a href="{{ route('personas.grupo-familiar.create', $persona) }}"
-                       style="background:#e6f5fb; border:1px solid #b3e0f5; color:#0879a8; border-radius:8px; padding:4px 10px; font-size:12px; font-weight:700; text-decoration:none; transition:background .15s;"
-                       onmouseover="this.style.background='#0d92c2'; this.style.color='white'; this.style.borderColor='#0d92c2'"
-                       onmouseout="this.style.background='#e6f5fb'; this.style.color='#0879a8'; this.style.borderColor='#b3e0f5'">
-                        + Agregar integrante
+                {{-- Actions --}}
+                <div style="display:flex; gap:8px; flex-shrink:0; flex-wrap:wrap;">
+                    <a href="{{ route('personas.grupo-familiar.create', $persona) }}" class="sp-btn-primary">
+                        <i class="bi bi-person-plus-fill"></i> Agregar integrante
+                    </a>
+                    <a href="{{ route('personas.create') }}" class="sp-btn-ghost">
+                        <i class="bi bi-person-plus"></i> Nueva persona
                     </a>
                 </div>
-                @if($persona->grupoFamiliar && $persona->grupoFamiliar->count())
-                    <div style="overflow-x:auto;">
-                        <table style="width:100%; border-collapse:collapse; font-size:13px;">
-                            <thead>
-                                <tr style="background:#f8fafe;">
-                                    <th style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.06em; padding:10px 16px; text-align:left; border-bottom:1px solid #e0ddd6; white-space:nowrap;">Nombre</th>
-                                    <th style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.06em; padding:10px 16px; text-align:left; border-bottom:1px solid #e0ddd6; white-space:nowrap;">Documento</th>
-                                    <th style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.06em; padding:10px 16px; text-align:left; border-bottom:1px solid #e0ddd6; white-space:nowrap;">Nacimiento</th>
-                                    <th style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.06em; padding:10px 16px; text-align:left; border-bottom:1px solid #e0ddd6; white-space:nowrap;">Cobertura</th>
-                                    <th style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.06em; padding:10px 16px; text-align:left; border-bottom:1px solid #e0ddd6; white-space:nowrap;">Situación</th>
-                                    <th style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.06em; padding:10px 16px; text-align:left; border-bottom:1px solid #e0ddd6; white-space:nowrap;">Ingresos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($persona->grupoFamiliar as $m)
-                                    <tr style="border-bottom:1px solid #f0ede8; transition:background .15s;"
-                                        onmouseover="this.style.background='#fafaf8'" onmouseout="this.style.background='white'">
-                                        <td style="padding:12px 16px;">
-                                            <div style="font-weight:700; color:#0f172a; font-size:13.5px;">{{ $m->nombre }}</div>
-                                            <div style="font-size:11px; color:#94a3b4; margin-top:2px;">{{ $m->relacion_titular ?? '—' }}</div>
-                                        </td>
-                                        <td style="padding:12px 16px; color:#536070;">
-                                            {{ $m->tipo_documento?->nombre?->nombre ?? '' }}
-                                            {{ $m->numero_documento ?? '—' }}
-                                        </td>
-                                        <td style="padding:12px 16px; color:#536070;">
-                                            {{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}
-                                        </td>
-                                        <td style="padding:12px 16px;">
-                                            @if($m->cobertura?->nombre)
-                                                <span style="background:#e6f5fb; border:1px solid #b3e0f5; color:#0879a8; border-radius:20px; padding:2px 9px; font-size:11.5px; font-weight:600;">{{ $m->cobertura->nombre }}</span>
-                                            @else
-                                                <span style="color:#94a3b4;">—</span>
-                                            @endif
-                                        </td>
-                                        <td style="padding:12px 16px; color:#536070;">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
-                                        <td style="padding:12px 16px; font-weight:600; color:#0f172a;">
-                                            {{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <div style="text-align:center; padding:32px 20px;">
-                        <div style="width:44px; height:44px; background:#e6f5fb; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:20px; color:#0d92c2;">
-                            <i class="bi bi-people"></i>
+            </div>
+        </div>
+    </section>
+
+    {{-- ── MAIN CONTENT ── --}}
+    <div class="container py-4">
+
+        {{-- ── ROW 1: Datos personales + Domicilio ── --}}
+        <div class="row g-3 mb-3">
+
+            {{-- Datos personales --}}
+            <div class="col-md-6 sp-anim sp-anim-3">
+                <div class="sp-card">
+
+                    <div class="sp-card-header">
+                        <div class="sp-card-header-left">
+                            <div class="sp-dot" style="background: var(--blue);"></div>
+                            <span class="sp-card-title">Datos personales</span>
                         </div>
-                        <p style="color:#536070; font-size:13.5px; margin:0 0 12px;">Sin integrantes registrados.</p>
-                        <a href="{{ route('personas.grupo-familiar.create', $persona) }}"
-                           style="display:inline-flex; align-items:center; gap:6px; background:#0d92c2; color:white; text-decoration:none; padding:8px 16px; border-radius:10px; font-weight:700; font-size:13px;">
-                            <i class="bi bi-person-plus-fill"></i> Agregar el primero
-                        </a>
+
+                        @if(in_array(auth()->user()->rol_id, [2,3,5]))
+                            <button type="button" onclick="toggleEdit('datos')" class="sp-card-action">
+                                Editar
+                            </button>
+                        @endif
                     </div>
-                @endif
+
+                    <div class="sp-card-body">
+                        <form action="{{ route('personas.updateDatos', $persona->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            {{-- Correo --}}
+                            <div class="sp-data-row">
+                                <span class="sp-label"><i class="bi bi-envelope"></i> Correo</span>
+
+                                <span class="sp-val view-datos">{{ $persona->correo ?? '—' }}</span>
+
+                                <input type="email" name="correo" value="{{ $persona->correo }}"
+                                    class="edit-datos" style="display:none;">
+                            </div>
+
+                            {{-- Teléfono --}}
+                            <div class="sp-data-row">
+                                <span class="sp-label"><i class="bi bi-phone"></i> Teléfono</span>
+
+                                <span class="sp-val view-datos">{{ $persona->telefono ?? '—' }}</span>
+
+                                <input type="text" name="telefono" value="{{ $persona->telefono }}"
+                                    class="edit-datos" style="display:none;">
+                            </div>
+
+                            {{-- Fecha nacimiento --}}
+                            <div class="sp-data-row">
+                                <span class="sp-label"><i class="bi bi-calendar3"></i> Fecha de nac.</span>
+
+                                    <span class="sp-val view-datos">
+                                        {{ $persona->fecha_nacimiento ? \Carbon\Carbon::parse($persona->fecha_nacimiento)->format('d/m/Y') : '—' }}
+                                    </span>
+
+                                    <input type="date" name="fecha_nacimiento"
+                                        value="{{ $persona->fecha_nacimiento ? $persona->fecha_nacimiento->format('Y-m-d') : '' }}"
+                                        class="edit-datos" style="display:none;">
+                                </div>
+
+                                {{-- CUIL --}}
+                                <div class="sp-data-row">
+                                    <span class="sp-label"><i class="bi bi-fingerprint"></i> CUIL</span>
+
+                                    <span class="sp-val view-datos">{{ $persona->cuil ?? '—' }}</span>
+
+                                    <input type="text" name="cuil" value="{{ $persona->cuil }}"
+                                        class="edit-datos" style="display:none;">
+                                </div>
+
+                                {{-- Grupo sanguíneo --}}
+                                <div class="sp-data-row">
+                                    <span class="sp-label"><i class="bi bi-heart-pulse"></i> Grupo sanguíneo</span>
+
+                                    <span class="sp-val view-datos">{{ $persona->grupo_sanguineo ?? '—' }}</span>
+
+                                    <input type="text" name="grupo_sanguineo" value="{{ $persona->grupo_sanguineo }}"
+                                        class="edit-datos" style="display:none;">
+                                </div>
+
+                                {{-- Nivel de estudio --}}
+                                <div class="sp-data-row">
+                                    <span class="sp-label"><i class="bi bi-mortarboard"></i> Nivel de estudio</span>
+
+                                    <span class="sp-val view-datos">{{ $persona->nivelEstudio?->nombre ?? '—' }}</span>
+
+                                    <select name="nivel_estudio_id" class="edit-datos" style="display:none;">
+                                        <option value="">Seleccionar</option>
+                                        @foreach($niveles as $n)
+                                            <option value="{{ $n->id }}" @selected($persona->nivel_estudio_id == $n->id)>
+                                                {{ $n->nombre }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="sp-btn-primary edit-datos" style="display:none; margin-top:10px;">
+                                    Guardar cambios
+                                </button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            {{-- Domicilio --}}
+            <div class="col-md-6 sp-anim sp-anim-3">
+            <div class="sp-card">
+
+                <div class="sp-card-header">
+                    <div class="sp-card-header-left">
+                        <div class="sp-dot" style="background: var(--teal);"></div>
+                        <span class="sp-card-title">Domicilio</span>
+                    </div>
+
+                    @if(in_array(auth()->user()->rol_id, [2,3,5]))
+                        <button type="button" onclick="toggleEdit('domicilio')" class="sp-card-action">
+                            Editar
+                        </button>
+                    @endif
+                </div>
+
+                <div class="sp-card-body">
+                    <form action="{{ route('personas.updateDomicilio', $persona->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        {{-- Provincia --}}
+                        <div class="sp-data-row">
+                            <span class="sp-label">Provincia</span>
+
+                            <span class="sp-val view-domicilio">{{ $persona->provincia->nombre ?? '—' }}</span>
+
+                            <select name="provincia_id" class="edit-domicilio" style="display:none;">
+                                @foreach($provincias as $p)
+                                    <option value="{{ $p->id }}" @selected($persona->provincia_id == $p->id)>
+                                        {{ $p->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Localidad --}}
+                        <div class="sp-data-row">
+                            <span class="sp-label">Localidad</span>
+
+                            <span class="sp-val view-domicilio">{{ $persona->localidad->nombre ?? '—' }}</span>
+
+                            <select name="localidad_id" class="edit-domicilio" style="display:none;">
+                                @foreach($localidades as $l)
+                                    <option value="{{ $l->id }}" @selected($persona->localidad_id == $l->id)>
+                                        {{ $l->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Barrio --}}
+                        <div class="sp-data-row">
+                            <span class="sp-label">Barrio</span>
+
+                            <span class="sp-val view-domicilio">{{ $persona->domicilio->barrio->nombre ?? '—' }}</span>
+
+                            <select name="barrio_id" class="edit-domicilio" style="display:none;">
+                                @foreach($barrios as $b)
+                                    <option value="{{ $b->id }}" @selected(optional($persona->domicilio)->barrio_id == $b->id)>
+                                        {{ $b->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Calle --}}
+                        <div class="sp-data-row">
+                            <span class="sp-label">Calle</span>
+
+                            <span class="sp-val view-domicilio">
+                                {{ $persona->domicilio->calle ?? '—' }} {{ $persona->domicilio->numero ?? '' }}
+                            </span>
+
+                            <input type="text" name="calle" value="{{ $persona->domicilio->calle ?? '' }}"
+                                class="edit-domicilio" style="display:none;">
+
+                            <input type="text" name="numero" value="{{ $persona->domicilio->numero ?? '' }}"
+                                class="edit-domicilio" style="display:none; width:80px;">
+                        </div>
+
+                        {{-- Piso / Dpto --}}
+                        <div class="sp-data-row">
+                            <span class="sp-label">Piso / Dpto</span>
+
+                            <span class="sp-val view-domicilio">
+                                {{ $persona->domicilio->piso ?? '' }} {{ $persona->domicilio->dpto ?? '' }}
+                            </span>
+
+                            <input type="text" name="piso" value="{{ $persona->domicilio->piso ?? '' }}"
+                                class="edit-domicilio" style="display:none; width:60px;">
+
+                            <input type="text" name="dpto" value="{{ $persona->domicilio->dpto ?? '' }}"
+                                class="edit-domicilio" style="display:none; width:60px;">
+                        </div>
+
+                        <button type="submit" class="sp-btn-primary edit-domicilio" style="display:none; margin-top:10px;">
+                            Guardar cambios
+                        </button>
+
+                    </form>
+                </div>
             </div>
         </div>
 
-        {{-- ── Últimas atenciones (Corregido cierre de etiquetas) ── --}}
-        <div class="col-12">
-            <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden;">
-                <div style="padding:13px 20px 11px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:10px;">
-                    <div style="width:6px; height:6px; border-radius:50%; background:#17a385; flex-shrink:0;"></div>
-                    <span style="font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">Últimas atenciones</span>
-                </div>
-                <div style="padding:18px 20px;">
-                    @if($persona->atenciones && $persona->atenciones->count())
-                        @foreach($persona->atenciones as $a)
-                            <div style="padding:12px 0; border-bottom:1px solid #f0ede8; display:flex; gap:14px; align-items:flex-start;">
-                                <div style="width:8px; height:8px; border-radius:50%; background:#17a385; flex-shrink:0; margin-top:6px;"></div>
-                                <div style="flex-grow:1;">
-                                    <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                                        <span style="font-size:12px; font-weight:700; color:#17a385; text-transform:capitalize;">{{ $a->tipo ?? 'Atención' }}</span>
-                                        <span style="font-size:11.5px; color:#94a3b4;">{{ $a->fecha ? \Carbon\Carbon::parse($a->fecha)->format('d/m/Y') : '—' }}</span>
-                                    </div>
-                                    <div style="font-size:13px; color:#0f172a; margin-top:3px; line-height:1.5;">
-                                        {{ $a->descripcion ?? 'Sin detalles adicionales registrados.' }}
-                                    </div>
-                                    <div style="font-size:11.5px; color:#94a3b4; margin-top:4px;">
-                                        <i class="bi bi-person" style="margin-right: 4px;"></i>{{ $a->usuario->name ?? 'Sistema' }}
-                                    </div>
-                                </div>
+        {{-- ── ROW 2: CUD + Programas ── --}}
+        <div class="row g-3 mb-3">
+
+            {{-- CUD --}}
+            <div class="col-md-6 sp-anim sp-anim-4">
+                <div class="sp-card">
+                    <div class="sp-card-header">
+                        <div class="sp-card-header-left">
+                            <div class="sp-dot" style="background: var(--amber);"></div>
+                            <span class="sp-card-title">CUD — Discapacidad</span>
+                            
+                        </div>
+                    </div>
+                    <div class="sp-card-body">
+                        @if($persona->cud)
+                            <div class="sp-data-row">
+                                <span class="sp-label"><i class="bi bi-patch-check" style="margin-right:5px; font-size:12px;"></i>Tiene CUD</span>
+                                @if($persona->cud->tiene_cud)
+                                    <span class="sp-badge-yes">Sí</span>
+                                @else
+                                    <span class="sp-badge-no">No</span>
+                                @endif
                             </div>
-                        @endforeach
+                            @if($persona->cud->tiene_cud)
+                                <div class="sp-data-row">
+                                    <span class="sp-label"><i class="bi bi-hash" style="margin-right:5px; font-size:12px;"></i>Número</span>
+                                    <span class="sp-val">{{ $persona->cud->numero_cud ?? '—' }}</span>
+                                </div>
+                                <div class="sp-data-row">
+                                    <span class="sp-label"><i class="bi bi-calendar-check" style="margin-right:5px; font-size:12px;"></i>Emisión</span>
+                                    <span class="sp-val">{{ $persona->cud->fecha_emision ? \Carbon\Carbon::parse($persona->cud->fecha_emision)->format('d/m/Y') : '—' }}</span>
+                                </div>
+                                <div class="sp-data-row" style="border-bottom:none;">
+                                    <span class="sp-label"><i class="bi bi-calendar-x" style="margin-right:5px; font-size:12px;"></i>Vencimiento</span>
+                                    <span class="sp-val">{{ $persona->cud->fecha_vencimiento ? \Carbon\Carbon::parse($persona->cud->fecha_vencimiento)->format('d/m/Y') : '—' }}</span>
+                                </div>
+                            @endif
+                        @else
+                            <div class="sp-empty">
+                                <div class="sp-empty-icon" style="background: var(--amber-lt); color: var(--amber);">
+                                    <i class="bi bi-patch-question"></i>
+                                </div>
+                                Sin registro de CUD
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            {{-- Programas --}}
+            <div class="col-md-6 sp-anim sp-anim-4">
+                <div class="sp-card">
+                    <div class="sp-card-header">
+                        <div class="sp-card-header-left">
+                            <div class="sp-dot" style="background: var(--teal-dk);"></div>
+                            <span class="sp-card-title">Programas de asistencia</span>
+                        </div>
+                        <button onclick="document.getElementById('modalPrograma').style.display='flex'" class="sp-card-action" style="cursor:pointer; font-family: var(--sans);">
+                            + Asignar
+                        </button>
+                    </div>
+                    <div class="sp-card-body">
+                        @if($persona->personaPrograma && $persona->personaPrograma->count())
+                            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                                @foreach($persona->personaPrograma as $pp)
+                                    <span class="sp-tag-green">{{ $pp->programa->nombre }}</span>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="sp-empty">
+                                <div class="sp-empty-icon" style="background: var(--teal-lt); color: var(--teal);">
+                                    <i class="bi bi-grid-3x3-gap"></i>
+                                </div>
+                                Sin programas asignados
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── ROW 3: Beneficios ── --}}
+        <div class="row g-3 mb-3">
+            <div class="col-12 sp-anim sp-anim-4">
+                <div class="sp-card">
+                    <div class="sp-card-header">
+                        <div class="sp-card-header-left">
+                            <div class="sp-dot" style="background: var(--blue);"></div>
+                            <span class="sp-card-title">Beneficios</span>
+                        </div>
+                    </div>
+                    <div class="sp-card-body">
+                        @if($persona->personaBeneficio && $persona->personaBeneficio->count())
+                            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                                @foreach($persona->personaBeneficio as $pb)
+                                    <span class="sp-tag-blue">{{ $pb->beneficio->nombre }}</span>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="sp-empty" style="padding: 20px;">
+                                Sin beneficios asignados
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── ROW 4: Grupo familiar ── --}}
+        <div class="row g-3 mb-3">
+            <div class="col-12 sp-anim sp-anim-5">
+                <div class="sp-card">
+                    <div class="sp-card-header">
+                        <div class="sp-card-header-left">
+                            <div class="sp-dot" style="background: var(--blue);"></div>
+                            <span class="sp-card-title">
+                                Grupo familiar
+                                @if($persona->grupoFamiliar && $persona->grupoFamiliar->count())
+                                    <span class="sp-count">{{ $persona->grupoFamiliar->count() }}</span>
+                                @endif
+                            </span>
+                        </div>
+                        <a href="{{ route('personas.grupo-familiar.create', $persona) }}"
+                           class="sp-card-action">
+                            + Agregar integrante
+                        </a>
+                    </div>
+
+                    @if($persona->grupoFamiliar && $persona->grupoFamiliar->count())
+                        <div style="overflow-x:auto;">
+                            <table class="sp-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Documento</th>
+                                        <th>Nacimiento</th>
+                                        <th>Cobertura</th>
+                                        <th>Situación</th>
+                                        <th>Ingresos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($persona->grupoFamiliar as $m)
+                                        <tr>
+                                            <td>
+                                                <div style="font-weight:700; color: var(--ink);">{{ $m->nombre }}</div>
+                                                <div style="font-size:11.5px; color: var(--muted); margin-top:2px;">{{ $m->relacion_titular ?? '—' }}</div>
+                                            </td>
+                                            <td style="color: var(--slate);">
+                                                {{ $m->tipo_documento?->nombre?->nombre ?? '' }}
+                                                {{ $m->numero_documento ?? '—' }}
+                                            </td>
+                                            <td style="color: var(--slate);">
+                                                {{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}
+                                            </td>
+                                            <td>
+                                                @if($m->cobertura?->nombre)
+                                                    <span class="sp-tag-blue" style="font-size:11.5px; padding:2px 9px;">{{ $m->cobertura->nombre }}</span>
+                                                @else
+                                                    <span style="color: var(--muted);">—</span>
+                                                @endif
+                                            </td>
+                                            <td style="color: var(--slate);">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
+                                            <td style="font-weight:700; color: var(--ink);">
+                                                {{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     @else
-                        <div style="text-align:center; padding:24px 0; color:#94a3b4; font-size:13.5px;">Sin atenciones registradas</div>
+                        <div class="sp-empty">
+                            <div class="sp-empty-icon" style="background: var(--blue-lt); color: var(--blue);">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <p style="margin: 0 0 14px;">Sin integrantes registrados.</p>
+                            <a href="{{ route('personas.grupo-familiar.create', $persona) }}" class="sp-btn-primary" style="display:inline-flex; font-size:13px;">
+                                <i class="bi bi-person-plus-fill"></i> Agregar el primero
+                            </a>
+                        </div>
                     @endif
                 </div>
             </div>
         </div>
 
-    </div> {{-- Cierre Row --}}
-  </div> {{-- Cierre Page --}}
+        {{-- ── ROW 5: Últimas atenciones ── --}}
+        <div class="row g-3">
+            <div class="col-12 sp-anim sp-anim-6">
+                <div class="sp-card">
+                    <div class="sp-card-header">
+                        <div class="sp-card-header-left">
+                            <div class="sp-dot" style="background: var(--teal);"></div>
+                            <span class="sp-card-title">Últimas atenciones</span>
+                        </div>
+                    </div>
+                    <div class="sp-card-body">
+                        @if($persona->atenciones && $persona->atenciones->count())
+                            @foreach($persona->atenciones as $a)
+                                <div class="sp-att-row">
+                                    <div class="sp-att-dot"></div>
+                                    <div style="flex-grow:1;">
+                                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap;">
+                                            <span style="font-size:12.5px; font-weight:800; color: var(--teal); text-transform:capitalize;">
+                                                {{ $a->tipo ?? 'Atención' }}
+                                            </span>
+                                            <span style="font-size:11.5px; color: var(--muted); white-space:nowrap;">
+                                                <i class="bi bi-calendar3" style="margin-right:4px;"></i>
+                                                {{ $a->fecha ? \Carbon\Carbon::parse($a->fecha)->format('d/m/Y') : '—' }}
+                                            </span>
+                                        </div>
+                                        <div style="font-size:13.5px; color: var(--ink); margin-top:5px; line-height:1.6;">
+                                            {{ $a->descripcion ?? 'Sin detalles adicionales registrados.' }}
+                                        </div>
+                                        <div style="font-size:11.5px; color: var(--muted); margin-top:5px;">
+                                            <i class="bi bi-person" style="margin-right:4px;"></i>{{ $a->usuario->name ?? 'Sistema' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="sp-empty">
+                                <div class="sp-empty-icon" style="background: var(--teal-lt); color: var(--teal);">
+                                    <i class="bi bi-clipboard2-pulse"></i>
+                                </div>
+                                Sin atenciones registradas
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  {{-- ── Modal de Programas (Recreado y funcionando) ── --}}
-  <div id="modalPrograma" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; align-items:center; justify-content:center; backdrop-filter:blur(2px);">
-      <div style="background:white; border-radius:16px; width:90%; max-width:450px; box-shadow:0 10px 25px rgba(0,0,0,0.15); overflow:hidden; animation:fadeUp 0.3s ease;">
-          <div style="padding:16px 24px; border-bottom:1px solid #e0ddd6; display:flex; justify-content:space-between; align-items:center; background:#f8fafe;">
-              <h3 style="margin:0; font-size:16px; font-weight:800; color:#0f172a; font-family:'Plus Jakarta Sans',sans-serif;">Asignar Programa</h3>
-              <button type="button" onclick="document.getElementById('modalPrograma').style.display='none'" style="background:none; border:none; font-size:24px; color:#94a3b4; cursor:pointer; line-height:1;">&times;</button>
-          </div>
-          <div style="padding:24px;">
-              {{-- IMPORTANTE: Reemplaza esta etiqueta form con la ruta correcta hacia tu controlador --}}
-              <form action="{{ route('persona-programa.store') }}" method="POST">                  @csrf
-                  <p style="font-size:13.5px; color:#536070; margin-bottom:18px;">
-                      Seleccione el programa de asistencia para asignar a <strong>{{ $persona->nombre }} {{ $persona->apellido }}</strong>.
-                  </p>
-                  
-                  <div style="margin-bottom: 20px;">
-                      <label style="display:block; font-size:12.5px; font-weight:600; color:#536070; margin-bottom:8px;">Programa disponible</label>
-                      <select name="programa_id" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #c8c4bb; font-size:13.5px; color:#0f172a; font-family:inherit;" required>
-                          <option value="" disabled selected>Seleccionar programa...</option>
-                          @foreach($programas as $p)
-                              <option value="{{ $p->id }}">{{ $p->nombre }}</option>
-                          @endforeach
-                      </select>
-                  </div>
-                  <input type="hidden" name="persona_id" value="{{ $persona->id }}">
+    </div>{{-- /container --}}
+</div>{{-- /sp-page --}}
 
-                  <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:28px;">
-                      <button type="button" onclick="document.getElementById('modalPrograma').style.display='none'" class="btn btn-ghost" style="height:40px;">Cancelar</button>
-                      <button type="submit" class="btn btn-primary" style="height:40px; border-radius:10px;">Asignar programa</button>
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
+{{-- ── MODAL: Asignar Programa ── --}}
+<div id="modalPrograma"
+     style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.45); z-index:1050; align-items:center; justify-content:center; backdrop-filter:blur(3px);">
+    <div style="background:white; border-radius:20px; width:90%; max-width:460px; box-shadow:0 20px 60px rgba(0,0,0,0.18); overflow:hidden; animation:fadeUp .28s ease;">
 
-</body>
-</html>
+        {{-- Modal header --}}
+        <div style="padding:18px 24px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, var(--blue-lt) 0%, var(--teal-lt) 100%);">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--blue),var(--teal)); display:flex; align-items:center; justify-content:center; color:white; font-size:16px;">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                </div>
+                <h3 style="margin:0; font-size:15px; font-weight:800; color: var(--ink); font-family: var(--sans);">Asignar Programa</h3>
+            </div>
+            <button type="button"
+                    onclick="document.getElementById('modalPrograma').style.display='none'"
+                    style="background:white; border:1px solid var(--border); border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color: var(--muted); cursor:pointer; font-size:18px; line-height:1; transition:background .15s;"
+                    onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='white'">&times;</button>
+        </div>
+
+        {{-- Modal body --}}
+        @php
+            $edad = \Carbon\Carbon::parse($persona->fecha_nacimiento)->age;
+        @endphp
+        <div style="padding:24px;">
+            persona-programa.store') }}" method="POST">
+                @csrf
+                <p style="font-size:13.5px; color: var(--slate); margin-bottom:20px; line-height:1.6;">
+                    Seleccioná el programa de asistencia para asignar a
+                    <strong style="color: var(--ink);">{{ $persona->nombre }} {{ $persona->apellido }}</strong>.
+                </p>
+
+                <div style="margin-bottom:20px;">
+                    <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:8px; text-transform:uppercase; letter-spacing:.06em;">
+                        Programa disponible
+                    </label>
+                    <select name="programa_id"
+                            style="width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border); font-size:13.5px; color: var(--ink); font-family: var(--sans); background:white; transition:border-color .15s; outline:none;"
+                            onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'"
+                            required>
+                        <option value="" disabled selected>Seleccionar programa...</option>
+                        @foreach($programas as $p)
+
+                            @if($p->nombre == 'Guarderia' && $edad <= 5)
+                                <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                            @endif
+
+                            @if($p->nombre == 'UDI' && $edad >= 6 && $edad <= 11)
+                                <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                            @endif
+
+                            @if($p->nombre == 'Envion' && $edad >= 12)
+                                <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                            @endif
+
+                            @if($p->nombre == 'Multiespacio' && $edad >= 12)
+                                <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                            @endif
+
+                        @endforeach
+                    </select>
+                    <div style="margin-bottom:20px;">
+                        <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:8px; text-transform:uppercase;">
+                            Rol en el programa
+                        </label>
+
+                        <select name="rol" required
+                            style="width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border);">
+
+                            <option value="destinatario">Destinatario</option>
+
+                            @if($edad >= 18 && $edad <= 25)
+                                <option value="tutor">Tutor</option>
+                            @endif
+
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" name="persona_id" value="{{ $persona->id }}">
+
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
+                    <button type="button"
+                            onclick="document.getElementById('modalPrograma').style.display='none'"
+                            class="sp-btn-ghost">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="sp-btn-primary">
+                        <i class="bi bi-check-lg"></i> Asignar programa
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const programaSelect = document.querySelector('select[name="programa_id"]');
+    const rolSelect = document.querySelector('select[name="rol"]');
+
+    programaSelect.addEventListener('change', function () {
+        const texto = this.options[this.selectedIndex].text;
+
+        // Si no es Envion → ocultar tutor
+        if (texto !== 'Envion') {
+            [...rolSelect.options].forEach(o => {
+                if (o.value === 'tutor') o.style.display = 'none';
+            });
+            rolSelect.value = 'destinatario';
+        } else {
+            [...rolSelect.options].forEach(o => o.style.display = 'block');
+        }
+    });
+
+});
+</script>
+
+<script>
+function toggleEdit(section) {
+    const views = document.querySelectorAll('.view-' + section);
+    const edits = document.querySelectorAll('.edit-' + section);
+
+    const isEditing = edits[0].style.display === 'inline-block';
+
+    if (isEditing) {
+        views.forEach(e => e.style.display = 'inline');
+        edits.forEach(e => e.style.display = 'none');
+    } else {
+        views.forEach(e => e.style.display = 'none');
+        edits.forEach(e => e.style.display = 'inline-block');
+    }
+}
+</script>
+
+@endsection

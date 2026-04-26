@@ -13,6 +13,12 @@ Route::put('/personas/{id}', [PersonaController::class, 'update'])
 Route::get('/personas', [PersonaController::class, 'index'])
     ->name('personas.index');
 
+Route::put('/personas/{id}/datos', [PersonaController::class, 'updateDatos'])
+    ->name('personas.updateDatos');
+
+Route::put('/personas/{id}/domicilio', [PersonaController::class, 'updateDomicilio'])
+    ->name('personas.updateDomicilio');
+
 // Rutas para asignar programas a personas
 Route::post('/persona-programa', [PersonaProgramaController::class, 'store'])
     ->name('persona-programa.store');

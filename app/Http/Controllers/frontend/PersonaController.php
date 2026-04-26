@@ -125,6 +125,58 @@ class PersonaController extends Controller
             ->with('abrirProgramaModal', true);
     }
 
+    public function asignarPrograma(Request $request, $personaId)
+    {
+        $persona = Persona::findOrFail($personaId);
+        $edad = $persona->edad;
+
+        $programa = ProgramasAsistencia::findOrFail($request->programa_id);
+        $rol = $request->rol; // destinatario o tutor
+
+        switch ($programa->nombre) {
+
+            case 'Guarderia':
+                if ($edad < 0 || $edad > 5) {
+                    return back()->withErrors('Solo 0 a 5 años en guardería');
+                }
+            break;
+
+            case 'UDI':
+                if ($edad < 6 || $edad > 11) {
+                    return back()->withErrors('Solo 6 a 11 años en UDI');
+                }
+            break;
+
+            case 'Envion':
+                if ($rol == 'destinatario') {
+                    if ($edad < 12 || $edad > 21) {
+                        return back()->withErrors('Envión destinatario: 12 a 21 años');
+                    }
+                }
+
+                if ($rol == 'tutor') {
+                    if ($edad < 18 || $edad > 25) {
+                        return back()->withErrors('Tutor: 18 a 25 años');
+                    }
+                }
+            break;
+
+            case 'Multiespacio':
+                if ($edad < 12) {
+                    return back()->withErrors('Multiespacio: desde 12 años');
+                }
+            break;
+        }
+
+        // Guardar
+        $persona->programas()->attach($programa->id, [
+            'rol' => $rol,
+            'fecha_ingreso' => now()
+        ]);
+
+        return back()->with('success', 'Programa asignado correctamente');
+    }
+
     public function show($id)
     {
         $persona = Persona::with([
@@ -137,9 +189,21 @@ class PersonaController extends Controller
             'sedeOrigen'
         ])->findOrFail($id);
 
-        $programas = ProgramasAsistencia::orderBy('nombre')->get();
+        $programas   = ProgramasAsistencia::orderBy('nombre')->get();
+        $niveles     = NivelesEstudio::orderBy('nombre')->get();
+        $provincias  = Provincia::orderBy('nombre')->get();
+        $localidades = Localidad::orderBy('nombre')->get();
+        $barrios     = Barrio::orderBy('nombre')->get();
 
-        return view('frontend.persona.show', compact('persona', 'programas'));
+
+        return view('frontend.persona.show', [
+            'persona'     => $persona,
+            'programas'   => $programas,
+            'niveles'     => $niveles,
+            'provincias'  => $provincias,
+            'localidades' => $localidades,
+            'barrios'     => $barrios,
+        ]);
     }
 
     public function edit($id)
@@ -159,21 +223,55 @@ class PersonaController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function updateDatos(Request $request, $id)
     {
+        if (!in_array(auth()->user()->rol_id, [2,3,5])) {
+            abort(403, 'No tenés permisos para editar esta información');
+        }
+
         $persona = Persona::findOrFail($id);
 
         $request->validate([
-            'nombre'            => 'required|string|max:255',
-            'apellido'          => 'required|string|max:255',
-            'dni'               => 'required',
-            'cuil'              => 'nullable|string|max:20',
-            'estado_civil_id'   => 'nullable|exists:estado_civil,id',
-            'provincia_id'      => 'nullable|exists:provincia,id',
-            'localidad_id'      => 'nullable|exists:localidad,id',
+            'correo'           => 'nullable|email|max:255',
+            'telefono'         => 'nullable|string|max:50',
+            'fecha_nacimiento' => 'nullable|date',
+            'cuil'             => 'nullable|string|max:20',
+            'grupo_sanguineo'  => 'nullable|string|max:10',
+            'nivel_estudio_id' => 'nullable|exists:niveles_estudio,id',
+        ]);
+
+        $persona->update([
+            'correo'              => $request->correo,
+            'telefono'            => $request->telefono,
+            'fecha_nacimiento'    => $request->fecha_nacimiento,
+            'cuil'                => $request->cuil,
+            'grupo_sanguineo'     => $request->grupo_sanguineo,
+            'nivel_estudio_id'    => $request->nivel_estudio_id,
+        ]);
+
+        return back()->with('success', 'Datos personales actualizados correctamente');
+    }
+
+    public function updateDomicilio(Request $request, $id)
+    {
+        if (!in_array(auth()->user()->rol_id, [2,3,5])) {
+            abort(403, 'No tenés permisos para editar esta información');
+        }
+
+        $persona = Persona::findOrFail($id);
+
+        $request->validate([
+            'provincia_id' => 'nullable|exists:provincia,id',
+            'localidad_id' => 'nullable|exists:localidad,id',
+            'barrio_id'    => 'nullable|exists:barrio,id',
+            'calle'        => 'nullable|string|max:255',
+            'numero'       => 'nullable|string|max:20',
+            'piso'         => 'nullable|string|max:10',
+            'dpto'         => 'nullable|string|max:10',
         ]);
 
         if ($request->filled(['calle', 'numero']) || $request->filled('barrio_id')) {
+
             $datosDomicilio = [
                 'barrio_id' => $request->barrio_id,
                 'calle'     => $request->calle,
@@ -187,31 +285,15 @@ class PersonaController extends Controller
             } else {
                 $domicilio = Domicilio::create($datosDomicilio);
                 $persona->domicilio_id = $domicilio->id;
+                $persona->save();
             }
         }
 
         $persona->update([
-            'nombre'              => $request->nombre,
-            'apellido'            => $request->apellido,
-            'correo'              => $request->correo,
-            'fecha_nacimiento'    => $request->fecha_nacimiento,
-            'documento_id'        => $request->documento_id,
-            'dni'                 => $request->dni,
-            'cuil'                => $request->cuil,
-            'sexo_id'             => $request->sexo_id,
-            'domicilio_id'        => $persona->domicilio_id, 
-            'provincia_id'        => $request->provincia_id,
-            'localidad_id'        => $request->localidad_id,
-            'telefono'            => $request->telefono,
-            'nivel_estudio_id'    => $request->nivel_estudio_id,
-            'estado_civil_id'     => $request->estado_civil_id,
-            'trabaja'             => $request->trabaja ? 1 : 0,
-            'grupo_sanguineo'     => $request->grupo_sanguineo,
-            'sede_origen_id'      => $request->sede_origen_id,
+            'provincia_id' => $request->provincia_id,
+            'localidad_id' => $request->localidad_id,
         ]);
 
-        return redirect()
-            ->route('personas.index')
-            ->with('success', 'Persona actualizada correctamente');
+        return back()->with('success', 'Domicilio actualizado correctamente');
     }
 }

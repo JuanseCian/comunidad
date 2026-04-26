@@ -20,6 +20,7 @@ class PersonaProgramaController extends Controller
         PersonaPrograma::create([
             'persona_id'   => $request->persona_id,
             'programa_id'  => $request->programa_id,
+            'rol'           => $request->rol,
             'fecha_inicio' => $request->fecha_inicio,
             'observaciones'=> $request->observaciones,
         ]);

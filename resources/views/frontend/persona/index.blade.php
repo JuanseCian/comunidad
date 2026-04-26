@@ -228,13 +228,6 @@
                            onmouseout="this.style.background='#e6f5fb'; this.style.color='#0879a8'; this.style.borderColor='#b3e0f5'">
                             <i class="bi bi-eye-fill" style="font-size:13px;"></i>
                         </a>
-                        <a href="{{ route('personas.edit', $p) }}"
-                           style="width:32px; height:32px; background:#e6f5fb; border:1px solid #b3e0f5; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#0879a8; text-decoration:none; transition:background .15s;"
-                           title="Editar"
-                           onmouseover="this.style.background='#0d92c2'; this.style.color='white'; this.style.borderColor='#0d92c2'"
-                           onmouseout="this.style.background='#e6f5fb'; this.style.color='#0879a8'; this.style.borderColor='#b3e0f5'">
-                            <i class="bi bi-pencil-fill" style="font-size:13px;"></i>
-                        </a>
                         <a href="{{ route('personas.grupo-familiar.create', $p) }}"
                            style="width:32px; height:32px; background:#e8f9f5; border:1px solid #9fe1cb; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#0e8a70; text-decoration:none; transition:background .15s;"
                            title="Agregar familiar"

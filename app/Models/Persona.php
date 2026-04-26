@@ -106,4 +106,9 @@ class Persona extends Model
     {
         return $this->hasMany(Atenciones::class, 'persona_id');
     }
+
+    public function getEdadAttribute()
+    {
+        return \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
     }
+}
