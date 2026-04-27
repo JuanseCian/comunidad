@@ -29,7 +29,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('frontend.home', compact('alertas'));
+        return view('frontend.home.home', compact('alertas'));
     }
 
 }
