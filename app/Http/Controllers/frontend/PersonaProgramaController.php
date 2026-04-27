@@ -14,7 +14,9 @@ class PersonaProgramaController extends Controller
             'persona_id'   => 'required|exists:personas,id',
             'programa_id'  => 'required|exists:programas_asistencia,id',
             'fecha_inicio' => 'nullable|date',
-            'observaciones'=> 'nullable|string'
+            'observaciones'=> 'nullable|string',
+            'fecha_inicio' => 'nullable|date',
+            'fecha_fin'    => 'nullable|date|after_or_equal:fecha_inicio',
         ]);
 
         PersonaPrograma::create([
@@ -23,8 +25,27 @@ class PersonaProgramaController extends Controller
             'rol'           => $request->rol,
             'fecha_inicio' => $request->fecha_inicio,
             'observaciones'=> $request->observaciones,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin'    => $request->fecha_fin,
         ]);
 
         return back()->with('success', 'Programa asignado correctamente');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $pp = PersonaPrograma::findOrFail($id);
+
+        $pp->update([
+            'rol' => $request->rol,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+        ]);
+
+        if ($request->fecha_fin && $request->fecha_fin < $request->fecha_inicio) {
+            return back()->with('error', 'La fecha fin no puede ser menor a inicio');
+        }
+
+        return back()->with('success', 'Programa actualizado');
     }
 }

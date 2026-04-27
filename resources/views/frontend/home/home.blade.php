@@ -4,6 +4,13 @@
 
 @section('content')
 
+@if(session('success'))
+    <div class="sp-alert">
+        <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+    </div>
+@endif
+
+
 {{-- ── HERO ── --}}
 <section style="background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2.5rem 0 2rem;">
     <div class="container">
@@ -45,6 +52,7 @@
         </div>
     </div>
 </section>
+
 
 {{-- ── CONTENIDO PRINCIPAL ── --}}
 <div class="container py-4">

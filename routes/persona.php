@@ -23,4 +23,9 @@ Route::put('/personas/{id}/domicilio', [PersonaController::class, 'updateDomicil
 Route::post('/persona-programa', [PersonaProgramaController::class, 'store'])
     ->name('persona-programa.store');
     
-    
+Route::put('/persona-programa/{id}', [PersonaProgramaController::class, 'update'])
+    ->name('persona-programa.update');
+
+
+Route::post('/personas/{id}/cambiar-programa', [PersonaController::class, 'cambiarPrograma'])
+    ->name('personas.cambiarPrograma');

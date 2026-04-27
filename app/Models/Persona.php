@@ -111,4 +111,86 @@ class Persona extends Model
     {
         return \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
     }
+
+    public function alertaPrograma()
+    {
+        if (!$this->fecha_nacimiento) return null;
+
+        $edad = $this->edad;
+
+        foreach ($this->personaPrograma as $pp) {
+
+            if (!$pp->programa) continue;
+
+            $nombre = strtolower($pp->programa->nombre);
+            $rol    = $pp->rol;
+
+            // 🔴 Guardería
+            if (str_contains($nombre, 'guarderia') && $edad >= 6) {
+                return [
+                    'mensaje' => 'Debe egresar de Guardería.',
+                    'siguiente' => 'UDI'
+                ];
+            }
+
+            if (str_contains($nombre, 'udi') && $edad >= 12) {
+                return [
+                    'mensaje' => 'Debe egresar de UDI.',
+                    'siguiente' => 'Envion'
+                ];
+            }
+
+            if (str_contains($nombre, 'envion') && $rol == 'destinatario' && $edad >= 21) {
+                return [
+                    'mensaje' => 'Finaliza Envión por edad.',
+                    'siguiente' => null
+                ];
+            }
+
+            if (str_contains($nombre, 'envion') && $rol == 'tutor' && $edad >= 25) {
+                return [
+                    'mensaje' => 'Finaliza tutor de Envión por edad.',
+                    'siguiente' => null
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    public function actualizarProgramasPorEdad()
+    {
+        if (!$this->fecha_nacimiento) return;
+
+        $edad = $this->edad;
+
+        foreach ($this->personaPrograma as $pp) {
+
+            if (!$pp->programa) continue;
+            if ($pp->fecha_fin) continue;
+
+            $nombre = strtolower($pp->programa->nombre);
+            $rol    = $pp->rol;
+
+            // 🎂 calcular fecha exacta de egreso
+            $cumple = match (true) {
+                str_contains($nombre, 'guarderia') => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(6),
+                str_contains($nombre, 'udi')       => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(12),
+                str_contains($nombre, 'envion') && $rol == 'destinatario'
+                                                    => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(21),
+                str_contains($nombre, 'envion') && $rol == 'tutor'
+                                                    => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(25),
+                default => null
+            };
+
+            if (!$cumple) continue;
+
+            // 🚨 si ya pasó la edad → cerrar
+            if ($edad >= $cumple->age) {
+                $pp->update([
+                    'fecha_fin' => $cumple
+                ]);
+            }
+        }
+    }
 }

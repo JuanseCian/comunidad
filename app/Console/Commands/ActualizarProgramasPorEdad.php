@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Persona;
 
 class ActualizarProgramasPorEdad extends Command
 {
@@ -25,26 +26,10 @@ class ActualizarProgramasPorEdad extends Command
      */
     public function handle()
     {
-        $personas = Persona::all();
+        $personas = Persona::with('personaPrograma.programa')->get();
 
         foreach ($personas as $persona) {
-            $edad = $persona->edad;
-
-            foreach ($persona->programas as $programa) {
-
-                if ($programa->nombre == 'Guarderia' && $edad >= 6) {
-                    $persona->programas()->updateExistingPivot($programa->id, [
-                        'fecha_egreso' => now()
-                    ]);
-                }
-
-                if ($programa->nombre == 'UDI' && $edad >= 12) {
-                    $persona->programas()->updateExistingPivot($programa->id, [
-                        'fecha_egreso' => now()
-                    ]);
-                }
-
-            }
+            $persona->evaluarProgramasPorEdad();
         }
     }
 }

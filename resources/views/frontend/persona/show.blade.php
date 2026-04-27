@@ -6,6 +6,21 @@
 
 @section('content')
 
+@php
+    $alerta = $persona->alertaPrograma();
+@endphp
+
+@if($alerta)
+    <div class="sp-alert" style="background:#fff7ed; border-color:#fed7aa; color:#9a3412;">
+        ⚠️ {{ $alerta['mensaje'] }}
+
+        @if($alerta['siguiente'])
+            <br>
+            👉 Programa sugerido: <strong>{{ $alerta['siguiente'] }}</strong>
+        @endif
+    </div>
+@endif
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -560,19 +575,77 @@
                     </div>
                     <div class="sp-card-body">
                         @if($persona->personaPrograma && $persona->personaPrograma->count())
-                            <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                                @foreach($persona->personaPrograma as $pp)
-                                    <span class="sp-tag-green">{{ $pp->programa->nombre }}</span>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="sp-empty">
-                                <div class="sp-empty-icon" style="background: var(--teal-lt); color: var(--teal);">
-                                    <i class="bi bi-grid-3x3-gap"></i>
+
+                            @foreach($persona->personaPrograma as $pp)
+
+                                <div style="border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden;">
+
+                                    {{-- HEADER (lo visible siempre) --}}
+                                    <div onclick="togglePrograma({{ $pp->id }})"
+                                        style="padding:12px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; background:var(--bg);">
+
+                                        <span style="font-weight:700;">
+                                            {{ $pp->programa->nombre }}
+                                        </span>
+
+                                        @if($pp->fecha_inicio && !$pp->fecha_fin)
+                                            <span style="background:#e8f9f5; color:#0e8a70; border:1px solid #9fe1cb; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700;">
+                                                Activo
+                                            </span>
+                                        @elseif($pp->fecha_fin)
+                                            <span style="background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700;">
+                                                Finalizado
+                                            </span>
+                                        @endif
+
+                                        <i class="bi bi-chevron-down" id="icon-{{ $pp->id }}"></i>
+                                    </div>
+
+                                    {{-- CONTENIDO OCULTO --}}
+                                    <div id="prog-{{ $pp->id }}" style="display:none; padding:14px;">
+
+                                        <form method="POST" action="{{ route('persona-programa.update', $pp->id) }}">
+                                            @csrf
+                                            @method('PUT')
+
+                                            {{-- Rol --}}
+                                            <div style="margin-bottom:10px;">
+                                                <label>Rol</label>
+                                                <select name="rol" class="form-control">
+                                                    <option value="destinatario" @selected($pp->rol == 'destinatario')>Destinatario</option>
+                                                    <option value="tutor" @selected($pp->rol == 'tutor')>Tutor</option>
+                                                </select>
+                                            </div>
+
+                                        {{-- Fechas --}}
+                                        <div style="margin-bottom:10px;">
+                                            <label>Fecha inicio</label>
+                                            <input type="date" name="fecha_inicio"
+                                                value="{{ $pp->fecha_inicio ? \Carbon\Carbon::parse($pp->fecha_inicio)->format('Y-m-d') : '' }}"
+                                                class="form-control">
+                                        </div>
+
+                                        <div style="margin-bottom:10px;">
+                                            <label>Fecha fin</label>
+                                            <input type="date" name="fecha_fin"
+                                                value="{{ $pp->fecha_fin ? \Carbon\Carbon::parse($pp->fecha_fin)->format('Y-m-d') : '' }}"
+                                                class="form-control">
+                                                
+                                        </div>
+
+                                        <button class="sp-btn-primary">Guardar</button>
+                                    </form>
+
                                 </div>
-                                Sin programas asignados
                             </div>
-                        @endif
+
+                        @endforeach
+
+                    @else
+                        <div class="sp-empty">
+                            Sin programas asignados
+                        </div>
+                    @endif
                     </div>
                 </div>
             </div>
@@ -757,13 +830,13 @@
             $edad = \Carbon\Carbon::parse($persona->fecha_nacimiento)->age;
         @endphp
         <div style="padding:24px;">
-            persona-programa.store') }}" method="POST">
+            <form action="{{ route('persona-programa.store') }}" method="POST">
                 @csrf
                 <p style="font-size:13.5px; color: var(--slate); margin-bottom:20px; line-height:1.6;">
                     Seleccioná el programa de asistencia para asignar a
                     <strong style="color: var(--ink);">{{ $persona->nombre }} {{ $persona->apellido }}</strong>.
                 </p>
-
+    
                 <div style="margin-bottom:20px;">
                     <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:8px; text-transform:uppercase; letter-spacing:.06em;">
                         Programa disponible
@@ -808,6 +881,24 @@
                             @endif
 
                         </select>
+                        {{-- Fecha inicio --}}
+                        <div style="margin-bottom:12px;">
+                            <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:6px;">
+                                Fecha inicio
+                            </label>
+                            <input type="date" name="fecha_inicio"
+                                value="{{ now()->format('Y-m-d') }}"
+                                style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border);">
+                        </div>
+
+                        {{-- Fecha fin --}}
+                        <div style="margin-bottom:12px;">
+                            <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:6px;">
+                                Fecha fin
+                            </label>
+                            <input type="date" name="fecha_fin"
+                                style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border);">
+                        </div>
                     </div>
                 </div>
 
@@ -825,6 +916,37 @@
                 </div>
             </form>
         </div>
+    </div>
+</div>
+
+<div id="modalEditarPrograma"
+     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1050; align-items:center; justify-content:center;">
+
+    <div style="background:white; padding:20px; border-radius:12px; width:300px;">
+
+        <h4>Editar fechas</h4>
+
+        <form id="formEditarPrograma" method="POST">
+            @csrf
+            @method('PUT')
+
+            <input type="hidden" name="id" id="edit_id">
+
+            <div style="margin-bottom:10px;">
+                <label>Fecha inicio</label>
+                <input type="date" name="fecha_inicio" id="edit_inicio" class="form-control">
+            </div>
+
+            <div style="margin-bottom:10px;">
+                <label>Fecha fin</label>
+                <input type="date" name="fecha_fin" id="edit_fin" class="form-control">
+            </div>
+
+            <button type="submit" class="sp-btn-primary">Guardar</button>
+            <button type="button"
+                    onclick="cerrarModalEditar()"
+                    class="sp-btn-ghost">Cancelar</button>
+        </form>
     </div>
 </div>
 
@@ -868,4 +990,36 @@ function toggleEdit(section) {
 }
 </script>
 
+<script>
+function togglePrograma(id) {
+    const div = document.getElementById('prog-' + id);
+    const icon = document.getElementById('icon-' + id);
+
+    if (div.style.display === 'none') {
+        div.style.display = 'block';
+        icon.classList.remove('bi-chevron-down');
+        icon.classList.add('bi-chevron-up');
+    } else {
+        div.style.display = 'none';
+        icon.classList.remove('bi-chevron-up');
+        icon.classList.add('bi-chevron-down');
+    }
+}
+</script>
+
+<script>
+function abrirModalEditar(id, inicio, fin) {
+    document.getElementById('modalEditarPrograma').style.display = 'flex';
+
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_inicio').value = inicio;
+    document.getElementById('edit_fin').value = fin;
+
+    document.getElementById('formEditarPrograma').action = '/persona-programa/' + id;
+}
+
+function cerrarModalEditar() {
+    document.getElementById('modalEditarPrograma').style.display = 'none';
+}
+</script>
 @endsection

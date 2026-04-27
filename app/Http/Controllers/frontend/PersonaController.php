@@ -71,7 +71,7 @@ class PersonaController extends Controller
         ]);
     }
 
-  public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'nombre'            => 'required|string|max:255',
@@ -171,7 +171,7 @@ class PersonaController extends Controller
         // Guardar
         $persona->programas()->attach($programa->id, [
             'rol' => $rol,
-            'fecha_ingreso' => now()
+            'fecha_inicio' => now()
         ]);
 
         return back()->with('success', 'Programa asignado correctamente');
@@ -195,6 +195,12 @@ class PersonaController extends Controller
         $localidades = Localidad::orderBy('nombre')->get();
         $barrios     = Barrio::orderBy('nombre')->get();
 
+        $persona->actualizarProgramasPorEdad();
+
+        
+        $persona->load('personaPrograma.programa');
+
+        $persona->actualizarProgramasPorEdad();
 
         return view('frontend.persona.show', [
             'persona'     => $persona,
@@ -204,6 +210,77 @@ class PersonaController extends Controller
             'localidades' => $localidades,
             'barrios'     => $barrios,
         ]);
+    }
+
+    public function cambiarPrograma(Request $request, $id)
+    {
+        $persona = Persona::findOrFail($id);
+        
+        $actual = $persona->personaPrograma()
+            ->whereNull('fecha_fin')
+            ->latest()
+            ->first();
+
+        if ($actual) {
+            $actual->update([
+                'fecha_fin' => now()
+            ]);
+        }
+
+        $programaActual = $persona->programas()
+            ->wherePivotNull('fecha_fin')
+            ->first();
+
+        if ($programaActual) {
+            $persona->programas()->updateExistingPivot($programaActual->id, [
+                'fecha_fin' => now()
+            ]);
+        }
+
+        $nuevoPrograma = ProgramasAsistencia::where('nombre', $request->programa_nombre)->first();
+
+        if ($nuevoPrograma) {
+            $persona->programas()->attach($nuevoPrograma->id, [
+                'rol' => 'destinatario',
+                'fecha_ingreso' => now()
+            ]);
+        }
+
+        return back()->with('success', 'Programa actualizado correctamente');
+    }
+    
+    public function evaluarProgramasPorEdad()
+    {
+        if (!$this->fecha_nacimiento) return;
+
+        $edad = $this->edad;
+
+        foreach ($this->personaPrograma as $pp) {
+
+            if (!$pp->programa) continue;
+
+            // SOLO activos
+            if ($pp->fecha_fin) continue;
+
+            $nombre = strtolower($pp->programa->nombre);
+            $rol    = $pp->rol;
+
+            if (str_contains($nombre, 'guarderia') && $edad >= 6) {
+                $pp->update(['fecha_fin' => now()]);
+            }
+
+            if (str_contains($nombre, 'udi') && $edad >= 12) {
+                $pp->update(['fecha_fin' => now()]);
+            }
+
+            if (str_contains($nombre, 'envion') && $rol == 'destinatario' && $edad >= 21) {
+                $pp->update(['fecha_fin' => now()]);
+            }
+
+            if (str_contains($nombre, 'envion') && $rol == 'tutor' && $edad >= 25) {
+                $pp->update(['fecha_fin' => now()]);
+            }
+        }
     }
 
     public function edit($id)
