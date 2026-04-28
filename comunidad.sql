@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Apr 26, 2026 at 11:20 PM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- Servidor: localhost:3306
+-- Tiempo de generación: 28-04-2026 a las 18:03:31
+-- Versión del servidor: 8.0.30
+-- Versión de PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `comunidad`
+-- Base de datos: `comunidad`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `adjuntos`
+-- Estructura de tabla para la tabla `adjuntos`
 --
 
 CREATE TABLE `adjuntos` (
@@ -45,7 +45,7 @@ CREATE TABLE `adjuntos` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `adjuntos_descargas`
+-- Estructura de tabla para la tabla `adjuntos_descargas`
 --
 
 CREATE TABLE `adjuntos_descargas` (
@@ -59,7 +59,7 @@ CREATE TABLE `adjuntos_descargas` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `atenciones`
+-- Estructura de tabla para la tabla `atenciones`
 --
 
 CREATE TABLE `atenciones` (
@@ -78,7 +78,7 @@ CREATE TABLE `atenciones` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `auditoria`
+-- Estructura de tabla para la tabla `auditoria`
 --
 
 CREATE TABLE `auditoria` (
@@ -97,7 +97,7 @@ CREATE TABLE `auditoria` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `barrio`
+-- Estructura de tabla para la tabla `barrio`
 --
 
 CREATE TABLE `barrio` (
@@ -113,7 +113,7 @@ CREATE TABLE `barrio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `barrio`
+-- Volcado de datos para la tabla `barrio`
 --
 
 INSERT INTO `barrio` (`id`, `nombre`, `localidad_id`, `zona_barrio_id`, `created_at`, `updated_by`, `deleted_by`, `updated_at`, `deleted_at`) VALUES
@@ -217,7 +217,7 @@ INSERT INTO `barrio` (`id`, `nombre`, `localidad_id`, `zona_barrio_id`, `created
 -- --------------------------------------------------------
 
 --
--- Table structure for table `beneficios`
+-- Estructura de tabla para la tabla `beneficios`
 --
 
 CREATE TABLE `beneficios` (
@@ -226,7 +226,7 @@ CREATE TABLE `beneficios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `beneficios`
+-- Volcado de datos para la tabla `beneficios`
 --
 
 INSERT INTO `beneficios` (`id`, `nombre`) VALUES
@@ -237,7 +237,7 @@ INSERT INTO `beneficios` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `categoria_ocupacional`
+-- Estructura de tabla para la tabla `categoria_ocupacional`
 --
 
 CREATE TABLE `categoria_ocupacional` (
@@ -245,10 +245,22 @@ CREATE TABLE `categoria_ocupacional` (
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Volcado de datos para la tabla `categoria_ocupacional`
+--
+
+INSERT INTO `categoria_ocupacional` (`id`, `nombre`) VALUES
+(1, 'Patron/Dueño'),
+(2, 'Empl. Domestica'),
+(3, 'Empleado con relac. de dependencia'),
+(5, 'Changas'),
+(6, 'Otras'),
+(7, 'NS/NR');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cobertura`
+-- Estructura de tabla para la tabla `cobertura`
 --
 
 CREATE TABLE `cobertura` (
@@ -256,10 +268,22 @@ CREATE TABLE `cobertura` (
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Volcado de datos para la tabla `cobertura`
+--
+
+INSERT INTO `cobertura` (`id`, `nombre`) VALUES
+(1, 'Obra Social'),
+(2, 'Prepaga'),
+(3, 'Mutual'),
+(4, 'Sist. Emerg. Pago'),
+(5, 'Ninguna'),
+(6, 'NS/NR');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `condicion_inactividad`
+-- Estructura de tabla para la tabla `condicion_inactividad`
 --
 
 CREATE TABLE `condicion_inactividad` (
@@ -267,10 +291,24 @@ CREATE TABLE `condicion_inactividad` (
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Volcado de datos para la tabla `condicion_inactividad`
+--
+
+INSERT INTO `condicion_inactividad` (`id`, `nombre`) VALUES
+(1, 'Menor/Est.'),
+(2, 'Ama de casa'),
+(3, 'Jub/pens.'),
+(4, 'Mayor 65 años s/jub ni pension'),
+(5, 'Discapacitado s/pension'),
+(7, 'Enfermo'),
+(8, 'No consigue'),
+(9, 'NS/NR');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cud`
+-- Estructura de tabla para la tabla `cud`
 --
 
 CREATE TABLE `cud` (
@@ -286,18 +324,29 @@ CREATE TABLE `cud` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `discapacidad`
+-- Estructura de tabla para la tabla `discapacidad`
 --
 
 CREATE TABLE `discapacidad` (
   `id` bigint UNSIGNED NOT NULL,
-  `nombre` varchar(100) NOT NULL
+  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `discapacidad`
+--
+
+INSERT INTO `discapacidad` (`id`, `nombre`) VALUES
+(1, 'Motora'),
+(2, 'Sensorial'),
+(3, 'Mental'),
+(4, 'Visceral'),
+(5, 'NS/NR');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `domicilio`
+-- Estructura de tabla para la tabla `domicilio`
 --
 
 CREATE TABLE `domicilio` (
@@ -312,7 +361,7 @@ CREATE TABLE `domicilio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `domicilio`
+-- Volcado de datos para la tabla `domicilio`
 --
 
 INSERT INTO `domicilio` (`id`, `municipio`, `localidad`, `barrio_id`, `calle`, `numero`, `piso`, `dpto`) VALUES
@@ -330,7 +379,7 @@ INSERT INTO `domicilio` (`id`, `municipio`, `localidad`, `barrio_id`, `calle`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `enfermedades`
+-- Estructura de tabla para la tabla `enfermedades`
 --
 
 CREATE TABLE `enfermedades` (
@@ -339,7 +388,7 @@ CREATE TABLE `enfermedades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `enfermedades`
+-- Volcado de datos para la tabla `enfermedades`
 --
 
 INSERT INTO `enfermedades` (`id`, `nombre`) VALUES
@@ -356,7 +405,7 @@ INSERT INTO `enfermedades` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `estado_civil`
+-- Estructura de tabla para la tabla `estado_civil`
 --
 
 CREATE TABLE `estado_civil` (
@@ -365,7 +414,7 @@ CREATE TABLE `estado_civil` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `estado_civil`
+-- Volcado de datos para la tabla `estado_civil`
 --
 
 INSERT INTO `estado_civil` (`id`, `nombre`) VALUES
@@ -379,7 +428,7 @@ INSERT INTO `estado_civil` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `failed_jobs`
+-- Estructura de tabla para la tabla `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
@@ -395,7 +444,7 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `grupo_familiar`
+-- Estructura de tabla para la tabla `grupo_familiar`
 --
 
 CREATE TABLE `grupo_familiar` (
@@ -433,7 +482,7 @@ CREATE TABLE `grupo_familiar` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `localidad`
+-- Estructura de tabla para la tabla `localidad`
 --
 
 CREATE TABLE `localidad` (
@@ -449,7 +498,7 @@ CREATE TABLE `localidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `localidad`
+-- Volcado de datos para la tabla `localidad`
 --
 
 INSERT INTO `localidad` (`id`, `nombre`, `codigo_postal`, `provincia_id`, `created_at`, `updated_at`, `deleted_at`, `updated_by`, `deleted_by`) VALUES
@@ -664,7 +713,7 @@ INSERT INTO `localidad` (`id`, `nombre`, `codigo_postal`, `provincia_id`, `creat
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Estructura de tabla para la tabla `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -674,7 +723,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `migrations`
+-- Volcado de datos para la tabla `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -686,7 +735,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `niveles_estudio`
+-- Estructura de tabla para la tabla `niveles_estudio`
 --
 
 CREATE TABLE `niveles_estudio` (
@@ -695,7 +744,7 @@ CREATE TABLE `niveles_estudio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `niveles_estudio`
+-- Volcado de datos para la tabla `niveles_estudio`
 --
 
 INSERT INTO `niveles_estudio` (`id`, `nombre`) VALUES
@@ -709,7 +758,7 @@ INSERT INTO `niveles_estudio` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_reset_tokens`
+-- Estructura de tabla para la tabla `password_reset_tokens`
 --
 
 CREATE TABLE `password_reset_tokens` (
@@ -721,7 +770,7 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permisos`
+-- Estructura de tabla para la tabla `permisos`
 --
 
 CREATE TABLE `permisos` (
@@ -732,7 +781,7 @@ CREATE TABLE `permisos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `permisos`
+-- Volcado de datos para la tabla `permisos`
 --
 
 INSERT INTO `permisos` (`id`, `nombre`, `descripcion`, `modulo`) VALUES
@@ -756,7 +805,7 @@ INSERT INTO `permisos` (`id`, `nombre`, `descripcion`, `modulo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `personal_access_tokens`
+-- Estructura de tabla para la tabla `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
@@ -775,7 +824,7 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `personas`
+-- Estructura de tabla para la tabla `personas`
 --
 
 CREATE TABLE `personas` (
@@ -803,7 +852,7 @@ CREATE TABLE `personas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `personas`
+-- Volcado de datos para la tabla `personas`
 --
 
 INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`) VALUES
@@ -823,7 +872,7 @@ INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `persona_beneficio`
+-- Estructura de tabla para la tabla `persona_beneficio`
 --
 
 CREATE TABLE `persona_beneficio` (
@@ -843,7 +892,7 @@ CREATE TABLE `persona_beneficio` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `persona_programa`
+-- Estructura de tabla para la tabla `persona_programa`
 --
 
 CREATE TABLE `persona_programa` (
@@ -861,28 +910,28 @@ CREATE TABLE `persona_programa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `persona_programa`
+-- Volcado de datos para la tabla `persona_programa`
 --
 
 INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
-(1, 14, 1, '2026-04-24', NULL, 1, 'destinatario', 'a', NULL, '2026-04-26 03:59:38', '2026-04-26 03:59:38'),
-(2, 15, 4, '2026-04-30', NULL, 1, 'destinatario', 'H', NULL, '2026-04-26 04:07:59', '2026-04-26 04:07:59'),
+(1, 14, 1, '2026-04-24', '2020-02-22', 1, 'destinatario', 'a', NULL, '2026-04-26 03:59:38', '2026-04-27 19:40:27'),
+(2, 15, 4, '2026-04-30', '2026-10-30', 1, 'destinatario', 'H', NULL, '2026-04-26 04:07:59', '2026-04-27 19:40:27'),
 (3, 16, 4, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-26 04:25:47', '2026-04-26 04:25:47'),
 (4, 17, 1, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-26 04:26:33', '2026-04-26 04:26:33'),
 (5, 18, 2, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-26 23:02:03', '2026-04-26 23:02:03'),
-(6, 20, 2, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-27 01:15:10', '2026-04-27 01:15:10'),
-(7, 21, 1, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-27 01:15:47', '2026-04-27 01:15:47'),
+(6, 20, 2, NULL, '2024-11-20', 1, 'destinatario', NULL, NULL, '2026-04-27 01:15:10', '2026-04-27 19:40:27'),
+(7, 21, 1, NULL, '2032-11-20', 1, 'destinatario', NULL, NULL, '2026-04-27 01:15:47', '2026-04-27 19:40:27'),
 (8, 21, 3, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-27 01:15:54', '2026-04-27 01:15:54'),
-(9, 22, 1, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-27 01:16:55', '2026-04-27 01:16:55'),
-(10, 22, 1, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-27 01:18:26', '2026-04-27 01:18:26'),
-(11, 23, 1, NULL, NULL, 1, 'tutor', NULL, NULL, '2026-04-27 01:22:15', '2026-04-27 01:22:15'),
-(12, 25, 1, NULL, NULL, 1, 'tutor', NULL, NULL, '2026-04-27 01:26:51', '2026-04-27 01:26:51'),
+(9, 22, 1, NULL, '2024-06-26', 1, 'destinatario', NULL, NULL, '2026-04-27 01:16:55', '2026-04-27 19:40:27'),
+(10, 22, 1, NULL, '2024-06-26', 1, 'destinatario', NULL, NULL, '2026-04-27 01:18:26', '2026-04-27 19:40:27'),
+(11, 23, 1, NULL, '2027-11-25', 1, 'tutor', NULL, NULL, '2026-04-27 01:22:15', '2026-04-27 19:40:27'),
+(12, 25, 1, NULL, '2027-10-30', 1, 'tutor', NULL, NULL, '2026-04-27 01:26:51', '2026-04-27 19:40:27'),
 (13, 13, 1, NULL, NULL, 1, 'tutor', NULL, NULL, '2026-04-27 01:55:44', '2026-04-27 01:55:44');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `programas_asistencia`
+-- Estructura de tabla para la tabla `programas_asistencia`
 --
 
 CREATE TABLE `programas_asistencia` (
@@ -891,7 +940,7 @@ CREATE TABLE `programas_asistencia` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `programas_asistencia`
+-- Volcado de datos para la tabla `programas_asistencia`
 --
 
 INSERT INTO `programas_asistencia` (`id`, `nombre`) VALUES
@@ -903,7 +952,7 @@ INSERT INTO `programas_asistencia` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `provincia`
+-- Estructura de tabla para la tabla `provincia`
 --
 
 CREATE TABLE `provincia` (
@@ -917,7 +966,7 @@ CREATE TABLE `provincia` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `provincia`
+-- Volcado de datos para la tabla `provincia`
 --
 
 INSERT INTO `provincia` (`id`, `nombre`, `created_at`, `updated_at`, `updated_by`, `deleted_by`, `deleted_at`) VALUES
@@ -948,7 +997,7 @@ INSERT INTO `provincia` (`id`, `nombre`, `created_at`, `updated_at`, `updated_by
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Estructura de tabla para la tabla `roles`
 --
 
 CREATE TABLE `roles` (
@@ -960,7 +1009,7 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `roles`
+-- Volcado de datos para la tabla `roles`
 --
 
 INSERT INTO `roles` (`id`, `nombre`, `created_at`, `updated_at`, `descripcion`) VALUES
@@ -973,7 +1022,7 @@ INSERT INTO `roles` (`id`, `nombre`, `created_at`, `updated_at`, `descripcion`) 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rol_permiso`
+-- Estructura de tabla para la tabla `rol_permiso`
 --
 
 CREATE TABLE `rol_permiso` (
@@ -982,7 +1031,7 @@ CREATE TABLE `rol_permiso` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `rol_permiso`
+-- Volcado de datos para la tabla `rol_permiso`
 --
 
 INSERT INTO `rol_permiso` (`rol_id`, `permiso_id`) VALUES
@@ -1039,7 +1088,7 @@ INSERT INTO `rol_permiso` (`rol_id`, `permiso_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sedes`
+-- Estructura de tabla para la tabla `sedes`
 --
 
 CREATE TABLE `sedes` (
@@ -1058,7 +1107,7 @@ CREATE TABLE `sedes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sexo`
+-- Estructura de tabla para la tabla `sexo`
 --
 
 CREATE TABLE `sexo` (
@@ -1067,7 +1116,7 @@ CREATE TABLE `sexo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `sexo`
+-- Volcado de datos para la tabla `sexo`
 --
 
 INSERT INTO `sexo` (`id`, `nombre`) VALUES
@@ -1077,7 +1126,7 @@ INSERT INTO `sexo` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `situacion_ocupacional`
+-- Estructura de tabla para la tabla `situacion_ocupacional`
 --
 
 CREATE TABLE `situacion_ocupacional` (
@@ -1085,10 +1134,20 @@ CREATE TABLE `situacion_ocupacional` (
   `nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Volcado de datos para la tabla `situacion_ocupacional`
+--
+
+INSERT INTO `situacion_ocupacional` (`id`, `nombre`) VALUES
+(1, 'Trabajo Formal'),
+(2, 'Trabajo Informal'),
+(3, 'Inactivo'),
+(4, 'NS/NR');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tipo_documento`
+-- Estructura de tabla para la tabla `tipo_documento`
 --
 
 CREATE TABLE `tipo_documento` (
@@ -1097,7 +1156,7 @@ CREATE TABLE `tipo_documento` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `tipo_documento`
+-- Volcado de datos para la tabla `tipo_documento`
 --
 
 INSERT INTO `tipo_documento` (`id`, `nombre`) VALUES
@@ -1109,7 +1168,7 @@ INSERT INTO `tipo_documento` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Estructura de tabla para la tabla `users`
 --
 
 CREATE TABLE `users` (
@@ -1127,7 +1186,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `users`
+-- Volcado de datos para la tabla `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `nombre`, `apellido`, `email`, `password`, `rol_id`, `sede_id`, `remember_token`, `created_at`, `updated_at`) VALUES
@@ -1139,7 +1198,7 @@ INSERT INTO `users` (`id`, `username`, `nombre`, `apellido`, `email`, `password`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `zona_barrio`
+-- Estructura de tabla para la tabla `zona_barrio`
 --
 
 CREATE TABLE `zona_barrio` (
@@ -1150,7 +1209,7 @@ CREATE TABLE `zona_barrio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `zona_barrio`
+-- Volcado de datos para la tabla `zona_barrio`
 --
 
 INSERT INTO `zona_barrio` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
@@ -1161,11 +1220,11 @@ INSERT INTO `zona_barrio` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
 (5, 'DELEGACIONES', NULL, NULL);
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `adjuntos`
+-- Indices de la tabla `adjuntos`
 --
 ALTER TABLE `adjuntos`
   ADD PRIMARY KEY (`id`),
@@ -1174,7 +1233,7 @@ ALTER TABLE `adjuntos`
   ADD KEY `idx_adjuntos_hash` (`hash_sha256`);
 
 --
--- Indexes for table `adjuntos_descargas`
+-- Indices de la tabla `adjuntos_descargas`
 --
 ALTER TABLE `adjuntos_descargas`
   ADD PRIMARY KEY (`id`),
@@ -1182,7 +1241,7 @@ ALTER TABLE `adjuntos_descargas`
   ADD KEY `idx_descarga_usuario` (`usuario_id`);
 
 --
--- Indexes for table `atenciones`
+-- Indices de la tabla `atenciones`
 --
 ALTER TABLE `atenciones`
   ADD PRIMARY KEY (`id`),
@@ -1192,7 +1251,7 @@ ALTER TABLE `atenciones`
   ADD KEY `idx_atenciones_fecha` (`fecha_atencion`);
 
 --
--- Indexes for table `auditoria`
+-- Indices de la tabla `auditoria`
 --
 ALTER TABLE `auditoria`
   ADD PRIMARY KEY (`id`),
@@ -1201,7 +1260,7 @@ ALTER TABLE `auditoria`
   ADD KEY `idx_auditoria_fecha` (`created_at`);
 
 --
--- Indexes for table `barrio`
+-- Indices de la tabla `barrio`
 --
 ALTER TABLE `barrio`
   ADD PRIMARY KEY (`id`),
@@ -1212,31 +1271,31 @@ ALTER TABLE `barrio`
   ADD KEY `idx_barrio_deleted_at` (`deleted_at`);
 
 --
--- Indexes for table `beneficios`
+-- Indices de la tabla `beneficios`
 --
 ALTER TABLE `beneficios`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `categoria_ocupacional`
+-- Indices de la tabla `categoria_ocupacional`
 --
 ALTER TABLE `categoria_ocupacional`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `cobertura`
+-- Indices de la tabla `cobertura`
 --
 ALTER TABLE `cobertura`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `condicion_inactividad`
+-- Indices de la tabla `condicion_inactividad`
 --
 ALTER TABLE `condicion_inactividad`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `cud`
+-- Indices de la tabla `cud`
 --
 ALTER TABLE `cud`
   ADD PRIMARY KEY (`id`),
@@ -1244,38 +1303,38 @@ ALTER TABLE `cud`
   ADD KEY `idx_cud_numero` (`numero_cud`);
 
 --
--- Indexes for table `discapacidad`
+-- Indices de la tabla `discapacidad`
 --
 ALTER TABLE `discapacidad`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `domicilio`
+-- Indices de la tabla `domicilio`
 --
 ALTER TABLE `domicilio`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_domicilio_barrio` (`barrio_id`);
 
 --
--- Indexes for table `enfermedades`
+-- Indices de la tabla `enfermedades`
 --
 ALTER TABLE `enfermedades`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `estado_civil`
+-- Indices de la tabla `estado_civil`
 --
 ALTER TABLE `estado_civil`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `failed_jobs`
+-- Indices de la tabla `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `grupo_familiar`
+-- Indices de la tabla `grupo_familiar`
 --
 ALTER TABLE `grupo_familiar`
   ADD PRIMARY KEY (`id`),
@@ -1294,7 +1353,7 @@ ALTER TABLE `grupo_familiar`
   ADD KEY `fk_gf_deleted_by` (`deleted_by`);
 
 --
--- Indexes for table `localidad`
+-- Indices de la tabla `localidad`
 --
 ALTER TABLE `localidad`
   ADD PRIMARY KEY (`id`),
@@ -1304,38 +1363,38 @@ ALTER TABLE `localidad`
   ADD KEY `idx_localidad_deleted_at` (`deleted_at`);
 
 --
--- Indexes for table `migrations`
+-- Indices de la tabla `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `niveles_estudio`
+-- Indices de la tabla `niveles_estudio`
 --
 ALTER TABLE `niveles_estudio`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `password_reset_tokens`
+-- Indices de la tabla `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indexes for table `permisos`
+-- Indices de la tabla `permisos`
 --
 ALTER TABLE `permisos`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uq_permisos_nombre` (`nombre`);
 
 --
--- Indexes for table `personal_access_tokens`
+-- Indices de la tabla `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `personas`
+-- Indices de la tabla `personas`
 --
 ALTER TABLE `personas`
   ADD PRIMARY KEY (`id`),
@@ -1354,7 +1413,7 @@ ALTER TABLE `personas`
   ADD KEY `fk_personas_estado_civil` (`estado_civil_id`);
 
 --
--- Indexes for table `persona_beneficio`
+-- Indices de la tabla `persona_beneficio`
 --
 ALTER TABLE `persona_beneficio`
   ADD PRIMARY KEY (`id`),
@@ -1363,7 +1422,7 @@ ALTER TABLE `persona_beneficio`
   ADD KEY `fk_pb_registrado_por` (`registrado_por`);
 
 --
--- Indexes for table `persona_programa`
+-- Indices de la tabla `persona_programa`
 --
 ALTER TABLE `persona_programa`
   ADD PRIMARY KEY (`id`),
@@ -1372,13 +1431,13 @@ ALTER TABLE `persona_programa`
   ADD KEY `fk_pp_registrado_por` (`registrado_por`);
 
 --
--- Indexes for table `programas_asistencia`
+-- Indices de la tabla `programas_asistencia`
 --
 ALTER TABLE `programas_asistencia`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `provincia`
+-- Indices de la tabla `provincia`
 --
 ALTER TABLE `provincia`
   ADD PRIMARY KEY (`id`),
@@ -1387,45 +1446,45 @@ ALTER TABLE `provincia`
   ADD KEY `idx_provincia_deleted_at` (`deleted_at`);
 
 --
--- Indexes for table `roles`
+-- Indices de la tabla `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `rol_permiso`
+-- Indices de la tabla `rol_permiso`
 --
 ALTER TABLE `rol_permiso`
   ADD PRIMARY KEY (`rol_id`,`permiso_id`),
   ADD KEY `fk_rp_permiso` (`permiso_id`);
 
 --
--- Indexes for table `sedes`
+-- Indices de la tabla `sedes`
 --
 ALTER TABLE `sedes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_sedes_barrio` (`barrio_id`);
 
 --
--- Indexes for table `sexo`
+-- Indices de la tabla `sexo`
 --
 ALTER TABLE `sexo`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `situacion_ocupacional`
+-- Indices de la tabla `situacion_ocupacional`
 --
 ALTER TABLE `situacion_ocupacional`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tipo_documento`
+-- Indices de la tabla `tipo_documento`
 --
 ALTER TABLE `tipo_documento`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indices de la tabla `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -1435,232 +1494,232 @@ ALTER TABLE `users`
   ADD KEY `fk_users_sede` (`sede_id`);
 
 --
--- Indexes for table `zona_barrio`
+-- Indices de la tabla `zona_barrio`
 --
 ALTER TABLE `zona_barrio`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `adjuntos`
+-- AUTO_INCREMENT de la tabla `adjuntos`
 --
 ALTER TABLE `adjuntos`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `adjuntos_descargas`
+-- AUTO_INCREMENT de la tabla `adjuntos_descargas`
 --
 ALTER TABLE `adjuntos_descargas`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `atenciones`
+-- AUTO_INCREMENT de la tabla `atenciones`
 --
 ALTER TABLE `atenciones`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `auditoria`
+-- AUTO_INCREMENT de la tabla `auditoria`
 --
 ALTER TABLE `auditoria`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `barrio`
+-- AUTO_INCREMENT de la tabla `barrio`
 --
 ALTER TABLE `barrio`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
--- AUTO_INCREMENT for table `beneficios`
+-- AUTO_INCREMENT de la tabla `beneficios`
 --
 ALTER TABLE `beneficios`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `categoria_ocupacional`
+-- AUTO_INCREMENT de la tabla `categoria_ocupacional`
 --
 ALTER TABLE `categoria_ocupacional`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `cobertura`
+-- AUTO_INCREMENT de la tabla `cobertura`
 --
 ALTER TABLE `cobertura`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `condicion_inactividad`
+-- AUTO_INCREMENT de la tabla `condicion_inactividad`
 --
 ALTER TABLE `condicion_inactividad`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `cud`
+-- AUTO_INCREMENT de la tabla `cud`
 --
 ALTER TABLE `cud`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `discapacidad`
+-- AUTO_INCREMENT de la tabla `discapacidad`
 --
 ALTER TABLE `discapacidad`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `domicilio`
+-- AUTO_INCREMENT de la tabla `domicilio`
 --
 ALTER TABLE `domicilio`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `enfermedades`
+-- AUTO_INCREMENT de la tabla `enfermedades`
 --
 ALTER TABLE `enfermedades`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `estado_civil`
+-- AUTO_INCREMENT de la tabla `estado_civil`
 --
 ALTER TABLE `estado_civil`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `failed_jobs`
+-- AUTO_INCREMENT de la tabla `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `grupo_familiar`
+-- AUTO_INCREMENT de la tabla `grupo_familiar`
 --
 ALTER TABLE `grupo_familiar`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `localidad`
+-- AUTO_INCREMENT de la tabla `localidad`
 --
 ALTER TABLE `localidad`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=209;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT de la tabla `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `niveles_estudio`
+-- AUTO_INCREMENT de la tabla `niveles_estudio`
 --
 ALTER TABLE `niveles_estudio`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `permisos`
+-- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT for table `personal_access_tokens`
+-- AUTO_INCREMENT de la tabla `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `personas`
+-- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT for table `persona_beneficio`
+-- AUTO_INCREMENT de la tabla `persona_beneficio`
 --
 ALTER TABLE `persona_beneficio`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `persona_programa`
+-- AUTO_INCREMENT de la tabla `persona_programa`
 --
 ALTER TABLE `persona_programa`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT for table `programas_asistencia`
+-- AUTO_INCREMENT de la tabla `programas_asistencia`
 --
 ALTER TABLE `programas_asistencia`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `provincia`
+-- AUTO_INCREMENT de la tabla `provincia`
 --
 ALTER TABLE `provincia`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT for table `roles`
+-- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `sedes`
+-- AUTO_INCREMENT de la tabla `sedes`
 --
 ALTER TABLE `sedes`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `sexo`
+-- AUTO_INCREMENT de la tabla `sexo`
 --
 ALTER TABLE `sexo`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `situacion_ocupacional`
+-- AUTO_INCREMENT de la tabla `situacion_ocupacional`
 --
 ALTER TABLE `situacion_ocupacional`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `tipo_documento`
+-- AUTO_INCREMENT de la tabla `tipo_documento`
 --
 ALTER TABLE `tipo_documento`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `zona_barrio`
+-- AUTO_INCREMENT de la tabla `zona_barrio`
 --
 ALTER TABLE `zona_barrio`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `adjuntos`
+-- Filtros para la tabla `adjuntos`
 --
 ALTER TABLE `adjuntos`
   ADD CONSTRAINT `fk_adjuntos_user` FOREIGN KEY (`subido_por`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `adjuntos_descargas`
+-- Filtros para la tabla `adjuntos_descargas`
 --
 ALTER TABLE `adjuntos_descargas`
   ADD CONSTRAINT `fk_descarga_adjunto` FOREIGN KEY (`adjunto_id`) REFERENCES `adjuntos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_descarga_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `atenciones`
+-- Filtros para la tabla `atenciones`
 --
 ALTER TABLE `atenciones`
   ADD CONSTRAINT `fk_atenciones_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -1668,13 +1727,13 @@ ALTER TABLE `atenciones`
   ADD CONSTRAINT `fk_atenciones_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
--- Constraints for table `auditoria`
+-- Filtros para la tabla `auditoria`
 --
 ALTER TABLE `auditoria`
   ADD CONSTRAINT `fk_auditoria_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `barrio`
+-- Filtros para la tabla `barrio`
 --
 ALTER TABLE `barrio`
   ADD CONSTRAINT `fk_barrio_deleted_by` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -1683,19 +1742,19 @@ ALTER TABLE `barrio`
   ADD CONSTRAINT `fk_barrio_zona` FOREIGN KEY (`zona_barrio_id`) REFERENCES `zona_barrio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `cud`
+-- Filtros para la tabla `cud`
 --
 ALTER TABLE `cud`
   ADD CONSTRAINT `fk_cud_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `domicilio`
+-- Filtros para la tabla `domicilio`
 --
 ALTER TABLE `domicilio`
   ADD CONSTRAINT `fk_domicilio_barrio` FOREIGN KEY (`barrio_id`) REFERENCES `barrio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `grupo_familiar`
+-- Filtros para la tabla `grupo_familiar`
 --
 ALTER TABLE `grupo_familiar`
   ADD CONSTRAINT `fk_gf_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -1713,7 +1772,7 @@ ALTER TABLE `grupo_familiar`
   ADD CONSTRAINT `fk_grupo_situacion` FOREIGN KEY (`situacion_ocupacional_id`) REFERENCES `situacion_ocupacional` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `localidad`
+-- Filtros para la tabla `localidad`
 --
 ALTER TABLE `localidad`
   ADD CONSTRAINT `fk_localidad_deleted_by` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -1721,7 +1780,7 @@ ALTER TABLE `localidad`
   ADD CONSTRAINT `fk_localidad_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `personas`
+-- Filtros para la tabla `personas`
 --
 ALTER TABLE `personas`
   ADD CONSTRAINT `fk_persona_barrio` FOREIGN KEY (`barrio_id`) REFERENCES `barrio` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -1735,7 +1794,7 @@ ALTER TABLE `personas`
   ADD CONSTRAINT `fk_personas_sede` FOREIGN KEY (`sede_origen_id`) REFERENCES `sedes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `persona_beneficio`
+-- Filtros para la tabla `persona_beneficio`
 --
 ALTER TABLE `persona_beneficio`
   ADD CONSTRAINT `fk_pb_beneficio` FOREIGN KEY (`beneficio_id`) REFERENCES `beneficios` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -1743,7 +1802,7 @@ ALTER TABLE `persona_beneficio`
   ADD CONSTRAINT `fk_pb_registrado_por` FOREIGN KEY (`registrado_por`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `persona_programa`
+-- Filtros para la tabla `persona_programa`
 --
 ALTER TABLE `persona_programa`
   ADD CONSTRAINT `fk_pp_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -1751,27 +1810,27 @@ ALTER TABLE `persona_programa`
   ADD CONSTRAINT `fk_pp_registrado_por` FOREIGN KEY (`registrado_por`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `provincia`
+-- Filtros para la tabla `provincia`
 --
 ALTER TABLE `provincia`
   ADD CONSTRAINT `fk_provincia_deleted_by` FOREIGN KEY (`deleted_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_provincia_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `rol_permiso`
+-- Filtros para la tabla `rol_permiso`
 --
 ALTER TABLE `rol_permiso`
   ADD CONSTRAINT `fk_rp_permiso` FOREIGN KEY (`permiso_id`) REFERENCES `permisos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_rp_rol` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `sedes`
+-- Filtros para la tabla `sedes`
 --
 ALTER TABLE `sedes`
   ADD CONSTRAINT `fk_sedes_barrio` FOREIGN KEY (`barrio_id`) REFERENCES `barrio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
--- Constraints for table `users`
+-- Filtros para la tabla `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `fk_users_rol` FOREIGN KEY (`rol_id`) REFERENCES `roles` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
