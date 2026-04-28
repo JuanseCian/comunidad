@@ -17,6 +17,7 @@ use App\Models\Localidad;
 use App\Models\ProgramasAsistencia;
 use App\Models\Discapacidad;
 use App\Models\Enfermedad;
+use App\Models\Cobertura;
 
 class PersonaController extends Controller
 {
@@ -71,6 +72,7 @@ class PersonaController extends Controller
             'catalogos'       => [
                 'discapacidades' => Discapacidad::orderBy('nombre')->get(),
                 'enfermedades'   => Enfermedad::orderBy('nombre')->get(),
+                'coberturas'     => Cobertura::orderBy('nombre')->get(),
             ],
         ]);
     }
@@ -88,6 +90,7 @@ class PersonaController extends Controller
             // Salud
             'discapacidad_id'          => 'nullable|exists:discapacidad,id',
             'enfermedad_id'            => 'nullable|exists:enfermedad,id',
+            'cobertura_id'             => 'nullable|exists:cobertura,id',
         ]);
 
         $domicilio_id = null;
@@ -137,6 +140,8 @@ class PersonaController extends Controller
             // Salud — embarazo
             'embarazo'                 => $tieneEmbarazo ? 1 : 0,
             'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
+            // Cobertura médica
+            'cobertura_id'             => $request->cobertura_id,
         ]);
 
         return redirect()
@@ -320,6 +325,7 @@ class PersonaController extends Controller
             'catalogos'       => [
                 'discapacidades' => Discapacidad::orderBy('nombre')->get(),
                 'enfermedades'   => Enfermedad::orderBy('nombre')->get(),
+                'coberturas'     => Cobertura::orderBy('nombre')->get(),
             ],
         ]);
     }
@@ -342,6 +348,7 @@ class PersonaController extends Controller
             // Salud
             'discapacidad_id'  => 'nullable|exists:discapacidad,id',
             'enfermedad_id'    => 'nullable|exists:enfermedad,id',
+            'cobertura_id'     => 'nullable|exists:cobertura,id',
         ]);
 
         $tieneDiscapacidad = $request->boolean('_tiene_discapacidad') || $request->filled('discapacidad_id');
@@ -365,6 +372,8 @@ class PersonaController extends Controller
             // Salud — embarazo
             'embarazo'                 => $tieneEmbarazo ? 1 : 0,
             'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
+            // Cobertura médica
+            'cobertura_id'             => $request->cobertura_id,
         ]);
 
         return back()->with('success', 'Datos personales actualizados correctamente');

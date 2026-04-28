@@ -321,6 +321,21 @@
         <div style="padding:22px;">
             <div style="display:flex; flex-direction:column; gap:0;">
 
+                {{-- Cobertura médica --}}
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
+                    <div style="flex:1; padding-right:16px;">
+                        <div style="font-size:14px; color:#0f172a; font-weight:500; margin-bottom:6px;">Cobertura médica</div>
+                        <select name="cobertura_id"
+                                style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                                onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                            <option value="">— Seleccionar —</option>
+                            @foreach($catalogos['coberturas'] as $c)
+                                <option value="{{ $c->id }}" {{ old('cobertura_id') == $c->id ? 'selected' : '' }}>{{ $c->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
                 {{-- Discapacidad --}}
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
                     <div>
