@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 28-04-2026 a las 18:03:31
+-- Tiempo de generación: 28-04-2026 a las 18:19:21
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -848,26 +848,19 @@ CREATE TABLE `personas` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `sede_origen_id` bigint UNSIGNED DEFAULT NULL,
-  `estado_civil_id` bigint UNSIGNED DEFAULT NULL
+  `estado_civil_id` bigint UNSIGNED DEFAULT NULL,
+  `discapacidad_id` bigint UNSIGNED DEFAULT NULL,
+  `discapacidad_permanente` tinyint(1) DEFAULT NULL,
+  `discapacidad_tratamiento` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `personas`
 --
 
-INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`) VALUES
-(13, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-04-27 02:15:35', NULL, 1),
-(14, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-04-27 02:20:01', NULL, 1),
-(15, 'Daniela', 'hernandez', 'H@GMAIL.COM', '2020-10-30', 1, '11', '112', 2, 10, 1, 5, NULL, '445', 1, 1, 'A-', '2026-04-26 04:07:41', '2026-04-26 04:07:41', NULL, 1),
-(16, 'pipa', 'pepe', NULL, NULL, 1, '1111', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-04-26 04:22:17', '2026-04-26 04:22:17', NULL, NULL),
-(17, 'la police', 'noono', NULL, NULL, 1, '22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-04-26 04:26:28', '2026-04-26 04:26:28', NULL, NULL),
-(18, 'flaco', 'titi', NULL, NULL, 1, '113', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-04-26 23:01:57', '2026-04-26 23:01:57', NULL, NULL),
-(19, 'ss', 'aa', NULL, NULL, 1, '99', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-04-27 01:10:38', '2026-04-27 01:10:38', NULL, NULL),
-(20, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', '2012-11-20', 1, 'q1', NULL, NULL, NULL, NULL, NULL, NULL, '03364318066', NULL, 0, NULL, '2026-04-27 01:15:04', '2026-04-27 01:17:33', NULL, NULL),
-(21, 'dd', 'dd', NULL, '2011-11-20', 1, '2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-04-27 01:15:39', '2026-04-27 01:15:39', NULL, NULL),
-(22, 'll', 'll', NULL, '2003-06-26', 1, '921', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-04-27 01:16:43', '2026-04-27 01:16:43', NULL, NULL),
-(23, 'paap', 'peep', NULL, '2002-11-25', 1, '999', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-04-27 01:21:50', '2026-04-27 01:21:50', NULL, NULL),
-(25, 'qq', 'ss', NULL, '2002-10-30', 1, '1188', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-04-27 01:26:34', '2026-04-27 01:26:34', NULL, NULL);
+INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`) VALUES
+(13, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-04-27 02:15:35', NULL, 1, NULL, NULL, NULL),
+(14, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-04-27 02:20:01', NULL, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -915,17 +908,6 @@ CREATE TABLE `persona_programa` (
 
 INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
 (1, 14, 1, '2026-04-24', '2020-02-22', 1, 'destinatario', 'a', NULL, '2026-04-26 03:59:38', '2026-04-27 19:40:27'),
-(2, 15, 4, '2026-04-30', '2026-10-30', 1, 'destinatario', 'H', NULL, '2026-04-26 04:07:59', '2026-04-27 19:40:27'),
-(3, 16, 4, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-26 04:25:47', '2026-04-26 04:25:47'),
-(4, 17, 1, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-26 04:26:33', '2026-04-26 04:26:33'),
-(5, 18, 2, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-26 23:02:03', '2026-04-26 23:02:03'),
-(6, 20, 2, NULL, '2024-11-20', 1, 'destinatario', NULL, NULL, '2026-04-27 01:15:10', '2026-04-27 19:40:27'),
-(7, 21, 1, NULL, '2032-11-20', 1, 'destinatario', NULL, NULL, '2026-04-27 01:15:47', '2026-04-27 19:40:27'),
-(8, 21, 3, NULL, NULL, 1, 'destinatario', NULL, NULL, '2026-04-27 01:15:54', '2026-04-27 01:15:54'),
-(9, 22, 1, NULL, '2024-06-26', 1, 'destinatario', NULL, NULL, '2026-04-27 01:16:55', '2026-04-27 19:40:27'),
-(10, 22, 1, NULL, '2024-06-26', 1, 'destinatario', NULL, NULL, '2026-04-27 01:18:26', '2026-04-27 19:40:27'),
-(11, 23, 1, NULL, '2027-11-25', 1, 'tutor', NULL, NULL, '2026-04-27 01:22:15', '2026-04-27 19:40:27'),
-(12, 25, 1, NULL, '2027-10-30', 1, 'tutor', NULL, NULL, '2026-04-27 01:26:51', '2026-04-27 19:40:27'),
 (13, 13, 1, NULL, NULL, 1, 'tutor', NULL, NULL, '2026-04-27 01:55:44', '2026-04-27 01:55:44');
 
 -- --------------------------------------------------------
@@ -1410,7 +1392,8 @@ ALTER TABLE `personas`
   ADD KEY `fk_persona_nivel` (`nivel_estudio_id`),
   ADD KEY `fk_personas_sede` (`sede_origen_id`),
   ADD KEY `idx_personas_nombre_apellido` (`apellido`,`nombre`),
-  ADD KEY `fk_personas_estado_civil` (`estado_civil_id`);
+  ADD KEY `fk_personas_estado_civil` (`estado_civil_id`),
+  ADD KEY `fk_persona_discapacidad` (`discapacidad_id`);
 
 --
 -- Indices de la tabla `persona_beneficio`
@@ -1784,6 +1767,7 @@ ALTER TABLE `localidad`
 --
 ALTER TABLE `personas`
   ADD CONSTRAINT `fk_persona_barrio` FOREIGN KEY (`barrio_id`) REFERENCES `barrio` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_persona_discapacidad` FOREIGN KEY (`discapacidad_id`) REFERENCES `discapacidad` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_documento` FOREIGN KEY (`documento_id`) REFERENCES `tipo_documento` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_domicilio` FOREIGN KEY (`domicilio_id`) REFERENCES `domicilio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_localidad` FOREIGN KEY (`localidad_id`) REFERENCES `localidad` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
