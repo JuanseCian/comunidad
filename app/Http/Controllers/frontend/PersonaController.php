@@ -87,7 +87,7 @@ class PersonaController extends Controller
             'estado_civil_id'          => 'nullable|exists:estado_civil,id',
             'provincia_id'             => 'nullable|exists:provincia,id',
             'localidad_id'             => 'nullable|exists:localidad,id',
-            // Salud
+
             'discapacidad_id'          => 'nullable|exists:discapacidad,id',
             'enfermedad_id'            => 'nullable|exists:enfermedad,id',
             'cobertura_id'             => 'nullable|exists:cobertura,id',
@@ -107,7 +107,7 @@ class PersonaController extends Controller
             $domicilio_id = $domicilio->id;
         }
 
-        // Los campos de discapacidad solo se guardan si el toggle está activo
+
         $tieneDiscapacidad = $request->boolean('_tiene_discapacidad') || $request->filled('discapacidad_id');
         $tieneEnfermedad   = $request->filled('enfermedad_id');
         $tieneEmbarazo     = $request->boolean('embarazo');
@@ -130,17 +130,17 @@ class PersonaController extends Controller
             'trabaja'                  => $request->boolean('trabaja') ? 1 : 0,
             'grupo_sanguineo'          => $request->grupo_sanguineo,
             'sede_origen_id'           => $request->sede_origen_id,
-            // Salud — discapacidad
+
             'discapacidad_permanente'  => $tieneDiscapacidad ? 1 : 0,
             'discapacidad_id'          => $tieneDiscapacidad ? $request->discapacidad_id : null,
             'discapacidad_tratamiento' => $tieneDiscapacidad ? ($request->boolean('discapacidad_tratamiento') ? 1 : 0) : null,
-            // Salud — enfermedad
+
             'enfermedad_id'            => $tieneEnfermedad ? $request->enfermedad_id : null,
             'enfermedad_tratamiento'   => $tieneEnfermedad ? ($request->boolean('enfermedad_tratamiento') ? 1 : 0) : null,
-            // Salud — embarazo
+
             'embarazo'                 => $tieneEmbarazo ? 1 : 0,
             'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
-            // Cobertura médica
+
             'cobertura_id'             => $request->cobertura_id,
         ]);
 
@@ -156,7 +156,7 @@ class PersonaController extends Controller
         $edad = $persona->edad;
 
         $programa = ProgramasAsistencia::findOrFail($request->programa_id);
-        $rol = $request->rol; // destinatario o tutor
+        $rol = $request->rol;
 
         switch ($programa->nombre) {
 
@@ -193,7 +193,7 @@ class PersonaController extends Controller
             break;
         }
 
-        // Guardar
+
         $persona->programas()->attach($programa->id, [
             'rol' => $rol,
             'fecha_inicio' => now()
@@ -284,7 +284,7 @@ class PersonaController extends Controller
 
             if (!$pp->programa) continue;
 
-            // SOLO activos
+
             if ($pp->fecha_fin) continue;
 
             $nombre = strtolower($pp->programa->nombre);
@@ -345,7 +345,7 @@ class PersonaController extends Controller
             'cuil'             => 'nullable|string|max:20',
             'grupo_sanguineo'  => 'nullable|string|max:10',
             'nivel_estudio_id' => 'nullable|exists:niveles_estudio,id',
-            // Salud
+
             'discapacidad_id'  => 'nullable|exists:discapacidad,id',
             'enfermedad_id'    => 'nullable|exists:enfermedad,id',
             'cobertura_id'     => 'nullable|exists:cobertura,id',
@@ -362,17 +362,17 @@ class PersonaController extends Controller
             'cuil'                     => $request->cuil,
             'grupo_sanguineo'          => $request->grupo_sanguineo,
             'nivel_estudio_id'         => $request->nivel_estudio_id,
-            // Salud — discapacidad
+   
             'discapacidad_permanente'  => $tieneDiscapacidad ? 1 : 0,
             'discapacidad_id'          => $tieneDiscapacidad ? $request->discapacidad_id : null,
             'discapacidad_tratamiento' => $tieneDiscapacidad ? ($request->boolean('discapacidad_tratamiento') ? 1 : 0) : null,
-            // Salud — enfermedad
+         
             'enfermedad_id'            => $tieneEnfermedad ? $request->enfermedad_id : null,
             'enfermedad_tratamiento'   => $tieneEnfermedad ? ($request->boolean('enfermedad_tratamiento') ? 1 : 0) : null,
-            // Salud — embarazo
+          
             'embarazo'                 => $tieneEmbarazo ? 1 : 0,
             'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
-            // Cobertura médica
+           
             'cobertura_id'             => $request->cobertura_id,
         ]);
 

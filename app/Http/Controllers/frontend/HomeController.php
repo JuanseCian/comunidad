@@ -15,7 +15,7 @@ class HomeController extends Controller
 
         foreach ($personas as $persona) {
 
-            // 🔥 actualiza automáticamente
+
             $persona->actualizarProgramasPorEdad();
 
             $alerta = $persona->alertaPrograma();

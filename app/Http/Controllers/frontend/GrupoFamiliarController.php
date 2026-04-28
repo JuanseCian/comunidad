@@ -18,10 +18,7 @@ use Illuminate\Http\Request;
 
 class GrupoFamiliarController extends Controller
 {
-    /**
-     * Muestra el formulario para agregar un integrante al grupo familiar.
-     * Ruta: GET /personas/{persona}/grupo-familiar/create
-     */
+
     public function create(Persona $persona)
     {
         $catalogos = [
@@ -39,10 +36,7 @@ class GrupoFamiliarController extends Controller
         return view('frontend.grupofamiliar.create', compact('persona', 'catalogos'));
     }
 
-    /**
-     * Guarda el nuevo integrante del grupo familiar.
-     * Ruta: POST /personas/{persona}/grupo-familiar
-     */
+
     public function store(Request $request, Persona $persona)
     {
         $validated = $request->validate([
@@ -69,11 +63,11 @@ class GrupoFamiliarController extends Controller
             'ingresos'                  => 'nullable|numeric|min:0',
         ]);
 
-        // Vincular siempre a la persona titular de la URL
+
         $validated['persona_id']  = $persona->id;
         $validated['created_by']  = auth()->id();
 
-        // Normalizar booleanos de checkboxes (vienen como '1' o ausentes)
+
         foreach (['discapacidad_permanente','discapacidad_tratamiento','enfermedad_tratamiento',
                   'embarazo','control_embarazo','esquema_vacunacion'] as $campo) {
             $validated[$campo] = $request->boolean($campo);
