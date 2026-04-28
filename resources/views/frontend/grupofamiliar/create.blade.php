@@ -4,7 +4,7 @@
 
 @section('content')
 
-{{-- ── HEADER ── --}}
+
 <div style="background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2rem 0 1.5rem;">
     <div class="container">
         <p style="font-size:12px; font-weight:700; color:#0879a8; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:4px;">
@@ -28,7 +28,7 @@
 <div class="container py-4">
 <div style="max-width:780px; margin:0 auto;">
 
-    {{-- Errores --}}
+    
     @if ($errors->any())
         <div style="background:#fff5f5; border:1px solid #fca5a5; border-radius:12px; padding:13px 18px; margin-bottom:1.25rem; color:#b91c1c; font-size:13.5px;">
             <div style="display:flex; align-items:center; gap:8px; font-weight:700; margin-bottom:6px;">
@@ -45,9 +45,7 @@
     <form method="POST" action="{{ route('personas.grupo-familiar.store', $persona) }}" novalidate>
     @csrf
 
-    {{-- ══════════════════════════════════════════
-         SECCIÓN 1: Datos personales del integrante
-    ══════════════════════════════════════════ --}}
+    
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">1</div>
@@ -141,9 +139,7 @@
         </div>
     </div>
 
-    {{-- ══════════════════════════════════════════
-         SECCIÓN 2: Salud
-    ══════════════════════════════════════════ --}}
+   
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">2</div>
@@ -152,7 +148,7 @@
         </div>
         <div style="padding:22px;">
 
-            {{-- Cobertura --}}
+            
             <div style="margin-bottom:18px;">
                 <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Cobertura médica</label>
                 <select name="cobertura_id" class="{{ $errors->has('cobertura_id') ? 'is-invalid' : '' }}"
@@ -167,10 +163,10 @@
 
             <div style="height:1px; background:#e0ddd6; margin-bottom:18px;"></div>
 
-            {{-- Toggles de salud --}}
+            
             <div style="display:flex; flex-direction:column; gap:0;">
 
-                {{-- Discapacidad --}}
+                
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
                     <div>
                         <div style="font-size:14px; color:#0f172a; font-weight:500;">Tiene discapacidad permanente</div>
@@ -220,7 +216,7 @@
                     </div>
                 </div>
 
-                {{-- Enfermedad --}}
+                
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
                     <div>
                         <div style="font-size:14px; color:#0f172a; font-weight:500;">Tiene enfermedad crónica o relevante</div>
@@ -263,7 +259,7 @@
                     </div>
                 </div>
 
-                {{-- Embarazo --}}
+                
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
                     <div>
                         <div style="font-size:14px; color:#0f172a; font-weight:500;">Está embarazada</div>
@@ -293,7 +289,7 @@
                     </div>
                 </div>
 
-                {{-- Vacunación --}}
+                
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0;">
                     <div>
                         <div style="font-size:14px; color:#0f172a; font-weight:500;">Esquema de vacunación completo</div>
@@ -309,13 +305,11 @@
                     </label>
                 </div>
 
-            </div>{{-- /toggles --}}
+            </div>
         </div>
     </div>
 
-    {{-- ══════════════════════════════════════════
-         SECCIÓN 3: Situación laboral
-    ══════════════════════════════════════════ --}}
+
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">3</div>
@@ -379,9 +373,7 @@
         </div>
     </div>
 
-    {{-- ══════════════════════════════════════════
-         ACCIONES
-    ══════════════════════════════════════════ --}}
+
     <div style="display:flex; align-items:center; justify-content:space-between; padding-top:1rem; border-top:1px solid #e0ddd6; margin-top:.5rem;">
         <a href="{{ route('personas.show', $persona) }}"
            style="height:42px; padding:0 20px; background:white; color:#536070; border:1px solid #c8c4bb; border-radius:10px; font-family:inherit; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:7px; text-decoration:none; transition:background .15s;"
@@ -400,7 +392,7 @@
 </div>
 
 <script>
-// Toggles condicionales (discapacidad, enfermedad, embarazo)
+
 [
   ['chk-discapacidad', 'blk-discapacidad'],
   ['chk-enfermedad',   'blk-enfermedad'],
@@ -428,7 +420,7 @@
   });
 });
 
-// Animar todos los toggles al cambiar
+
 document.querySelectorAll('input[type="checkbox"]').forEach(function(chk) {
   if (['chk-discapacidad','chk-enfermedad','chk-embarazo'].includes(chk.id)) return;
   chk.addEventListener('change', function() {
@@ -440,7 +432,7 @@ document.querySelectorAll('input[type="checkbox"]').forEach(function(chk) {
   });
 });
 
-// Mostrar condición de inactividad
+
 document.getElementById('sel-situacion').addEventListener('change', function() {
   const blk = document.getElementById('blk-inactividad');
   blk.style.display = this.value ? '' : 'none';
@@ -449,7 +441,7 @@ document.getElementById('sel-situacion').addEventListener('change', function() {
   }
 });
 
-// Validación cliente: campo nombre obligatorio
+
 document.querySelector('form').addEventListener('submit', function(e) {
   const nombre = document.querySelector('[name="nombre"]');
   if (!nombre.value.trim()) {

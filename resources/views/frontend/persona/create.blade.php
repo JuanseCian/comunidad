@@ -4,7 +4,7 @@
 
 @section('content')
 
-{{-- ── HEADER ── --}}
+
 <div style="background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2rem 0 1.5rem;">
     <div class="container">
         <p style="font-size:12px; font-weight:700; color:#0879a8; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:4px;">
@@ -49,9 +49,7 @@
     <form method="POST" action="{{ route('personas.store') }}">
     @csrf
 
-    {{-- ══════════════════════════════════════
-         SECCIÓN 1: Datos personales
-    ══════════════════════════════════════ --}}
+
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">1</div>
@@ -187,9 +185,7 @@
         </div>
     </div>
 
-    {{-- ══════════════════════════════════════
-         SECCIÓN 2: Contacto
-    ══════════════════════════════════════ --}}
+
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">2</div>
@@ -221,9 +217,7 @@
         </div>
     </div>
 
-    {{-- ══════════════════════════════════════
-         SECCIÓN 3: Domicilio
-    ══════════════════════════════════════ --}}
+
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">3</div>
@@ -309,9 +303,7 @@
         </div>
     </div>
 
-    {{-- ══════════════════════════════════════
-         SECCIÓN 4: Salud
-    ══════════════════════════════════════ --}}
+
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">4</div>
@@ -321,7 +313,7 @@
         <div style="padding:22px;">
             <div style="display:flex; flex-direction:column; gap:0;">
 
-                {{-- Cobertura médica --}}
+
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
                     <div style="flex:1; padding-right:16px;">
                         <div style="font-size:14px; color:#0f172a; font-weight:500; margin-bottom:6px;">Cobertura médica</div>
@@ -336,7 +328,7 @@
                     </div>
                 </div>
 
-                {{-- Discapacidad --}}
+                
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
                     <div>
                         <div style="font-size:14px; color:#0f172a; font-weight:500;">Tiene discapacidad</div>
@@ -374,7 +366,7 @@
                                    onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
                         </div>
                     </div>
-                    {{-- Permanente y tratamiento como campos dentro del bloque --}}
+                   
                     <div style="display:flex; flex-direction:column; gap:0; margin-top:12px; border-top:1px solid #e0ddd6; padding-top:4px;">
                         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0;">
                             <div style="font-size:13.5px; color:#0f172a;">Es permanente</div>
@@ -403,7 +395,7 @@
                     </div>
                 </div>
 
-                {{-- Enfermedad --}}
+                
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
                     <div>
                         <div style="font-size:14px; color:#0f172a; font-weight:500;">Tiene enfermedad crónica o relevante</div>
@@ -448,7 +440,7 @@
                     </div>
                 </div>
 
-                {{-- Embarazo --}}
+               
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
                     <div>
                         <div style="font-size:14px; color:#0f172a; font-weight:500;">Está embarazada</div>
@@ -484,9 +476,7 @@
         </div>
     </div>
 
-    {{-- ══════════════════════════════════════
-         SECCIÓN 5: Sistema
-    ══════════════════════════════════════ --}}
+
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">5</div>
@@ -507,9 +497,7 @@
         </div>
     </div>
 
-    {{-- ══════════════════════════════════════
-         ACCIONES
-    ══════════════════════════════════════ --}}
+
     <div style="display:flex; align-items:center; justify-content:space-between; padding-top:1rem; border-top:1px solid #e0ddd6; margin-top:.5rem;">
         <a href="{{ route('personas.index') }}" style="height:42px; padding:0 20px; background:white; color:#536070; border:1px solid #c8c4bb; border-radius:10px; font-family:inherit; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:7px; text-decoration:none; transition:background .15s;" onmouseover="this.style.background='#f5f3ee'" onmouseout="this.style.background='white'">
             <i class="bi bi-arrow-left" style="font-size:13px;"></i> Cancelar
@@ -523,9 +511,9 @@
 </div>
 </div>
 
-{{-- Lógica de toggles --}}
+
 <script>
-    // Actualiza visualmente el slider de un checkbox toggle
+    
     function toggleSlider(chk) {
         const track = chk.nextElementSibling;
         const thumb = track.querySelector('span');
@@ -533,7 +521,7 @@
         thumb.style.transform  = chk.checked ? 'translateX(18px)' : 'translateX(0)';
     }
 
-    // Muestra/oculta un bloque condicional y actualiza el slider
+
     function toggleBlock(blockId, chk) {
         toggleSlider(chk);
         const block = document.getElementById(blockId);
@@ -541,12 +529,12 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Inicializar todos los toggles según su estado actual (old() del server)
+
         document.querySelectorAll('input[type="checkbox"].toggle-init, input[type="checkbox"][onchange]').forEach(function(chk) {
             toggleSlider(chk);
         });
 
-        // Inicializar sliders de todos los checkboxes que tengan toggle-slider como siguiente sibling
+
         document.querySelectorAll('input[type="checkbox"]').forEach(function(chk) {
             const track = chk.nextElementSibling;
             if (track && track.classList.contains('toggle-slider')) {

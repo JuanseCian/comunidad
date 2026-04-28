@@ -11,7 +11,7 @@
 @endif
 
 
-{{-- ── HERO ── --}}
+
 <section style="background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2.5rem 0 2rem;">
     <div class="container">
         <div class="row align-items-center g-4">
@@ -61,10 +61,10 @@
 </section>
 
 
-{{-- ── CONTENIDO PRINCIPAL ── --}}
+
 <div class="container py-4">
 
-    {{-- SECCIÓN: Gestión de Personas --}}
+    
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem; margin-top:0.5rem;">
         <div style="width:4px; height:22px; background:linear-gradient(180deg,#0879a8,#0d92c2); border-radius:4px; flex-shrink:0;"></div>
         <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0879a8; margin:0;">Gestión de Personas</p>
@@ -72,7 +72,7 @@
     </div>
 
     <div class="row g-3 mb-4">
-        {{-- Nueva persona --}}
+        
         <div class="col-md-6">
             <a href="{{ route('personas.create') }}" style="text-decoration:none; display:block;">
                 <div style="
@@ -104,7 +104,7 @@
             </a>
         </div>
 
-        {{-- Listado de personas --}}
+        
         <div class="col-md-6">
             <a href="{{ route('personas.index') }}" style="text-decoration:none; display:block;">
                 <div style="
@@ -137,7 +137,7 @@
         </div>
     </div>
 
-    {{-- SECCIÓN: Programas --}}
+    
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem; margin-top:0.5rem;">
         <div style="width:4px; height:22px; background:linear-gradient(180deg,#17a385,#5dc9a8); border-radius:4px; flex-shrink:0;"></div>
         <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0e8a70; margin:0;">Programas de Acompañamiento</p>
@@ -223,7 +223,7 @@
     </div>
 
 
-    {{-- SECCIÓN: Otros servicios --}}
+  
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem;">
         <div style="width:4px; height:22px; background:linear-gradient(180deg,#1aaad8,#4dbde8); border-radius:4px; flex-shrink:0;"></div>
         <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0879a8; margin:0;">Otros Servicios</p>

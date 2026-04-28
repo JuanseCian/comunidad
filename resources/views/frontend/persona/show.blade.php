@@ -1,4 +1,4 @@
-{{-- resources/views/frontend/persona/show.blade.php --}}
+
 
 @extends('frontend.layout.front')
 
@@ -51,7 +51,7 @@
 
     .sp-page { font-family: var(--sans); color: var(--ink); }
 
-    /* ── Breadcrumb ── */
+
     .sp-breadcrumb {
         display: flex; align-items: center; gap: 6px;
         font-size: 12px; color: var(--muted); margin-bottom: 1.5rem; flex-wrap: wrap;
@@ -60,7 +60,6 @@
     .sp-breadcrumb a:hover { color: var(--blue); }
     .sp-breadcrumb span { opacity: .5; }
 
-    /* ── Alert ── */
     .sp-alert {
         display: flex; align-items: center; gap: 10px;
         background: var(--teal-lt); border: 1px solid var(--teal-brd); color: var(--teal-dk);
@@ -68,7 +67,6 @@
         margin-bottom: 1.5rem;
     }
 
-    /* ── Hero ── */
     .sp-hero {
         background: linear-gradient(135deg, var(--blue-lt) 0%, var(--teal-lt) 100%);
         border: 1px solid var(--blue-brd);
@@ -98,7 +96,6 @@
         font-weight: 800; color: var(--ink); line-height: 1.15; margin: 0 0 10px;
     }
 
-    /* ── Pill badges ── */
     .sp-pill {
         display: inline-flex; align-items: center;
         border-radius: 40px; padding: 3px 11px;
@@ -109,7 +106,6 @@
     .sp-pill-teal   { background: var(--teal-lt); border-color: var(--teal-brd); color: var(--teal-dk); }
     .sp-pill-amber  { background: var(--amber-lt); border-color: var(--amber-brd); color: var(--amber); }
 
-    /* ── Action buttons ── */
     .sp-btn-primary {
         display: inline-flex; align-items: center; gap: 7px;
         height: 40px; padding: 0 18px; border-radius: 12px;
@@ -131,7 +127,6 @@
     }
     .sp-btn-ghost:hover { background: var(--bg); color: var(--ink); }
 
-    /* ── Section card ── */
     .sp-card {
         background: var(--white);
         border: 1px solid var(--border);
@@ -161,7 +156,6 @@
     .sp-card-action:hover { background: var(--blue); color: white; }
     .sp-card-body { padding: 18px 20px; }
 
-    /* ── Data rows ── */
     .sp-data-row {
         display: flex; justify-content: space-between; align-items: baseline;
         gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border-sm);
@@ -172,14 +166,12 @@
     .sp-val { color: var(--ink); font-weight: 600; text-align: right; }
     .sp-val-empty { color: #c8c4bb; font-style: italic; font-weight: 400; text-align: right; }
 
-    /* ── Badge counter ── */
     .sp-count {
         background: var(--blue-lt); border: 1px solid var(--blue-brd);
         color: var(--blue-dk); border-radius: 20px;
         padding: 1px 8px; font-size: 11px; font-weight: 700; margin-left: 6px;
     }
 
-    /* ── Family table ── */
     .sp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .sp-table thead tr { background: var(--bg); }
     .sp-table th {
@@ -193,15 +185,12 @@
     .sp-table tbody tr { transition: background .12s; }
     .sp-table tbody tr:hover td { background: var(--bg); }
 
-    /* ── CUD badge ── */
     .sp-badge-yes { background: var(--teal-lt); border: 1px solid var(--teal-brd); color: var(--teal-dk); border-radius: 20px; padding: 3px 10px; font-size: 11.5px; font-weight: 700; }
     .sp-badge-no  { background: var(--bg); border: 1px solid var(--border); color: var(--slate); border-radius: 20px; padding: 3px 10px; font-size: 11.5px; font-weight: 600; }
 
-    /* ── Tag list ── */
     .sp-tag-green { background: var(--teal-lt); border: 1px solid var(--teal-brd); color: var(--teal-dk); border-radius: 20px; padding: 4px 13px; font-size: 12.5px; font-weight: 700; }
     .sp-tag-blue  { background: var(--blue-lt); border: 1px solid var(--blue-brd); color: var(--blue-dk); border-radius: 20px; padding: 4px 13px; font-size: 12.5px; font-weight: 700; }
 
-    /* ── Atención ── */
     .sp-att-row {
         display: flex; gap: 14px; align-items: flex-start;
         padding: 14px 0; border-bottom: 1px solid var(--border-sm);
@@ -209,7 +198,6 @@
     .sp-att-row:last-child { border-bottom: none; }
     .sp-att-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--teal); margin-top: 5px; flex-shrink: 0; }
 
-    /* ── Empty state ── */
     .sp-empty { text-align: center; padding: 30px 20px; color: var(--muted); font-size: 13.5px; }
     .sp-empty-icon {
         width: 46px; height: 46px; border-radius: 50%;
@@ -217,7 +205,6 @@
         margin: 0 auto 12px; font-size: 20px;
     }
 
-    /* ── Animations ── */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .sp-anim { animation: fadeUp .35s ease both; }
     .sp-anim-1 { animation-delay: .00s; }
@@ -238,11 +225,9 @@
 
 <div class="sp-page">
 
-    {{-- ── HERO SECTION ── --}}
     <section style="background: linear-gradient(135deg, var(--blue-lt, #e6f5fb) 0%, var(--teal-lt, #e8f9f5) 100%); border-bottom: 1px solid #d0eee7; padding: 2rem 0 1.75rem;">
         <div class="container">
 
-            {{-- Breadcrumb --}}
             <nav class="sp-breadcrumb sp-anim sp-anim-1">
                 <a href="{{ route('home') }}">Inicio</a>
                 <span>/</span>
@@ -251,7 +236,6 @@
                 <span style="color: #536070; font-weight: 600;">{{ $persona->apellido }}, {{ $persona->nombre }}</span>
             </nav>
 
-            {{-- Flash --}}
             @if(session('success'))
                 <div class="sp-alert sp-anim sp-anim-1">
                     <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
@@ -260,7 +244,6 @@
 
             <div class="sp-anim sp-anim-2" style="display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
 
-                {{-- Avatar + nombre --}}
                 <div style="display:flex; align-items:center; gap:18px;">
                     <div class="sp-avatar">
                         {{ strtoupper(substr($persona->nombre, 0, 1)) }}{{ strtoupper(substr($persona->apellido, 0, 1)) }}
@@ -287,7 +270,6 @@
                     </div>
                 </div>
 
-                {{-- Actions --}}
                 <div style="display:flex; gap:8px; flex-shrink:0; flex-wrap:wrap;">
                     <a href="{{ route('personas.grupo-familiar.create', $persona) }}" class="sp-btn-primary">
                         <i class="bi bi-person-plus-fill"></i> Agregar integrante
@@ -300,13 +282,10 @@
         </div>
     </section>
 
-    {{-- ── MAIN CONTENT ── --}}
     <div class="container py-4">
 
-        {{-- ── ROW 1: Datos personales + Domicilio ── --}}
         <div class="row g-3 mb-3">
 
-            {{-- Datos personales --}}
             <div class="col-md-6 sp-anim sp-anim-3">
                 <div class="sp-card">
 
@@ -328,7 +307,6 @@
                             @csrf
                             @method('PUT')
 
-                            {{-- Correo --}}
                             <div class="sp-data-row">
                                 <span class="sp-label"><i class="bi bi-envelope"></i> Correo</span>
 
@@ -338,7 +316,6 @@
                                     class="edit-datos" style="display:none;">
                             </div>
 
-                            {{-- Teléfono --}}
                             <div class="sp-data-row">
                                 <span class="sp-label"><i class="bi bi-phone"></i> Teléfono</span>
 
@@ -348,7 +325,6 @@
                                     class="edit-datos" style="display:none;">
                             </div>
 
-                            {{-- Fecha nacimiento --}}
                             <div class="sp-data-row">
                                 <span class="sp-label"><i class="bi bi-calendar3"></i> Fecha de nac.</span>
 
@@ -361,7 +337,6 @@
                                         class="edit-datos" style="display:none;">
                                 </div>
 
-                                {{-- CUIL --}}
                                 <div class="sp-data-row">
                                     <span class="sp-label"><i class="bi bi-fingerprint"></i> CUIL</span>
 
@@ -371,7 +346,6 @@
                                         class="edit-datos" style="display:none;">
                                 </div>
 
-                                {{-- Grupo sanguíneo --}}
                                 <div class="sp-data-row">
                                     <span class="sp-label"><i class="bi bi-heart-pulse"></i> Grupo sanguíneo</span>
 
@@ -381,7 +355,6 @@
                                         class="edit-datos" style="display:none;">
                                 </div>
 
-                                {{-- Nivel de estudio --}}
                                 <div class="sp-data-row">
                                     <span class="sp-label"><i class="bi bi-mortarboard"></i> Nivel de estudio</span>
 
@@ -406,7 +379,6 @@
                     </div>
                 </div>
 
-            {{-- Domicilio --}}
             <div class="col-md-6 sp-anim sp-anim-3">
             <div class="sp-card">
 
@@ -428,7 +400,6 @@
                         @csrf
                         @method('PUT')
 
-                        {{-- Provincia --}}
                         <div class="sp-data-row">
                             <span class="sp-label">Provincia</span>
 
@@ -443,7 +414,6 @@
                             </select>
                         </div>
 
-                        {{-- Localidad --}}
                         <div class="sp-data-row">
                             <span class="sp-label">Localidad</span>
 
@@ -458,7 +428,6 @@
                             </select>
                         </div>
 
-                        {{-- Barrio --}}
                         <div class="sp-data-row">
                             <span class="sp-label">Barrio</span>
 
@@ -473,7 +442,6 @@
                             </select>
                         </div>
 
-                        {{-- Calle --}}
                         <div class="sp-data-row">
                             <span class="sp-label">Calle</span>
 
@@ -488,7 +456,6 @@
                                 class="edit-domicilio" style="display:none; width:80px;">
                         </div>
 
-                        {{-- Piso / Dpto --}}
                         <div class="sp-data-row">
                             <span class="sp-label">Piso / Dpto</span>
 
@@ -512,10 +479,8 @@
             </div>
         </div>
 
-        {{-- ── ROW 2: CUD + Programas ── --}}
         <div class="row g-3 mb-3">
 
-            {{-- CUD --}}
             <div class="col-md-6 sp-anim sp-anim-4">
                 <div class="sp-card">
                     <div class="sp-card-header">
@@ -561,7 +526,6 @@
                 </div>
             </div>
 
-            {{-- Programas --}}
             <div class="col-md-6 sp-anim sp-anim-4">
                 <div class="sp-card">
                     <div class="sp-card-header">
@@ -580,7 +544,7 @@
 
                                 <div style="border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden;">
 
-                                    {{-- HEADER (lo visible siempre) --}}
+
                                     <div onclick="togglePrograma({{ $pp->id }})"
                                         style="padding:12px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; background:var(--bg);">
 
@@ -601,14 +565,13 @@
                                         <i class="bi bi-chevron-down" id="icon-{{ $pp->id }}"></i>
                                     </div>
 
-                                    {{-- CONTENIDO OCULTO --}}
+
                                     <div id="prog-{{ $pp->id }}" style="display:none; padding:14px;">
 
                                         <form method="POST" action="{{ route('persona-programa.update', $pp->id) }}">
                                             @csrf
                                             @method('PUT')
 
-                                            {{-- Rol --}}
                                             <div style="margin-bottom:10px;">
                                                 <label>Rol</label>
                                                 <select name="rol" class="form-control">
@@ -617,7 +580,6 @@
                                                 </select>
                                             </div>
 
-                                        {{-- Fechas --}}
                                         <div style="margin-bottom:10px;">
                                             <label>Fecha inicio</label>
                                             <input type="date" name="fecha_inicio"
@@ -651,7 +613,6 @@
             </div>
         </div>
 
-        {{-- ── ROW 3: Beneficios ── --}}
         <div class="row g-3 mb-3">
             <div class="col-12 sp-anim sp-anim-4">
                 <div class="sp-card">
@@ -678,7 +639,6 @@
             </div>
         </div>
 
-        {{-- ── ROW 4: Grupo familiar ── --}}
         <div class="row g-3 mb-3">
             <div class="col-12 sp-anim sp-anim-5">
                 <div class="sp-card">
@@ -756,7 +716,6 @@
             </div>
         </div>
 
-        {{-- ── ROW 5: Últimas atenciones ── --}}
         <div class="row g-3">
             <div class="col-12 sp-anim sp-anim-6">
                 <div class="sp-card">
@@ -803,15 +762,13 @@
             </div>
         </div>
 
-    </div>{{-- /container --}}
-</div>{{-- /sp-page --}}
+    </div>
+</div>
 
-{{-- ── MODAL: Asignar Programa ── --}}
 <div id="modalPrograma"
      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.45); z-index:1050; align-items:center; justify-content:center; backdrop-filter:blur(3px);">
     <div style="background:white; border-radius:20px; width:90%; max-width:460px; box-shadow:0 20px 60px rgba(0,0,0,0.18); overflow:hidden; animation:fadeUp .28s ease;">
 
-        {{-- Modal header --}}
         <div style="padding:18px 24px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background: linear-gradient(135deg, var(--blue-lt) 0%, var(--teal-lt) 100%);">
             <div style="display:flex; align-items:center; gap:10px;">
                 <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--blue),var(--teal)); display:flex; align-items:center; justify-content:center; color:white; font-size:16px;">
@@ -825,7 +782,6 @@
                     onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='white'">&times;</button>
         </div>
 
-        {{-- Modal body --}}
         @php
             $edad = \Carbon\Carbon::parse($persona->fecha_nacimiento)->age;
         @endphp
@@ -881,7 +837,7 @@
                             @endif
 
                         </select>
-                        {{-- Fecha inicio --}}
+                    
                         <div style="margin-bottom:12px;">
                             <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:6px;">
                                 Fecha inicio
@@ -891,7 +847,7 @@
                                 style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border);">
                         </div>
 
-                        {{-- Fecha fin --}}
+                   
                         <div style="margin-bottom:12px;">
                             <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:6px;">
                                 Fecha fin
@@ -959,7 +915,7 @@ document.addEventListener('DOMContentLoaded', function () {
     programaSelect.addEventListener('change', function () {
         const texto = this.options[this.selectedIndex].text;
 
-        // Si no es Envion → ocultar tutor
+    
         if (texto !== 'Envion') {
             [...rolSelect.options].forEach(o => {
                 if (o.value === 'tutor') o.style.display = 'none';

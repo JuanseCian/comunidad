@@ -44,11 +44,11 @@
 
 <div class="container py-4">
 
-    {{-- ── Filtros ── --}}
+
     <form method="GET" action="{{ route('personas.index') }}">
         <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; padding:18px 20px; margin-bottom:1.25rem; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
 
-            {{-- Buscador --}}
+
             <div style="flex:1; min-width:200px;">
                 <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Buscar</label>
                 <div style="position:relative;">
@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            {{-- Filtro sede --}}
+
             <div style="min-width:160px;">
                 <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Sede</label>
                 <select name="sede_id" style="width:100%; height:38px; padding:0 30px 0 10px; border:1px solid #c8c4bb; border-radius:10px; font-size:13.5px; font-family:inherit; outline:none; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none; color:#0f172a;"
@@ -75,7 +75,7 @@
                 </select>
             </div>
 
-            {{-- Filtro barrio --}}
+
             <div style="min-width:160px;">
                 <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Barrio</label>
                 <select name="barrio_id" style="width:100%; height:38px; padding:0 30px 0 10px; border:1px solid #c8c4bb; border-radius:10px; font-size:13.5px; font-family:inherit; outline:none; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none; color:#0f172a;"
@@ -89,7 +89,7 @@
                 </select>
             </div>
 
-            {{-- Botones --}}
+
             <div style="display:flex; gap:8px; align-items:flex-end;">
                 <button type="submit" style="height:38px; padding:0 18px; background:linear-gradient(135deg,#0d92c2,#1aaad8); color:white; border:none; border-radius:10px; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
                     <i class="bi bi-funnel-fill" style="font-size:12px;"></i> Filtrar
@@ -104,14 +104,14 @@
         </div>
     </form>
 
-    {{-- ── Flash ── --}}
+  
     @if(session('success'))
         <div style="background:#e8f9f5; border:1px solid #9fe1cb; border-radius:12px; padding:12px 18px; margin-bottom:1.25rem; color:#0e8a70; font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:10px;">
             <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
         </div>
     @endif
 
-    {{-- ── Tabla ── --}}
+
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden;">
 
         @if($personas->isEmpty())
@@ -134,19 +134,19 @@
 
         @else
 
-            {{-- Header tabla --}}
+
             <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap:0; border-bottom:1px solid #e0ddd6; background:#f5f3ee; padding:0 20px;">
                 @foreach(['Persona', 'DNI', 'Localidad / Barrio', 'Grupo familiar', 'Sede', ''] as $col)
                     <div style="padding:10px 8px; font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">{{ $col }}</div>
                 @endforeach
             </div>
 
-            {{-- Filas --}}
+
             @foreach($personas as $p)
                 <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap:0; border-bottom:1px solid #f0ede8; padding:0 20px; transition:background .15s;"
                      onmouseover="this.style.background='#fafaf8'" onmouseout="this.style.background='white'">
 
-                    {{-- Nombre --}}
+
                     <div style="padding:14px 8px; display:flex; align-items:center; gap:12px; min-width:0;">
                         <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#e6f5fb,#e8f9f5); border:1px solid #b3e0f5; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13px; color:#0879a8; flex-shrink:0;">
                             {{ strtoupper(substr($p->nombre, 0, 1)) }}{{ strtoupper(substr($p->apellido, 0, 1)) }}
@@ -171,7 +171,7 @@
                         </div>
                     </div>
 
-                    {{-- DNI --}}
+
                     <div style="padding:14px 8px; display:flex; align-items:center;">
                         <div>
                             <div style="font-size:13.5px; font-weight:600; color:#0f172a;">{{ $p->dni ?? '—' }}</div>
@@ -181,7 +181,7 @@
                         </div>
                     </div>
 
-                    {{-- Localidad / Barrio --}}
+
                     <div style="padding:14px 8px; display:flex; align-items:center;">
                         <div>
                             <div style="font-size:13px; color:#0f172a; font-weight:500;">
@@ -196,7 +196,6 @@
                         </div>
                     </div>
 
-                    {{-- Grupo familiar --}}
                     <div style="padding:14px 8px; display:flex; align-items:center;">
                         @php $total = $p->grupoFamiliar?->count() ?? 0; @endphp
                         @if($total > 0)
@@ -208,7 +207,6 @@
                         @endif
                     </div>
 
-                    {{-- Sede --}}
                     <div style="padding:14px 8px; display:flex; align-items:center;">
                         @if($p->sedeOrigen)
                             <span style="background:#e6f5fb; color:#0879a8; border:1px solid #b3e0f5; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px; display:block;">
@@ -219,7 +217,6 @@
                         @endif
                     </div>
 
-                    {{-- Acciones --}}
                     <div style="padding:14px 8px; display:flex; align-items:center; justify-content:flex-end; gap:6px;">
                         <a href="{{ route('personas.show', $p) }}"
                            style="width:32px; height:32px; background:#e6f5fb; border:1px solid #b3e0f5; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#0879a8; text-decoration:none; transition:background .15s;"
@@ -240,14 +237,13 @@
                 </div>
             @endforeach
 
-            {{-- Paginación --}}
             @if($personas->hasPages())
                 <div style="padding:16px 20px; border-top:1px solid #e0ddd6; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
                     <span style="font-size:13px; color:#536070;">
                         Mostrando {{ $personas->firstItem() }}–{{ $personas->lastItem() }} de {{ $personas->total() }}
                     </span>
                     <div style="display:flex; gap:4px; align-items:center;">
-                        {{-- Anterior --}}
+
                         @if($personas->onFirstPage())
                             <span style="width:34px; height:34px; border:1px solid #e0ddd6; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#c8c4bb; font-size:13px;">
                                 <i class="bi bi-chevron-left"></i>
@@ -258,7 +254,7 @@
                             </a>
                         @endif
 
-                        {{-- Páginas --}}
+
                         @foreach($personas->getUrlRange(max(1, $personas->currentPage()-2), min($personas->lastPage(), $personas->currentPage()+2)) as $page => $url)
                             @if($page == $personas->currentPage())
                                 <span style="width:34px; height:34px; background:linear-gradient(135deg,#0d92c2,#1aaad8); color:white; border:1px solid #0d92c2; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;">{{ $page }}</span>
@@ -267,7 +263,7 @@
                             @endif
                         @endforeach
 
-                        {{-- Siguiente --}}
+
                         @if($personas->hasMorePages())
                             <a href="{{ $personas->nextPageUrl() }}" style="width:34px; height:34px; border:1px solid #c8c4bb; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#536070; text-decoration:none; transition:all .15s;" onmouseover="this.style.background='#0d92c2'; this.style.color='white'; this.style.borderColor='#0d92c2'" onmouseout="this.style.background='white'; this.style.color='#536070'; this.style.borderColor='#c8c4bb'">
                                 <i class="bi bi-chevron-right" style="font-size:13px;"></i>
