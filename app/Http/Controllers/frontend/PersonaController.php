@@ -13,8 +13,10 @@ use App\Models\Barrio;
 use App\Models\Sede;
 use App\Models\Domicilio;
 use App\Models\EstadoCivil;
-use App\Models\localidad;
+use App\Models\Localidad;
 use App\Models\ProgramasAsistencia;
+use App\Models\Discapacidad;
+use App\Models\Enfermedad;
 
 class PersonaController extends Controller
 {
@@ -58,29 +60,34 @@ class PersonaController extends Controller
     public function create()
     {
         return view('frontend.persona.create', [
-            'tipos_doc'  => TipoDocumento::orderBy('nombre')->get(),
-            'sexos'      => Sexo::orderBy('nombre')->get(),
-            'niveles'    => NivelesEstudio::orderBy('nombre')->get(),
-            'provincias' => Provincia::orderBy('nombre')->get(),
-            'barrios'    => Barrio::orderBy('nombre')->get(),
-            'sedes'      => Sede::orderBy('nombre')->get(),
+            'tipos_doc'       => TipoDocumento::orderBy('nombre')->get(),
+            'sexos'           => Sexo::orderBy('nombre')->get(),
+            'niveles'         => NivelesEstudio::orderBy('nombre')->get(),
+            'barrios'         => Barrio::orderBy('nombre')->get(),
+            'sedes'           => Sede::orderBy('nombre')->get(),
             'estados_civiles' => EstadoCivil::all(),
-            'provincias' => Provincia::all(),
-            'localidades' => Localidad::all(),
-
+            'provincias'      => Provincia::orderBy('nombre')->get(),
+            'localidades'     => Localidad::orderBy('nombre')->get(),
+            'catalogos'       => [
+                'discapacidades' => Discapacidad::orderBy('nombre')->get(),
+                'enfermedades'   => Enfermedad::orderBy('nombre')->get(),
+            ],
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nombre'            => 'required|string|max:255',
-            'apellido'          => 'required|string|max:255',
-            'dni'               => 'required',
-            'cuil'              => 'nullable|string|max:20',
-            'estado_civil_id'   => 'nullable|exists:estado_civil,id',
-            'provincia_id'      => 'nullable|exists:provincia,id',
-            'localidad_id'      => 'nullable|exists:localidad,id',
+            'nombre'                   => 'required|string|max:255',
+            'apellido'                 => 'required|string|max:255',
+            'dni'                      => 'required',
+            'cuil'                     => 'nullable|string|max:20',
+            'estado_civil_id'          => 'nullable|exists:estado_civil,id',
+            'provincia_id'             => 'nullable|exists:provincia,id',
+            'localidad_id'             => 'nullable|exists:localidad,id',
+            // Salud
+            'discapacidad_id'          => 'nullable|exists:discapacidad,id',
+            'enfermedad_id'            => 'nullable|exists:enfermedad,id',
         ]);
 
         $domicilio_id = null;
@@ -97,26 +104,39 @@ class PersonaController extends Controller
             $domicilio_id = $domicilio->id;
         }
 
+        // Los campos de discapacidad solo se guardan si el toggle está activo
+        $tieneDiscapacidad = $request->boolean('_tiene_discapacidad') || $request->filled('discapacidad_id');
+        $tieneEnfermedad   = $request->filled('enfermedad_id');
+        $tieneEmbarazo     = $request->boolean('embarazo');
+
         $persona = Persona::create([
-            'nombre'              => $request->nombre,
-            'apellido'            => $request->apellido,
-            'correo'              => $request->correo,
-            'fecha_nacimiento'    => $request->fecha_nacimiento,
-            'documento_id'        => $request->documento_id,
-            'dni'                 => $request->dni,
-            'cuil'                => $request->cuil,
-            'sexo_id'             => $request->sexo_id,
-            'domicilio_id'        => $domicilio_id,
-
-            'provincia_id'        => $request->provincia_id,
-            'localidad_id'        => $request->localidad_id,
-
-            'telefono'            => $request->telefono,
-            'nivel_estudio_id'    => $request->nivel_estudio_id,
-            'estado_civil_id'     => $request->estado_civil_id,
-            'trabaja'             => $request->trabaja ? 1 : 0,
-            'grupo_sanguineo'     => $request->grupo_sanguineo,
-            'sede_origen_id'      => $request->sede_origen_id,
+            'nombre'                   => $request->nombre,
+            'apellido'                 => $request->apellido,
+            'correo'                   => $request->correo,
+            'fecha_nacimiento'         => $request->fecha_nacimiento,
+            'documento_id'             => $request->documento_id,
+            'dni'                      => $request->dni,
+            'cuil'                     => $request->cuil,
+            'sexo_id'                  => $request->sexo_id,
+            'domicilio_id'             => $domicilio_id,
+            'provincia_id'             => $request->provincia_id,
+            'localidad_id'             => $request->localidad_id,
+            'telefono'                 => $request->telefono,
+            'nivel_estudio_id'         => $request->nivel_estudio_id,
+            'estado_civil_id'          => $request->estado_civil_id,
+            'trabaja'                  => $request->boolean('trabaja') ? 1 : 0,
+            'grupo_sanguineo'          => $request->grupo_sanguineo,
+            'sede_origen_id'           => $request->sede_origen_id,
+            // Salud — discapacidad
+            'discapacidad_permanente'  => $tieneDiscapacidad ? 1 : 0,
+            'discapacidad_id'          => $tieneDiscapacidad ? $request->discapacidad_id : null,
+            'discapacidad_tratamiento' => $tieneDiscapacidad ? ($request->boolean('discapacidad_tratamiento') ? 1 : 0) : null,
+            // Salud — enfermedad
+            'enfermedad_id'            => $tieneEnfermedad ? $request->enfermedad_id : null,
+            'enfermedad_tratamiento'   => $tieneEnfermedad ? ($request->boolean('enfermedad_tratamiento') ? 1 : 0) : null,
+            // Salud — embarazo
+            'embarazo'                 => $tieneEmbarazo ? 1 : 0,
+            'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
         ]);
 
         return redirect()
@@ -297,6 +317,10 @@ class PersonaController extends Controller
             'sedes'           => Sede::orderBy('nombre')->get(),
             'estados_civiles' => EstadoCivil::orderBy('nombre')->get(),
             'localidades'     => Localidad::orderBy('nombre')->get(),
+            'catalogos'       => [
+                'discapacidades' => Discapacidad::orderBy('nombre')->get(),
+                'enfermedades'   => Enfermedad::orderBy('nombre')->get(),
+            ],
         ]);
     }
 
@@ -315,15 +339,32 @@ class PersonaController extends Controller
             'cuil'             => 'nullable|string|max:20',
             'grupo_sanguineo'  => 'nullable|string|max:10',
             'nivel_estudio_id' => 'nullable|exists:niveles_estudio,id',
+            // Salud
+            'discapacidad_id'  => 'nullable|exists:discapacidad,id',
+            'enfermedad_id'    => 'nullable|exists:enfermedad,id',
         ]);
 
+        $tieneDiscapacidad = $request->boolean('_tiene_discapacidad') || $request->filled('discapacidad_id');
+        $tieneEnfermedad   = $request->filled('enfermedad_id');
+        $tieneEmbarazo     = $request->boolean('embarazo');
+
         $persona->update([
-            'correo'              => $request->correo,
-            'telefono'            => $request->telefono,
-            'fecha_nacimiento'    => $request->fecha_nacimiento,
-            'cuil'                => $request->cuil,
-            'grupo_sanguineo'     => $request->grupo_sanguineo,
-            'nivel_estudio_id'    => $request->nivel_estudio_id,
+            'correo'                   => $request->correo,
+            'telefono'                 => $request->telefono,
+            'fecha_nacimiento'         => $request->fecha_nacimiento,
+            'cuil'                     => $request->cuil,
+            'grupo_sanguineo'          => $request->grupo_sanguineo,
+            'nivel_estudio_id'         => $request->nivel_estudio_id,
+            // Salud — discapacidad
+            'discapacidad_permanente'  => $tieneDiscapacidad ? 1 : 0,
+            'discapacidad_id'          => $tieneDiscapacidad ? $request->discapacidad_id : null,
+            'discapacidad_tratamiento' => $tieneDiscapacidad ? ($request->boolean('discapacidad_tratamiento') ? 1 : 0) : null,
+            // Salud — enfermedad
+            'enfermedad_id'            => $tieneEnfermedad ? $request->enfermedad_id : null,
+            'enfermedad_tratamiento'   => $tieneEnfermedad ? ($request->boolean('enfermedad_tratamiento') ? 1 : 0) : null,
+            // Salud — embarazo
+            'embarazo'                 => $tieneEmbarazo ? 1 : 0,
+            'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
         ]);
 
         return back()->with('success', 'Datos personales actualizados correctamente');

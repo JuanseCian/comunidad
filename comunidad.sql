@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 28-04-2026 a las 18:19:21
+-- Tiempo de generación: 28-04-2026 a las 18:35:38
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -851,16 +851,21 @@ CREATE TABLE `personas` (
   `estado_civil_id` bigint UNSIGNED DEFAULT NULL,
   `discapacidad_id` bigint UNSIGNED DEFAULT NULL,
   `discapacidad_permanente` tinyint(1) DEFAULT NULL,
-  `discapacidad_tratamiento` tinyint(1) DEFAULT NULL
+  `discapacidad_tratamiento` tinyint(1) DEFAULT NULL,
+  `caratula` varchar(150) DEFAULT NULL,
+  `enfermedad_id` bigint UNSIGNED DEFAULT NULL,
+  `enfermedad_tratamiento` tinyint(1) DEFAULT NULL,
+  `embarazo` tinyint(1) DEFAULT NULL,
+  `control_embarazo` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `personas`
 --
 
-INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`) VALUES
-(13, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-04-27 02:15:35', NULL, 1, NULL, NULL, NULL),
-(14, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-04-27 02:20:01', NULL, 1, NULL, NULL, NULL);
+INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`) VALUES
+(13, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-04-27 02:15:35', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(14, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-04-27 02:20:01', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1393,7 +1398,8 @@ ALTER TABLE `personas`
   ADD KEY `fk_personas_sede` (`sede_origen_id`),
   ADD KEY `idx_personas_nombre_apellido` (`apellido`,`nombre`),
   ADD KEY `fk_personas_estado_civil` (`estado_civil_id`),
-  ADD KEY `fk_persona_discapacidad` (`discapacidad_id`);
+  ADD KEY `fk_persona_discapacidad` (`discapacidad_id`),
+  ADD KEY `fk_persona_enfermedad` (`enfermedad_id`);
 
 --
 -- Indices de la tabla `persona_beneficio`
@@ -1770,6 +1776,7 @@ ALTER TABLE `personas`
   ADD CONSTRAINT `fk_persona_discapacidad` FOREIGN KEY (`discapacidad_id`) REFERENCES `discapacidad` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_documento` FOREIGN KEY (`documento_id`) REFERENCES `tipo_documento` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_domicilio` FOREIGN KEY (`domicilio_id`) REFERENCES `domicilio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_persona_enfermedad` FOREIGN KEY (`enfermedad_id`) REFERENCES `enfermedades` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_localidad` FOREIGN KEY (`localidad_id`) REFERENCES `localidad` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_nivel` FOREIGN KEY (`nivel_estudio_id`) REFERENCES `niveles_estudio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_provincia` FOREIGN KEY (`provincia_id`) REFERENCES `provincia` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,

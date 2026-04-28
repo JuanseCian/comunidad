@@ -175,10 +175,10 @@
                         <label style="position:relative; display:inline-block; width:42px; height:24px; margin:0; cursor:pointer;">
                             <input type="checkbox" name="trabaja" value="1" {{ old('trabaja') ? 'checked' : '' }}
                                    style="opacity:0; width:0; height:0; position:absolute;"
-                                   onchange="this.nextElementSibling.style.background = this.checked ? '#0d92c2' : '#c8c4bb'; this.nextElementSibling.querySelector('span').style.transform = this.checked ? 'translateX(18px)' : 'translateX(0)'">
-                            <div style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                                   onchange="toggleSlider(this)">
+                            <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
                                 <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
-                            </div>
+                            </span>
                         </label>
                     </div>
                 </div>
@@ -310,11 +310,171 @@
     </div>
 
     {{-- ══════════════════════════════════════
-         SECCIÓN 4: Sistema
+         SECCIÓN 4: Salud
     ══════════════════════════════════════ --}}
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
         <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
             <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">4</div>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#0f172a;">Salud</span>
+            <span style="font-size:12px; color:#94a3b4; margin-left:auto;">Discapacidad, enfermedades y embarazo</span>
+        </div>
+        <div style="padding:22px;">
+            <div style="display:flex; flex-direction:column; gap:0;">
+
+                {{-- Discapacidad --}}
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
+                    <div>
+                        <div style="font-size:14px; color:#0f172a; font-weight:500;">Tiene discapacidad</div>
+                        <div style="font-size:11.5px; color:#94a3b4; margin-top:2px; font-style:italic;">Activá para completar el tipo y detalle</div>
+                    </div>
+                    <label style="position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer; margin:0;">
+                        <input type="checkbox" name="_tiene_discapacidad" value="1" id="chk-discapacidad"
+                               {{ old('discapacidad_id') || old('_tiene_discapacidad') ? 'checked' : '' }}
+                               style="opacity:0; width:0; height:0; position:absolute;"
+                               onchange="toggleBlock('blk-discapacidad', this)">
+                        <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                            <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
+                        </span>
+                    </label>
+                </div>
+                <div id="blk-discapacidad"
+                     style="display:{{ old('discapacidad_id') || old('_tiene_discapacidad') ? 'block' : 'none' }}; margin:0; padding:16px; background:#f8fafe; border-radius:10px; border:1px solid #e0ddd6; margin-top:8px; margin-bottom:8px;">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Tipo de discapacidad</label>
+                            <select name="discapacidad_id"
+                                    style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                                    onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                                <option value="">— Seleccionar —</option>
+                                @foreach($catalogos['discapacidades'] as $d)
+                                    <option value="{{ $d->id }}" {{ old('discapacidad_id') == $d->id ? 'selected' : '' }}>{{ $d->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Carátula / expediente</label>
+                            <input type="text" name="caratula" value="{{ old('caratula') }}" placeholder="Número o referencia"
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                                   onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                                   onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                        </div>
+                    </div>
+                    {{-- Permanente y tratamiento como campos dentro del bloque --}}
+                    <div style="display:flex; flex-direction:column; gap:0; margin-top:12px; border-top:1px solid #e0ddd6; padding-top:4px;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0;">
+                            <div style="font-size:13.5px; color:#0f172a;">Es permanente</div>
+                            <label style="position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer; margin:0;">
+                                <input type="checkbox" name="discapacidad_permanente" value="1"
+                                       {{ old('discapacidad_permanente') ? 'checked' : '' }}
+                                       style="opacity:0; width:0; height:0; position:absolute;"
+                                       onchange="toggleSlider(this)">
+                                <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                                    <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0;">
+                            <div style="font-size:13.5px; color:#0f172a;">Recibe tratamiento por discapacidad</div>
+                            <label style="position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer; margin:0;">
+                                <input type="checkbox" name="discapacidad_tratamiento" value="1"
+                                       {{ old('discapacidad_tratamiento') ? 'checked' : '' }}
+                                       style="opacity:0; width:0; height:0; position:absolute;"
+                                       onchange="toggleSlider(this)">
+                                <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                                    <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Enfermedad --}}
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
+                    <div>
+                        <div style="font-size:14px; color:#0f172a; font-weight:500;">Tiene enfermedad crónica o relevante</div>
+                        <div style="font-size:11.5px; color:#94a3b4; margin-top:2px; font-style:italic;">Activá para seleccionar el tipo y tratamiento</div>
+                    </div>
+                    <label style="position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer; margin:0;">
+                        <input type="checkbox" name="_tiene_enfermedad" value="1" id="chk-enfermedad"
+                               {{ old('enfermedad_id') ? 'checked' : '' }}
+                               style="opacity:0; width:0; height:0; position:absolute;"
+                               onchange="toggleBlock('blk-enfermedad', this)">
+                        <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                            <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
+                        </span>
+                    </label>
+                </div>
+                <div id="blk-enfermedad"
+                     style="display:{{ old('enfermedad_id') ? 'block' : 'none' }}; margin:0; padding:16px; background:#f8fafe; border-radius:10px; border:1px solid #e0ddd6; margin-top:8px; margin-bottom:8px;">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Tipo de enfermedad</label>
+                            <select name="enfermedad_id"
+                                    style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
+                                    onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                                <option value="">— Seleccionar —</option>
+                                @foreach($catalogos['enfermedades'] as $e)
+                                    <option value="{{ $e->id }}" {{ old('enfermedad_id') == $e->id ? 'selected' : '' }}>{{ $e->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0 0; margin-top:12px; border-top:1px solid #e0ddd6;">
+                        <div style="font-size:13.5px; color:#0f172a;">Recibe tratamiento por la enfermedad</div>
+                        <label style="position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer; margin:0;">
+                            <input type="checkbox" name="enfermedad_tratamiento" value="1"
+                                   {{ old('enfermedad_tratamiento') ? 'checked' : '' }}
+                                   style="opacity:0; width:0; height:0; position:absolute;"
+                                   onchange="toggleSlider(this)">
+                            <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                                <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                {{-- Embarazo --}}
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid #f0ede8;">
+                    <div>
+                        <div style="font-size:14px; color:#0f172a; font-weight:500;">Está embarazada</div>
+                        <div style="font-size:11.5px; color:#94a3b4; margin-top:2px; font-style:italic;">Solo aplicar si corresponde</div>
+                    </div>
+                    <label style="position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer; margin:0;">
+                        <input type="checkbox" name="embarazo" value="1" id="chk-embarazo"
+                               {{ old('embarazo') ? 'checked' : '' }}
+                               style="opacity:0; width:0; height:0; position:absolute;"
+                               onchange="toggleBlock('blk-embarazo', this)">
+                        <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                            <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
+                        </span>
+                    </label>
+                </div>
+                <div id="blk-embarazo"
+                     style="display:{{ old('embarazo') ? 'block' : 'none' }}; padding:14px 16px; background:#f8fafe; border-radius:10px; border:1px solid #e0ddd6; margin-top:8px; margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <div style="font-size:13.5px; color:#0f172a;">Realiza controles de embarazo</div>
+                        <label style="position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer; margin:0;">
+                            <input type="checkbox" name="control_embarazo" value="1"
+                                   {{ old('control_embarazo') ? 'checked' : '' }}
+                                   style="opacity:0; width:0; height:0; position:absolute;"
+                                   onchange="toggleSlider(this)">
+                            <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
+                                <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════
+         SECCIÓN 5: Sistema
+    ══════════════════════════════════════ --}}
+    <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
+        <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
+            <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">5</div>
             <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#0f172a;">Sistema</span>
             <span style="font-size:12px; color:#94a3b4; margin-left:auto;">Datos administrativos internos</span>
         </div>
@@ -348,19 +508,37 @@
 </div>
 </div>
 
-{{-- Inicializar toggle de "Trabaja" según valor actual --}}
+{{-- Lógica de toggles --}}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const chk = document.querySelector('input[name="trabaja"]');
-    if (chk) {
+    // Actualiza visualmente el slider de un checkbox toggle
+    function toggleSlider(chk) {
         const track = chk.nextElementSibling;
         const thumb = track.querySelector('span');
-        if (chk.checked) {
-            track.style.background = '#0d92c2';
-            thumb.style.transform  = 'translateX(18px)';
-        }
+        track.style.background = chk.checked ? '#0d92c2' : '#c8c4bb';
+        thumb.style.transform  = chk.checked ? 'translateX(18px)' : 'translateX(0)';
     }
-});
+
+    // Muestra/oculta un bloque condicional y actualiza el slider
+    function toggleBlock(blockId, chk) {
+        toggleSlider(chk);
+        const block = document.getElementById(blockId);
+        if (block) block.style.display = chk.checked ? 'block' : 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Inicializar todos los toggles según su estado actual (old() del server)
+        document.querySelectorAll('input[type="checkbox"].toggle-init, input[type="checkbox"][onchange]').forEach(function(chk) {
+            toggleSlider(chk);
+        });
+
+        // Inicializar sliders de todos los checkboxes que tengan toggle-slider como siguiente sibling
+        document.querySelectorAll('input[type="checkbox"]').forEach(function(chk) {
+            const track = chk.nextElementSibling;
+            if (track && track.classList.contains('toggle-slider')) {
+                toggleSlider(chk);
+            }
+        });
+    });
 </script>
 
 @endsection
