@@ -18,6 +18,7 @@ use App\Models\ProgramasAsistencia;
 use App\Models\Discapacidad;
 use App\Models\Enfermedad;
 use App\Models\Cobertura;
+use App\Models\Familia;
 
 class PersonaController extends Controller
 {
@@ -87,7 +88,7 @@ class PersonaController extends Controller
             'estado_civil_id'          => 'nullable|exists:estado_civil,id',
             'provincia_id'             => 'nullable|exists:provincia,id',
             'localidad_id'             => 'nullable|exists:localidad,id',
-
+            // Salud
             'discapacidad_id'          => 'nullable|exists:discapacidad,id',
             'enfermedad_id'            => 'nullable|exists:enfermedad,id',
             'cobertura_id'             => 'nullable|exists:cobertura,id',
@@ -107,12 +108,18 @@ class PersonaController extends Controller
             $domicilio_id = $domicilio->id;
         }
 
+        // Crear grupo familiar automáticamente
+        $familia = Familia::create([
+            'codigo' => Familia::generarCodigo(),
+        ]);
 
+        // Los campos de discapacidad solo se guardan si el toggle está activo
         $tieneDiscapacidad = $request->boolean('_tiene_discapacidad') || $request->filled('discapacidad_id');
         $tieneEnfermedad   = $request->filled('enfermedad_id');
         $tieneEmbarazo     = $request->boolean('embarazo');
 
         $persona = Persona::create([
+            'familia_id'               => $familia->id,
             'nombre'                   => $request->nombre,
             'apellido'                 => $request->apellido,
             'correo'                   => $request->correo,
@@ -130,17 +137,17 @@ class PersonaController extends Controller
             'trabaja'                  => $request->boolean('trabaja') ? 1 : 0,
             'grupo_sanguineo'          => $request->grupo_sanguineo,
             'sede_origen_id'           => $request->sede_origen_id,
-
+            // Salud — discapacidad
             'discapacidad_permanente'  => $tieneDiscapacidad ? 1 : 0,
             'discapacidad_id'          => $tieneDiscapacidad ? $request->discapacidad_id : null,
             'discapacidad_tratamiento' => $tieneDiscapacidad ? ($request->boolean('discapacidad_tratamiento') ? 1 : 0) : null,
-
+            // Salud — enfermedad
             'enfermedad_id'            => $tieneEnfermedad ? $request->enfermedad_id : null,
             'enfermedad_tratamiento'   => $tieneEnfermedad ? ($request->boolean('enfermedad_tratamiento') ? 1 : 0) : null,
-
+            // Salud — embarazo
             'embarazo'                 => $tieneEmbarazo ? 1 : 0,
             'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
-
+            // Cobertura médica
             'cobertura_id'             => $request->cobertura_id,
         ]);
 
@@ -156,7 +163,7 @@ class PersonaController extends Controller
         $edad = $persona->edad;
 
         $programa = ProgramasAsistencia::findOrFail($request->programa_id);
-        $rol = $request->rol;
+        $rol = $request->rol; // destinatario o tutor
 
         switch ($programa->nombre) {
 
@@ -193,7 +200,7 @@ class PersonaController extends Controller
             break;
         }
 
-
+        // Guardar
         $persona->programas()->attach($programa->id, [
             'rol' => $rol,
             'fecha_inicio' => now()
@@ -211,8 +218,19 @@ class PersonaController extends Controller
             'estadoCivil',
             'sexo',
             'nivelEstudio',
-            'sedeOrigen'
+            'sedeOrigen',
+            'familia.personas',
         ])->findOrFail($id);
+
+        // Si la persona no tiene grupo familiar asignado, crear uno automáticamente
+        if (!$persona->familia_id) {
+            $familia = Familia::create([
+                'codigo' => Familia::generarCodigo(),
+            ]);
+            $persona->familia_id = $familia->id;
+            $persona->save();
+            $persona->load('familia.personas');
+        }
 
         $programas   = ProgramasAsistencia::orderBy('nombre')->get();
         $niveles     = NivelesEstudio::orderBy('nombre')->get();
@@ -284,7 +302,7 @@ class PersonaController extends Controller
 
             if (!$pp->programa) continue;
 
-
+            // SOLO activos
             if ($pp->fecha_fin) continue;
 
             $nombre = strtolower($pp->programa->nombre);
@@ -306,6 +324,52 @@ class PersonaController extends Controller
                 $pp->update(['fecha_fin' => now()]);
             }
         }
+    }
+
+    public function vincularFamilia(Request $request, $id)
+    {
+        $request->validate([
+            'codigo' => 'required|string',
+        ]);
+
+        $persona = Persona::findOrFail($id);
+
+        // Normalizar: quitar guiones y mayúsculas
+        $codigo = strtoupper(str_replace('-', '', $request->codigo));
+
+        $familia = Familia::where('codigo', $codigo)->first();
+
+        if (!$familia) {
+            return back()
+                ->withErrors(['codigo' => 'No existe ningún grupo con ese código.'])
+                ->withInput();
+        }
+
+        if ($familia->id === $persona->familia_id) {
+            return back()->with('familia_error', 'Esta persona ya pertenece a ese grupo.');
+        }
+
+        // Si la familia anterior quedó vacía al desvincular, se puede dejar
+        // (no se borra automáticamente para no romper referencias)
+        $persona->familia_id = $familia->id;
+        $persona->save();
+
+        return back()->with('familia_success', 'Persona vinculada al grupo correctamente.');
+    }
+
+    public function desvincularFamilia($id)
+    {
+        $persona = Persona::findOrFail($id);
+
+        // Crear un grupo nuevo para esta persona
+        $nuevaFamilia = Familia::create([
+            'codigo' => Familia::generarCodigo(),
+        ]);
+
+        $persona->familia_id = $nuevaFamilia->id;
+        $persona->save();
+
+        return back()->with('familia_success', 'Persona desvinculada. Se le asignó un nuevo grupo.');
     }
 
     public function edit($id)
@@ -345,7 +409,7 @@ class PersonaController extends Controller
             'cuil'             => 'nullable|string|max:20',
             'grupo_sanguineo'  => 'nullable|string|max:10',
             'nivel_estudio_id' => 'nullable|exists:niveles_estudio,id',
-
+            // Salud
             'discapacidad_id'  => 'nullable|exists:discapacidad,id',
             'enfermedad_id'    => 'nullable|exists:enfermedad,id',
             'cobertura_id'     => 'nullable|exists:cobertura,id',
@@ -362,17 +426,17 @@ class PersonaController extends Controller
             'cuil'                     => $request->cuil,
             'grupo_sanguineo'          => $request->grupo_sanguineo,
             'nivel_estudio_id'         => $request->nivel_estudio_id,
-   
+            // Salud — discapacidad
             'discapacidad_permanente'  => $tieneDiscapacidad ? 1 : 0,
             'discapacidad_id'          => $tieneDiscapacidad ? $request->discapacidad_id : null,
             'discapacidad_tratamiento' => $tieneDiscapacidad ? ($request->boolean('discapacidad_tratamiento') ? 1 : 0) : null,
-         
+            // Salud — enfermedad
             'enfermedad_id'            => $tieneEnfermedad ? $request->enfermedad_id : null,
             'enfermedad_tratamiento'   => $tieneEnfermedad ? ($request->boolean('enfermedad_tratamiento') ? 1 : 0) : null,
-          
+            // Salud — embarazo
             'embarazo'                 => $tieneEmbarazo ? 1 : 0,
             'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
-           
+            // Cobertura médica
             'cobertura_id'             => $request->cobertura_id,
         ]);
 

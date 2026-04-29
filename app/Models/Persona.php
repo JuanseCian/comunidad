@@ -86,6 +86,9 @@ class Persona extends Model
     {
         return $this->hasMany(GrupoFamiliar::class, 'persona_id');
     }
+    public function familia() {
+    return $this->belongsTo(Familia::class, 'familia_id');
+}
 
     public function cud()
     {

@@ -42,8 +42,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $updated_by
  * @property string|null $deleted_at
  * @property int|null $deleted_by
+ * @property int|null $familia_id
  * 
  * @property User|null $user
+ * @property Familia|null $familia
  * @property CategoriaOcupacional|null $categoria_ocupacional
  * @property Cobertura|null $cobertura
  * @property Discapacidad|null $discapacidad
@@ -64,6 +66,7 @@ class GrupoFamiliar extends Model
 
 	protected $casts = [
 		'persona_id' => 'int',
+		'familia_id' => 'int',
 		'documento_id' => 'int',
 		'sexo_id' => 'int',
 		'fecha_nacimiento' => 'datetime',
@@ -88,6 +91,7 @@ class GrupoFamiliar extends Model
 
 	protected $fillable = [
 		'persona_id',
+		'familia_id',
 		'nombre',
 		'documento_id',
 		'numero_documento',
@@ -113,6 +117,11 @@ class GrupoFamiliar extends Model
 		'updated_by',
 		'deleted_by'
 	];
+
+	public function familia()
+	{
+		return $this->belongsTo(Familia::class);
+	}
 
 	public function user()
 	{

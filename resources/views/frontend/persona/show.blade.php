@@ -639,6 +639,141 @@
             </div>
         </div>
 
+        {{-- ══ CARD: Código de grupo familiar ══ --}}
+        <div class="row g-3 mb-3">
+            <div class="col-12 sp-anim sp-anim-5">
+                <div class="sp-card">
+
+                    {{-- Header --}}
+                    <div class="sp-card-header">
+                        <div class="sp-card-header-left">
+                            <div class="sp-dot" style="background: var(--blue);"></div>
+                            <span class="sp-card-title">Código de grupo familiar</span>
+                        </div>
+                        {{-- Código visible a la derecha --}}
+                        @if($persona->familia)
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span id="codigo-familia"
+                                  style="font-family:monospace; font-size:15px; font-weight:800; color:var(--blue); letter-spacing:2px;">
+                                {{ $persona->familia->codigo_formateado }}
+                            </span>
+                            <button type="button" onclick="copiarCodigo()" title="Copiar código"
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid var(--border); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--slate); transition:all .15s;"
+                                    onmouseover="this.style.borderColor='var(--blue)'; this.style.color='var(--blue)'"
+                                    onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--slate)'">
+                                <i class="bi bi-clipboard" id="icon-copiar" style="font-size:12px;"></i>
+                            </button>
+                        </div>
+                        @endif
+                    </div>
+
+                    <div class="sp-card-body">
+
+                        {{-- Flash messages --}}
+                        @if(session('familia_success'))
+                        <div class="sp-alert" style="margin-bottom:16px;">
+                            <i class="bi bi-check-circle-fill"></i> {{ session('familia_success') }}
+                        </div>
+                        @endif
+                        @if(session('familia_error'))
+                        <div class="sp-alert" style="background:#fff5f5; border-color:#fca5a5; color:#b91c1c; margin-bottom:16px;">
+                            <i class="bi bi-exclamation-circle-fill"></i> {{ session('familia_error') }}
+                        </div>
+                        @endif
+
+                        {{-- Integrantes del grupo --}}
+                        @if($persona->familia && $persona->familia->personas->count() > 1)
+                            <div style="font-size:10.5px; font-weight:800; color:var(--slate); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px;">
+                                Integrantes del grupo
+                                <span class="sp-count">{{ $persona->familia->personas->count() }}</span>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
+                                @foreach($persona->familia->personas as $integrante)
+                                <div style="display:flex; align-items:center; gap:10px; padding:9px 13px; background:{{ $integrante->id === $persona->id ? 'var(--blue-lt)' : 'var(--bg)' }}; border-radius:10px; border:1px solid {{ $integrante->id === $persona->id ? 'var(--blue-brd)' : 'var(--border)' }};">
+                                    <div style="width:32px; height:32px; border-radius:50%; background:{{ $integrante->id === $persona->id ? 'linear-gradient(135deg,var(--blue),var(--teal))' : 'var(--border)' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <span style="font-size:12px; font-weight:800; color:{{ $integrante->id === $persona->id ? 'white' : 'var(--slate)' }};">
+                                            {{ strtoupper(substr($integrante->nombre, 0, 1)) }}
+                                        </span>
+                                    </div>
+                                    <div style="flex:1; min-width:0;">
+                                        <div style="font-size:13px; font-weight:700; color:var(--ink);">
+                                            {{ $integrante->apellido }}, {{ $integrante->nombre }}
+                                            @if($integrante->id === $persona->id)
+                                                <span class="sp-pill sp-pill-blue" style="margin-left:5px; font-size:10px;">Este perfil</span>
+                                            @endif
+                                        </div>
+                                        <div style="font-size:11.5px; color:var(--muted);">DNI {{ $integrante->dni }}</div>
+                                    </div>
+                                    @if($integrante->id !== $persona->id)
+                                        <a href="{{ route('personas.show', $integrante->id) }}" class="sp-card-action" style="font-size:11px;">
+                                            Ver →
+                                        </a>
+                                        @if(in_array(auth()->user()->rol_id, [2,3,5]))
+                                        <form method="POST" action="{{ route('personas.familia.desvincular', $integrante->id) }}"
+                                              onsubmit="return confirm('¿Desvincular a {{ $integrante->nombre }} del grupo?')">
+                                            @csrf @method('PATCH')
+                                            <button type="submit" title="Desvincular"
+                                                    style="width:26px; height:26px; border-radius:6px; border:1px solid #fca5a5; background:#fff5f5; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#b91c1c; transition:background .15s;"
+                                                    onmouseover="this.style.background='#fecaca'"
+                                                    onmouseout="this.style.background='#fff5f5'">
+                                                <i class="bi bi-x-lg" style="font-size:10px;"></i>
+                                            </button>
+                                        </form>
+                                        @endif
+                                    @endif
+                                </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="sp-empty" style="padding:16px 0 10px;">
+                                <div class="sp-empty-icon" style="background:var(--blue-lt); color:var(--blue);">
+                                    <i class="bi bi-people"></i>
+                                </div>
+                                Sin personas vinculadas a este grupo aún.
+                            </div>
+                        @endif
+
+                        {{-- Vincular a grupo existente --}}
+                        @if(in_array(auth()->user()->rol_id, [2,3,5]))
+                        <div style="border-top:1px solid var(--border-sm); padding-top:16px;">
+                            <div style="font-size:10.5px; font-weight:800; color:var(--slate); text-transform:uppercase; letter-spacing:.07em; margin-bottom:8px;">
+                                Vincular a un grupo existente
+                            </div>
+                            <p style="font-size:12.5px; color:var(--muted); margin:0 0 10px; line-height:1.5;">
+                                Ingresá el código de otro grupo para unir a esta persona.
+                            </p>
+                            <form method="POST" action="{{ route('personas.familia.vincular', $persona->id) }}">
+                                @csrf @method('PATCH')
+                                <div style="display:flex; gap:8px; align-items:flex-start;">
+                                    <div style="flex:1;">
+                                        <input type="text"
+                                               name="codigo"
+                                               placeholder="Ej: KAR-482-XTQ"
+                                               maxlength="11"
+                                               autocomplete="off"
+                                               oninput="this.value = this.value.toUpperCase()"
+                                               style="width:100%; height:38px; padding:0 12px; border:1px solid {{ $errors->has('codigo') ? '#fca5a5' : 'var(--border)' }}; border-radius:10px; font-size:13.5px; font-family:monospace; letter-spacing:1px; outline:none; color:var(--ink); transition:border-color .15s;"
+                                               onfocus="this.style.borderColor='var(--blue)'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                                               onblur="this.style.borderColor='var(--border)'; this.style.boxShadow='none'"
+                                               value="{{ old('codigo') }}">
+                                        @error('codigo')
+                                            <div style="font-size:12px; color:#b91c1c; margin-top:4px;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <button type="submit" class="sp-btn-primary" style="height:38px; white-space:nowrap;">
+                                        <i class="bi bi-link-45deg"></i> Vincular
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ══ CARD: Integrantes convivientes (grupo_familiar) ══ --}}
         <div class="row g-3 mb-3">
             <div class="col-12 sp-anim sp-anim-5">
                 <div class="sp-card">
@@ -976,6 +1111,20 @@ function abrirModalEditar(id, inicio, fin) {
 
 function cerrarModalEditar() {
     document.getElementById('modalEditarPrograma').style.display = 'none';
+}
+</script>
+<script>
+function copiarCodigo() {
+    const codigo = document.getElementById('codigo-familia').innerText.trim();
+    navigator.clipboard.writeText(codigo).then(() => {
+        const icon = document.getElementById('icon-copiar');
+        icon.className = 'bi bi-clipboard-check';
+        icon.style.color = 'var(--teal-dk)';
+        setTimeout(() => {
+            icon.className = 'bi bi-clipboard';
+            icon.style.color = '';
+        }, 2000);
+    });
 }
 </script>
 @endsection

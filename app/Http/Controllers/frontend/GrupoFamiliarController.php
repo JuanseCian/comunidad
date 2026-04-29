@@ -65,6 +65,7 @@ class GrupoFamiliarController extends Controller
 
 
         $validated['persona_id']  = $persona->id;
+        $validated['familia_id']  = $persona->familia_id;  // hereda el grupo de la persona titular
         $validated['created_by']  = auth()->id();
 
 
