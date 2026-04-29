@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 28-04-2026 a las 19:11:15
+-- Tiempo de generación: 29-04-2026 a las 12:22:56
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -374,7 +374,9 @@ INSERT INTO `domicilio` (`id`, `municipio`, `localidad`, `barrio_id`, `calle`, `
 (7, NULL, NULL, 99, 'a', '1', '1', 'a'),
 (8, NULL, NULL, 34, 'Almafuerte', '748', NULL, NULL),
 (9, NULL, NULL, 63, 'Jujuy', '422', NULL, NULL),
-(10, NULL, NULL, 98, 'T', '78', NULL, NULL);
+(10, NULL, NULL, 98, 'T', '78', NULL, NULL),
+(11, NULL, NULL, 99, 'paraguay 1', '384', NULL, NULL),
+(12, NULL, NULL, 98, 'paraguay 1', '384', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -444,12 +446,60 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `familias`
+--
+
+CREATE TABLE `familias` (
+  `id` bigint UNSIGNED NOT NULL,
+  `codigo` varchar(10) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `familias`
+--
+
+INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
+(6, '7ZX129OUY', '2026-04-29 03:49:02', '2026-04-29 03:49:02'),
+(7, 'A6U767GVZ', '2026-04-29 03:49:03', '2026-04-29 03:49:03');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `genero_percibido`
+--
+
+CREATE TABLE `genero_percibido` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `genero_percibido`
+--
+
+INSERT INTO `genero_percibido` (`id`, `nombre`) VALUES
+(1, 'Femenino'),
+(2, 'Masculino'),
+(3, 'No binario'),
+(4, 'Género fluido'),
+(5, 'Travesti'),
+(6, 'Trans femenino'),
+(7, 'Trans masculino'),
+(8, 'Otro'),
+(9, 'NS/NR');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `grupo_familiar`
 --
 
 CREATE TABLE `grupo_familiar` (
   `id` bigint UNSIGNED NOT NULL,
   `persona_id` bigint UNSIGNED NOT NULL,
+  `familia_id` bigint UNSIGNED DEFAULT NULL,
   `nombre` varchar(150) NOT NULL,
   `documento_id` bigint UNSIGNED DEFAULT NULL,
   `numero_documento` varchar(20) DEFAULT NULL,
@@ -829,6 +879,7 @@ CREATE TABLE `personal_access_tokens` (
 
 CREATE TABLE `personas` (
   `id` bigint UNSIGNED NOT NULL,
+  `familia_id` bigint UNSIGNED DEFAULT NULL,
   `nombre` varchar(150) DEFAULT NULL,
   `apellido` varchar(150) DEFAULT NULL,
   `correo` varchar(150) DEFAULT NULL,
@@ -837,6 +888,7 @@ CREATE TABLE `personas` (
   `dni` varchar(20) DEFAULT NULL,
   `cuil` varchar(20) DEFAULT NULL,
   `sexo_id` bigint UNSIGNED DEFAULT NULL,
+  `genero_percibido_id` bigint UNSIGNED DEFAULT NULL,
   `domicilio_id` bigint UNSIGNED DEFAULT NULL,
   `provincia_id` bigint UNSIGNED DEFAULT NULL,
   `localidad_id` bigint UNSIGNED DEFAULT NULL,
@@ -864,9 +916,9 @@ CREATE TABLE `personas` (
 -- Volcado de datos para la tabla `personas`
 --
 
-INSERT INTO `personas` (`id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`) VALUES
-(13, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-04-27 02:15:35', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(14, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-04-27 02:20:01', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`) VALUES
+(13, NULL, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, NULL, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-04-27 02:15:35', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(14, NULL, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, NULL, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-04-27 02:20:01', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1322,6 +1374,19 @@ ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `familias`
+--
+ALTER TABLE `familias`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_familias_codigo` (`codigo`);
+
+--
+-- Indices de la tabla `genero_percibido`
+--
+ALTER TABLE `genero_percibido`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `grupo_familiar`
 --
 ALTER TABLE `grupo_familiar`
@@ -1338,7 +1403,8 @@ ALTER TABLE `grupo_familiar`
   ADD KEY `fk_grupo_categoria` (`categoria_ocupacional_id`),
   ADD KEY `fk_gf_created_by` (`created_by`),
   ADD KEY `fk_gf_updated_by` (`updated_by`),
-  ADD KEY `fk_gf_deleted_by` (`deleted_by`);
+  ADD KEY `fk_gf_deleted_by` (`deleted_by`),
+  ADD KEY `fk_grupo_familiar_familia` (`familia_id`);
 
 --
 -- Indices de la tabla `localidad`
@@ -1401,7 +1467,9 @@ ALTER TABLE `personas`
   ADD KEY `fk_personas_estado_civil` (`estado_civil_id`),
   ADD KEY `fk_persona_discapacidad` (`discapacidad_id`),
   ADD KEY `fk_persona_enfermedad` (`enfermedad_id`),
-  ADD KEY `fk_persona_cobertura` (`cobertura_id`);
+  ADD KEY `fk_persona_cobertura` (`cobertura_id`),
+  ADD KEY `fk_persona_genero_percibido` (`genero_percibido_id`),
+  ADD KEY `fk_persona_familia` (`familia_id`);
 
 --
 -- Indices de la tabla `persona_beneficio`
@@ -1564,7 +1632,7 @@ ALTER TABLE `discapacidad`
 -- AUTO_INCREMENT de la tabla `domicilio`
 --
 ALTER TABLE `domicilio`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `enfermedades`
@@ -1585,10 +1653,22 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `familias`
+--
+ALTER TABLE `familias`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de la tabla `genero_percibido`
+--
+ALTER TABLE `genero_percibido`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT de la tabla `grupo_familiar`
 --
 ALTER TABLE `grupo_familiar`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `localidad`
@@ -1624,7 +1704,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_beneficio`
@@ -1636,7 +1716,7 @@ ALTER TABLE `persona_beneficio`
 -- AUTO_INCREMENT de la tabla `persona_programa`
 --
 ALTER TABLE `persona_programa`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `programas_asistencia`
@@ -1757,6 +1837,7 @@ ALTER TABLE `grupo_familiar`
   ADD CONSTRAINT `fk_grupo_documento` FOREIGN KEY (`documento_id`) REFERENCES `tipo_documento` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_grupo_enfermedad` FOREIGN KEY (`enfermedad_id`) REFERENCES `enfermedades` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_grupo_estado_civil` FOREIGN KEY (`estado_civil_id`) REFERENCES `estado_civil` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_grupo_familiar_familia` FOREIGN KEY (`familia_id`) REFERENCES `familias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_grupo_inactividad` FOREIGN KEY (`condicion_inactividad_id`) REFERENCES `condicion_inactividad` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_grupo_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_grupo_sexo` FOREIGN KEY (`sexo_id`) REFERENCES `sexo` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -1780,6 +1861,8 @@ ALTER TABLE `personas`
   ADD CONSTRAINT `fk_persona_documento` FOREIGN KEY (`documento_id`) REFERENCES `tipo_documento` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_domicilio` FOREIGN KEY (`domicilio_id`) REFERENCES `domicilio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_enfermedad` FOREIGN KEY (`enfermedad_id`) REFERENCES `enfermedades` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_persona_familia` FOREIGN KEY (`familia_id`) REFERENCES `familias` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_persona_genero_percibido` FOREIGN KEY (`genero_percibido_id`) REFERENCES `genero_percibido` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_localidad` FOREIGN KEY (`localidad_id`) REFERENCES `localidad` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_nivel` FOREIGN KEY (`nivel_estudio_id`) REFERENCES `niveles_estudio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_persona_provincia` FOREIGN KEY (`provincia_id`) REFERENCES `provincia` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
