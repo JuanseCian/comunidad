@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" x-data="{ sidebarOpen: true, openUbicaciones: false }">
+<html lang="es" x-data="{ sidebarOpen: true, openMenu: null }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -16,9 +17,9 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        panel: '#09090b', // Zinc 950
+                        panel: '#09090b',
                         sidebar: '#121216',
-                        accent: '#4f46e5' // Indigo 600
+                        accent: '#4f46e5'
                     }
                 }
             }
@@ -33,7 +34,6 @@
             color: #818cf8;
             border-right: 2px solid #4f46e5;
         }
-        /* Scrollbar personalizada */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
@@ -43,6 +43,7 @@
 
     <div class="flex h-screen overflow-hidden">
         
+        <!-- SIDEBAR -->
         <aside 
             :class="sidebarOpen ? 'w-72' : 'w-20'" 
             class="sidebar-transition bg-sidebar border-r border-zinc-800 text-zinc-400 flex-shrink-0 flex flex-col z-30 shadow-2xl">
@@ -53,42 +54,44 @@
                         <i data-lucide="shield-check" class="w-5 h-5"></i>
                     </div>
                     <span x-show="sidebarOpen" x-transition.opacity class="font-bold text-lg text-zinc-100 tracking-tight">
-                        Comunidad<span class="text-accent"></span>
+                        Comunidad<span class="text-accent">.</span>
                     </span>
                 </div>
             </div>
 
-            <nav class="flex-1 overflow-y-auto px-4 space-y-8">
+            <nav class="flex-1 overflow-y-auto px-4 space-y-6">
                 
+                <!-- GRUPO: GENERAL -->
                 <div>
                     <p x-show="sidebarOpen" class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-4">Principal</p>
                     <div class="space-y-1">
                         <a href="{{ route('admin.home') }}" class="flex items-center p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
-                            <i data-lucide="layout-dashboard" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
+                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                             <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Dashboard</span>
                         </a>
                         <a href="#" class="flex items-center p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
-                            <i data-lucide="users-2" class="w-5 h-5"></i>
+                            <i data-lucide="users" class="w-5 h-5"></i>
                             <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Usuarios</span>
                         </a>
                     </div>
                 </div>
 
+                <!-- GRUPO: CONFIGURACIÓN -->
                 <div>
-                    <p x-show="sidebarOpen" class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-4">Configuración de Red</p>
+                    <p x-show="sidebarOpen" class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-4">Parámetros</p>
                     <div class="space-y-1">
-                        <div>
-                            <button @click="openUbicaciones = !openUbicaciones" 
+                        
+                        <!-- Accordion: Ubicaciones -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" :class="open ? 'text-zinc-100 bg-zinc-800/30' : ''"
                                 class="w-full flex items-center justify-between p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
                                 <div class="flex items-center">
-                                    <i data-lucide="map" class="w-5 h-5"></i>
-                                    <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Ubicaciones</span>
+                                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                    <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Geografía</span>
                                 </div>
-                                <i x-show="sidebarOpen" data-lucide="chevron-right" 
-                                    :class="openUbicaciones ? 'rotate-90' : ''" class="w-3 h-3 transition-transform text-zinc-600"></i>
+                                <i x-show="sidebarOpen" data-lucide="chevron-down" :class="open ? 'rotate-180' : ''" class="w-4 h-4 transition-transform text-zinc-600"></i>
                             </button>
-                            
-                            <div x-show="openUbicaciones && sidebarOpen" x-collapse class="mt-1 ml-4 pl-4 border-l border-zinc-800 space-y-1">
+                            <div x-show="open && sidebarOpen" x-collapse class="mt-1 ml-4 pl-4 border-l border-zinc-800 space-y-1">
                                 <a href="{{ route('provincias.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Provincias</a>
                                 <a href="{{ route('localidades.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Localidades</a>
                                 <a href="{{ route('zonas-barrios.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Zonas</a>
@@ -96,70 +99,96 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('enfermedades.index') }}" class="flex items-center p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all">
-                            <i data-lucide="stethoscope" class="w-5 h-5 text-emerald-500/70"></i>
-                            <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Enfermedades</span>
-                        </a>
+                        <!-- Accordion: Salud y Capacidad -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" :class="open ? 'text-zinc-100 bg-zinc-800/30' : ''"
+                                class="w-full flex items-center justify-between p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
+                                <div class="flex items-center">
+                                    <i data-lucide="heart-pulse" class="w-5 h-5 text-emerald-500/70"></i>
+                                    <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Salud y Cobertura</span>
+                                </div>
+                                <i x-show="sidebarOpen" data-lucide="chevron-down" :class="open ? 'rotate-180' : ''" class="w-4 h-4 transition-transform text-zinc-600"></i>
+                            </button>
+                            <div x-show="open && sidebarOpen" x-collapse class="mt-1 ml-4 pl-4 border-l border-zinc-800 space-y-1">
+                                <a href="{{ route('enfermedades.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Enfermedades</a>
+                                <a href="{{ route('discapacidades.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Discapacidades</a>
+                                <a href="{{ route('coberturas.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Cobertura Médica</a>
+                            </div>
+                        </div>
 
-                        <a href="{{ route('niveles-estudio.index') }}" class="flex items-center p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all">
-                            <i data-lucide="book-open" class="w-5 h-5 text-amber-500/70"></i>
-                            <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Niveles de Estudio</span>
-                        </a>
-                        <a href="{{ route('estados-civiles.index') }}" class="flex items-center p-3 hover:bg-slate-800 rounded-lg group transition-colors">
-                            <i data-lucide="heart" class="w-6 h-6"></i>
-                            <span x-show="sidebarOpen" x-cloak class="ml-3 font-medium text-sm">Estado Civil</span>
-                        </a>
-                        <a href="{{ route('programas-asistencia.index') }}" class="flex items-center p-3 hover:bg-slate-800 rounded-lg group transition-colors">
-                            <i data-lucide="briefcase" class="w-6 h-6"></i>
-                            <span x-show="sidebarOpen" x-cloak class="ml-3 font-medium text-sm">Prog. Asistencia</span>
-                        </a>
-                        <a href="{{ route('beneficios.index') }}" class="flex items-center p-3 hover:bg-slate-800 rounded-lg group transition-colors">
-                            <i data-lucide="user-check" class="w-6 h-6"></i>                    
-                            <span x-show="sidebarOpen" x-cloak class="ml-3 font-medium text-sm">Beneficios</span>
-                        </a>
-                        <a href="{{ route('home') }}" class="flex items-center p-3 hover:bg-slate-800 rounded-lg group transition-colors">
-                            <i data-arrow="briefcase" class="w-6 h-6"></i>
-                            <span x-show="sidebarOpen" x-cloak class="ml-3 font-medium text-sm">Volver al Inicio</span>
-                        </a>
+                        <!-- Accordion: Socio-Educativo -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" :class="open ? 'text-zinc-100 bg-zinc-800/30' : ''"
+                                class="w-full flex items-center justify-between p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
+                                <div class="flex items-center">
+                                    <i data-lucide="graduation-cap" class="w-5 h-5 text-amber-500/70"></i>
+                                    <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Social y Educación</span>
+                                </div>
+                                <i x-show="sidebarOpen" data-lucide="chevron-down" :class="open ? 'rotate-180' : ''" class="w-4 h-4 transition-transform text-zinc-600"></i>
+                            </button>
+                            <div x-show="open && sidebarOpen" x-collapse class="mt-1 ml-4 pl-4 border-l border-zinc-800 space-y-1">
+                                <a href="{{ route('niveles-estudio.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Niveles de Estudio</a>
+                                <a href="{{ route('estados-civiles.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Estado Civil</a>
+                            </div>
+                        </div>
+
+                        <!-- Accordion: Laboral -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" :class="open ? 'text-zinc-100 bg-zinc-800/30' : ''"
+                                class="w-full flex items-center justify-between p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
+                                <div class="flex items-center">
+                                    <i data-lucide="briefcase" class="w-5 h-5 text-sky-500/70"></i>
+                                    <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Laboral y Ayuda</span>
+                                </div>
+                                <i x-show="sidebarOpen" data-lucide="chevron-down" :class="open ? 'rotate-180' : ''" class="w-4 h-4 transition-transform text-zinc-600"></i>
+                            </button>
+                            <div x-show="open && sidebarOpen" x-collapse class="mt-1 ml-4 pl-4 border-l border-zinc-800 space-y-1">
+                                <a href="{{ route('categorias.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Categoría Ocupacional</a>
+                                <a href="{{ route('condiciones-inactividad.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Condiciones Inactividad</a>
+                                <a href="{{ route('programas-asistencia.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Prog. Asistencia</a>
+                                <a href="{{ route('beneficios.index') }}" class="block p-2 text-sm hover:text-accent transition-colors">Beneficios</a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </nav>
 
+            <!-- FOOTER SIDEBAR -->
             <div class="p-4 border-t border-zinc-800 bg-sidebar/50">
                 <a href="{{ route('home') }}" class="flex items-center p-3 text-zinc-500 hover:text-white transition-colors group">
                     <i data-lucide="log-out" class="w-5 h-5"></i>
-                    <span x-show="sidebarOpen" class="ml-3 text-sm font-medium tracking-tight">Salir del Sistema</span>
+                    <span x-show="sidebarOpen" class="ml-3 text-sm font-medium">Cerrar Sesión</span>
                 </a>
             </div>
         </aside>
 
+        <!-- MAIN CONTENT -->
         <div class="flex-1 flex flex-col overflow-hidden">
             
-            <header class="h-20 bg-gradient-to-r from-sky-50 via-white to-emerald-50 border-b border-sky-100 flex items-center justify-between px-8 sticky top-0 z-20 shadow-sm">
+            <!-- HEADER -->
+            <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20 shadow-sm">
                 <div class="flex items-center gap-6">
-                    <button @click="sidebarOpen = !sidebarOpen" class="text-slate-500 hover:text-accent transition-colors">
-                        <i data-lucide="align-left" class="w-6 h-6"></i>
+                    <button @click="sidebarOpen = !sidebarOpen" class="text-slate-500 hover:text-accent transition-colors p-2 hover:bg-slate-100 rounded-lg">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                     
                     <nav class="hidden md:flex items-center gap-3 text-sm">
-                        <span class="text-slate-400 font-medium tracking-tight">Panel Administrativo</span>
+                        <span class="text-slate-400 font-medium">Panel Administrativo</span>
                         <i data-lucide="chevron-right" class="w-3 h-3 text-slate-300"></i>
-                        <span class="font-semibold text-slate-800 px-3 py-1 bg-white/50 border border-sky-100 rounded-full shadow-sm">@yield('header')</span>
+                        <span class="font-semibold text-slate-800 px-3 py-1 bg-slate-50 border border-slate-200 rounded-full shadow-sm">
+                            @yield('header')
+                        </span>
                     </nav>
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <button class="relative p-2 text-slate-400 hover:text-slate-600 transition-colors">
-                        <i data-lucide="bell" class="w-5 h-5"></i>
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-emerald-500 rounded-full border-2 border-white"></span>
-                    </button>
-                    <div class="h-8 w-[1px] bg-sky-200/50 mx-2"></div>
-                    <div class="flex items-center gap-3 cursor-pointer group">
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-200">
                         <div class="text-right hidden sm:block">
-                            <p class="text-xs font-bold text-slate-900 group-hover:text-accent transition-colors">Administrador</p>
-                            <p class="text-[10px] text-slate-400 font-medium tracking-tight">admin@sistema.com</p>
+                            <p class="text-xs font-bold text-slate-900">Admin Sistema</p>
+                            <p class="text-[10px] text-slate-400 font-medium">admin@sistema.com</p>
                         </div>
-                        <div class="w-10 h-10 rounded-full bg-white border border-sky-200 flex items-center justify-center text-sky-600 font-bold shadow-sm group-hover:border-emerald-300 transition-all">
+                        <div class="w-10 h-10 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center text-accent font-bold">
                             AD
                         </div>
                     </div>

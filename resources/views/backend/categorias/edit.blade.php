@@ -1,0 +1,2 @@
+<?php
+@include('categorias.create')

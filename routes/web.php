@@ -55,6 +55,14 @@ require __DIR__.'/niveles-estudio.php';
 require __DIR__.'/beneficio.php';
 //rutas para programas de asistencia
 require __DIR__.'/programa-asistencia.php';
+//rutas para categorias ocupacionales
+require __DIR__.'/categoria-ocupacional.php';
+//rutas para coberturas
+require __DIR__.'/cobertura.php';
+//rutas para condiciones de inactividad
+require __DIR__.'/condiciones-inactividad.php';
+//rutas para discapacidades
+require __DIR__.'/discapacidad.php';
 
 
 require __DIR__.'/grupoFamiliar.php';
