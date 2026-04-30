@@ -72,8 +72,9 @@
     </div>
 
     <div class="row g-3 mb-4">
-        
-        <div class="col-md-6">
+
+            @if(auth()->user()?->rol_id != 1)        
+            <div class="col-md-6">
             <a href="{{ route('personas.create') }}" style="text-decoration:none; display:block;">
                 <div style="
                     background: white;
@@ -103,8 +104,8 @@
                 </div>
             </a>
         </div>
+        @endif
 
-        
         <div class="col-md-6">
             <a href="{{ route('personas.index') }}" style="text-decoration:none; display:block;">
                 <div style="

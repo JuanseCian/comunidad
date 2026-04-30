@@ -402,10 +402,10 @@
 
                         <div class="sp-data-row">
                             <span class="sp-label">Provincia</span>
-
                             <span class="sp-val view-domicilio">{{ $persona->provincia->nombre ?? '—' }}</span>
 
                             <select name="provincia_id" class="edit-domicilio" style="display:none;">
+                                <option value="" @selected(is_null($persona->provincia_id))>— Seleccionar Provincia —</option>
                                 @foreach($provincias as $p)
                                     <option value="{{ $p->id }}" @selected($persona->provincia_id == $p->id)>
                                         {{ $p->nombre }}
@@ -416,10 +416,10 @@
 
                         <div class="sp-data-row">
                             <span class="sp-label">Localidad</span>
-
                             <span class="sp-val view-domicilio">{{ $persona->localidad->nombre ?? '—' }}</span>
 
                             <select name="localidad_id" class="edit-domicilio" style="display:none;">
+                                <option value="" @selected(is_null($persona->localidad_id))>— Seleccionar Localidad —</option>
                                 @foreach($localidades as $l)
                                     <option value="{{ $l->id }}" @selected($persona->localidad_id == $l->id)>
                                         {{ $l->nombre }}
@@ -430,10 +430,10 @@
 
                         <div class="sp-data-row">
                             <span class="sp-label">Barrio</span>
-
                             <span class="sp-val view-domicilio">{{ $persona->domicilio->barrio->nombre ?? '—' }}</span>
 
                             <select name="barrio_id" class="edit-domicilio" style="display:none;">
+                                <option value="" @selected(is_null(optional($persona->domicilio)->barrio_id))>— Seleccionar Barrio —</option>
                                 @foreach($barrios as $b)
                                     <option value="{{ $b->id }}" @selected(optional($persona->domicilio)->barrio_id == $b->id)>
                                         {{ $b->nombre }}
