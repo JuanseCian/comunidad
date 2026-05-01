@@ -365,6 +365,37 @@
                                    onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
                                    onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
                         </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">
+                                N° CUD
+                                <span style="font-size:10px; font-weight:400; text-transform:none; color:#94a3b4; letter-spacing:0;">(Certificado Único de Discapacidad)</span>
+                            </label>
+                            <input type="text" name="cud_numero" value="{{ old('cud_numero') }}" placeholder="Ej: 12345678"
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                                   onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                                   onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                        </div>
+                        <div class="col-md-3">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Emisión CUD</label>
+                            <input type="date" name="cud_fecha_emision" value="{{ old('cud_fecha_emision') }}"
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                                   onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                                   onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                        </div>
+                        <div class="col-md-3">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Vencimiento CUD</label>
+                            <input type="date" name="cud_vencimiento" value="{{ old('cud_vencimiento') }}"
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                                   onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                                   onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                        </div>
+                        <div class="col-12">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Observaciones CUD</label>
+                            <input type="text" name="cud_observaciones" value="{{ old('cud_observaciones') }}" placeholder="Opcional"
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                                   onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                                   onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                        </div>
                     </div>
                    
                     <div style="display:flex; flex-direction:column; gap:0; margin-top:12px; border-top:1px solid #e0ddd6; padding-top:4px;">

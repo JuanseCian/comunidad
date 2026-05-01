@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 29-04-2026 a las 12:22:56
+-- Tiempo de generación: 01-05-2026 a las 22:22:11
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -318,8 +318,17 @@ CREATE TABLE `cud` (
   `numero_cud` varchar(100) DEFAULT NULL,
   `fecha_emision` date DEFAULT NULL,
   `fecha_vencimiento` date DEFAULT NULL,
-  `observaciones` text
+  `observaciones` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `cud`
+--
+
+INSERT INTO `cud` (`id`, `persona_id`, `tiene_cud`, `numero_cud`, `fecha_emision`, `fecha_vencimiento`, `observaciones`, `created_at`, `updated_at`) VALUES
+(1, 34, 1, '123', '2026-05-01', '2026-05-05', 'asd', '2026-05-02 01:21:14', '2026-05-02 01:21:14');
 
 -- --------------------------------------------------------
 
@@ -462,7 +471,13 @@ CREATE TABLE `familias` (
 
 INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
 (6, '7ZX129OUY', '2026-04-29 03:49:02', '2026-04-29 03:49:02'),
-(7, 'A6U767GVZ', '2026-04-29 03:49:03', '2026-04-29 03:49:03');
+(7, 'A6U767GVZ', '2026-04-29 03:49:03', '2026-04-29 03:49:03'),
+(8, 'QKD682HTR', '2026-05-02 01:09:30', '2026-05-02 01:09:30'),
+(9, 'CT5512NGU', '2026-05-02 01:09:31', '2026-05-02 01:09:31'),
+(10, 'FYL398RP6', '2026-05-02 01:11:52', '2026-05-02 01:11:52'),
+(11, 'G8C913MK0', '2026-05-02 01:19:30', '2026-05-02 01:19:30'),
+(12, 'B3D107RVL', '2026-05-02 01:20:34', '2026-05-02 01:20:34'),
+(13, 'FOL7134QL', '2026-05-02 01:21:14', '2026-05-02 01:21:14');
 
 -- --------------------------------------------------------
 
@@ -905,6 +920,8 @@ CREATE TABLE `personas` (
   `discapacidad_permanente` tinyint(1) DEFAULT NULL,
   `discapacidad_tratamiento` tinyint(1) DEFAULT NULL,
   `caratula` varchar(150) DEFAULT NULL,
+  `cud_numero` varchar(50) DEFAULT NULL,
+  `cud_vencimiento` date DEFAULT NULL,
   `enfermedad_id` bigint UNSIGNED DEFAULT NULL,
   `enfermedad_tratamiento` tinyint(1) DEFAULT NULL,
   `embarazo` tinyint(1) DEFAULT NULL,
@@ -916,9 +933,10 @@ CREATE TABLE `personas` (
 -- Volcado de datos para la tabla `personas`
 --
 
-INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`) VALUES
-(13, NULL, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, NULL, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-04-27 02:15:35', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(14, NULL, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, NULL, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-04-27 02:20:01', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `cud_numero`, `cud_vencimiento`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`) VALUES
+(13, NULL, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, NULL, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-04-27 02:15:35', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(14, NULL, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, NULL, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-04-27 02:20:01', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(34, 13, 'lau', 'caminos', NULL, NULL, 1, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-05-02 01:21:14', '2026-05-02 01:21:14', NULL, NULL, 3, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -967,6 +985,30 @@ CREATE TABLE `persona_programa` (
 INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
 (1, 14, 1, '2026-04-24', '2020-02-22', 1, 'destinatario', 'a', NULL, '2026-04-26 03:59:38', '2026-04-27 19:40:27'),
 (13, 13, 1, NULL, NULL, 1, 'tutor', NULL, NULL, '2026-04-27 01:55:44', '2026-04-27 01:55:44');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `persona_trabajo`
+--
+
+CREATE TABLE `persona_trabajo` (
+  `id` bigint UNSIGNED NOT NULL,
+  `persona_id` bigint UNSIGNED NOT NULL,
+  `situacion_ocupacional_id` bigint UNSIGNED DEFAULT NULL,
+  `categoria_ocupacional_id` bigint UNSIGNED DEFAULT NULL,
+  `descripcion` varchar(255) DEFAULT NULL COMMENT 'Tipo/rubro de trabajo',
+  `empleador` varchar(150) DEFAULT NULL,
+  `cargo` varchar(100) DEFAULT NULL,
+  `ingresos` decimal(12,2) DEFAULT NULL,
+  `fecha_inicio` date DEFAULT NULL,
+  `fecha_fin` date DEFAULT NULL COMMENT 'NULL = trabajo actual',
+  `observaciones` text,
+  `created_by` bigint UNSIGNED DEFAULT NULL,
+  `updated_by` bigint UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -1340,7 +1382,8 @@ ALTER TABLE `condicion_inactividad`
 ALTER TABLE `cud`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_cud_persona` (`persona_id`),
-  ADD KEY `idx_cud_numero` (`numero_cud`);
+  ADD KEY `idx_cud_numero` (`numero_cud`),
+  ADD KEY `fk_cud_persona` (`persona_id`);
 
 --
 -- Indices de la tabla `discapacidad`
@@ -1490,6 +1533,16 @@ ALTER TABLE `persona_programa`
   ADD KEY `fk_pp_registrado_por` (`registrado_por`);
 
 --
+-- Indices de la tabla `persona_trabajo`
+--
+ALTER TABLE `persona_trabajo`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_pt_persona` (`persona_id`),
+  ADD KEY `fk_pt_situacion_ocupacional` (`situacion_ocupacional_id`),
+  ADD KEY `fk_pt_categoria_ocupacional` (`categoria_ocupacional_id`),
+  ADD KEY `idx_pt_actual` (`persona_id`,`fecha_fin`);
+
+--
 -- Indices de la tabla `programas_asistencia`
 --
 ALTER TABLE `programas_asistencia`
@@ -1620,7 +1673,7 @@ ALTER TABLE `condicion_inactividad`
 -- AUTO_INCREMENT de la tabla `cud`
 --
 ALTER TABLE `cud`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `discapacidad`
@@ -1656,7 +1709,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT de la tabla `familias`
 --
 ALTER TABLE `familias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `genero_percibido`
@@ -1704,7 +1757,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_beneficio`
@@ -1717,6 +1770,12 @@ ALTER TABLE `persona_beneficio`
 --
 ALTER TABLE `persona_programa`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `persona_trabajo`
+--
+ALTER TABLE `persona_trabajo`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `programas_asistencia`
@@ -1885,6 +1944,14 @@ ALTER TABLE `persona_programa`
   ADD CONSTRAINT `fk_pp_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_pp_programa` FOREIGN KEY (`programa_id`) REFERENCES `programas_asistencia` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_pp_registrado_por` FOREIGN KEY (`registrado_por`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `persona_trabajo`
+--
+ALTER TABLE `persona_trabajo`
+  ADD CONSTRAINT `fk_pt_categoria_ocupacional` FOREIGN KEY (`categoria_ocupacional_id`) REFERENCES `categoria_ocupacional` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pt_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pt_situacion_ocupacional` FOREIGN KEY (`situacion_ocupacional_id`) REFERENCES `situacion_ocupacional` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `provincia`

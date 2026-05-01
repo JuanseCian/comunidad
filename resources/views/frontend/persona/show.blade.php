@@ -487,41 +487,85 @@
                         <div class="sp-card-header-left">
                             <div class="sp-dot" style="background: var(--amber);"></div>
                             <span class="sp-card-title">CUD — Discapacidad</span>
-                            
                         </div>
                     </div>
                     <div class="sp-card-body">
-                        @if($persona->cud)
-                            <div class="sp-data-row">
-                                <span class="sp-label"><i class="bi bi-patch-check" style="margin-right:5px; font-size:12px;"></i>Tiene CUD</span>
-                                @if($persona->cud->tiene_cud)
-                                    <span class="sp-badge-yes">Sí</span>
-                                @else
-                                    <span class="sp-badge-no">No</span>
-                                @endif
-                            </div>
-                            @if($persona->cud->tiene_cud)
-                                <div class="sp-data-row">
-                                    <span class="sp-label"><i class="bi bi-hash" style="margin-right:5px; font-size:12px;"></i>Número</span>
-                                    <span class="sp-val">{{ $persona->cud->numero_cud ?? '—' }}</span>
-                                </div>
-                                <div class="sp-data-row">
-                                    <span class="sp-label"><i class="bi bi-calendar-check" style="margin-right:5px; font-size:12px;"></i>Emisión</span>
-                                    <span class="sp-val">{{ $persona->cud->fecha_emision ? \Carbon\Carbon::parse($persona->cud->fecha_emision)->format('d/m/Y') : '—' }}</span>
-                                </div>
-                                <div class="sp-data-row" style="border-bottom:none;">
-                                    <span class="sp-label"><i class="bi bi-calendar-x" style="margin-right:5px; font-size:12px;"></i>Vencimiento</span>
-                                    <span class="sp-val">{{ $persona->cud->fecha_vencimiento ? \Carbon\Carbon::parse($persona->cud->fecha_vencimiento)->format('d/m/Y') : '—' }}</span>
-                                </div>
+
+                        {{-- Discapacidad --}}
+                        <div class="sp-data-row">
+                            <span class="sp-label"><i class="bi bi-person-wheelchair" style="margin-right:5px; font-size:12px;"></i>Discapacidad</span>
+                            @if($persona->discapacidad)
+                                <span class="sp-val">{{ $persona->discapacidad->nombre }}</span>
+                            @else
+                                <span class="sp-val">—</span>
                             @endif
-                        @else
-                            <div class="sp-empty">
-                                <div class="sp-empty-icon" style="background: var(--amber-lt); color: var(--amber);">
-                                    <i class="bi bi-patch-question"></i>
-                                </div>
-                                Sin registro de CUD
-                            </div>
+                        </div>
+                        <div class="sp-data-row">
+                            <span class="sp-label"><i class="bi bi-infinity" style="margin-right:5px; font-size:12px;"></i>Permanente</span>
+                            @if($persona->discapacidad_permanente)
+                                <span class="sp-badge-yes">Sí</span>
+                            @else
+                                <span class="sp-badge-no">No</span>
+                            @endif
+                        </div>
+                        <div class="sp-data-row">
+                            <span class="sp-label"><i class="bi bi-heart-pulse" style="margin-right:5px; font-size:12px;"></i>En tratamiento</span>
+                            @if($persona->discapacidad_tratamiento)
+                                <span class="sp-badge-yes">Sí</span>
+                            @elseif(is_null($persona->discapacidad_tratamiento))
+                                <span class="sp-val">—</span>
+                            @else
+                                <span class="sp-badge-no">No</span>
+                            @endif
+                        </div>
+                        @if($persona->caratula)
+                        <div class="sp-data-row">
+                            <span class="sp-label"><i class="bi bi-folder2" style="margin-right:5px; font-size:12px;"></i>Carátula</span>
+                            <span class="sp-val">{{ $persona->caratula }}</span>
+                        </div>
                         @endif
+
+                        {{-- CUD --}}
+                        <div class="sp-data-row" style="margin-top:8px; padding-top:12px; border-top:1px solid var(--border-sm);">
+                            <span class="sp-label"><i class="bi bi-patch-check" style="margin-right:5px; font-size:12px;"></i>N° CUD</span>
+                            <span class="sp-val">{{ $persona->cud->numero_cud ?? '—' }}</span>
+                        </div>
+                        <div class="sp-data-row">
+                            <span class="sp-label"><i class="bi bi-calendar-check" style="margin-right:5px; font-size:12px;"></i>Emisión CUD</span>
+                            <span class="sp-val">{{ $persona->cud?->fecha_emision ? $persona->cud->fecha_emision->format('d/m/Y') : '—' }}</span>
+                        </div>
+                        <div class="sp-data-row" style="border-bottom:none;">
+                            <span class="sp-label"><i class="bi bi-calendar-x" style="margin-right:5px; font-size:12px;"></i>Vencimiento CUD</span>
+                            @if($persona->cud?->fecha_vencimiento)
+                                @php $venc = $persona->cud->fecha_vencimiento @endphp
+                                <span class="sp-val" style="color: {{ $venc->isPast() ? '#b91c1c' : ($venc->diffInDays(now()) <= 60 ? '#d97706' : 'inherit') }};">
+                                    {{ $venc->format('d/m/Y') }}
+                                    @if($venc->isPast())
+                                        <span class="sp-pill" style="background:#fef2f2; color:#b91c1c; border-color:#fecaca; font-size:10px; margin-left:4px;">Vencido</span>
+                                    @elseif($venc->diffInDays(now()) <= 60)
+                                        <span class="sp-pill" style="background:#fffbeb; color:#d97706; border-color:#fde68a; font-size:10px; margin-left:4px;">Por vencer</span>
+                                    @endif
+                                </span>
+                            @else
+                                <span class="sp-val">—</span>
+                            @endif
+                        </div>
+                        @if($persona->cud?->observaciones)
+                        <div class="sp-data-row" style="border-bottom:none; margin-top:4px;">
+                            <span class="sp-label"><i class="bi bi-chat-left-text" style="margin-right:5px; font-size:12px;"></i>Observaciones</span>
+                            <span class="sp-val" style="font-style:italic;">{{ $persona->cud->observaciones }}</span>
+                        </div>
+                        @endif
+
+                        @if(!$persona->discapacidad && !$persona->cud)
+                        <div class="sp-empty" style="padding:14px 0 4px;">
+                            <div class="sp-empty-icon" style="background: var(--amber-lt); color: var(--amber);">
+                                <i class="bi bi-patch-question"></i>
+                            </div>
+                            Sin registro de discapacidad ni CUD
+                        </div>
+                        @endif
+
                     </div>
                 </div>
             </div>

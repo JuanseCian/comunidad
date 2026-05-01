@@ -9,6 +9,7 @@ class Persona extends Model
     protected $table = 'personas';
 
     protected $fillable = [
+        'familia_id',
         'nombre',
         'apellido',
         'correo',
@@ -17,6 +18,7 @@ class Persona extends Model
         'dni',
         'cuil',
         'sexo_id',
+        'genero_percibido_id',
         'domicilio_id',
         'provincia_id',
         'localidad_id',
@@ -26,52 +28,92 @@ class Persona extends Model
         'estado_civil_id',
         'trabaja',
         'grupo_sanguineo',
-        'sede_origen_id'
+        'sede_origen_id',
+        // Salud — discapacidad
+        'discapacidad_id',
+        'discapacidad_permanente',
+        'discapacidad_tratamiento',
+        'caratula',
+        // Salud — enfermedad
+        'enfermedad_id',
+        'enfermedad_tratamiento',
+        // Salud — embarazo
+        'embarazo',
+        'control_embarazo',
+        // Cobertura
+        'cobertura_id',
     ];
 
     protected $casts = [
-        'fecha_nacimiento' => 'date',
-        'documento_id' => 'int',
-        'sexo_id' => 'int',
-        'domicilio_id' => 'int',
-        'provincia_id' => 'int',
-        'localidad_id' => 'int',
-        'barrio_id' => 'int',
-        'nivel_estudio_id' => 'int',
-        'estado_civil_id' => 'int',
-        'sede_origen_id' => 'int',
-        'trabaja' => 'boolean'
+        'fecha_nacimiento'         => 'date',
+        'documento_id'             => 'int',
+        'sexo_id'                  => 'int',
+        'genero_percibido_id'      => 'int',
+        'domicilio_id'             => 'int',
+        'provincia_id'             => 'int',
+        'localidad_id'             => 'int',
+        'barrio_id'                => 'int',
+        'nivel_estudio_id'         => 'int',
+        'estado_civil_id'          => 'int',
+        'sede_origen_id'           => 'int',
+        'familia_id'               => 'int',
+        'trabaja'                  => 'boolean',
+        // Salud — discapacidad
+        'discapacidad_id'          => 'int',
+        'discapacidad_permanente'  => 'boolean',
+        'discapacidad_tratamiento' => 'boolean',
+        // Salud — enfermedad
+        'enfermedad_id'            => 'int',
+        'enfermedad_tratamiento'   => 'boolean',
+        // Salud — embarazo
+        'embarazo'                 => 'boolean',
+        'control_embarazo'         => 'boolean',
+        // Cobertura
+        'cobertura_id'             => 'int',
     ];
 
-   
-    public function domicilio() {
+    // ── Relaciones ──────────────────────────────────────────
+
+    public function domicilio()
+    {
         return $this->belongsTo(Domicilio::class);
     }
 
-    public function provincia() {
+    public function provincia()
+    {
         return $this->belongsTo(Provincia::class);
     }
 
-    public function localidad() {
+    public function localidad()
+    {
         return $this->belongsTo(Localidad::class);
     }
 
-    public function estadoCivil() {
+    public function estadoCivil()
+    {
         return $this->belongsTo(EstadoCivil::class);
     }
 
-    public function sexo() {
+    public function sexo()
+    {
         return $this->belongsTo(Sexo::class);
     }
 
-    public function nivelEstudio() {
+    public function generoPercibido()
+    {
+        return $this->belongsTo(GeneroPercibido::class);
+    }
+
+    public function nivelEstudio()
+    {
         return $this->belongsTo(NivelesEstudio::class, 'nivel_estudio_id');
     }
 
-
-    public function sedeOrigen() {
+    public function sedeOrigen()
+    {
         return $this->belongsTo(Sede::class, 'sede_origen_id');
     }
+
     public function tipoDocumento()
     {
         return $this->belongsTo(TipoDocumento::class, 'documento_id');
@@ -86,13 +128,30 @@ class Persona extends Model
     {
         return $this->hasMany(GrupoFamiliar::class, 'persona_id');
     }
-    public function familia() {
-    return $this->belongsTo(Familia::class, 'familia_id');
-}
+
+    public function familia()
+    {
+        return $this->belongsTo(Familia::class, 'familia_id');
+    }
+
+    public function discapacidad()
+    {
+        return $this->belongsTo(Discapacidad::class);
+    }
+
 
     public function cud()
     {
         return $this->hasOne(Cud::class, 'persona_id');
+    }
+    public function enfermedad()
+    {
+        return $this->belongsTo(Enfermedad::class);
+    }
+
+    public function cobertura()
+    {
+        return $this->belongsTo(Cobertura::class);
     }
 
     public function personaPrograma()
@@ -110,10 +169,14 @@ class Persona extends Model
         return $this->hasMany(Atenciones::class, 'persona_id');
     }
 
+    // ── Accessors ───────────────────────────────────────────
+
     public function getEdadAttribute()
     {
         return \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
     }
+
+    // ── Lógica de programas ─────────────────────────────────
 
     public function alertaPrograma()
     {
@@ -128,33 +191,20 @@ class Persona extends Model
             $nombre = strtolower($pp->programa->nombre);
             $rol    = $pp->rol;
 
-            // 🔴 Guardería
             if (str_contains($nombre, 'guarderia') && $edad >= 6) {
-                return [
-                    'mensaje' => 'Debe egresar de Guardería.',
-                    'siguiente' => 'UDI'
-                ];
+                return ['mensaje' => 'Debe egresar de Guardería.', 'siguiente' => 'UDI'];
             }
 
             if (str_contains($nombre, 'udi') && $edad >= 12) {
-                return [
-                    'mensaje' => 'Debe egresar de UDI.',
-                    'siguiente' => 'Envion'
-                ];
+                return ['mensaje' => 'Debe egresar de UDI.', 'siguiente' => 'Envion'];
             }
 
             if (str_contains($nombre, 'envion') && $rol == 'destinatario' && $edad >= 21) {
-                return [
-                    'mensaje' => 'Finaliza Envión por edad.',
-                    'siguiente' => null
-                ];
+                return ['mensaje' => 'Finaliza Envión por edad.', 'siguiente' => null];
             }
 
             if (str_contains($nombre, 'envion') && $rol == 'tutor' && $edad >= 25) {
-                return [
-                    'mensaje' => 'Finaliza tutor de Envión por edad.',
-                    'siguiente' => null
-                ];
+                return ['mensaje' => 'Finaliza tutor de Envión por edad.', 'siguiente' => null];
             }
         }
 
@@ -175,24 +225,18 @@ class Persona extends Model
             $nombre = strtolower($pp->programa->nombre);
             $rol    = $pp->rol;
 
-            // 🎂 calcular fecha exacta de egreso
             $cumple = match (true) {
-                str_contains($nombre, 'guarderia') => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(6),
-                str_contains($nombre, 'udi')       => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(12),
-                str_contains($nombre, 'envion') && $rol == 'destinatario'
-                                                    => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(21),
-                str_contains($nombre, 'envion') && $rol == 'tutor'
-                                                    => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(25),
+                str_contains($nombre, 'guarderia')                            => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(6),
+                str_contains($nombre, 'udi')                                  => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(12),
+                str_contains($nombre, 'envion') && $rol == 'destinatario'     => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(21),
+                str_contains($nombre, 'envion') && $rol == 'tutor'            => \Carbon\Carbon::parse($this->fecha_nacimiento)->addYears(25),
                 default => null
             };
 
             if (!$cumple) continue;
 
-            // 🚨 si ya pasó la edad → cerrar
             if ($edad >= $cumple->age) {
-                $pp->update([
-                    'fecha_fin' => $cumple
-                ]);
+                $pp->update(['fecha_fin' => $cumple]);
             }
         }
     }

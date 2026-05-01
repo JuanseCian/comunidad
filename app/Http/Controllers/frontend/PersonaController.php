@@ -19,6 +19,7 @@ use App\Models\Discapacidad;
 use App\Models\Enfermedad;
 use App\Models\Cobertura;
 use App\Models\Familia;
+use App\Models\Cud;
 
 class PersonaController extends Controller
 {
@@ -90,6 +91,10 @@ class PersonaController extends Controller
             'localidad_id'             => 'nullable|exists:localidad,id',
             // Salud
             'discapacidad_id'          => 'nullable|exists:discapacidad,id',
+            'cud_numero'               => 'nullable|string|max:100',
+            'cud_fecha_emision'        => 'nullable|date',
+            'cud_vencimiento'          => 'nullable|date',
+            'cud_observaciones'        => 'nullable|string|max:1000',
             'enfermedad_id'            => 'nullable|exists:enfermedad,id',
             'cobertura_id'             => 'nullable|exists:cobertura,id',
         ]);
@@ -151,6 +156,18 @@ class PersonaController extends Controller
             'cobertura_id'             => $request->cobertura_id,
         ]);
 
+
+        // Crear registro CUD si el toggle de discapacidad está activo
+        if ($tieneDiscapacidad) {
+            Cud::create([
+                'persona_id'        => $persona->id,
+                'tiene_cud'         => $request->filled('cud_numero') ? 1 : 0,
+                'numero_cud'        => $request->cud_numero,
+                'fecha_emision'     => $request->cud_fecha_emision,
+                'fecha_vencimiento' => $request->cud_vencimiento,
+                'observaciones'     => $request->cud_observaciones,
+            ]);
+        }
         return redirect()
             ->route('personas.show', $persona->id)
             ->with('success', 'Persona registrada correctamente')
@@ -220,6 +237,7 @@ class PersonaController extends Controller
             'nivelEstudio',
             'sedeOrigen',
             'familia.personas',
+            'cud',
         ])->findOrFail($id);
 
         // Si la persona no tiene grupo familiar asignado, crear uno automáticamente
@@ -411,6 +429,10 @@ class PersonaController extends Controller
             'nivel_estudio_id' => 'nullable|exists:niveles_estudio,id',
             // Salud
             'discapacidad_id'  => 'nullable|exists:discapacidad,id',
+            'cud_numero'               => 'nullable|string|max:100',
+            'cud_fecha_emision'        => 'nullable|date',
+            'cud_vencimiento'          => 'nullable|date',
+            'cud_observaciones'        => 'nullable|string|max:1000',
             'enfermedad_id'    => 'nullable|exists:enfermedad,id',
             'cobertura_id'     => 'nullable|exists:cobertura,id',
         ]);
@@ -440,6 +462,20 @@ class PersonaController extends Controller
             'cobertura_id'             => $request->cobertura_id,
         ]);
 
+
+        // Actualizar o crear registro CUD
+        if ($tieneDiscapacidad) {
+            Cud::updateOrCreate(
+                ['persona_id' => $persona->id],
+                [
+                    'tiene_cud'         => $request->filled('cud_numero') ? 1 : 0,
+                    'numero_cud'        => $request->cud_numero,
+                    'fecha_emision'     => $request->cud_fecha_emision,
+                    'fecha_vencimiento' => $request->cud_vencimiento,
+                    'observaciones'     => $request->cud_observaciones,
+                ]
+            );
+        }
         return back()->with('success', 'Datos personales actualizados correctamente');
     }
 
