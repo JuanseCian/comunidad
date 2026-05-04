@@ -4,6 +4,7 @@
 
 @section('content')
 
+
 @if(session('success'))
     <div class="sp-alert">
         <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
@@ -48,12 +49,28 @@
                             <p style="font-size:11px; color:#536070; font-weight:600; margin:0; margin-top:3px;">Programas</p>
                         </div>
                     </div>
+                    @if(auth()->user()?->rol_id == 3) {{-- Cambiado de 1 a 3 --}}
                     <div class="col-4">
-                        <div style="background:white; border-radius:14px; padding:16px 12px; text-align:center; box-shadow:0 2px 12px rgba(13,146,194,0.1); border:1px solid #c2eee3;">
-                            <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:1.8rem; font-weight:800; color:#0879a8; margin:0; line-height:1;">87%</p>
-                            <p style="font-size:11px; color:#536070; font-weight:600; margin:0; margin-top:3px;">Cobertura</p>
-                        </div>
+                        <a href="{{ route('personas.solicitudes') }}" style="text-decoration:none; display:block;">
+                            <div style="background:white; border-radius:14px; padding:16px 12px; text-align:center; box-shadow:0 2px 12px rgba(245, 158, 11, 0.15); border:1px solid #fde68a; transition: transform 0.2s;"
+                                onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                
+                                <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:1.8rem; font-weight:800; color:#d97706; margin:0; line-height:1;">
+                                    {{-- Mostramos el conteo real, si es 0 no mostramos nada o mostramos 0 --}}
+                                    {{ $solicitudesPendientes ?? 0 }}
+                                </p>
+                                <p style="font-size:11px; color:#536070; font-weight:600; margin:0; margin-top:3px;">Solicitudes</p>
+                                
+                                {{-- Badge visual opcional si hay pendientes --}}
+                                @if(($solicitudesPendientes ?? 0) > 0)
+                                    <span style="position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; border-radius:50%; width:20px; height:20px; font-size:10px; display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+                                        !
+                                    </span>
+                                @endif
+                            </div>
+                        </a>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -147,76 +164,74 @@
 
     <div class="row g-3 mb-4">
 
-        @php
-        $programas = [
-            [
-                'icon'     => 'bi-mortarboard',
-                'titulo'   => 'Envión',
-                'rango'    => '12 a 21 años',
-                'desc'     => 'Gestión de becas, tutores e intervenciones socioeducativas.',
-                'color'    => '#0d92c2',
-                'colorBg'  => '#e6f5fb',
-                'colorBor' => '#b3e0f5',
-                'tag'      => 'Jóvenes',
-            ],
-            [
-                'icon'     => 'bi-egg-fried',
-                'titulo'   => 'UDI & Más Vida',
-                'rango'    => '0 a 11 años',
-                'desc'     => 'Guarderías y Plan Más Vida. Nutrición y desarrollo temprano.',
-                'color'    => '#17a385',
-                'colorBg'  => '#e8f9f5',
-                'colorBor' => '#9fe1cb',
-                'tag'      => 'Infancia',
-            ],
-            [
-                'icon'     => 'bi-heart-pulse',
-                'titulo'   => 'Bajo Peso',
-                'rango'    => 'Salud Infantil',
-                'desc'     => 'Seguimiento clínico-social territorial. Alerta temprana.',
-                'color'    => '#0879a8',
-                'colorBg'  => '#e6f5fb',
-                'colorBor' => '#b3e0f5',
-                'tag'      => 'Salud',
-            ],
-            [
-                'icon'     => 'bi-building-up',
-                'titulo'   => 'Multiespacio',
-                'rango'    => 'Integración',
-                'desc'     => 'Área de desarrollo compartido para UDI y Envión.',
-                'color'    => '#0e8a70',
-                'colorBg'  => '#e8f9f5',
-                'colorBor' => '#9fe1cb',
-                'tag'      => 'Espacio',
-            ],
-        ];
-        @endphp
+        
 
         @foreach($programas as $p)
         <div class="col-sm-6 col-lg-3">
-            <a href="#" style="text-decoration:none; display:block; height:100%;">
+            <a href="{{ route('frontend.programas.show', $p->id) }}" style="text-decoration:none; display:block; height:100%;">
+                
                 <div style="
                     background: white;
                     border-radius: 16px;
                     padding: 20px 16px;
-                    border: 1px solid {{ $p['colorBor'] }};
-                    border-top: 3px solid {{ $p['color'] }};
+                    border: 1px solid #dbeafe;
+                    border-top: 3px solid #0d92c2;
                     box-shadow: 0 2px 12px rgba(0,0,0,0.05);
                     transition: transform 0.22s, box-shadow 0.22s;
                     height: 100%;
-                " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.10)'"
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 12px rgba(0,0,0,0.05)'">
+                "
+                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.10)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 12px rgba(0,0,0,0.05)'">
 
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-                        <div style="width:42px; height:42px; background:{{ $p['colorBg'] }}; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:{{ $p['color'] }};">
-                            <i class="bi {{ $p['icon'] }}"></i>
+                        
+                        <div style="
+                            width:42px; 
+                            height:42px; 
+                            background:#e6f5fb; 
+                            border-radius:12px; 
+                            display:flex; 
+                            align-items:center; 
+                            justify-content:center; 
+                            font-size:20px; 
+                            color:#0d92c2;
+                        ">
+                            <i class="bi bi-folder-fill"></i>
                         </div>
-                        <span style="background:{{ $p['colorBg'] }}; color:{{ $p['color'] }}; border:1px solid {{ $p['colorBor'] }}; border-radius:40px; padding:3px 10px; font-size:11px; font-weight:700;">{{ $p['tag'] }}</span>
+
+                        <span style="
+                            background:#e6f5fb; 
+                            color:#0d92c2; 
+                            border:1px solid #b3e0f5; 
+                            border-radius:40px; 
+                            padding:3px 10px; 
+                            font-size:11px; 
+                            font-weight:700;
+                        ">
+                            Programa
+                        </span>
                     </div>
 
-                    <h6 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:14.5px; color:#0f172a; margin:0 0 3px;">{{ $p['titulo'] }}</h6>
-                    <p style="font-size:11.5px; font-weight:600; color:{{ $p['color'] }}; margin:0 0 8px;">{{ $p['rango'] }}</p>
-                    <p style="font-size:12.5px; color:#536070; font-weight:500; margin:0; line-height:1.5;">{{ $p['desc'] }}</p>
+                    <h6 style="
+                        font-family:'Plus Jakarta Sans',sans-serif; 
+                        font-weight:800; 
+                        font-size:14.5px; 
+                        color:#0f172a; 
+                        margin:0 0 6px;
+                    ">
+                        {{ $p->nombre }}
+                    </h6>
+
+                    <p style="
+                        font-size:12.5px; 
+                        color:#536070; 
+                        font-weight:500; 
+                        margin:0; 
+                        line-height:1.5;
+                    ">
+                        Ver personas asociadas a este programa.
+                    </p>
+
                 </div>
             </a>
         </div>

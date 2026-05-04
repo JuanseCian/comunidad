@@ -5,14 +5,17 @@ use App\Http\Middleware\CheckRole;
 
 Route::middleware(['auth'])->group(function () {
 
-    // --- ACCESO TOTAL (Administrador y Coordinador: Roles 2 y 3) ---
+    Route::middleware([CheckRole::class . ':3'])->group(function () {
+        Route::get('/personas/solicitudes', [PersonaController::class, 'solicitudesPendientes'])->name('personas.solicitudes');
+        Route::patch('/personas/{id}/aprobar', [PersonaController::class, 'aprobarPersona'])->name('personas.aprobar');
+        Route::delete('/personas/{id}/rechazar', [PersonaController::class, 'rechazarPersona'])->name('personas.rechazar');
+    });
+
     Route::middleware([CheckRole::class . ':2,3'])->group(function () {
-        
         // Creación
         Route::get('/personas/create', [PersonaController::class, 'create'])->name('personas.create');
         Route::post('/personas', [PersonaController::class, 'store'])->name('personas.store');
         
-        // Edición y Actualización
         Route::get('/personas/{id}/edit', [PersonaController::class, 'edit'])->name('personas.edit');
         Route::put('/personas/{id}', [PersonaController::class, 'update'])->name('personas.update');
         Route::put('/personas/{id}/datos', [PersonaController::class, 'updateDatos'])->name('personas.updateDatos');
@@ -24,7 +27,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/personas/{id}/cambiar-programa', [PersonaController::class, 'cambiarPrograma'])->name('personas.cambiarPrograma');
     });
 
-    // --- ACCESO DE LECTURA (Técnico, Coordinador y Admin: Roles 1, 2 y 3) ---
     Route::middleware([CheckRole::class . ':1,2,3'])->group(function () {
         Route::get('/personas', [PersonaController::class, 'index'])->name('personas.index');
         Route::get('/personas/{id}', [PersonaController::class, 'show'])->name('personas.show');

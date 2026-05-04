@@ -16,6 +16,7 @@ class Persona extends Model
         'fecha_nacimiento',
         'documento_id',
         'dni',
+        'estado',
         'cuil',
         'sexo_id',
         'genero_percibido_id',

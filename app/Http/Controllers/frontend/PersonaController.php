@@ -23,7 +23,7 @@ use App\Models\Cud;
 
 class PersonaController extends Controller
 {
-   public function index(Request $request)
+    public function index(Request $request)
     {
         $query = Persona::with([
             'tipoDocumento',
@@ -32,8 +32,8 @@ class PersonaController extends Controller
             'domicilio.barrio',
             'sedeOrigen',
             'grupoFamiliar',
-        ]);
- 
+        ])->where('estado', 'aprobado');
+
         if ($request->filled('q')) {
             $q = $request->q;
             $query->where(function ($sql) use ($q) {
@@ -42,21 +42,21 @@ class PersonaController extends Controller
                     ->orWhere('dni',      'like', "%{$q}%");
             });
         }
- 
+
         if ($request->filled('sede_id')) {
             $query->where('sede_origen_id', $request->sede_id);
         }
- 
+
         if ($request->filled('barrio_id')) {
             $query->whereHas('domicilio', function ($sql) use ($request) {
                 $sql->where('barrio_id', $request->barrio_id);
             });
         }
- 
+
         $personas = $query->orderBy('apellido')->orderBy('nombre')->paginate(20)->withQueryString();
         $sedes    = Sede::orderBy('nombre')->get();
         $barrios  = Barrio::orderBy('nombre')->get();
- 
+
         return view('frontend.persona.index', compact('personas', 'sedes', 'barrios'));
     }
     
@@ -82,47 +82,36 @@ class PersonaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre'                   => 'required|string|max:255',
-            'apellido'                 => 'required|string|max:255',
-            'dni'                      => 'required',
-            'cuil'                     => 'nullable|string|max:20',
-            'estado_civil_id'          => 'nullable|exists:estado_civil,id',
-            'provincia_id'             => 'nullable|exists:provincia,id',
-            'localidad_id'             => 'nullable|exists:localidad,id',
-            // Salud
-            'discapacidad_id'          => 'nullable|exists:discapacidad,id',
-            'cud_numero'               => 'nullable|string|max:100',
-            'cud_fecha_emision'        => 'nullable|date',
-            'cud_vencimiento'          => 'nullable|date',
-            'cud_observaciones'        => 'nullable|string|max:1000',
-            'enfermedad_id'            => 'nullable|exists:enfermedad,id',
-            'cobertura_id'             => 'nullable|exists:cobertura,id',
+            'nombre'            => 'required|string|max:255',
+            'apellido'          => 'required|string|max:255',
+            'dni'               => 'required|unique:personas,dni',
+            'cuil'              => 'nullable|string|max:20',
+            'estado_civil_id'   => 'nullable|exists:estado_civil,id',
+            'provincia_id'      => 'nullable|exists:provincia,id',
+            'localidad_id'      => 'nullable|exists:localidad,id',
+            'discapacidad_id'   => 'nullable|exists:discapacidad,id',
+            'cud_numero'        => 'nullable|string|max:100',
+            'cud_fecha_emision' => 'nullable|date',
+            'cud_vencimiento'   => 'nullable|date',
         ]);
 
+        // 1. Verificación por ID de rol (3) o nombre (administrador)
+        // Usamos el ID 3 por ser más directo según tu base de datos
+        $esAdministrador = auth()->user()->rol_id == 3; 
+        $estado = $esAdministrador ? 'aprobado' : 'pendiente';
+
         $domicilio_id = null;
-
         if ($request->filled('barrio_id') || $request->filled('calle')) {
-            $domicilio = Domicilio::create([
-                'barrio_id' => $request->barrio_id,
-                'calle'     => $request->calle,
-                'numero'    => $request->numero,
-                'piso'      => $request->piso,
-                'dpto'      => $request->dpto,
-            ]);
-
+            $domicilio = Domicilio::create($request->only(['barrio_id', 'calle', 'numero', 'piso', 'dpto']));
             $domicilio_id = $domicilio->id;
         }
 
-        // Crear grupo familiar automáticamente
-        $familia = Familia::create([
-            'codigo' => Familia::generarCodigo(),
-        ]);
+        $familia = Familia::create(['codigo' => Familia::generarCodigo()]);
 
-        // Los campos de discapacidad solo se guardan si el toggle está activo
         $tieneDiscapacidad = $request->boolean('_tiene_discapacidad') || $request->filled('discapacidad_id');
         $tieneEnfermedad   = $request->filled('enfermedad_id');
         $tieneEmbarazo     = $request->boolean('embarazo');
-
+        
         $persona = Persona::create([
             'familia_id'               => $familia->id,
             'nombre'                   => $request->nombre,
@@ -139,38 +128,39 @@ class PersonaController extends Controller
             'telefono'                 => $request->telefono,
             'nivel_estudio_id'         => $request->nivel_estudio_id,
             'estado_civil_id'          => $request->estado_civil_id,
-            'trabaja'                  => $request->boolean('trabaja') ? 1 : 0,
+            'trabaja'                  => $request->boolean('trabaja'),
             'grupo_sanguineo'          => $request->grupo_sanguineo,
             'sede_origen_id'           => $request->sede_origen_id,
-            // Salud — discapacidad
-            'discapacidad_permanente'  => $tieneDiscapacidad ? 1 : 0,
+            'estado'                   => $estado, // Asignación basada en la validación del rol
+            'discapacidad_permanente'  => $tieneDiscapacidad,
             'discapacidad_id'          => $tieneDiscapacidad ? $request->discapacidad_id : null,
-            'discapacidad_tratamiento' => $tieneDiscapacidad ? ($request->boolean('discapacidad_tratamiento') ? 1 : 0) : null,
-            // Salud — enfermedad
+            'discapacidad_tratamiento' => $tieneDiscapacidad ? $request->boolean('discapacidad_tratamiento') : null,
             'enfermedad_id'            => $tieneEnfermedad ? $request->enfermedad_id : null,
-            'enfermedad_tratamiento'   => $tieneEnfermedad ? ($request->boolean('enfermedad_tratamiento') ? 1 : 0) : null,
-            // Salud — embarazo
-            'embarazo'                 => $tieneEmbarazo ? 1 : 0,
-            'control_embarazo'         => $tieneEmbarazo ? ($request->boolean('control_embarazo') ? 1 : 0) : null,
-            // Cobertura médica
+            'enfermedad_tratamiento'   => $tieneEnfermedad ? $request->boolean('enfermedad_tratamiento') : null,
+            'embarazo'                 => $tieneEmbarazo,
+            'control_embarazo'         => $tieneEmbarazo ? $request->boolean('control_embarazo') : null,
             'cobertura_id'             => $request->cobertura_id,
         ]);
 
-
-        // Crear registro CUD si el toggle de discapacidad está activo
         if ($tieneDiscapacidad) {
             Cud::create([
                 'persona_id'        => $persona->id,
-                'tiene_cud'         => $request->filled('cud_numero') ? 1 : 0,
+                'tiene_cud'         => $request->filled('cud_numero'),
                 'numero_cud'        => $request->cud_numero,
                 'fecha_emision'     => $request->cud_fecha_emision,
                 'fecha_vencimiento' => $request->cud_vencimiento,
                 'observaciones'     => $request->cud_observaciones,
             ]);
         }
-        return redirect()
-            ->route('personas.show', $persona->id)
-            ->with('success', 'Persona registrada correctamente')
+
+        // 2. Redirección lógica
+        if (!$esAdministrador) {
+            return redirect()->route('personas.index')
+                ->with('success', 'La solicitud ha sido enviada al Administrador para su revisión.');
+        }
+
+        return redirect()->route('personas.show', $persona->id)
+            ->with('success', 'Persona registrada y aprobada con éxito.')
             ->with('abrirProgramaModal', true);
     }
 
@@ -238,38 +228,25 @@ class PersonaController extends Controller
             'sedeOrigen',
             'familia.personas',
             'cud',
+            'personaPrograma.programa'
         ])->findOrFail($id);
 
-        // Si la persona no tiene grupo familiar asignado, crear uno automáticamente
         if (!$persona->familia_id) {
-            $familia = Familia::create([
-                'codigo' => Familia::generarCodigo(),
-            ]);
-            $persona->familia_id = $familia->id;
-            $persona->save();
+            $familia = Familia::create(['codigo' => Familia::generarCodigo()]);
+            $persona->update(['familia_id' => $familia->id]);
             $persona->load('familia.personas');
         }
 
-        $programas   = ProgramasAsistencia::orderBy('nombre')->get();
-        $niveles     = NivelesEstudio::orderBy('nombre')->get();
-        $provincias  = Provincia::orderBy('nombre')->get();
-        $localidades = Localidad::orderBy('nombre')->get();
-        $barrios     = Barrio::orderBy('nombre')->get();
-
-        $persona->actualizarProgramasPorEdad();
-
-        
-        $persona->load('personaPrograma.programa');
-
-        $persona->actualizarProgramasPorEdad();
+        // Se evalúa la edad una sola vez antes de mostrar
+        $this->evaluarProgramasPorEdad($persona);
 
         return view('frontend.persona.show', [
             'persona'     => $persona,
-            'programas'   => $programas,
-            'niveles'     => $niveles,
-            'provincias'  => $provincias,
-            'localidades' => $localidades,
-            'barrios'     => $barrios,
+            'programas'   => ProgramasAsistencia::orderBy('nombre')->get(),
+            'niveles'     => NivelesEstudio::orderBy('nombre')->get(),
+            'provincias'  => Provincia::orderBy('nombre')->get(),
+            'localidades' => Localidad::orderBy('nombre')->get(),
+            'barrios'     => Barrio::orderBy('nombre')->get(),
         ]);
     }
 
@@ -310,36 +287,25 @@ class PersonaController extends Controller
         return back()->with('success', 'Programa actualizado correctamente');
     }
     
-    public function evaluarProgramasPorEdad()
+    public function evaluarProgramasPorEdad(Persona $persona)
     {
-        if (!$this->fecha_nacimiento) return;
+        if (!$persona->fecha_nacimiento) return;
 
-        $edad = $this->edad;
+        $edad = $persona->edad;
 
-        foreach ($this->personaPrograma as $pp) {
-
-            if (!$pp->programa) continue;
-
-            // SOLO activos
-            if ($pp->fecha_fin) continue;
+        foreach ($persona->personaPrograma as $pp) {
+            if (!$pp->programa || $pp->fecha_fin) continue;
 
             $nombre = strtolower($pp->programa->nombre);
             $rol    = $pp->rol;
 
             if (str_contains($nombre, 'guarderia') && $edad >= 6) {
                 $pp->update(['fecha_fin' => now()]);
-            }
-
-            if (str_contains($nombre, 'udi') && $edad >= 12) {
+            } elseif (str_contains($nombre, 'udi') && $edad >= 12) {
                 $pp->update(['fecha_fin' => now()]);
-            }
-
-            if (str_contains($nombre, 'envion') && $rol == 'destinatario' && $edad >= 21) {
-                $pp->update(['fecha_fin' => now()]);
-            }
-
-            if (str_contains($nombre, 'envion') && $rol == 'tutor' && $edad >= 25) {
-                $pp->update(['fecha_fin' => now()]);
+            } elseif (str_contains($nombre, 'envion')) {
+                if ($rol == 'destinatario' && $edad >= 21) $pp->update(['fecha_fin' => now()]);
+                if ($rol == 'tutor' && $edad >= 25) $pp->update(['fecha_fin' => now()]);
             }
         }
     }
@@ -522,5 +488,36 @@ class PersonaController extends Controller
         ]);
 
         return back()->with('success', 'Domicilio actualizado correctamente');
+    }
+
+    public function solicitudesPendientes()
+    {
+        if (auth()->user()->rol_id != 3) {
+            return redirect()->route('home')->with('error', 'No tienes permisos de administrador para ver solicitudes.');
+        }
+
+        $pendientes = Persona::with(['sedeOrigen', 'domicilio.barrio'])
+            ->where('estado', 'pendiente')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('frontend.persona.solicitudes', compact('pendientes'));
+    }
+
+    public function aprobarPersona($id)
+    {
+        $persona = Persona::findOrFail($id);
+        $persona->update(['estado' => 'aprobado']);
+
+        return redirect()->back()->with('success', "La persona {$persona->nombre} {$persona->apellido} ha sido aprobada correctamente.");
+    }
+
+    public function rechazarPersona($id)
+    {
+        $persona = Persona::findOrFail($id);
+        
+        $persona->delete(); 
+
+        return redirect()->back()->with('warning', "La solicitud de alta ha sido rechazada y eliminada.");
     }
 }

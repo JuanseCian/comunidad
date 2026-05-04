@@ -4,20 +4,27 @@ namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Persona;
+use App\Models\ProgramasAsistencia;
+
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $personas = Persona::with('personaPrograma.programa')->get();
+        $solicitudesPendientes = Persona::where('estado', 'pendiente')->count();
+
+        $personas = Persona::where('estado', 'aprobado')
+            ->with(['personaPrograma' => function($q) {
+                $q->whereNull('fecha_fin')->with('programa');
+            }])->get();
+
+        $programas = ProgramasAsistencia::all(); // 👈 AGREGAR ESTO
 
         $alertas = [];
 
         foreach ($personas as $persona) {
-
-
-            $persona->actualizarProgramasPorEdad();
-
+            $personaController = new PersonaController();
+            $personaController->evaluarProgramasPorEdad($persona);
             $alerta = $persona->alertaPrograma();
 
             if ($alerta) {
@@ -29,7 +36,6 @@ class HomeController extends Controller
             }
         }
 
-        return view('frontend.home.home', compact('alertas'));
+        return view('frontend.home.home', compact('alertas', 'solicitudesPendientes', 'programas'));
     }
-
 }

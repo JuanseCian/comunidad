@@ -17,8 +17,10 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
-        //
+        view()->composer('frontend.layout.tu_vista_panel', function ($view) {
+            $view->with('solicitudesPendientes', \App\Models\Persona::where('estado', 'pendiente')->count());
+        });
     }
 }

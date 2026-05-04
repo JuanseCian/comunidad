@@ -32,4 +32,14 @@ class ProgramasAsistencia extends Model
 	{
 		return $this->hasMany(PersonaPrograma::class, 'programa_id');
 	}
+
+	public function personas()
+	{
+		return $this->belongsToMany(
+			Persona::class,
+			'persona_programa', // nombre de la tabla pivote
+			'programa_id',
+			'persona_id'
+		);
+}
 }
