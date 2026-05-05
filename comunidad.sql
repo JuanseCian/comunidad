@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 04, 2026 at 03:53 PM
+-- Generation Time: May 05, 2026 at 02:17 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -482,7 +482,11 @@ INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
 (22, '0QD631FTM', '2026-05-04 18:40:40', '2026-05-04 18:40:40'),
 (23, 'CQG752XDH', '2026-05-04 18:40:45', '2026-05-04 18:40:45'),
 (24, 'RIG132KPY', '2026-05-04 18:44:42', '2026-05-04 18:44:42'),
-(25, 'ROB923I43', '2026-05-04 18:45:12', '2026-05-04 18:45:12');
+(25, 'ROB923I43', '2026-05-04 18:45:12', '2026-05-04 18:45:12'),
+(26, 'I2O229HGO', '2026-05-05 16:45:19', '2026-05-05 16:45:19'),
+(27, 'GFZ578FTF', '2026-05-05 16:50:54', '2026-05-05 16:50:54'),
+(28, 'FON316ATS', '2026-05-05 16:52:19', '2026-05-05 16:52:19'),
+(29, '9UA370ZBC', '2026-05-05 17:14:18', '2026-05-05 17:14:18');
 
 -- --------------------------------------------------------
 
@@ -943,11 +947,7 @@ CREATE TABLE `personas` (
 INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `cud_numero`, `cud_vencimiento`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`, `estado`, `creado_por_id`) VALUES
 (13, 23, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, NULL, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-05-04 18:40:45', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'aprobado', NULL),
 (14, 22, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, NULL, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-05-04 18:40:40', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'aprobado', NULL),
-(40, 19, 'patapin', 'brbr', NULL, NULL, 1, '221', NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-05-04 15:41:52', '2026-05-04 15:52:32', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL),
-(41, 20, 'patapin', 'brbr', NULL, NULL, 1, '77', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-05-04 15:54:01', '2026-05-04 16:15:26', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL),
-(42, 21, 'cappucina', 'balerina', NULL, NULL, NULL, '66', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-05-04 15:54:14', '2026-05-04 16:15:13', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL),
-(43, 24, 'xa', 'xx', NULL, '2018-10-29', 1, '888', NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-05-04 18:44:42', '2026-05-04 18:44:42', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL),
-(44, 25, 'f', 'fs', NULL, '2003-11-30', 1, '82', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-05-04 18:45:12', '2026-05-04 18:45:12', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
+(48, 29, 'patapin', 'brbr', NULL, '2010-06-27', 1, '23', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, NULL, '2026-05-05 17:14:18', '2026-05-05 17:14:18', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
 
 -- --------------------------------------------------------
 
@@ -983,6 +983,8 @@ CREATE TABLE `persona_programa` (
   `fecha_fin` date DEFAULT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT '1',
   `rol` enum('destinatario','tutor') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'destinatario',
+  `en_adaptacion` tinyint(1) NOT NULL DEFAULT '0',
+  `fecha_limite_adaptacion` date DEFAULT NULL,
   `observaciones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `registrado_por` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -993,12 +995,10 @@ CREATE TABLE `persona_programa` (
 -- Dumping data for table `persona_programa`
 --
 
-INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
-(1, 14, 1, '2026-04-24', '2020-02-22', 1, 'destinatario', 'a', NULL, '2026-04-26 03:59:38', '2026-04-27 19:40:27'),
-(13, 13, 1, NULL, NULL, 1, 'tutor', NULL, NULL, '2026-04-27 01:55:44', '2026-04-27 01:55:44'),
-(18, 42, 4, '2026-05-04', NULL, 1, 'destinatario', NULL, NULL, '2026-05-04 18:44:21', '2026-05-04 18:44:21'),
-(19, 43, 2, '2026-05-04', NULL, 1, 'destinatario', NULL, NULL, '2026-05-04 18:44:46', '2026-05-04 18:44:46'),
-(20, 44, 3, '2026-05-04', NULL, 1, 'destinatario', NULL, NULL, '2026-05-04 18:45:21', '2026-05-04 18:45:21');
+INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `en_adaptacion`, `fecha_limite_adaptacion`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
+(1, 14, 1, '2026-04-24', '2020-02-22', 1, 'destinatario', 0, NULL, 'a', NULL, '2026-04-26 03:59:38', '2026-04-27 19:40:27'),
+(13, 13, 1, NULL, NULL, 1, 'tutor', 0, NULL, NULL, NULL, '2026-04-27 01:55:44', '2026-04-27 01:55:44'),
+(26, 48, 1, '2026-05-05', NULL, 1, 'destinatario', 1, '2026-05-05', NULL, NULL, '2026-05-05 17:14:31', '2026-05-05 17:15:02');
 
 -- --------------------------------------------------------
 
@@ -1724,7 +1724,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `familias`
 --
 ALTER TABLE `familias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `genero_percibido`
@@ -1784,7 +1784,7 @@ ALTER TABLE `persona_beneficio`
 -- AUTO_INCREMENT for table `persona_programa`
 --
 ALTER TABLE `persona_programa`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `persona_trabajo`
