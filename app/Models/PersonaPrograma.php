@@ -39,7 +39,9 @@ class PersonaPrograma extends Model
 		'fecha_inicio' => 'datetime',
 		'fecha_fin' => 'datetime',
 		'activo' => 'bool',
-		'registrado_por' => 'int'
+		'registrado_por' => 'int',
+		'en_adaptacion' => 'boolean',
+    	'fecha_limite_adaptacion' => 'date'
 	];
 
 	protected $fillable = [
@@ -50,8 +52,19 @@ class PersonaPrograma extends Model
 		'fecha_fin',
 		'activo',
 		'observaciones',
-		'registrado_por'
+		'registrado_por',
+		'en_adaptacion',
+    	'fecha_limite_adaptacion'
 	];
+
+	public function getEstaActivoAttribute()
+	{
+		if (!$this->en_adaptacion) {
+			return true;
+		}
+
+		return now()->greaterThan($this->fecha_limite_adaptacion);
+	}
 
 	public function persona()
 	{

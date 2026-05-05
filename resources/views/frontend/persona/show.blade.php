@@ -638,6 +638,20 @@
                                                 class="form-control">
                                                 
                                         </div>
+                                        <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--border-sm);">
+                                            <div class="form-check">
+                                                <input type="checkbox" name="en_adaptacion" value="1" @checked($pp->en_adaptacion) class="form-check-input">
+                                                <label class="form-check-label" style="font-size:13px;">En periodo de adaptación</label>
+                                            </div>
+                                            @if($pp->en_adaptacion)
+                                                <div style="margin-top:5px;">
+                                                    <label style="font-size:12px; color:var(--muted);">Fecha límite:</label>
+                                                    <input type="date" name="fecha_limite_adaptacion" 
+                                                        value="{{ $pp->fecha_limite_adaptacion ? \Carbon\Carbon::parse($pp->fecha_limite_adaptacion)->format('Y-m-d') : '' }}" 
+                                                        class="form-control form-control-sm">
+                                                </div>
+                                            @endif
+                                        </div>
 
                                         <button class="sp-btn-primary">Guardar</button>
                                     </form>
@@ -1037,6 +1051,27 @@
                     </div>
                 </div>
 
+                <div style="margin-top: 20px; padding: 15px; background: var(--blue-lt); border-radius: 12px; border: 1px solid var(--blue-brd);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <input type="checkbox" name="en_adaptacion" id="check_adaptacion" value="1" 
+                            style="width: 18px; height: 18px; cursor: pointer;">
+                        <label for="check_adaptacion" style="font-size: 13px; font-weight: 700; color: var(--blue-dk); cursor: pointer; margin: 0;">
+                            ¿Requiere periodo de adaptación?
+                        </label>
+                    </div>
+
+                    <div id="wrapper_fecha_adaptacion" style="display: none; animation: fadeUp .3s ease;">
+                        <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:6px; text-transform:uppercase;">
+                            Fecha límite de adaptación
+                        </label>
+                        <input type="date" name="fecha_limite_adaptacion" id="input_fecha_adaptacion"
+                            style="width:100%; padding:10px; border-radius:10px; border:1.5px solid var(--blue-brd); font-family: var(--sans);">
+                        <small style="display:block; margin-top:5px; color: var(--slate); font-size: 11px; line-height: 1.3;">
+                            <i class="bi bi-info-circle"></i> Al finalizar esta fecha, si no se cancela, la persona ingresará al programa automáticamente.
+                        </small>
+                    </div>
+                </div>
+
                 <input type="hidden" name="persona_id" value="{{ $persona->id }}">
 
                 <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
@@ -1170,5 +1205,24 @@ function copiarCodigo() {
         }, 2000);
     });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const checkAdaptacion = document.getElementById('check_adaptacion');
+    const wrapperFecha = document.getElementById('wrapper_fecha_adaptacion');
+    const inputFecha = document.getElementById('input_fecha_adaptacion');
+
+    checkAdaptacion.addEventListener('change', function() {
+        if (this.checked) {
+            wrapperFecha.style.display = 'block';
+            inputFecha.required = true;
+        } else {
+            wrapperFecha.style.display = 'none';
+            inputFecha.required = false;
+            inputFecha.value = '';
+        }
+    });
+});
 </script>
+
+
 @endsection
