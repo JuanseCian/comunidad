@@ -6,19 +6,66 @@
 
 @section('content')
 
+
 @php
     $alerta = $persona->alertaPrograma();
 @endphp
 
 @if($alerta)
-    <div class="sp-alert" style="background:#fff7ed; border-color:#fed7aa; color:#9a3412;">
-        ⚠️ {{ $alerta['mensaje'] }}
+    <!-- Modal de Alerta de Cambio de Programa -->
+    <div id="modalSugerenciaPrograma" 
+         style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:2000; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+        
+        <div class="sp-anim" style="background:white; border-radius:24px; width:90%; max-width:450px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); overflow:hidden;">
+            
+            <!-- Cabecera con gradiente de aviso -->
+            <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); padding: 30px 24px; text-align: center; border-bottom: 1px solid #fed7aa;">
+                <div style="width: 60px; height: 60px; background: #fb923c; color: white; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 28px; box-shadow: 0 10px 15px -3px rgba(251, 146, 60, 0.4);">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+                <h2 style="margin:0; font-size: 18px; font-weight: 800; color: #9a3412; font-family: var(--sans);">Cambio de Programa Sugerido</h2>
+            </div>
 
-        @if($alerta['siguiente'])
-            <br>
-            👉 Programa sugerido: <strong>{{ $alerta['siguiente'] }}</strong>
-        @endif
+            <!-- Cuerpo -->
+            <div style="padding: 24px; text-align: center;">
+                <p style="font-size: 14.5px; color: #7c2d12; line-height: 1.6; margin-bottom: 20px;">
+                    {{ $alerta['mensaje'] }}
+                </p>
+
+                @if($alerta['siguiente'])
+                    <div style="background: var(--blue-lt); border: 1px dashed var(--blue); padding: 15px; border-radius: 16px; margin-bottom: 24px;">
+                        <span style="display:block; font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--blue); letter-spacing: 1px; margin-bottom: 4px;">Nuevo programa recomendado</span>
+                        <span style="font-size: 17px; font-weight: 800; color: var(--ink);">{{ $alerta['programa'] }}</span>
+                    </div>
+                @endif
+
+                <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                    <button onclick="abrirAsignacionDesdeSugerencia()" class="sp-btn-primary" style="justify-content: center; height: 48px; font-size: 14px;">
+                        <i class="bi bi-check2-circle"></i> Realizar cambio ahora
+                    </button>
+                    <button onclick="document.getElementById('modalSugerenciaPrograma').style.display='none'" 
+                            class="sp-btn-ghost" style="justify-content: center; border: none;">
+                        Revisar más tarde
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostramos el modal de sugerencia automáticamente al cargar
+            setTimeout(() => {
+                document.getElementById('modalSugerenciaPrograma').style.display = 'flex';
+            }, 500);
+        });
+
+        function abrirAsignacionDesdeSugerencia() {
+            // Cerramos el de sugerencia y abrimos el de asignación que ya tenías
+            document.getElementById('modalSugerenciaPrograma').style.display = 'none';
+            document.getElementById('modalPrograma').style.display = 'flex';
+        }
+    </script>
 @endif
 
 <style>
@@ -51,6 +98,17 @@
 
     .sp-page { font-family: var(--sans); color: var(--ink); }
 
+    #modalSugerenciaPrograma {
+        transition: all 0.3s ease-in-out;
+    }
+
+    #modalSugerenciaPrograma .sp-btn-primary {
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #modalSugerenciaPrograma .sp-btn-primary:hover {
+        transform: scale(1.02);
+    }
 
     .sp-breadcrumb {
         display: flex; align-items: center; gap: 6px;

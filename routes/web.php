@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\backend\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,7 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/login', function () {
-    return view('auth.access'); // 👈 este cambio es clave
+    return view('auth.access');
 })->name('login');
 
 Route::get('/dashboard', function () {
@@ -29,6 +30,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+//Rutas para aceptar usuarios
+Route::prefix('backend')->middleware(['auth'])->group(function () {
+
+    Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+
+    Route::put('/usuarios/{user}/aprobar', [UserController::class, 'aprobar'])->name('usuarios.aprobar');
+
+    Route::put('/usuarios/{user}/rol', [UserController::class, 'cambiarRol'])->name('usuarios.rol');
+
 });
 
 //RUTAS DEL BACKEND

@@ -38,6 +38,11 @@ class User extends Authenticatable
 	{
 		return $this->hasMany(AdjuntosDescarga::class, 'usuario_id');
 	}
+
+	public function rol()
+	{
+		return $this->belongsTo(Role::class, 'rol_id');
+	}
 }
 	
 

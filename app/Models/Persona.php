@@ -177,40 +177,46 @@ class Persona extends Model
         return \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
     }
 
-    // ── Lógica de programas ─────────────────────────────────
 
     public function alertaPrograma()
-    {
-        if (!$this->fecha_nacimiento) return null;
+{
+    if (!$this->fecha_nacimiento) return null;
 
-        $edad = $this->edad;
+    $edad = \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
 
-        foreach ($this->personaPrograma as $pp) {
-
-            if (!$pp->programa) continue;
-
-            $nombre = strtolower($pp->programa->nombre);
-            $rol    = $pp->rol;
-
-            if (str_contains($nombre, 'guarderia') && $edad >= 6) {
-                return ['mensaje' => 'Debe egresar de Guardería.', 'siguiente' => 'UDI'];
-            }
-
-            if (str_contains($nombre, 'udi') && $edad >= 12) {
-                return ['mensaje' => 'Debe egresar de UDI.', 'siguiente' => 'Envion'];
-            }
-
-            if (str_contains($nombre, 'envion') && $rol == 'destinatario' && $edad >= 21) {
-                return ['mensaje' => 'Finaliza Envión por edad.', 'siguiente' => null];
-            }
-
-            if (str_contains($nombre, 'envion') && $rol == 'tutor' && $edad >= 25) {
-                return ['mensaje' => 'Finaliza tutor de Envión por edad.', 'siguiente' => null];
-            }
-        }
-
+    if ($this->personaPrograma()->count() === 0) {
         return null;
     }
+
+    if ($edad >= 6 && $edad < 12) {
+        $programaEsperado = 'UDI';
+        $mensaje = 'Debe ingresar a UDI.';
+        $siguiente = 'Envion';
+    } 
+    elseif ($edad >= 12 && $edad < 21) {
+        $programaEsperado = 'Envion';
+        $mensaje = 'Debe ingresar a Envión o Multiespacio.';
+        $siguiente = null;
+    }
+    else {
+        return null;
+    }
+
+    $tieneCorrecto = $this->personaPrograma()
+        ->whereNull('fecha_fin')
+        ->whereHas('programa', function ($q) use ($programaEsperado) {
+            $q->whereRaw('LOWER(nombre) LIKE ?', ["%$programaEsperado%"]);
+        })
+        ->exists();
+
+    if ($tieneCorrecto) return null;
+
+    return [
+        'mensaje' => $mensaje,
+        'programa' => $programaEsperado,
+        'siguiente' => $siguiente
+    ];
+}
 
     public function actualizarProgramasPorEdad()
     {
