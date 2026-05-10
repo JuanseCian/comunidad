@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\ProgramasAsistencia;
+use App\Models\Persona;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,10 +20,19 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(): void
     {
-        view()->composer('frontend.layout.tu_vista_panel', function ($view) {
-            $view->with('solicitudesPendientes', \App\Models\Persona::where('estado', 'pendiente')->count());
+        View::composer('*', function ($view) {
+
+            $view->with([
+
+                'programas' => ProgramasAsistencia::orderBy('nombre')->get(),
+
+                'solicitudesPendientes' =>
+                    Persona::where('estado', 'pendiente')->count()
+
+            ]);
+
         });
     }
 }

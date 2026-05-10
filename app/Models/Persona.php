@@ -165,10 +165,7 @@ class Persona extends Model
         return $this->hasMany(PersonaBeneficio::class, 'persona_id');
     }
 
-    public function atenciones()
-    {
-        return $this->hasMany(Atenciones::class, 'persona_id');
-    }
+    
 
     // ── Accessors ───────────────────────────────────────────
 
@@ -177,46 +174,50 @@ class Persona extends Model
         return \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
     }
 
+    public function atenciones()
+    {
+        return $this->hasMany(Atenciones::class)->latest('fecha_atencion');
+    }
 
     public function alertaPrograma()
-{
-    if (!$this->fecha_nacimiento) return null;
+    {
+        if (!$this->fecha_nacimiento) return null;
 
-    $edad = \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
+        $edad = \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
 
-    if ($this->personaPrograma()->count() === 0) {
-        return null;
+        if ($this->personaPrograma()->count() === 0) {
+            return null;
+        }
+
+        if ($edad >= 6 && $edad < 12) {
+            $programaEsperado = 'UDI';
+            $mensaje = 'Debe ingresar a UDI.';
+            $siguiente = 'Envion';
+        } 
+        elseif ($edad >= 12 && $edad < 21) {
+            $programaEsperado = 'Envion';
+            $mensaje = 'Debe ingresar a Envión o Multiespacio.';
+            $siguiente = null;
+        }
+        else {
+            return null;
+        }
+
+        $tieneCorrecto = $this->personaPrograma()
+            ->whereNull('fecha_fin')
+            ->whereHas('programa', function ($q) use ($programaEsperado) {
+                $q->whereRaw('LOWER(nombre) LIKE ?', ["%$programaEsperado%"]);
+            })
+            ->exists();
+
+        if ($tieneCorrecto) return null;
+
+        return [
+            'mensaje' => $mensaje,
+            'programa' => $programaEsperado,
+            'siguiente' => $siguiente
+        ];
     }
-
-    if ($edad >= 6 && $edad < 12) {
-        $programaEsperado = 'UDI';
-        $mensaje = 'Debe ingresar a UDI.';
-        $siguiente = 'Envion';
-    } 
-    elseif ($edad >= 12 && $edad < 21) {
-        $programaEsperado = 'Envion';
-        $mensaje = 'Debe ingresar a Envión o Multiespacio.';
-        $siguiente = null;
-    }
-    else {
-        return null;
-    }
-
-    $tieneCorrecto = $this->personaPrograma()
-        ->whereNull('fecha_fin')
-        ->whereHas('programa', function ($q) use ($programaEsperado) {
-            $q->whereRaw('LOWER(nombre) LIKE ?', ["%$programaEsperado%"]);
-        })
-        ->exists();
-
-    if ($tieneCorrecto) return null;
-
-    return [
-        'mensaje' => $mensaje,
-        'programa' => $programaEsperado,
-        'siguiente' => $siguiente
-    ];
-}
 
     public function actualizarProgramasPorEdad()
     {

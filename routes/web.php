@@ -77,9 +77,12 @@ require __DIR__.'/condiciones-inactividad.php';
 require __DIR__.'/discapacidad.php';
 
 
-require __DIR__.'/grupoFamiliar.php';
 //RUTAS DEL FRONTEND
 //rutas para el home
 require __DIR__.'/home.php';
 //rutas para personas
 require __DIR__.'/persona.php';
+//rutas para grupos familiares
+require __DIR__.'/grupoFamiliar.php';
+//rutas para atenciones
+require __DIR__.'/atencionnes.php';

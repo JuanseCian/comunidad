@@ -6,7 +6,6 @@
 
 @section('content')
 
-
 @php
     $alerta = $persona->alertaPrograma();
 @endphp
@@ -968,52 +967,175 @@
         </div>
 
         <div class="row g-3">
-            <div class="col-12 sp-anim sp-anim-6">
-                <div class="sp-card">
-                    <div class="sp-card-header">
-                        <div class="sp-card-header-left">
-                            <div class="sp-dot" style="background: var(--teal);"></div>
-                            <span class="sp-card-title">Últimas atenciones</span>
-                        </div>
-                    </div>
-                    <div class="sp-card-body">
-                        @if($persona->atenciones && $persona->atenciones->count())
-                            @foreach($persona->atenciones as $a)
-                                <div class="sp-att-row">
-                                    <div class="sp-att-dot"></div>
-                                    <div style="flex-grow:1;">
-                                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap;">
-                                            <span style="font-size:12.5px; font-weight:800; color: var(--teal); text-transform:capitalize;">
-                                                {{ $a->tipo ?? 'Atención' }}
-                                            </span>
-                                            <span style="font-size:11.5px; color: var(--muted); white-space:nowrap;">
-                                                <i class="bi bi-calendar3" style="margin-right:4px;"></i>
-                                                {{ $a->fecha ? \Carbon\Carbon::parse($a->fecha)->format('d/m/Y') : '—' }}
-                                            </span>
-                                        </div>
-                                        <div style="font-size:13.5px; color: var(--ink); margin-top:5px; line-height:1.6;">
-                                            {{ $a->descripcion ?? 'Sin detalles adicionales registrados.' }}
-                                        </div>
-                                        <div style="font-size:11.5px; color: var(--muted); margin-top:5px;">
-                                            <i class="bi bi-person" style="margin-right:4px;"></i>{{ $a->usuario->name ?? 'Sistema' }}
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="sp-empty">
-                                <div class="sp-empty-icon" style="background: var(--teal-lt); color: var(--teal);">
-                                    <i class="bi bi-clipboard2-pulse"></i>
-                                </div>
-                                Sin atenciones registradas
-                            </div>
-                        @endif
-                    </div>
+    
+    <div class="col-12 sp-anim sp-anim-6">
+        
+        <div class="sp-card">
+
+            <div class="sp-card-header">
+
+                <div class="sp-card-header-left">
+                    <div class="sp-dot" style="background: var(--teal);"></div>
+
+                    <span class="sp-card-title">
+                        Intervenciones
+                    </span>
+
+                    @if($persona->atenciones)
+                        <span class="sp-count">
+                            {{ $persona->atenciones->count() }}
+                        </span>
+                    @endif
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    @if(Auth::user()->puedeEditar())
+                        <a href="{{ route('atenciones.create', $persona) }}"
+                        class="sp-btn-primary">
+                            <i class="bi bi-plus-lg"></i>
+                            Nueva intervención
+                        </a>
+                    @endif
                 </div>
             </div>
+
+            <div class="sp-card-body">
+
+                @if($persona->atenciones && $persona->atenciones->count())
+
+                    @foreach($persona->atenciones as $a)
+
+                        <div class="sp-att-row">
+
+                            <div class="sp-att-dot"></div>
+
+                            <div style="flex-grow:1;">
+
+                                <div style="display:flex; justify-content:space-between; gap:15px; flex-wrap:wrap;">
+
+                                    <div style="flex:1; min-width:260px;">
+
+                                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+
+                                            <span class="sp-pill sp-pill-teal">
+                                                {{ ucfirst(str_replace('_', ' ', $a->tipo ?? 'Intervención')) }}
+                                            </span>
+
+                                            <span style="font-size:11.5px; color: var(--muted);">
+                                                <i class="bi bi-calendar3"></i>
+
+                                                {{ $a->fecha_atencion
+                                                    ? \Carbon\Carbon::parse($a->fecha_atencion)->format('d/m/Y')
+                                                    : 'Sin fecha'
+                                                }}
+                                            </span>
+
+                                        </div>
+
+                                        <div style="font-size:13.5px; color: var(--ink); margin-top:10px; line-height:1.7;">
+                                            {{ $a->descripcion ?? 'Sin detalles registrados.' }}
+                                        </div>
+
+                                        <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:10px;">
+
+                                            <div style="font-size:11.5px; color: var(--muted);">
+                                                <i class="bi bi-person"></i>
+                                                {{ $a->users->nombre ?? 'Sistema' }}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                   <div style="display:flex; align-items:start; gap:8px;">
+
+                                        {{-- VER --}}
+                                        @if(Auth::user()->puedeVerAtenciones())
+
+                                            <a href="{{ route('atenciones.show', $a) }}"
+                                            class="sp-btn-ghost">
+
+                                                <i class="bi bi-eye"></i>
+
+                                            </a>
+
+                                        @endif
+
+                                        {{-- EDITAR / ELIMINAR --}}
+                                        @if(Auth::user()->puedeEditar())
+
+                                            <a href="{{ route('atenciones.edit', $a) }}"
+                                            class="sp-btn-ghost">
+
+                                                <i class="bi bi-pencil-square"></i>
+
+                                            </a>
+
+                                            <form method="POST"
+                                                action="{{ route('atenciones.destroy', $a) }}">
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit"
+                                                        class="sp-btn-ghost sp-btn-delete"
+                                                        onclick="return confirm('¿Eliminar intervención?')">
+
+                                                    <i class="bi bi-trash"></i>
+
+                                                </button>
+
+                                            </form>
+
+                                        @endif
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    @endforeach
+
+                @else
+
+                    <div class="sp-empty">
+
+                        <div class="sp-empty-icon"
+                             style="background: var(--teal-lt); color: var(--teal);">
+
+                            <i class="bi bi-clipboard2-pulse"></i>
+
+                        </div>
+
+                        <div>
+                            Sin intervenciones registradas
+                        </div>
+
+                    @if(Auth::user()->puedeEditar())
+
+                        <a href="{{ route('atenciones.create', $persona) }}"
+                        class="sp-btn-primary"
+                        style="margin-top:15px;">
+
+                            Crear primera intervención
+
+                        </a>
+
+                    @endif
+
+                    </div>
+
+                @endif
+
+            </div>
+
         </div>
 
     </div>
+
 </div>
 
 <div id="modalPrograma"
