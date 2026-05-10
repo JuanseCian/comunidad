@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 05, 2026 at 02:17 PM
+-- Generation Time: May 10, 2026 at 01:09 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -74,6 +74,17 @@ CREATE TABLE `atenciones` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `atenciones`
+--
+
+INSERT INTO `atenciones` (`id`, `persona_id`, `usuario_id`, `sede_id`, `tipo`, `descripcion`, `fecha_atencion`, `proxima_atencion`, `created_at`, `updated_at`) VALUES
+(1, 14, 1, NULL, 'entrevista', 'aa', '2025-11-29 22:56:00', '2024-09-29', '2026-05-10 01:09:35', '2026-05-10 01:09:35'),
+(2, 14, 1, NULL, 'visita_domiciliaria', 'adabb', '2026-05-09 00:00:00', NULL, '2026-05-10 01:22:36', '2026-05-10 01:23:44'),
+(3, 13, 1, NULL, 'entrevista', 'CASNANSANSNbbs', '2026-05-09 00:00:00', NULL, '2026-05-10 01:34:11', '2026-05-10 02:29:45'),
+(4, 60, 1, NULL, 'visita_domiciliaria', 'AA', '2026-05-09 00:00:00', NULL, '2026-05-10 01:39:50', '2026-05-10 01:39:50'),
+(5, 60, 1, NULL, 'visita_domiciliaria', 'sasas', '2026-05-08 00:00:00', NULL, '2026-05-10 15:36:35', '2026-05-10 15:36:35');
 
 -- --------------------------------------------------------
 
@@ -323,6 +334,13 @@ CREATE TABLE `cud` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `cud`
+--
+
+INSERT INTO `cud` (`id`, `persona_id`, `tiene_cud`, `numero_cud`, `fecha_emision`, `fecha_vencimiento`, `observaciones`, `created_at`, `updated_at`) VALUES
+(2, 60, 1, '37227372', '2020-09-29', '2026-11-29', 'No se', '2026-05-10 01:38:29', '2026-05-10 01:38:29');
+
 -- --------------------------------------------------------
 
 --
@@ -378,7 +396,9 @@ INSERT INTO `domicilio` (`id`, `municipio`, `localidad`, `barrio_id`, `calle`, `
 (9, NULL, NULL, 63, 'Jujuy', '422', NULL, NULL),
 (10, NULL, NULL, 98, 'T', '78', NULL, NULL),
 (11, NULL, NULL, 99, 'paraguay 1', '384', NULL, NULL),
-(12, NULL, NULL, 98, 'paraguay 1', '384', NULL, NULL);
+(12, NULL, NULL, 98, 'paraguay 1', '384', NULL, NULL),
+(13, NULL, NULL, 99, 'Almafuerte', '748', NULL, NULL),
+(14, NULL, NULL, 73, 'Segundo Sombra', '609', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -486,7 +506,19 @@ INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
 (26, 'I2O229HGO', '2026-05-05 16:45:19', '2026-05-05 16:45:19'),
 (27, 'GFZ578FTF', '2026-05-05 16:50:54', '2026-05-05 16:50:54'),
 (28, 'FON316ATS', '2026-05-05 16:52:19', '2026-05-05 16:52:19'),
-(29, '9UA370ZBC', '2026-05-05 17:14:18', '2026-05-05 17:14:18');
+(29, '9UA370ZBC', '2026-05-05 17:14:18', '2026-05-05 17:14:18'),
+(30, 'V0X908NAM', '2026-05-06 14:57:08', '2026-05-06 14:57:08'),
+(31, 'PAC9123BS', '2026-05-06 15:10:57', '2026-05-06 15:10:57'),
+(32, 'AAP758WWB', '2026-05-06 15:13:53', '2026-05-06 15:13:53'),
+(33, 'KUK6158NS', '2026-05-06 15:23:29', '2026-05-06 15:23:29'),
+(34, 'X5X249SRC', '2026-05-06 15:24:00', '2026-05-06 15:24:00'),
+(35, 'E34605DHN', '2026-05-06 15:30:11', '2026-05-06 15:30:11'),
+(36, 'SIX9881ZA', '2026-05-06 15:32:25', '2026-05-06 15:32:25'),
+(37, '6TY905NZL', '2026-05-06 15:36:25', '2026-05-06 15:36:25'),
+(38, 'UPJ720WZF', '2026-05-06 15:37:45', '2026-05-06 15:37:45'),
+(39, '0LG826C5K', '2026-05-06 15:39:00', '2026-05-06 15:39:00'),
+(40, 'UXH283XLF', '2026-05-06 15:40:19', '2026-05-06 15:40:19'),
+(41, 'JUH872OAL', '2026-05-10 01:38:29', '2026-05-10 01:38:29');
 
 -- --------------------------------------------------------
 
@@ -947,7 +979,7 @@ CREATE TABLE `personas` (
 INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `cud_numero`, `cud_vencimiento`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`, `estado`, `creado_por_id`) VALUES
 (13, 23, 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', NULL, 1, '45032239', '20450322394', 1, NULL, 8, 1, 5, NULL, '03364318066', 5, 1, 'A+', '2026-04-26 03:22:01', '2026-05-04 18:40:45', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'aprobado', NULL),
 (14, 22, 'Daniela', 'Abal', 'as@gmail.com', '1999-02-22', 1, '41899221', '27418992218', 2, NULL, 9, 1, 5, NULL, '123', 3, 1, 'A+', '2026-04-26 03:51:51', '2026-05-04 18:40:40', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'aprobado', NULL),
-(48, 29, 'patapin', 'brbr', NULL, '2010-06-27', 1, '23', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, 2, 0, NULL, '2026-05-05 17:14:18', '2026-05-05 17:14:18', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
+(60, 41, 'Alejo', 'Mosquera', 'ale@gmail.com', '2004-04-21', 1, '8934983', '525253252', 1, NULL, 14, 1, 5, NULL, '24324324', 2, 0, 'A-', '2026-05-10 01:38:29', '2026-05-10 01:38:29', NULL, 3, 2, 1, 1, NULL, NULL, NULL, 3, 1, 1, 1, 2, 'aprobado', NULL);
 
 -- --------------------------------------------------------
 
@@ -998,7 +1030,8 @@ CREATE TABLE `persona_programa` (
 INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `en_adaptacion`, `fecha_limite_adaptacion`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
 (1, 14, 1, '2026-04-24', '2020-02-22', 1, 'destinatario', 0, NULL, 'a', NULL, '2026-04-26 03:59:38', '2026-04-27 19:40:27'),
 (13, 13, 1, NULL, NULL, 1, 'tutor', 0, NULL, NULL, NULL, '2026-04-27 01:55:44', '2026-04-27 01:55:44'),
-(26, 48, 1, '2026-05-05', NULL, 1, 'destinatario', 1, '2026-05-05', NULL, NULL, '2026-05-05 17:14:31', '2026-05-05 17:15:02');
+(44, 60, 3, '2026-05-08', NULL, 1, 'destinatario', 1, '2026-05-11', NULL, NULL, '2026-05-10 01:38:54', '2026-05-10 01:38:54'),
+(45, 60, 1, '2026-05-10', '2026-05-10', 1, 'tutor', 0, NULL, NULL, NULL, '2026-05-10 15:37:09', '2026-05-10 15:37:17');
 
 -- --------------------------------------------------------
 
@@ -1216,8 +1249,8 @@ CREATE TABLE `sexo` (
 --
 
 INSERT INTO `sexo` (`id`, `nombre`) VALUES
-(1, 'Hombre'),
-(2, 'Mujer');
+(1, 'Masculino'),
+(2, 'Femenino');
 
 -- --------------------------------------------------------
 
@@ -1288,9 +1321,10 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `username`, `nombre`, `apellido`, `email`, `password`, `rol_id`, `sede_id`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'admin', 'admin', 'admin', 'admin@gmail.com', '$2y$12$02kKXEoepSLtTXByGXq9gu6SPmhPMZQ9AWY5xLT.h5v5uyHHiC2eW', 3, NULL, NULL, '2026-04-15 22:19:26', '2026-04-15 22:19:26'),
 (8, 'juanse', 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', '$2y$12$VGe9zAy3tNkzzeto4I/TY.X8.YrBptmrfLrOtkmpMFfhEbsonDU1y', 4, NULL, NULL, '2026-04-21 16:51:32', '2026-04-21 16:51:32'),
-(9, 'pepe', 'pepe', 'pipi', 'pe@gmail.com', '$2y$12$SLck36S.1hliGIO8arwxx.OFZp3uh023w.Muv886goXmSvn0JEmC6', NULL, NULL, NULL, '2026-04-24 16:59:14', '2026-04-24 16:59:14'),
-(10, 'dani', 'daniela', 'abal', 'dani@gmail.com', '$2y$12$b/vbv3r90qddImz9aeB58O7zZuPb7DhD4t7sX/QW2thsSgBocl9E.', 2, NULL, NULL, '2026-04-24 17:00:39', '2026-04-24 17:00:39'),
-(11, 'coordinador', 'coordinador', 'coordinador', 'coordinador@gmail.com', '$2y$12$V8ICYWY8Q/YMgLc58r.TKOKZaWvDviT3VusjEEYMpEBbLp.SylF3i', 2, NULL, NULL, '2026-05-04 14:53:51', '2026-05-04 14:53:51');
+(9, 'pepe', 'pepe', 'pipi', 'pe@gmail.com', '$2y$12$SLck36S.1hliGIO8arwxx.OFZp3uh023w.Muv886goXmSvn0JEmC6', 5, NULL, NULL, '2026-04-24 16:59:14', '2026-05-06 17:47:49'),
+(10, 'dani', 'daniela', 'abal', 'dani@gmail.com', '$2y$12$b/vbv3r90qddImz9aeB58O7zZuPb7DhD4t7sX/QW2thsSgBocl9E.', 3, NULL, NULL, '2026-04-24 17:00:39', '2026-05-06 17:47:37'),
+(11, 'coordinador', 'coordinador', 'coordinador', 'coordinador@gmail.com', '$2y$12$V8ICYWY8Q/YMgLc58r.TKOKZaWvDviT3VusjEEYMpEBbLp.SylF3i', 2, NULL, NULL, '2026-05-04 14:53:51', '2026-05-06 17:47:41'),
+(12, 'tecnico', 'tecnico', 'tecnico', 'tecnico@gmail.com', '$2y$12$tebvZbPrFy.1/aat0fRjDeD/BJg3bU6GQu98Z7irjK4uDw2CcX5TW', 1, NULL, NULL, '2026-05-10 02:13:55', '2026-05-10 02:13:55');
 
 -- --------------------------------------------------------
 
@@ -1646,7 +1680,7 @@ ALTER TABLE `adjuntos_descargas`
 -- AUTO_INCREMENT for table `atenciones`
 --
 ALTER TABLE `atenciones`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `auditoria`
@@ -1688,7 +1722,7 @@ ALTER TABLE `condicion_inactividad`
 -- AUTO_INCREMENT for table `cud`
 --
 ALTER TABLE `cud`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `discapacidad`
@@ -1700,7 +1734,7 @@ ALTER TABLE `discapacidad`
 -- AUTO_INCREMENT for table `domicilio`
 --
 ALTER TABLE `domicilio`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `enfermedades`
@@ -1724,7 +1758,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `familias`
 --
 ALTER TABLE `familias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `genero_percibido`
@@ -1784,7 +1818,7 @@ ALTER TABLE `persona_beneficio`
 -- AUTO_INCREMENT for table `persona_programa`
 --
 ALTER TABLE `persona_programa`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `persona_trabajo`
@@ -1838,7 +1872,7 @@ ALTER TABLE `tipo_documento`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `zona_barrio`
