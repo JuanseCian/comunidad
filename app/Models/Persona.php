@@ -176,7 +176,7 @@ class Persona extends Model
 
     public function atenciones()
     {
-        return $this->hasMany(Atenciones::class)->latest('fecha_atencion');
+        return $this->hasMany(Atencion::class)->latest('fecha_atencion');
     }
 
     public function alertaPrograma()

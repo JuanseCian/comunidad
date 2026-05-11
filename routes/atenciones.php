@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\frontend\AtencionController;
 use App\Http\Middleware\CheckRole;
+use App\Models\Atencion;
 
 Route::middleware(['auth'])->group(function () {
 

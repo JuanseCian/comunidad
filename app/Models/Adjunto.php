@@ -1,68 +1,54 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Adjunto
- * 
- * @property int $id
- * @property string $entidad_tipo
- * @property int $entidad_id
- * @property string $nombre_original
- * @property string $nombre_guardado
- * @property string $ruta
- * @property string|null $tipo_mime
- * @property int|null $tamaño
- * @property bool|null $confidencial
- * @property string|null $hash_sha256
- * @property int|null $subido_por
- * @property Carbon|null $created_at
- * 
- * @property User|null $user
- * @property Collection|AdjuntosDescarga[] $adjuntos_descargas
- *
- * @package App\Models
- */
 class Adjunto extends Model
 {
-	protected $table = 'adjuntos';
-	public $timestamps = false;
+    // La tabla solo tiene created_at
+    const UPDATED_AT = null;
 
-	protected $casts = [
-		'entidad_id' => 'int',
-		'tamaño' => 'int',
-		'confidencial' => 'bool',
-		'subido_por' => 'int'
-	];
+    protected $table = 'adjuntos';
 
-	protected $fillable = [
-		'entidad_tipo',
-		'entidad_id',
-		'nombre_original',
-		'nombre_guardado',
-		'ruta',
-		'tipo_mime',
-		'tamaño',
-		'confidencial',
-		'hash_sha256',
-		'subido_por'
-	];
+    protected $fillable = [
+        'entidad_tipo',
+        'entidad_id',
+        'nombre_original',
+        'nombre_guardado',
+        'ruta',
+        'tipo_mime',
+        'tamaño',
+        'confidencial',
+        'hash_sha256',
+        'subido_por',
+    ];
 
-	public function user()
-	{
-		return $this->belongsTo(User::class, 'subido_por');
-	}
+    // ── Relaciones ────────────────────────────────────────────────────────────
 
-	public function adjuntos_descargas()
-	{
-		return $this->hasMany(AdjuntosDescarga::class);
-	}
+    public function subidoPor()
+    {
+        return $this->belongsTo(User::class, 'subido_por');
+    }
+
+    // ── Accessors ─────────────────────────────────────────────────────────────
+
+    /** "1.4 MB" o "320.5 KB" */
+    public function getTamañoFormateadoAttribute(): string
+    {
+        $bytes = $this->tamaño ?? 0;
+        return $bytes >= 1_048_576
+            ? number_format($bytes / 1_048_576, 2) . ' MB'
+            : number_format($bytes / 1_024, 1) . ' KB';
+    }
+
+    /** Clase FontAwesome según tipo MIME */
+    public function getIconoAttribute(): string
+    {
+        return match (true) {
+            str_contains($this->tipo_mime ?? '', 'pdf')   => 'fa-file-pdf text-danger',
+            str_contains($this->tipo_mime ?? '', 'image') => 'fa-file-image text-info',
+            default                                        => 'fa-file text-secondary',
+        };
+    }
 }

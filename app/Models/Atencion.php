@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Atenciones extends Model
+class Atencion extends Model
 {
     protected $table = 'atenciones';
 
@@ -35,4 +35,10 @@ class Atenciones extends Model
     {
         return $this->belongsTo(Sede::class);
     }
+    public function adjuntos()
+{
+    return $this->hasMany(\App\Models\Adjunto::class, 'entidad_id')
+                ->where('entidad_tipo', 'atencion')
+                ->latest();
+}
 }

@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\backend\UserController;
+use App\Http\Controllers\frontend\AtencionController;
+use App\Models\Atencion;
+use App\Models\Persona;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -85,4 +88,4 @@ require __DIR__.'/persona.php';
 //rutas para grupos familiares
 require __DIR__.'/grupoFamiliar.php';
 //rutas para atenciones
-require __DIR__.'/atencionnes.php';
+require __DIR__.'/atenciones.php';
