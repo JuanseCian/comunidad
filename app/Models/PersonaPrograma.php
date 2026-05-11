@@ -54,7 +54,8 @@ class PersonaPrograma extends Model
 		'observaciones',
 		'registrado_por',
 		'en_adaptacion',
-    	'fecha_limite_adaptacion'
+		'sede_id',
+    	'fecha_limite_adaptacion',
 	];
 
 	public function getEstaActivoAttribute()
@@ -79,5 +80,10 @@ class PersonaPrograma extends Model
 	public function user()
 	{
 		return $this->belongsTo(User::class, 'registrado_por');
+	}
+
+	public function sede()
+	{
+		return $this->belongsTo(Sede::class);
 	}
 }

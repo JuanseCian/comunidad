@@ -13,27 +13,56 @@ class PersonaProgramaController extends Controller
         $request->validate([
             'persona_id'   => 'required|exists:personas,id',
             'programa_id'  => 'required|exists:programas_asistencia,id',
-            'fecha_inicio' => 'nullable|date',
-            'observaciones'=> 'nullable|string',
+            'sede_id'      => 'nullable|exists:sedes,id',
+            'rol'          => 'required|in:destinatario,tutor',
+
             'fecha_inicio' => 'nullable|date',
             'fecha_fin'    => 'nullable|date|after_or_equal:fecha_inicio',
+
+            'observaciones'=> 'nullable|string',
+
             'en_adaptacion' => 'nullable|boolean',
-            'fecha_limite_adaptacion' => 'required_if:en_adaptacion,1|nullable|date',
+
+            'fecha_limite_adaptacion' =>
+                'required_if:en_adaptacion,1|nullable|date',
         ]);
+
+        $programa = \App\Models\ProgramasAsistencia::findOrFail($request->programa_id);
+
+        if (
+            strtolower($programa->nombre) !== 'multiespacio'
+            && !$request->sede_id
+        ) {
+            return back()->withErrors([
+                'sede_id' => 'Debe seleccionar una sede.'
+            ]);
+        }
 
         PersonaPrograma::create([
             'persona_id'   => $request->persona_id,
             'programa_id'  => $request->programa_id,
-            'rol'           => $request->rol,
-            'fecha_inicio' => $request->fecha_inicio,
-            'observaciones'=> $request->observaciones,
+            'sede_id'      => $request->sede_id,
+
+            'rol'          => $request->rol,
+
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin'    => $request->fecha_fin,
-            'en_adaptacion' => $request->has('en_adaptacion') ? 1 : 0,
-            'fecha_limite_adaptacion' => $request->fecha_limite_adaptacion,
+
+            'observaciones'=> $request->observaciones,
+
+            'en_adaptacion' =>
+                $request->has('en_adaptacion') ? 1 : 0,
+
+            'fecha_limite_adaptacion' =>
+                $request->has('en_adaptacion')
+                    ? $request->fecha_limite_adaptacion
+                    : null,
         ]);
 
-        return back()->with('success', 'Programa asignado correctamente');
+        return back()->with(
+            'success',
+            'Programa asignado correctamente'
+        );
     }
 
     public function update(Request $request, $id)

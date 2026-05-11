@@ -18,7 +18,7 @@
                     {{ $programa->nombre }}
                 </h1>
                 <p style="color:#536070; font-size:13.5px; font-weight:500; margin:4px 0 0;">
-                    {{ $programa->personas->count() }} {{ $programa->personas->count() === 1 ? 'persona asignada' : 'personas asignadas' }}
+                   {{ $personas->total() }} {{ $programa->personas->count() === 1 ? 'persona asignada' : 'personas asignadas' }}
                 </p>
             </div>
             <div class="col-auto">
@@ -39,11 +39,124 @@
 </div>
 
 <div class="container py-4">
+    {{-- FILTROS --}}
+    <div style="
+        background:white;
+        border:1px solid #e0ddd6;
+        border-radius:16px;
+        padding:16px;
+        margin-bottom:18px;
+    ">
+
+        <form method="GET"
+            style="
+                display:grid;
+                grid-template-columns: 1.5fr 1fr auto auto;
+                gap:12px;
+                align-items:end;
+            ">
+
+            {{-- BUSCADOR --}}
+            <div>
+                <label style="
+                    display:block;
+                    font-size:11px;
+                    font-weight:800;
+                    color:#536070;
+                    text-transform:uppercase;
+                    margin-bottom:6px;
+                ">
+                    Buscar persona
+                </label>
+
+                <input type="text"
+                    name="q"
+                    value="{{ request('q') }}"
+                    placeholder="Nombre, apellido o DNI..."
+                    style="
+                        width:100%;
+                        border:1px solid #d6d3d1;
+                        border-radius:12px;
+                        padding:11px 14px;
+                        font-size:13px;
+                    ">
+            </div>
+
+            {{-- SEDE --}}
+            <div>
+                <label style="
+                    display:block;
+                    font-size:11px;
+                    font-weight:800;
+                    color:#536070;
+                    text-transform:uppercase;
+                    margin-bottom:6px;
+                ">
+                    Sede
+                </label>
+
+                <select name="sede_id"
+                        style="
+                            width:100%;
+                            border:1px solid #d6d3d1;
+                            border-radius:12px;
+                            padding:11px 14px;
+                            font-size:13px;
+                        ">
+
+                    <option value="">Todas las sedes</option>
+
+                    @foreach($sedes as $sede)
+
+                        <option value="{{ $sede->id }}"
+                            @selected(request('sede_id') == $sede->id)>
+                            {{ $sede->nombre }}
+                        </option>
+
+                    @endforeach
+
+                </select>
+            </div>
+
+            {{-- BOTON --}}
+            <button type="submit"
+                    style="
+                        height:44px;
+                        border:none;
+                        border-radius:12px;
+                        background:#0d92c2;
+                        color:white;
+                        padding:0 18px;
+                        font-weight:700;
+                    ">
+                <i class="bi bi-search"></i>
+            </button>
+
+            {{-- LIMPIAR --}}
+            <a href="{{ route('frontend.programas.show', $programa->id) }}"
+            style="
+                height:44px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                padding:0 16px;
+                border-radius:12px;
+                border:1px solid #d6d3d1;
+                text-decoration:none;
+                color:#536070;
+                font-weight:700;
+                background:white;
+            ">
+                Limpiar
+            </a>
+
+        </form>
+    </div>
 
     {{-- Contenedor de la Tabla/Lista --}}
     <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden;">
 
-        @if($programa->personas->isEmpty())
+        @if($personas->isEmpty())
             <div style="text-align:center; padding:4rem 2rem;">
                 <div style="width:64px; height:64px; background:#e6f5fb; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:28px; color:#0d92c2;">
                     <i class="bi bi-people"></i>
@@ -64,7 +177,7 @@
             </div>
 
             {{-- Filas de Personas --}}
-            @foreach($programa->personas as $persona)
+            @foreach($personas as $persona)
                 <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 80px; gap:0; border-bottom:1px solid #f0ede8; padding:0 20px; transition:background .15s;"
                      onmouseover="this.style.background='#fafaf8'" onmouseout="this.style.background='white'">
 
@@ -93,14 +206,45 @@
                     </div>
 
                     {{-- Columna Extra (puedes ajustarla según tus campos) --}}
-                    <div style="padding:14px 8px; display:flex; align-items:center;">
+                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+
                         @if($persona->sexo)
-                            <span style="background:#e6f5fb; color:#0879a8; border:1px solid #b3e0f5; border-radius:20px; padding:3px 10px; font-size:11px; font-weight:700;">
+                            <span style="
+                                background:#e6f5fb;
+                                color:#0879a8;
+                                border:1px solid #b3e0f5;
+                                border-radius:20px;
+                                padding:3px 10px;
+                                font-size:11px;
+                                font-weight:700;
+                            ">
                                 {{ $persona->sexo->nombre }}
                             </span>
-                        @else
-                            <span style="font-size:12.5px; color:#94a3b4;">—</span>
                         @endif
+
+                        @php
+                            $pp = $persona->personaPrograma
+                                ->where('programa_id', $programa->id)
+                                ->first();
+                        @endphp
+
+                        @if($pp?->sede)
+
+                            <span style="
+                                background:#ecfdf5;
+                                color:#047857;
+                                border:1px solid #a7f3d0;
+                                border-radius:20px;
+                                padding:3px 10px;
+                                font-size:11px;
+                                font-weight:700;
+                            ">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                {{ $pp->sede->nombre }}
+                            </span>
+
+                        @endif
+
                     </div>
 
                     {{-- Columna Acciones --}}
@@ -119,6 +263,17 @@
 
         @endif
     </div>
+    @if($personas->hasPages())
+
+        <div style="
+            padding:16px;
+            border-top:1px solid #ece8df;
+            background:#fafaf8;
+        ">
+            {{ $personas->links() }}
+        </div>
+
+    @endif
 </div>
 
 @endsection

@@ -247,6 +247,9 @@ class PersonaController extends Controller
             'provincias'  => Provincia::orderBy('nombre')->get(),
             'localidades' => Localidad::orderBy('nombre')->get(),
             'barrios'     => Barrio::orderBy('nombre')->get(),
+            'sedes' => Sede::where('activa', 1)
+                            ->orderBy('nombre')
+                            ->get(['id', 'nombre']),
         ]);
     }
 

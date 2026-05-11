@@ -1,5 +1,3 @@
-
-
 @extends('frontend.layout.front')
 
 @section('title', $persona->apellido . ', ' . $persona->nombre . ' — Perfil')
@@ -11,13 +9,11 @@
 @endphp
 
 @if($alerta)
-    <!-- Modal de Alerta de Cambio de Programa -->
     <div id="modalSugerenciaPrograma" 
          style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:2000; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
         
         <div class="sp-anim" style="background:white; border-radius:24px; width:90%; max-width:450px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); overflow:hidden;">
             
-            <!-- Cabecera con gradiente de aviso -->
             <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); padding: 30px 24px; text-align: center; border-bottom: 1px solid #fed7aa;">
                 <div style="width: 60px; height: 60px; background: #fb923c; color: white; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 28px; box-shadow: 0 10px 15px -3px rgba(251, 146, 60, 0.4);">
                     <i class="bi bi-arrow-repeat"></i>
@@ -25,7 +21,6 @@
                 <h2 style="margin:0; font-size: 18px; font-weight: 800; color: #9a3412; font-family: var(--sans);">Cambio de Programa Sugerido</h2>
             </div>
 
-            <!-- Cuerpo -->
             <div style="padding: 24px; text-align: center;">
                 <p style="font-size: 14.5px; color: #7c2d12; line-height: 1.6; margin-bottom: 20px;">
                     {{ $alerta['mensaje'] }}
@@ -53,14 +48,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mostramos el modal de sugerencia automáticamente al cargar
             setTimeout(() => {
                 document.getElementById('modalSugerenciaPrograma').style.display = 'flex';
             }, 500);
         });
 
         function abrirAsignacionDesdeSugerencia() {
-            // Cerramos el de sugerencia y abrimos el de asignación que ya tenías
             document.getElementById('modalSugerenciaPrograma').style.display = 'none';
             document.getElementById('modalPrograma').style.display = 'flex';
         }
@@ -649,9 +642,28 @@
                                     <div onclick="togglePrograma({{ $pp->id }})"
                                         style="padding:12px 14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; background:var(--bg);">
 
-                                        <span style="font-weight:700;">
-                                            {{ $pp->programa->nombre }}
-                                        </span>
+                                        <div style="display:flex; flex-direction:column; gap:2px;">
+    
+                                            <span style="font-weight:700;">
+                                                {{ $pp->programa->nombre }}
+                                            </span>
+
+                                            <div style="display:flex; align-items:center; gap:6px;">
+
+                                                <i class="bi bi-geo-alt-fill"
+                                                style="font-size:11px; color:var(--teal-dk);"></i>
+
+                                                <span style="
+                                                    font-size:11px;
+                                                    color:var(--muted);
+                                                    font-weight:600;
+                                                ">
+                                                    {{ $pp->sede->nombre ?? 'Sede única' }}
+                                                </span>
+
+                                            </div>
+
+                                        </div>
 
                                         @if($pp->fecha_inicio && !$pp->fecha_fin)
                                             <span style="background:#e8f9f5; color:#0e8a70; border:1px solid #9fe1cb; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700;">
@@ -1170,7 +1182,7 @@
                     <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:8px; text-transform:uppercase; letter-spacing:.06em;">
                         Programa disponible
                     </label>
-                    <select name="programa_id"
+                    <select name="programa_id" id="programa_select"
                             style="width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border); font-size:13.5px; color: var(--ink); font-family: var(--sans); background:white; transition:border-color .15s; outline:none;"
                             onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'"
                             required>
@@ -1195,6 +1207,27 @@
 
                         @endforeach
                     </select>
+                    <div id="wrapper_sede" style="margin-top:16px; margin-bottom:20px;">
+                        <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:8px; text-transform:uppercase; letter-spacing:.06em;">
+                            Sede
+                        </label>
+
+                        <select name="sede_id"
+                                id="select_sede"
+                                style="width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border); font-size:13.5px; color: var(--ink); background:white;">
+
+                            <option value="" selected disabled>
+                                Seleccionar sede...
+                            </option>
+
+                            @foreach($sedes as $sede)
+                                <option value="{{ $sede->id }}">
+                                    {{ $sede->nombre }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
                     <div style="margin-bottom:20px;">
                         <label style="display:block; font-size:12px; font-weight:800; color: var(--slate); margin-bottom:8px; text-transform:uppercase;">
                             Rol en el programa
@@ -1404,5 +1437,34 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const programaSelect = document.getElementById('programa_select');
+    const sedeWrapper = document.getElementById('wrapper_sede');
+    const sedeSelect = document.getElementById('select_sede');
+
+    function toggleSede() {
+
+        const texto =
+            programaSelect.options[programaSelect.selectedIndex]?.text?.trim();
+
+        if (texto === 'Multiespacio') {
+
+            sedeWrapper.style.display = 'none';
+            sedeSelect.value = '';
+
+        } else {
+
+            sedeWrapper.style.display = 'block';
+
+        }
+    }
+
+    programaSelect.addEventListener('change', toggleSede);
+
+    toggleSede();
+});
+</script>
 
 @endsection
