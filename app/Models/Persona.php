@@ -165,7 +165,12 @@ class Persona extends Model
         return $this->hasMany(PersonaBeneficio::class, 'persona_id');
     }
 
-    
+    public function atenciones()
+{
+    return $this->hasMany(Atencion::class)
+                ->with('adjuntos')
+                ->latest('fecha_atencion');
+}
 
     // ── Accessors ───────────────────────────────────────────
 
@@ -174,10 +179,7 @@ class Persona extends Model
         return \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
     }
 
-    public function atenciones()
-    {
-        return $this->hasMany(Atencion::class)->latest('fecha_atencion');
-    }
+   
 
     public function alertaPrograma()
     {

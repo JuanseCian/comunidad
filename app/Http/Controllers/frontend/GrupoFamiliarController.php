@@ -16,6 +16,7 @@ use App\Models\CondicionInactividad;
 use App\Models\CategoriaOcupacional;
 use Illuminate\Http\Request;
 
+
 class GrupoFamiliarController extends Controller
 {
 

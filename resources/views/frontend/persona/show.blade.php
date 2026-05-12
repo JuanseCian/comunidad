@@ -1059,6 +1059,29 @@
 
                                     </div>
 
+                                   {{-- Panel de adjuntos desplegable --}}
+                                   @if($a->adjuntos && $a->adjuntos->count())
+                                       <div id="adjuntos-{{ $a->id }}"
+                                            style="display:none; margin-top:10px; border:1px solid var(--border); border-radius:10px; overflow:hidden;">
+                                           @foreach($a->adjuntos as $adj)
+                                               <div style="display:flex; align-items:center; justify-content:space-between; padding:9px 13px; border-bottom:1px solid var(--border-sm); font-size:12.5px;">
+                                                   <div style="display:flex; align-items:center; gap:8px;">
+                                                       <i class="bi {{ str_contains($adj->tipo_mime ?? '', 'pdf') ? 'bi-file-earmark-pdf text-danger' : 'bi-file-earmark-image' }}"
+                                                          style="font-size:15px;"></i>
+                                                       <span style="color:var(--ink); font-weight:600;">{{ $adj->nombre_original }}</span>
+                                                       <span style="color:var(--muted);">{{ $adj->tamaño_formateado }}</span>
+                                                   </div>
+                                                   <a href="{{ route('adjuntos.download', $adj) }}"
+                                                      style="display:inline-flex; align-items:center; gap:5px; padding:4px 11px; border-radius:8px; border:1px solid var(--blue-brd); background:var(--blue-lt); color:var(--blue-dk); font-size:12px; font-weight:700; text-decoration:none; transition:background .15s;"
+                                                      onmouseover="this.style.background='var(--blue)'; this.style.color='white';"
+                                                      onmouseout="this.style.background='var(--blue-lt)'; this.style.color='var(--blue-dk)';">
+                                                       <i class="bi bi-download"></i> Descargar
+                                                   </a>
+                                               </div>
+                                           @endforeach
+                                       </div>
+                                   @endif
+
                                    <div style="display:flex; align-items:start; gap:8px;">
 
                                         {{-- VER --}}
@@ -1070,6 +1093,24 @@
                                                 <i class="bi bi-eye"></i>
 
                                             </a>
+
+                                        @endif
+
+                                        {{-- ADJUNTOS --}}
+                                        @if($a->adjuntos && $a->adjuntos->count())
+
+                                            <button type="button"
+                                                    class="sp-btn-ghost"
+                                                    title="{{ $a->adjuntos->count() }} archivo(s) adjunto(s)"
+                                                    onclick="toggleAdjuntos({{ $a->id }})">
+
+                                                <i class="bi bi-paperclip"></i>
+
+                                                <span style="font-size:11px; font-weight:700;">
+                                                    {{ $a->adjuntos->count() }}
+                                                </span>
+
+                                            </button>
 
                                         @endif
 
@@ -1465,6 +1506,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     toggleSede();
 });
+</script>
+
+<script>
+function toggleAdjuntos(id) {
+    const panel = document.getElementById('adjuntos-' + id);
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
 </script>
 
 @endsection

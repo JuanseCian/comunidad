@@ -3,7 +3,7 @@
 use App\Http\Controllers\frontend\AtencionController;
 use App\Http\Middleware\CheckRole;
 use App\Models\Atencion;
-
+use App\Http\Controllers\frontend\AdjuntoController;
 Route::middleware(['auth'])->group(function () {
 
     Route::middleware([CheckRole::class . ':1,2,3,5'])->group(function () {
@@ -23,6 +23,12 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/atenciones/{atencion}/edit', [AtencionController::class, 'edit'])
             ->name('atenciones.edit');
+            Route::middleware(['auth'])->group(function () {
+
+    Route::get('/adjuntos/{adjunto}/download', [AdjuntoController::class, 'download'])
+        ->name('adjuntos.download');
+
+});
 
         Route::put('/atenciones/{atencion}', [AtencionController::class, 'update'])
             ->name('atenciones.update');

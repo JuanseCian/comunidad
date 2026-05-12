@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\Atencion;
 use App\Models\Persona;
 use App\Models\Adjunto;
@@ -17,7 +18,33 @@ class AtencionController extends Controller
     {
         return view('frontend.atenciones.create', compact('persona'));
     }
+public function destroy(Atencion $atencion)
+{
+    // Cargar adjuntos relacionados
+    $atencion->load('adjuntos');
 
+    // Eliminar archivos físicos y registros
+    foreach ($atencion->adjuntos as $adjunto) {
+
+        // Eliminar archivo del storage si existe
+        if (Storage::disk('local')->exists($adjunto->ruta)) {
+            Storage::disk('local')->delete($adjunto->ruta);
+        }
+
+        // Eliminar registro del adjunto
+        $adjunto->delete();
+    }
+
+    // Guardar persona antes de borrar
+    $persona = $atencion->persona;
+
+    // Eliminar atención
+    $atencion->delete();
+
+    return redirect()
+        ->route('personas.show', $persona)
+        ->with('success', 'Intervención eliminada correctamente.');
+}
   public function store(Request $request, Persona $persona)
 {
     $request->validate([
@@ -84,7 +111,12 @@ public function update(Request $request, Atencion $atencion)
         ->route('atenciones.edit', $atencion)
         ->with('success', 'Intervención actualizada correctamente.');
 }
+public function show(Atencion $atencion)
+{
+    $atencion->load(['adjuntos', 'users', 'persona']);
 
+    return view('frontend.atenciones.show', compact('atencion'));
+}
 // ── HELPER PRIVADO ───────────────────────────────────────────────────────────
 /**
  * Persiste un array de UploadedFile y registra cada uno en la tabla adjuntos.
