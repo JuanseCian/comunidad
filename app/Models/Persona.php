@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Beneficio;
 
 class Persona extends Model
 {
@@ -140,6 +141,19 @@ class Persona extends Model
         return $this->belongsTo(Discapacidad::class);
     }
 
+    public function programas()
+    {
+        return $this->belongsToMany(
+            ProgramasAsistencia::class,
+            'persona_programa',
+            'persona_id',
+            'programa_id'
+        )->withPivot([
+            'rol',
+            'fecha_inicio',
+            'fecha_fin'
+        ])->withTimestamps();
+    }
 
     public function cud()
     {
@@ -164,8 +178,6 @@ class Persona extends Model
     {
         return $this->hasMany(PersonaBeneficio::class, 'persona_id');
     }
-
-    
 
     // ── Accessors ───────────────────────────────────────────
 
