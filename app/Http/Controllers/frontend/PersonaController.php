@@ -4,6 +4,7 @@ namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Models\Persona;
 use App\Models\TipoDocumento;
 use App\Models\Sexo;
@@ -20,6 +21,7 @@ use App\Models\Enfermedad;
 use App\Models\Cobertura;
 use App\Models\Familia;
 use App\Models\Cud;
+use App\Models\Beneficio;
 
 class PersonaController extends Controller
 {
@@ -52,12 +54,39 @@ class PersonaController extends Controller
                 $sql->where('barrio_id', $request->barrio_id);
             });
         }
+        if ($request->filled('programa_id')) {
+            $query->whereHas('programas', function ($sql) use ($request) {
+                $sql->where('programas_asistencia.id', $request->programa_id);
+            });
+        }
+
+        if ($request->filled('sexo_id')) {
+            $query->where('sexo_id', $request->sexo_id);
+        }
+
+        if ($request->filled('trabaja')) {
+            $query->where('trabaja', $request->trabaja);
+        }
+
+        if ($request->filled('edad_desde')) {
+            $fechaMax = Carbon::now()->subYears($request->edad_desde)->format('Y-m-d');
+
+            $query->whereDate('fecha_nacimiento', '<=', $fechaMax);
+        }
+
+        if ($request->filled('edad_hasta')) {
+            $fechaMin = Carbon::now()->subYears($request->edad_hasta + 1)->addDay()->format('Y-m-d');
+
+            $query->whereDate('fecha_nacimiento', '>=', $fechaMin);
+        }
 
         $personas = $query->orderBy('apellido')->orderBy('nombre')->paginate(20)->withQueryString();
         $sedes    = Sede::orderBy('nombre')->get();
         $barrios  = Barrio::orderBy('nombre')->get();
+        $programas = ProgramasAsistencia::orderBy('nombre')->get();
+        $sexos = Sexo::orderBy('nombre')->get();
 
-        return view('frontend.persona.index', compact('personas', 'sedes', 'barrios'));
+        return view('frontend.persona.index', compact('personas', 'sedes', 'barrios', 'programas', 'sexos'));
     }
     
     public function create()
@@ -228,7 +257,8 @@ class PersonaController extends Controller
             'sedeOrigen',
             'familia.personas',
             'cud',
-            'personaPrograma.programa'
+            'personaPrograma.programa',
+            'personaBeneficio.beneficio'
         ])->findOrFail($id);
 
         if (!$persona->familia_id) {
@@ -247,6 +277,7 @@ class PersonaController extends Controller
             'provincias'  => Provincia::orderBy('nombre')->get(),
             'localidades' => Localidad::orderBy('nombre')->get(),
             'barrios'     => Barrio::orderBy('nombre')->get(),
+            'beneficios' => Beneficio::orderBy('nombre')->get(),
             'sedes' => Sede::where('activa', 1)
                             ->orderBy('nombre')
                             ->get(['id', 'nombre']),

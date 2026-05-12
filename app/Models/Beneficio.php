@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Persona;
 
 /**
  * Class Beneficio
@@ -31,7 +32,15 @@ class Beneficio extends Model
 	public function personas()
 	{
 		return $this->belongsToMany(Persona::class, 'persona_beneficio')
-					->withPivot('id', 'fecha_otorgamiento', 'fecha_vencimiento', 'monto', 'activo', 'observaciones', 'registrado_por')
+					->withPivot(
+						'id',
+						'fecha_otorgamiento',
+						'fecha_vencimiento',
+						'monto',
+						'activo',
+						'observaciones',
+						'registrado_por'
+					)
 					->withTimestamps();
 	}
 }

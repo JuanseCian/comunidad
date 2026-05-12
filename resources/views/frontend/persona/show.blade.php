@@ -742,25 +742,249 @@
 
         <div class="row g-3 mb-3">
             <div class="col-12 sp-anim sp-anim-4">
+
                 <div class="sp-card">
+
+                    {{-- HEADER --}}
                     <div class="sp-card-header">
                         <div class="sp-card-header-left">
                             <div class="sp-dot" style="background: var(--blue);"></div>
                             <span class="sp-card-title">Beneficios</span>
                         </div>
-                    </div>
-                    <div class="sp-card-body">
-                        @if($persona->personaBeneficio && $persona->personaBeneficio->count())
-                            <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                                @foreach($persona->personaBeneficio as $pb)
-                                    <span class="sp-tag-blue">{{ $pb->beneficio->nombre }}</span>
+
+                        {{-- FORM AGREGAR --}}
+                        <form method="POST"
+                            action="{{ route('personas.beneficios.store', $persona->id) }}"
+                            style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+
+                            @csrf
+
+                            <select name="beneficio_id"
+                                    class="form-select"
+                                    style="
+                                        min-width:220px;
+                                        border-radius:12px;
+                                        height:40px;
+                                        font-size:13px;
+                                    ">
+
+                                <option value="">
+                                    Seleccionar beneficio
+                                </option>
+
+                                @foreach($beneficios as $beneficio)
+                                    <option value="{{ $beneficio->id }}">
+                                        {{ $beneficio->nombre }}
+                                    </option>
                                 @endforeach
+
+                            </select>
+
+                            <button type="submit"
+                                    class="sp-btn-primary"
+                                    style="
+                                        height:40px;
+                                        border:none;
+                                        border-radius:12px;
+                                        padding:0 16px;
+                                        font-size:13px;
+                                        font-weight:700;
+                                    ">
+                                <i class="bi bi-plus-lg"></i>
+                                Asignar
+                            </button>
+
+                        </form>
+                    </div>
+
+                    {{-- BODY --}}
+                    <div class="sp-card-body">
+
+                        @if($persona->personaBeneficio && $persona->personaBeneficio->count())
+
+                            <div class="row g-3">
+
+                                @foreach($persona->personaBeneficio as $pb)
+
+                                    <div class="col-xl-4 col-md-6">
+
+                                        <div style="
+                                            border:1px solid #e2e8f0;
+                                            border-radius:18px;
+                                            padding:16px;
+                                            background:white;
+                                            height:100%;
+                                        ">
+
+                                            {{-- TOP --}}
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+
+                                                <div>
+                                                    <div style="
+                                                        font-weight:800;
+                                                        font-size:15px;
+                                                        color:#0f172a;
+                                                        margin-bottom:4px;
+                                                    ">
+                                                        {{ $pb->beneficio->nombre }}
+                                                    </div>
+
+                                                    @if($pb->fecha_otorgamiento)
+                                                        <div style="
+                                                            font-size:12px;
+                                                            color:#64748b;
+                                                        ">
+                                                            Otorgado:
+                                                            {{ \Carbon\Carbon::parse($pb->fecha_otorgamiento)->format('d/m/Y') }}
+                                                        </div>
+                                                    @endif
+                                                </div>
+
+                                                @if($pb->activo)
+                                                    <span style="
+                                                        background:#dcfce7;
+                                                        color:#166534;
+                                                        border:1px solid #86efac;
+                                                        padding:4px 10px;
+                                                        border-radius:999px;
+                                                        font-size:11px;
+                                                        font-weight:700;
+                                                    ">
+                                                        Activo
+                                                    </span>
+                                                @else
+                                                    <span style="
+                                                        background:#fee2e2;
+                                                        color:#991b1b;
+                                                        border:1px solid #fca5a5;
+                                                        padding:4px 10px;
+                                                        border-radius:999px;
+                                                        font-size:11px;
+                                                        font-weight:700;
+                                                    ">
+                                                        Inactivo
+                                                    </span>
+                                                @endif
+
+                                            </div>
+
+                                            {{-- INFO --}}
+                                            <div style="
+                                                display:flex;
+                                                flex-direction:column;
+                                                gap:10px;
+                                                font-size:13px;
+                                            ">
+
+                                                @if($pb->monto)
+                                                    <div>
+                                                        <span style="color:#64748b;">Monto:</span>
+                                                        <strong>
+                                                            ${{ number_format($pb->monto, 0, ',', '.') }}
+                                                        </strong>
+                                                    </div>
+                                                @endif
+
+                                                @if($pb->fecha_vencimiento)
+                                                    <div>
+                                                        <span style="color:#64748b;">Vence:</span>
+
+                                                        <strong>
+                                                            {{ \Carbon\Carbon::parse($pb->fecha_vencimiento)->format('d/m/Y') }}
+                                                        </strong>
+                                                    </div>
+                                                @endif
+
+                                                @if($pb->observaciones)
+                                                    <div>
+                                                        <span style="color:#64748b;">
+                                                            Observaciones:
+                                                        </span>
+
+                                                        <div style="
+                                                            margin-top:4px;
+                                                            color:#334155;
+                                                            line-height:1.4;
+                                                        ">
+                                                            {{ $pb->observaciones }}
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                            </div>
+
+                                            {{-- FOOTER --}}
+                                            <div class="mt-4 d-flex justify-content-end">
+
+                                                <form method="POST"
+                                                    action="{{ route('persona-beneficios.destroy', $pb->id) }}"
+                                                    onsubmit="return confirm('¿Quitar beneficio?')">
+
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="submit"
+                                                            style="
+                                                                border:none;
+                                                                background:#fee2e2;
+                                                                color:#b91c1c;
+                                                                width:34px;
+                                                                height:34px;
+                                                                border-radius:10px;
+                                                            ">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                @endforeach
+
                             </div>
+
                         @else
-                            <div class="sp-empty" style="padding: 20px;">
-                                Sin beneficios asignados
+
+                            <div class="sp-empty" style="padding:40px 20px;">
+
+                                <div style="
+                                    width:64px;
+                                    height:64px;
+                                    margin:0 auto 14px;
+                                    border-radius:50%;
+                                    background:#eef8ff;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    color:#0d92c2;
+                                    font-size:28px;
+                                ">
+                                    <i class="bi bi-gift"></i>
+                                </div>
+
+                                <div style="
+                                    font-weight:700;
+                                    color:#334155;
+                                    margin-bottom:4px;
+                                ">
+                                    Sin beneficios asignados
+                                </div>
+
+                                <div style="
+                                    color:#64748b;
+                                    font-size:13px;
+                                ">
+                                    Esta persona todavía no posee beneficios registrados.
+                                </div>
+
                             </div>
+
                         @endif
+
                     </div>
                 </div>
             </div>

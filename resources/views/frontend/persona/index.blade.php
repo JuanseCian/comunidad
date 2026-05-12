@@ -46,61 +46,253 @@
 
 
     <form method="GET" action="{{ route('personas.index') }}">
-        <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; padding:18px 20px; margin-bottom:1.25rem; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
 
+        <div style="
+            background:white;
+            border:1px solid #e0ddd6;
+            border-radius:18px;
+            overflow:hidden;
+            margin-bottom:1.4rem;
+            box-shadow:0 2px 10px rgba(15,23,42,.03);
+        ">
 
-            <div style="flex:1; min-width:200px;">
-                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Buscar</label>
-                <div style="position:relative;">
-                    <i class="bi bi-search" style="position:absolute; left:11px; top:50%; transform:translateY(-50%); color:#94a3b4; font-size:14px;"></i>
-                    <input type="text" name="q" value="{{ request('q') }}"
-                           placeholder="Nombre, apellido o DNI..."
-                           style="width:100%; height:38px; padding:0 12px 0 34px; border:1px solid #c8c4bb; border-radius:10px; font-size:13.5px; font-family:inherit; outline:none; color:#0f172a;"
-                           onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
-                           onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+            {{-- HEADER --}}
+            <div style="
+                padding:14px 20px;
+                border-bottom:1px solid #f1efe9;
+                background:#fcfcfb;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                flex-wrap:wrap;
+                gap:10px;
+            ">
+
+                <div>
+                    <div style="
+                        font-size:13px;
+                        font-weight:800;
+                        color:#0f172a;
+                        font-family:'Plus Jakarta Sans',sans-serif;
+                    ">
+                        Filtros de búsqueda
+                    </div>
+
+                    <div style="
+                        font-size:12px;
+                        color:#64748b;
+                        margin-top:2px;
+                    ">
+                        Filtrá personas por sede, edad, programas y más.
+                    </div>
                 </div>
-            </div>
 
+                @php
+                    $hayFiltros =
+                        request('q') ||
+                        request('sede_id') ||
+                        request('barrio_id') ||
+                        request('programa_id') ||
+                        request('edad_desde') ||
+                        request('edad_hasta') ||
+                        request('sexo_id');
+                @endphp
 
-            <div style="min-width:160px;">
-                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Sede</label>
-                <select name="sede_id" style="width:100%; height:38px; padding:0 30px 0 10px; border:1px solid #c8c4bb; border-radius:10px; font-size:13.5px; font-family:inherit; outline:none; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none; color:#0f172a;"
-                        onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
-                    <option value="">Todas las sedes</option>
-                    @foreach($sedes as $sede)
-                        <option value="{{ $sede->id }}" {{ request('sede_id') == $sede->id ? 'selected' : '' }}>
-                            {{ $sede->nombre }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-
-            <div style="min-width:160px;">
-                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Barrio</label>
-                <select name="barrio_id" style="width:100%; height:38px; padding:0 30px 0 10px; border:1px solid #c8c4bb; border-radius:10px; font-size:13.5px; font-family:inherit; outline:none; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none; color:#0f172a;"
-                        onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
-                    <option value="">Todos los barrios</option>
-                    @foreach($barrios as $barrio)
-                        <option value="{{ $barrio->id }}" {{ request('barrio_id') == $barrio->id ? 'selected' : '' }}>
-                            {{ $barrio->nombre }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-
-            <div style="display:flex; gap:8px; align-items:flex-end;">
-                <button type="submit" style="height:38px; padding:0 18px; background:linear-gradient(135deg,#0d92c2,#1aaad8); color:white; border:none; border-radius:10px; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-                    <i class="bi bi-funnel-fill" style="font-size:12px;"></i> Filtrar
-                </button>
-                @if(request('q') || request('sede_id') || request('barrio_id'))
-                    <a href="{{ route('personas.index') }}" style="height:38px; padding:0 14px; background:white; color:#536070; border:1px solid #c8c4bb; border-radius:10px; font-size:13.5px; font-weight:600; display:inline-flex; align-items:center; gap:5px; text-decoration:none; transition:background .2s;" onmouseover="this.style.background='#f5f3ee'" onmouseout="this.style.background='white'">
-                        <i class="bi bi-x-lg" style="font-size:12px;"></i> Limpiar
+                @if($hayFiltros)
+                    <a href="{{ route('personas.index') }}"
+                    style="
+                            font-size:12px;
+                            font-weight:700;
+                            color:#dc2626;
+                            text-decoration:none;
+                            display:flex;
+                            align-items:center;
+                            gap:5px;
+                    ">
+                        <i class="bi bi-x-circle"></i>
+                        Limpiar filtros
                     </a>
                 @endif
             </div>
 
+            {{-- BODY --}}
+            <div style="padding:20px;">
+
+                <div class="row g-3">
+
+                    {{-- BUSCADOR --}}
+                    <div class="col-lg-4">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">
+                            Buscar
+                        </label>
+
+                        <div style="position:relative;">
+                            <i class="bi bi-search"
+                            style="
+                                    position:absolute;
+                                    left:12px;
+                                    top:50%;
+                                    transform:translateY(-50%);
+                                    color:#94a3b8;
+                            "></i>
+
+                            <input
+                                type="text"
+                                name="q"
+                                value="{{ request('q') }}"
+                                placeholder="Nombre, apellido o DNI"
+                                class="form-control"
+                                style="
+                                    height:42px;
+                                    border-radius:12px;
+                                    padding-left:38px;
+                                    border:1px solid #d6d3cd;
+                                ">
+                        </div>
+                    </div>
+
+                    {{-- SEDE --}}
+                    <div class="col-lg-2 col-md-4">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">
+                            Sede
+                        </label>
+
+                        <select name="sede_id"
+                                class="form-select"
+                                style="height:42px; border-radius:12px;">
+                            <option value="">Todas</option>
+
+                            @foreach($sedes as $sede)
+                                <option value="{{ $sede->id }}"
+                                    {{ request('sede_id') == $sede->id ? 'selected' : '' }}>
+                                    {{ $sede->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- PROGRAMA --}}
+                    <div class="col-lg-2 col-md-4">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">
+                            Programa
+                        </label>
+
+                        <select name="programa_id"
+                                class="form-select"
+                                style="height:42px; border-radius:12px;">
+                            <option value="">Todos</option>
+
+                            @foreach($programas as $programa)
+                                <option value="{{ $programa->id }}"
+                                    {{ request('programa_id') == $programa->id ? 'selected' : '' }}>
+                                    {{ $programa->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- SEXO --}}
+                    <div class="col-lg-2 col-md-4">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">
+                            Sexo
+                        </label>
+
+                        <select name="sexo_id"
+                                class="form-select"
+                                style="height:42px; border-radius:12px;">
+                            <option value="">Todos</option>
+
+                            @foreach($sexos as $sexo)
+                                <option value="{{ $sexo->id }}"
+                                    {{ request('sexo_id') == $sexo->id ? 'selected' : '' }}>
+                                    {{ $sexo->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- BARRIO --}}
+                    <div class="col-lg-2 col-md-4">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">
+                            Barrio
+                        </label>
+
+                        <select name="barrio_id"
+                                class="form-select"
+                                style="height:42px; border-radius:12px;">
+                            <option value="">Todos</option>
+
+                            @foreach($barrios as $barrio)
+                                <option value="{{ $barrio->id }}"
+                                    {{ request('barrio_id') == $barrio->id ? 'selected' : '' }}>
+                                    {{ $barrio->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- EDAD DESDE --}}
+                    <div class="col-lg-2 col-md-3">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">
+                            Edad desde
+                        </label>
+
+                        <input type="number"
+                            name="edad_desde"
+                            value="{{ request('edad_desde') }}"
+                            min="0"
+                            class="form-control"
+                            style="height:42px; border-radius:12px;">
+                    </div>
+                    {{-- EDAD HASTA --}}
+                    <div class="col-lg-2 col-md-3">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">
+                            Edad hasta
+                        </label>
+                        <input type="number"
+                            name="edad_hasta"
+                            value="{{ request('edad_hasta') }}"
+                            min="0"
+                            class="form-control"
+                            style="height:42px; border-radius:12px;">
+                    </div>
+                    {{-- TRABAJA --}}
+                    <div class="col-lg-2 col-md-3">
+                        <label class="form-label small fw-bold text-uppercase text-secondary">
+                            Trabajo
+                        </label>
+
+                        <select name="trabaja"
+                                class="form-select"
+                                style="height:42px; border-radius:12px;">
+                            <option value="">Todos</option>
+                            <option value="1" {{ request('trabaja') === '1' ? 'selected' : '' }}>
+                                Trabaja
+                            </option>
+                            <option value="0" {{ request('trabaja') === '0' ? 'selected' : '' }}>
+                                No trabaja
+                            </option>
+                        </select>
+                    </div>
+
+                    {{-- BOTONES --}}
+                    <div class="col-lg-2 col-md-3 d-flex align-items-end">
+                        <button type="submit"
+                                class="btn w-100"
+                                style="
+                                    height:42px;
+                                    border-radius:12px;
+                                    background:linear-gradient(135deg,#0d92c2,#17a385);
+                                    color:white;
+                                    font-weight:700;
+                                    border:none;
+                                ">
+                            <i class="bi bi-funnel-fill"></i>
+                            Filtrar
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 
