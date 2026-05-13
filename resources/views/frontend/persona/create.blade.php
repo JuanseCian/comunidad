@@ -173,11 +173,73 @@
                         <label style="position:relative; display:inline-block; width:42px; height:24px; margin:0; cursor:pointer;">
                             <input type="checkbox" name="trabaja" value="1" {{ old('trabaja') ? 'checked' : '' }}
                                    style="opacity:0; width:0; height:0; position:absolute;"
-                                   onchange="toggleSlider(this)">
+                                   onchange="toggleTrabaja(this)">
                             <span class="toggle-slider" style="position:absolute; inset:0; background:#c8c4bb; border-radius:24px; transition:background .2s;">
                                 <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block;"></span>
                             </span>
                         </label>
+                    </div>
+
+                    {{-- Panel datos laborales --}}
+                    <div id="panelTrabajo" style="display:{{ old('trabaja') ? 'block' : 'none' }}; margin-top:12px; background:#f0fdf8; border:1px solid #bbf0df; border-radius:12px; padding:18px;">
+                        <div style="font-size:11px; font-weight:800; color:#0f6b4f; text-transform:uppercase; letter-spacing:.07em; margin-bottom:14px;">
+                            <i class="bi bi-briefcase-fill me-1"></i> Datos laborales
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Situación ocupacional</label>
+                                <select name="situacion_ocupacional_id" style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; background:white; color:#0f172a;">
+                                    <option value="">— Seleccionar —</option>
+                                    @foreach($situaciones_ocup as $s)
+                                        <option value="{{ $s->id }}" {{ old('situacion_ocupacional_id') == $s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Categoría ocupacional</label>
+                                <select name="categoria_ocupacional_id" style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; background:white; color:#0f172a;">
+                                    <option value="">— Seleccionar —</option>
+                                    @foreach($categorias_ocup as $c)
+                                        <option value="{{ $c->id }}" {{ old('categoria_ocupacional_id') == $c->id ? 'selected' : '' }}>{{ $c->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Rubro / Tipo de trabajo <span style="color:#e74c3c;">*</span></label>
+                                <input type="text" name="trabajo_descripcion" value="{{ old('trabajo_descripcion') }}"
+                                       placeholder="Ej: Albañilería, Docencia, Comercio..."
+                                       style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                            </div>
+                            <div class="col-md-6">
+                                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Empleador / Empresa</label>
+                                <input type="text" name="trabajo_empleador" value="{{ old('trabajo_empleador') }}"
+                                       placeholder="Nombre del empleador"
+                                       style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                            </div>
+                            <div class="col-md-6">
+                                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Cargo / Puesto</label>
+                                <input type="text" name="trabajo_cargo" value="{{ old('trabajo_cargo') }}"
+                                       placeholder="Ej: Operario, Encargado..."
+                                       style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                            </div>
+                            <div class="col-md-6">
+                                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Ingresos mensuales ($)</label>
+                                <input type="number" name="trabajo_ingresos" min="0" step="0.01"
+                                       value="{{ old('trabajo_ingresos') }}" placeholder="0.00"
+                                       style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                            </div>
+                            <div class="col-md-6">
+                                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Fecha de inicio</label>
+                                <input type="date" name="trabajo_fecha_inicio" value="{{ old('trabajo_fecha_inicio') }}"
+                                       style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                            </div>
+                            <div class="col-12">
+                                <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Observaciones</label>
+                                <textarea name="trabajo_observaciones" rows="2"
+                                          placeholder="Información adicional sobre el trabajo..."
+                                          style="width:100%; padding:8px 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a; resize:vertical;">{{ old('trabajo_observaciones') }}</textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -550,6 +612,12 @@
         const thumb = track.querySelector('span');
         track.style.background = chk.checked ? '#0d92c2' : '#c8c4bb';
         thumb.style.transform  = chk.checked ? 'translateX(18px)' : 'translateX(0)';
+    }
+
+    function toggleTrabaja(chk) {
+        toggleSlider(chk);
+        const panel = document.getElementById('panelTrabajo');
+        if (panel) panel.style.display = chk.checked ? 'block' : 'none';
     }
 
 

@@ -21,7 +21,11 @@ use App\Models\Enfermedad;
 use App\Models\Cobertura;
 use App\Models\Familia;
 use App\Models\Cud;
+use App\Models\PersonaTrabajo;
+use App\Models\SituacionOcupacional;
+use App\Models\CategoriaOcupacional;
 use App\Models\Beneficio;
+use Illuminate\Support\Facades\Auth;
 
 class PersonaController extends Controller
 {
@@ -100,7 +104,9 @@ class PersonaController extends Controller
             'estados_civiles' => EstadoCivil::all(),
             'provincias'      => Provincia::orderBy('nombre')->get(),
             'localidades'     => Localidad::orderBy('nombre')->get(),
-            'catalogos'       => [
+            'situaciones_ocup' => SituacionOcupacional::orderBy('nombre')->get(),
+            'categorias_ocup'  => CategoriaOcupacional::orderBy('nombre')->get(),
+            'catalogos'        => [
                 'discapacidades' => Discapacidad::orderBy('nombre')->get(),
                 'enfermedades'   => Enfermedad::orderBy('nombre')->get(),
                 'coberturas'     => Cobertura::orderBy('nombre')->get(),
@@ -182,6 +188,22 @@ class PersonaController extends Controller
             ]);
         }
 
+        // Guardar trabajo inicial si trabaja
+        if ($request->boolean('trabaja') && $request->filled('trabajo_descripcion')) {
+            PersonaTrabajo::create([
+                'persona_id'               => $persona->id,
+                'situacion_ocupacional_id' => $request->situacion_ocupacional_id,
+                'categoria_ocupacional_id' => $request->categoria_ocupacional_id,
+                'descripcion'              => $request->trabajo_descripcion,
+                'empleador'                => $request->trabajo_empleador,
+                'cargo'                    => $request->trabajo_cargo,
+                'ingresos'                 => $request->trabajo_ingresos,
+                'fecha_inicio'             => $request->trabajo_fecha_inicio ?? now()->toDateString(),
+                'observaciones'            => $request->trabajo_observaciones,
+                'created_by'               => Auth::id(),
+            ]);
+        }
+
         // 2. Redirección lógica
         if (!$esAdministrador) {
             return redirect()->route('personas.index')
@@ -258,7 +280,9 @@ class PersonaController extends Controller
             'familia.personas',
             'cud',
             'personaPrograma.programa',
-            'personaBeneficio.beneficio'
+            'personaBeneficio.beneficio',
+            'trabajos.situacionOcupacional',
+            'trabajos.categoriaOcupacional',
         ])->findOrFail($id);
 
         if (!$persona->familia_id) {
@@ -271,16 +295,16 @@ class PersonaController extends Controller
         $this->evaluarProgramasPorEdad($persona);
 
         return view('frontend.persona.show', [
-            'persona'     => $persona,
-            'programas'   => ProgramasAsistencia::orderBy('nombre')->get(),
-            'niveles'     => NivelesEstudio::orderBy('nombre')->get(),
-            'provincias'  => Provincia::orderBy('nombre')->get(),
-            'localidades' => Localidad::orderBy('nombre')->get(),
-            'barrios'     => Barrio::orderBy('nombre')->get(),
-            'beneficios' => Beneficio::orderBy('nombre')->get(),
-            'sedes' => Sede::where('activa', 1)
-                            ->orderBy('nombre')
-                            ->get(['id', 'nombre']),
+            'persona'          => $persona,
+            'programas'        => ProgramasAsistencia::orderBy('nombre')->get(),
+            'niveles'          => NivelesEstudio::orderBy('nombre')->get(),
+            'provincias'       => Provincia::orderBy('nombre')->get(),
+            'localidades'      => Localidad::orderBy('nombre')->get(),
+            'barrios'          => Barrio::orderBy('nombre')->get(),
+            'beneficios'       => Beneficio::orderBy('nombre')->get(),
+            'sedes'            => Sede::where('activa', 1)->orderBy('nombre')->get(['id', 'nombre']),
+            'situaciones_ocup' => SituacionOcupacional::orderBy('nombre')->get(),
+            'categorias_ocup'  => CategoriaOcupacional::orderBy('nombre')->get(),
         ]);
     }
 

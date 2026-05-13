@@ -186,6 +186,16 @@ class Persona extends Model
                 ->latest('fecha_atencion');
 }
 
+    public function trabajos()
+    {
+        return $this->hasMany(PersonaTrabajo::class)->latest('fecha_inicio');
+    }
+
+    public function trabajoActual()
+    {
+        return $this->hasOne(PersonaTrabajo::class)->whereNull('fecha_fin')->latest('fecha_inicio');
+    }
+
     // ── Accessors ───────────────────────────────────────────
 
     public function getEdadAttribute()

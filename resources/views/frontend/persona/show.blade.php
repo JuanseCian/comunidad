@@ -1123,6 +1123,236 @@
                 </div>
             </div>
         </div>
+ @php
+            $trabajoActual    = $persona->trabajos->firstWhere('fecha_fin', null);
+            $historialLaboral = $persona->trabajos->filter(fn($t) => !is_null($t->fecha_fin));
+        @endphp
+
+        <div class="col-12 sp-anim">
+            <div class="sp-card">
+
+                <div class="sp-card-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:14px; flex-shrink:0;">
+                            <i class="bi bi-briefcase-fill"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight:700; font-size:14px; color:var(--ink);">Situación laboral</div>
+                            <div style="font-size:12px; color:var(--muted);">Trabajo actual e historial</div>
+                        </div>
+                    </div>
+                    @if(Auth::user()->puedeEditar())
+                        <button type="button"
+                                onclick="document.getElementById('modalNuevoTrabajo').style.display='flex'"
+                                style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:none; background:var(--blue); color:white; font-size:12.5px; font-weight:700; cursor:pointer;">
+                            <i class="bi bi-plus-circle-fill"></i>
+                            {{ $trabajoActual ? 'Actualizar trabajo' : 'Registrar trabajo' }}
+                        </button>
+                    @endif
+                </div>
+
+                @if($trabajoActual)
+                    <div style="padding:16px 20px; background:#f0fdf8; border-bottom:1px solid var(--border);">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                            <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:#0d6b4f; background:#bbf7d0; padding:2px 9px; border-radius:20px;">● Actual</span>
+                            @if($trabajoActual->fecha_inicio)
+                                <span style="font-size:12px; color:var(--muted);">desde {{ $trabajoActual->fecha_inicio->format('d/m/Y') }}</span>
+                            @endif
+                        </div>
+                        <div class="row g-2" style="font-size:13px;">
+                            <div class="col-md-4">
+                                <div style="color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Rubro / Tipo</div>
+                                <div style="font-weight:700; color:var(--ink);">{{ $trabajoActual->descripcion ?? '—' }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Empleador</div>
+                                <div style="color:var(--slate);">{{ $trabajoActual->empleador ?? '—' }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Cargo</div>
+                                <div style="color:var(--slate);">{{ $trabajoActual->cargo ?? '—' }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Situación</div>
+                                <div style="color:var(--slate);">{{ $trabajoActual->situacionOcupacional?->nombre ?? '—' }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Categoría</div>
+                                <div style="color:var(--slate);">{{ $trabajoActual->categoriaOcupacional?->nombre ?? '—' }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Ingresos</div>
+                                <div style="font-weight:800; color:var(--ink);">{{ $trabajoActual->ingresos_formateado }}</div>
+                            </div>
+                            @if($trabajoActual->observaciones)
+                                <div class="col-12">
+                                    <div style="color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:2px;">Observaciones</div>
+                                    <div style="color:var(--slate);">{{ $trabajoActual->observaciones }}</div>
+                                </div>
+                            @endif
+                        </div>
+                        @if(Auth::user()->puedeEditar())
+                            <form method="POST" action="{{ route('personas.trabajo.finalizar', $persona) }}"
+                                  onsubmit="return confirm('¿Confirmás que esta persona dejó de trabajar? El registro pasará al historial.')"
+                                  style="margin-top:12px;">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" style="display:inline-flex; align-items:center; gap:5px; padding:5px 13px; border-radius:8px; border:1px solid #fca5a5; background:#fff5f5; color:#dc2626; font-size:12px; font-weight:700; cursor:pointer;">
+                                    <i class="bi bi-x-circle"></i> Marcar como finalizado
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                @else
+                    <div class="sp-empty" style="padding:28px;">
+                        <div class="sp-empty-icon" style="background:#f0fdf8; color:#0d92c2;"><i class="bi bi-briefcase"></i></div>
+                        <p style="margin:0 0 10px; font-size:13.5px; color:var(--muted);">Sin trabajo registrado actualmente.</p>
+                        @if(Auth::user()->puedeEditar())
+                            <button type="button"
+                                    onclick="document.getElementById('modalNuevoTrabajo').style.display='flex'"
+                                    style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; border:none; background:var(--blue); color:white; font-size:12.5px; font-weight:700; cursor:pointer;">
+                                <i class="bi bi-plus-circle-fill"></i> Registrar trabajo
+                            </button>
+                        @endif
+                    </div>
+                @endif
+
+                @if($historialLaboral->isNotEmpty())
+                    <div style="padding:14px 20px 6px;">
+                        <button type="button"
+                                onclick="const h=document.getElementById('historialLaboral'); h.style.display=h.style.display==='none'?'block':'none';"
+                                style="background:none; border:none; font-size:12.5px; font-weight:700; color:var(--blue-dk); cursor:pointer; padding:0; display:flex; align-items:center; gap:5px;">
+                            <i class="bi bi-clock-history"></i>
+                            Historial laboral ({{ $historialLaboral->count() }} registro{{ $historialLaboral->count() != 1 ? 's' : '' }})
+                            <i class="bi bi-chevron-down" style="font-size:10px;"></i>
+                        </button>
+                    </div>
+                    <div id="historialLaboral" style="display:none;">
+                        <div style="overflow-x:auto;">
+                            <table class="sp-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rubro / Tipo</th>
+                                        <th>Empleador</th>
+                                        <th>Cargo</th>
+                                        <th>Situación</th>
+                                        <th>Ingresos</th>
+                                        <th>Desde</th>
+                                        <th>Hasta</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($historialLaboral as $t)
+                                        <tr>
+                                            <td style="font-weight:600; color:var(--ink);">{{ $t->descripcion ?? '—' }}</td>
+                                            <td style="color:var(--slate);">{{ $t->empleador ?? '—' }}</td>
+                                            <td style="color:var(--slate);">{{ $t->cargo ?? '—' }}</td>
+                                            <td>
+                                                @if($t->situacionOcupacional)
+                                                    <span class="sp-tag-blue" style="font-size:11px; padding:2px 8px;">{{ $t->situacionOcupacional->nombre }}</span>
+                                                @else
+                                                    <span style="color:var(--muted);">—</span>
+                                                @endif
+                                            </td>
+                                            <td style="font-weight:700; color:var(--ink);">{{ $t->ingresos_formateado }}</td>
+                                            <td style="color:var(--slate);">{{ $t->fecha_inicio ? $t->fecha_inicio->format('d/m/Y') : '—' }}</td>
+                                            <td style="color:var(--slate);">{{ $t->fecha_fin ? $t->fecha_fin->format('d/m/Y') : '—' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @endif
+
+            </div>
+        </div>
+
+        {{-- ══ MODAL nuevo trabajo ══ --}}
+        @if(Auth::user()->puedeEditar())
+        <div id="modalNuevoTrabajo"
+             style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1050; align-items:center; justify-content:center; padding:16px;">
+            <div style="background:white; border-radius:16px; width:100%; max-width:580px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25);">
+                <div style="padding:18px 22px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; justify-content:space-between;">
+                    <div style="font-weight:700; font-size:15px; color:var(--ink);">
+                        <i class="bi bi-briefcase-fill me-2 text-primary"></i>
+                        {{ $trabajoActual ? 'Actualizar trabajo' : 'Registrar trabajo' }}
+                    </div>
+                    <button type="button" onclick="document.getElementById('modalNuevoTrabajo').style.display='none'"
+                            style="background:none; border:none; font-size:20px; color:var(--muted); cursor:pointer; line-height:1;">&times;</button>
+                </div>
+                <form method="POST" action="{{ route('personas.trabajo.store', $persona) }}" style="padding:20px 22px;">
+                    @csrf
+                    @if($trabajoActual)
+                        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:10px 14px; font-size:12.5px; color:#92400e; margin-bottom:16px;">
+                            <i class="bi bi-info-circle me-1"></i> El trabajo actual pasará al historial y se registrará el nuevo.
+                        </div>
+                    @endif
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Situación ocupacional</label>
+                            <select name="situacion_ocupacional_id" style="width:100%; height:40px; padding:0 10px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; background:white; color:#0f172a;">
+                                <option value="">— Seleccionar —</option>
+                                @foreach($situaciones_ocup as $s)
+                                    <option value="{{ $s->id }}" {{ old('situacion_ocupacional_id', $trabajoActual?->situacion_ocupacional_id) == $s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Categoría ocupacional</label>
+                            <select name="categoria_ocupacional_id" style="width:100%; height:40px; padding:0 10px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; background:white; color:#0f172a;">
+                                <option value="">— Seleccionar —</option>
+                                @foreach($categorias_ocup as $c)
+                                    <option value="{{ $c->id }}" {{ old('categoria_ocupacional_id', $trabajoActual?->categoria_ocupacional_id) == $c->id ? 'selected' : '' }}>{{ $c->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Rubro / Tipo <span style="color:#e74c3c;">*</span></label>
+                            <input type="text" name="descripcion" value="{{ old('descripcion', $trabajoActual?->descripcion) }}"
+                                   placeholder="Ej: Albañilería, Docencia..."
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Empleador</label>
+                            <input type="text" name="empleador" value="{{ old('empleador', $trabajoActual?->empleador) }}"
+                                   placeholder="Nombre del empleador"
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Cargo</label>
+                            <input type="text" name="cargo" value="{{ old('cargo', $trabajoActual?->cargo) }}"
+                                   placeholder="Ej: Operario, Encargado..."
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Ingresos mensuales ($)</label>
+                            <input type="number" name="ingresos" min="0" step="0.01"
+                                   value="{{ old('ingresos', $trabajoActual?->ingresos) }}" placeholder="0.00"
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Fecha de inicio</label>
+                            <input type="date" name="fecha_inicio" value="{{ old('fecha_inicio', now()->format('Y-m-d')) }}"
+                                   style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a;">
+                        </div>
+                        <div class="col-12">
+                            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Observaciones</label>
+                            <textarea name="observaciones" rows="2" placeholder="Información adicional..."
+                                      style="width:100%; padding:8px 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; color:#0f172a; resize:vertical;">{{ old('observaciones') }}</textarea>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid #e0ddd6;">
+                        <button type="button" onclick="document.getElementById('modalNuevoTrabajo').style.display='none'"
+                                style="padding:8px 18px; border-radius:10px; border:1px solid #c8c4bb; background:white; font-size:13.5px; font-weight:600; cursor:pointer;">Cancelar</button>
+                        <button type="submit" style="padding:8px 20px; border-radius:10px; border:none; background:var(--blue); color:white; font-size:13.5px; font-weight:700; cursor:pointer;">
+                            <i class="bi bi-check-circle me-1"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
 
         {{-- ══ CARD: Integrantes convivientes (grupo_familiar) ══ --}}
         <div class="row g-3 mb-3">
@@ -1138,7 +1368,10 @@
                                 @endif
                             </span>
                         </div>
-                        <a href="{{ route('personas.grupo-familiar.create', $persona) }}"
+    
+        {{-- ══ Situación laboral ══ --}}
+       
+                    <a href="{{ route('personas.grupo-familiar.create', $persona) }}"
                            class="sp-card-action">
                             + Agregar integrante
                         </a>
@@ -1737,6 +1970,17 @@ function toggleAdjuntos(id) {
     const panel = document.getElementById('adjuntos-' + id);
     panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
+</script>
+
+
+<script>
+// Cerrar modal trabajo con Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const m = document.getElementById('modalNuevoTrabajo');
+        if (m) m.style.display = 'none';
+    }
+});
 </script>
 
 @endsection

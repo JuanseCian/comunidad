@@ -78,6 +78,7 @@ require __DIR__.'/cobertura.php';
 require __DIR__.'/condiciones-inactividad.php';
 //rutas para discapacidades
 require __DIR__.'/discapacidad.php';
+require __DIR__.'/trabajo.php';
 
 
 //RUTAS DEL FRONTEND
