@@ -19,7 +19,7 @@ class ProgramaController extends Controller
                 'personaPrograma.sede'
             ]);
 
-        // BUSCADOR
+        
         if ($request->filled('q')) {
 
             $q = trim($request->q);
@@ -33,7 +33,7 @@ class ProgramaController extends Controller
             });
         }
 
-        // FILTRO SEDE
+      
         if ($request->filled('sede_id')) {
 
             $query->whereHas('personaPrograma', function ($sql) use ($request, $id) {

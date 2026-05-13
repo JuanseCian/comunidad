@@ -20,25 +20,25 @@ class AtencionController extends Controller
     }
 public function destroy(Atencion $atencion)
 {
-    // Cargar adjuntos relacionados
+   
     $atencion->load('adjuntos');
 
-    // Eliminar archivos físicos y registros
+    
     foreach ($atencion->adjuntos as $adjunto) {
 
-        // Eliminar archivo del storage si existe
+       
         if (Storage::disk('local')->exists($adjunto->ruta)) {
             Storage::disk('local')->delete($adjunto->ruta);
         }
 
-        // Eliminar registro del adjunto
+       
         $adjunto->delete();
     }
 
-    // Guardar persona antes de borrar
+    
     $persona = $atencion->persona;
 
-    // Eliminar atención
+    
     $atencion->delete();
 
     return redirect()
@@ -55,7 +55,7 @@ public function destroy(Atencion $atencion)
         'archivos.*'     => 'file|mimes:pdf,jpg,jpeg,png|max:10240',
     ]);
 
-    // 1. Crear la atención
+    
     $atencion = $persona->atenciones()->create([
         'usuario_id'     => Auth::id(),
         'tipo'           => $request->tipo,
@@ -63,7 +63,7 @@ public function destroy(Atencion $atencion)
         'descripcion'    => $request->descripcion,
     ]);
 
-    // 2. Guardar archivos si se subieron
+   
     if ($request->hasFile('archivos')) {
         $this->guardarAdjuntos($request->file('archivos'), $persona->id, $atencion->id);
     }
@@ -74,13 +74,13 @@ public function destroy(Atencion $atencion)
 }
  public function edit(Atencion $atencion)
     {
-        // Carga los adjuntos existentes para mostrarlos en el formulario
+       
         $atencion->load('adjuntos');
  
         return view('frontend.atenciones.edit', compact('atencion'));
     }
  
-// ── UPDATE ───────────────────────────────────────────────────────────────────
+
 public function update(Request $request, Atencion $atencion)
 {
     $request->validate([
@@ -91,14 +91,14 @@ public function update(Request $request, Atencion $atencion)
         'archivos.*'     => 'file|mimes:pdf,jpg,jpeg,png|max:10240',
     ]);
 
-    // 1. Actualizar la atención
+   
     $atencion->update([
         'tipo'           => $request->tipo,
         'fecha_atencion' => $request->fecha_atencion,
         'descripcion'    => $request->descripcion,
     ]);
 
-    // 2. Agregar nuevos archivos si se subieron (los existentes no se tocan)
+   
     if ($request->hasFile('archivos')) {
         $this->guardarAdjuntos(
             $request->file('archivos'),
@@ -117,11 +117,7 @@ public function show(Atencion $atencion)
 
     return view('frontend.atenciones.show', compact('atencion'));
 }
-// ── HELPER PRIVADO ───────────────────────────────────────────────────────────
-/**
- * Persiste un array de UploadedFile y registra cada uno en la tabla adjuntos.
- * Carpeta resultante: adjuntos/persona_{id}/atencion_{id}/
- */
+
 private function guardarAdjuntos(array $archivos, int $personaId, int $atencionId): void
 {
     $carpeta = "adjuntos/persona_{$personaId}/atencion_{$atencionId}";

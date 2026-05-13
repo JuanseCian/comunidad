@@ -4,7 +4,7 @@ use App\Http\Controllers\frontend\PersonaBeneficioController;
 
 Route::resource('beneficios', BeneficioController::class);
 
-//Beneficio en el Frontend para personas
+
 Route::post(
     '/personas/{persona}/beneficios',
     [PersonaBeneficioController::class, 'store']

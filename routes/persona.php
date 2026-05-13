@@ -12,7 +12,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware([CheckRole::class . ':2,3'])->group(function () {
-        // Creación
+        
         Route::get('/personas/create', [PersonaController::class, 'create'])->name('personas.create');
         Route::post('/personas', [PersonaController::class, 'store'])->name('personas.store');
         
@@ -21,7 +21,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/personas/{id}/datos', [PersonaController::class, 'updateDatos'])->name('personas.updateDatos');
         Route::put('/personas/{id}/domicilio', [PersonaController::class, 'updateDomicilio'])->name('personas.updateDomicilio');
         
-        // Gestión de Programas
+       
         Route::post('/persona-programa', [PersonaProgramaController::class, 'store'])->name('persona-programa.store');
         Route::put('/persona-programa/{id}', [PersonaProgramaController::class, 'update'])->name('persona-programa.update');
         Route::post('/personas/{id}/cambiar-programa', [PersonaController::class, 'cambiarPrograma'])->name('personas.cambiarPrograma');

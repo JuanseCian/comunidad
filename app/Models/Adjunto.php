@@ -24,16 +24,14 @@ class Adjunto extends Model
         'subido_por',
     ];
 
-    // ── Relaciones ────────────────────────────────────────────────────────────
+   
 
     public function subidoPor()
     {
         return $this->belongsTo(User::class, 'subido_por');
     }
 
-    // ── Accessors ─────────────────────────────────────────────────────────────
-
-    /** "1.4 MB" o "320.5 KB" */
+   
     public function getTamañoFormateadoAttribute(): string
     {
         $bytes = $this->tamaño ?? 0;
@@ -42,7 +40,7 @@ class Adjunto extends Model
             : number_format($bytes / 1_024, 1) . ' KB';
     }
 
-    /** Clase FontAwesome según tipo MIME */
+   
     public function getIconoAttribute(): string
     {
         return match (true) {

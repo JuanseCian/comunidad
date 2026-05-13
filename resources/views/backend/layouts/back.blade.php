@@ -43,7 +43,7 @@
 
     <div class="flex h-screen overflow-hidden">
         
-        <!-- SIDEBAR -->
+       
         <aside 
             :class="sidebarOpen ? 'w-72' : 'w-20'" 
             class="sidebar-transition bg-sidebar border-r border-zinc-800 text-zinc-400 flex-shrink-0 flex flex-col z-30 shadow-2xl">
@@ -61,7 +61,7 @@
 
             <nav class="flex-1 overflow-y-auto px-4 space-y-6">
                 
-                <!-- GRUPO: GENERAL -->
+                
                 <div>
                     <p x-show="sidebarOpen" class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-4">Principal</p>
                     <div class="space-y-1">
@@ -76,12 +76,12 @@
                     </div>
                 </div>
 
-                <!-- GRUPO: CONFIGURACIÓN -->
+              
                 <div>
                     <p x-show="sidebarOpen" class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-4">Parámetros</p>
                     <div class="space-y-1">
                         
-                        <!-- Accordion: Ubicaciones -->
+                       
                         <div x-data="{ open: false }">
                             <button @click="open = !open" :class="open ? 'text-zinc-100 bg-zinc-800/30' : ''"
                                 class="w-full flex items-center justify-between p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
@@ -99,7 +99,7 @@
                             </div>
                         </div>
 
-                        <!-- Accordion: Salud y Capacidad -->
+                        
                         <div x-data="{ open: false }">
                             <button @click="open = !open" :class="open ? 'text-zinc-100 bg-zinc-800/30' : ''"
                                 class="w-full flex items-center justify-between p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
@@ -116,7 +116,7 @@
                             </div>
                         </div>
 
-                        <!-- Accordion: Socio-Educativo -->
+                      
                         <div x-data="{ open: false }">
                             <button @click="open = !open" :class="open ? 'text-zinc-100 bg-zinc-800/30' : ''"
                                 class="w-full flex items-center justify-between p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
@@ -132,7 +132,7 @@
                             </div>
                         </div>
 
-                        <!-- Accordion: Laboral -->
+                    
                         <div x-data="{ open: false }">
                             <button @click="open = !open" :class="open ? 'text-zinc-100 bg-zinc-800/30' : ''"
                                 class="w-full flex items-center justify-between p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
@@ -154,7 +154,7 @@
                 </div>
             </nav>
 
-            <!-- FOOTER SIDEBAR -->
+           
             <div class="p-4 border-t border-zinc-800 bg-sidebar/50">
                 <a href="{{ route('home') }}" class="flex items-center p-3 text-zinc-500 hover:text-white transition-colors group">
                     <i data-lucide="log-out" class="w-5 h-5"></i>
@@ -163,10 +163,10 @@
             </div>
         </aside>
 
-        <!-- MAIN CONTENT -->
+        
         <div class="flex-1 flex flex-col overflow-hidden">
             
-            <!-- HEADER -->
+          
             <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20 shadow-sm">
                 <div class="flex items-center gap-6">
                     <button @click="sidebarOpen = !sidebarOpen" class="text-slate-500 hover:text-accent transition-colors p-2 hover:bg-slate-100 rounded-lg">

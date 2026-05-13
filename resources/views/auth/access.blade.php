@@ -355,7 +355,7 @@
     <div class="container scene">
         <div class="flip-card-inner {{ $flip ? 'is-flipped' : '' }}" id="cardInner" style="max-width: 900px; margin: 0 auto;">
 
-            {{-- ══ LOGIN ══ --}}
+            
             <div class="flip-card-front">
                 <div class="auth-card">
                     <div class="row g-0">
@@ -438,7 +438,7 @@
                 </div>
             </div>
 
-            {{-- ══ REGISTER ══ --}}
+           
             <div class="flip-card-back">
                 <div class="auth-card">
                     <div class="row g-0">
@@ -622,7 +622,7 @@
 </footer>
 
 <script>
-/* ── Flip ────────────────────────────────────────────── */
+
 function flip(showRegister) {
     document.getElementById('cardInner').classList.toggle('is-flipped', showRegister);
 }
@@ -642,7 +642,7 @@ document.querySelectorAll('.eye-btn').forEach(btn => {
     });
 });
 
-/* ── Validación y visibilidad de reglas ──────────────── */
+
 const regPasswordInput = document.getElementById('reg_password');
 const rulesBox = document.getElementById('pwd-rules-box');
 
@@ -680,7 +680,7 @@ function setRule(id, ok) {
     document.getElementById(id).classList.toggle('ok', ok);
 }
 
-/* ── Verificación de coincidencia ────────────────────── */
+
 function checkMatch() {
     const p   = document.getElementById('reg_password').value;
     const c   = document.getElementById('reg_password_confirmation').value;

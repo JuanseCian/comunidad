@@ -18,7 +18,7 @@ class HomeController extends Controller
                 $q->whereNull('fecha_fin')->with('programa');
             }])->get();
 
-        $programas = ProgramasAsistencia::all(); // 👈 AGREGAR ESTO
+        $programas = ProgramasAsistencia::all(); 
 
         $alertas = [];
 

@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-//Rutas para aceptar usuarios
+
 Route::prefix('backend')->middleware(['auth'])->group(function () {
 
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
@@ -46,47 +46,46 @@ Route::prefix('backend')->middleware(['auth'])->group(function () {
 
 });
 
-//RUTAS DEL BACKEND
+
 require __DIR__.'/auth.php';
-//rutas para los roles
+
 require __DIR__.'/roles.php';
-//rutas para BackHome
+
 require __DIR__.'/back-home.php';
-//rutas para provincias
+
 require __DIR__.'/provincia.php';
-//rutas para localidades
+
 require __DIR__.'/localidad.php';
-//rutas para zonas y barrios
+
 require __DIR__.'/zona-barrio.php';
-//rutas para barrios
+
 require __DIR__.'/barrio.php';
-//rutas para enfermedades
+
 require __DIR__.'/enfermedad.php';
-//rutas para estados civiles
+
 require __DIR__.'/estado-civil.php';
-//rutas para niveles de estudio
+
 require __DIR__.'/niveles-estudio.php';
-//rutas para beneficios
+
 require __DIR__.'/beneficio.php';
-//rutas para programas de asistencia
+
 require __DIR__.'/programa-asistencia.php';
-//rutas para categorias ocupacionales
+
 require __DIR__.'/categoria-ocupacional.php';
-//rutas para coberturas
+
 require __DIR__.'/cobertura.php';
-//rutas para condiciones de inactividad
+
 require __DIR__.'/condiciones-inactividad.php';
-//rutas para discapacidades
+
 require __DIR__.'/discapacidad.php';
 require __DIR__.'/trabajo.php';
 
 
-//RUTAS DEL FRONTEND
-//rutas para el home
+
 require __DIR__.'/home.php';
-//rutas para personas
+
 require __DIR__.'/persona.php';
-//rutas para grupos familiares
+
 require __DIR__.'/grupoFamiliar.php';
-//rutas para atenciones
+
 require __DIR__.'/atenciones.php';

@@ -10,7 +10,7 @@
     <p class="text-sm text-slate-400 mt-1">¿Qué querés gestionar hoy?</p>
 </div>
 
-{{-- Módulos --}}
+
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
     <a href="{{ route('usuarios.index') }}" class="group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all p-6 flex items-start gap-4">

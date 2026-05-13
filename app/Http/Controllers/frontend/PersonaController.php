@@ -130,8 +130,7 @@ class PersonaController extends Controller
             'cud_vencimiento'   => 'nullable|date',
         ]);
 
-        // 1. Verificación por ID de rol (3) o nombre (administrador)
-        // Usamos el ID 3 por ser más directo según tu base de datos
+       
         $esAdministrador = auth()->user()->rol_id == 3; 
         $estado = $esAdministrador ? 'aprobado' : 'pendiente';
 

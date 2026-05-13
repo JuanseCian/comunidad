@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PersonaTrabajoController extends Controller
 {
-    /**
-     * Guardar un nuevo trabajo (cierra el actual si existe).
-     * POST /personas/{persona}/trabajo
-     */
+    
     public function store(Request $request, Persona $persona)
     {
         $request->validate([
@@ -29,13 +26,13 @@ class PersonaTrabajoController extends Controller
             'descripcion.required' => 'El tipo/rubro de trabajo es obligatorio.',
         ]);
 
-        // Cerrar trabajo actual si existe
+       
         $persona->trabajos()->actual()->update([
             'fecha_fin'  => now()->toDateString(),
             'updated_by' => Auth::id(),
         ]);
 
-        // Crear nuevo registro
+        
         $persona->trabajos()->create([
             'situacion_ocupacional_id' => $request->situacion_ocupacional_id,
             'categoria_ocupacional_id' => $request->categoria_ocupacional_id,
@@ -48,16 +45,13 @@ class PersonaTrabajoController extends Controller
             'created_by'               => Auth::id(),
         ]);
 
-        // Marcar a la persona como que trabaja
+        
         $persona->update(['trabaja' => true]);
 
         return back()->with('success', 'Trabajo registrado correctamente.');
     }
 
-    /**
-     * Finalizar el trabajo actual (sin eliminar).
-     * PATCH /personas/{persona}/trabajo/finalizar
-     */
+    
     public function finalizar(Request $request, Persona $persona)
     {
         $actual = $persona->trabajos()->actual()->latest()->first();

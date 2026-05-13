@@ -23,7 +23,6 @@ class PersonaBeneficioController extends Controller
 
         $persona = Persona::findOrFail($personaId);
 
-        // evitar duplicados activos
         $existe = PersonaBeneficio::where('persona_id', $persona->id)
             ->where('beneficio_id', $request->beneficio_id)
             ->where('activo', 1)

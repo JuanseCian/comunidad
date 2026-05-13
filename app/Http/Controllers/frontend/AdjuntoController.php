@@ -13,10 +13,7 @@ use Illuminate\Support\Str;
 
 class AdjuntoController extends Controller
 {
-    /**
-     * Descargar un adjunto.
-     * GET /adjuntos/{adjunto}/descargar
-     */
+    
     public function download(Adjunto $adjunto)
     {
         abort_unless(
@@ -31,10 +28,7 @@ class AdjuntoController extends Controller
         );
     }
 
-    /**
-     * Eliminar un adjunto.
-     * DELETE /adjuntos/{adjunto}
-     */
+   
     public function destroy(Adjunto $adjunto)
     {
         if (Storage::disk('local')->exists($adjunto->ruta)) {
