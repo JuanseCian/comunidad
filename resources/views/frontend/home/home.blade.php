@@ -84,7 +84,7 @@
     
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem; margin-top:0.5rem;">
         <div style="width:4px; height:22px; background:linear-gradient(180deg,#0879a8,#0d92c2); border-radius:4px; flex-shrink:0;"></div>
-        <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0879a8; margin:0;">Gestión de Personas</p>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0879a8; margin:0;">Gestión de Destinatarios</p>
         <div style="flex:1; height:1px; background:linear-gradient(90deg,#b3e0f5,transparent);"></div>
     </div>
 
@@ -113,7 +113,7 @@
                         </div>
                         <span style="background:#e6f5fb; color:#0879a8; border:1px solid #b3e0f5; border-radius:40px; padding:4px 12px; font-size:11.5px; font-weight:700;">Registro</span>
                     </div>
-                    <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.25rem; color:#0f172a; margin-bottom:6px;">Nueva Persona</h3>
+                    <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.25rem; color:#0f172a; margin-bottom:6px;">Nuevo Destinatario</h3>
                     <p style="color:#536070; font-size:13.5px; font-weight:500; margin:0 0 16px;">Registrá un nuevo titular en el sistema con sus datos personales, domicilio y grupo familiar.</p>
                     <div style="display:flex; align-items:center; gap:6px; color:#0d92c2; font-weight:700; font-size:13.5px;">
                         Iniciar registro <i class="bi bi-arrow-right-circle-fill" style="font-size:16px;"></i>
@@ -145,8 +145,8 @@
                         </div>
                         <span style="background:#e8f9f5; color:#0e8a70; border:1px solid #9fe1cb; border-radius:40px; padding:4px 12px; font-size:11.5px; font-weight:700;">Padrón</span>
                     </div>
-                    <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.25rem; color:#0f172a; margin-bottom:6px;">Ver Personas</h3>
-                    <p style="color:#536070; font-size:13.5px; font-weight:500; margin:0 0 16px;">Consultá, buscá y gestioná todas las personas registradas en el sistema.</p>
+                    <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.25rem; color:#0f172a; margin-bottom:6px;">Ver Destinatarios</h3>
+                    <p style="color:#536070; font-size:13.5px; font-weight:500; margin:0 0 16px;">Consultá, buscá y gestioná todos los destinatarios registrados en el sistema.</p>
                     <div style="display:flex; align-items:center; gap:6px; color:#17a385; font-weight:700; font-size:13.5px;">
                         Ver listado <i class="bi bi-arrow-right-circle-fill" style="font-size:16px;"></i>
                     </div>
@@ -229,7 +229,7 @@
                         margin:0; 
                         line-height:1.5;
                     ">
-                        Ver personas asociadas a este programa.
+                        Ver destinatarios asociados a este programa.
                     </p>
 
                 </div>
