@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::prefix('backend')->middleware(['auth'])->group(function () {
+Route::prefix('backend')->middleware(['auth', 'checkrole:1,2,3,5'])->group(function () {
 
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
 
@@ -89,3 +89,7 @@ require __DIR__.'/persona.php';
 require __DIR__.'/grupoFamiliar.php';
 
 require __DIR__.'/atenciones.php';
+
+
+//rutas para recepcion
+require __DIR__.'/recepcion.php';

@@ -46,6 +46,10 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerate();
 
+            if (auth()->user()->esRecepcion()) {
+                return redirect()->route('recepcion.dashboard');
+            }
+
             return redirect()->intended('/home');
         }
 

@@ -37,18 +37,6 @@
             </div>
             <div class="col-lg-5">
                 <div class="row g-3">
-                    <div class="col-4">
-                        <div style="background:white; border-radius:14px; padding:16px 12px; text-align:center; box-shadow:0 2px 12px rgba(13,146,194,0.1); border:1px solid #c2eee3;">
-                            <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:1.8rem; font-weight:800; color:#0d92c2; margin:0; line-height:1;">12</p>
-                            <p style="font-size:11px; color:#536070; font-weight:600; margin:0; margin-top:3px;">Casos hoy</p>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div style="background:white; border-radius:14px; padding:16px 12px; text-align:center; box-shadow:0 2px 12px rgba(23,163,133,0.1); border:1px solid #c2eee3;">
-                            <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:1.8rem; font-weight:800; color:#17a385; margin:0; line-height:1;">4</p>
-                            <p style="font-size:11px; color:#536070; font-weight:600; margin:0; margin-top:3px;">Programas</p>
-                        </div>
-                    </div>
                     @if(auth()->user()?->rol_id == 3) {{-- Cambiado de 1 a 3 --}}
                     <div class="col-4">
                         <a href="{{ route('personas.solicitudes') }}" style="text-decoration:none; display:block;">

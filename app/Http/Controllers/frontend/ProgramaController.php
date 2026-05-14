@@ -19,7 +19,7 @@ class ProgramaController extends Controller
                 'personaPrograma.sede'
             ]);
 
-        
+        // BUSCADOR
         if ($request->filled('q')) {
 
             $q = trim($request->q);
@@ -33,7 +33,7 @@ class ProgramaController extends Controller
             });
         }
 
-      
+        // FILTRO SEDE
         if ($request->filled('sede_id')) {
 
             $query->whereHas('personaPrograma', function ($sql) use ($request, $id) {
@@ -42,6 +42,26 @@ class ProgramaController extends Controller
                     ->where('sede_id', $request->sede_id);
 
             });
+        }
+
+        // FILTRO ESTADO
+        if ($request->filled('estado_programa')) {
+
+            if ($request->estado_programa == 'activo') {
+
+                $query->whereHas('personaPrograma', function ($sql) use ($id) {
+                    $sql->where('programa_id', $id)
+                        ->whereNull('fecha_fin');
+                });
+
+            } elseif ($request->estado_programa == 'finalizado') {
+
+                $query->whereHas('personaPrograma', function ($sql) use ($id) {
+                    $sql->where('programa_id', $id)
+                        ->whereNotNull('fecha_fin');
+                });
+
+            }
         }
 
         $personas = $query

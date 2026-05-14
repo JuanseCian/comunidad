@@ -51,7 +51,7 @@
         <form method="GET"
             style="
                 display:grid;
-                grid-template-columns: 1.5fr 1fr auto auto;
+                grid-template-columns: 1.5fr 1fr 1fr auto auto;
                 gap:12px;
                 align-items:end;
             ">
@@ -118,6 +118,43 @@
                 </select>
             </div>
 
+            {{-- ESTADO --}}
+            <div>
+                <label style="
+                    display:block;
+                    font-size:11px;
+                    font-weight:800;
+                    color:#536070;
+                    text-transform:uppercase;
+                    margin-bottom:6px;
+                ">
+                    Estado
+                </label>
+
+                <select name="estado_programa"
+                        style="
+                            width:100%;
+                            border:1px solid #d6d3d1;
+                            border-radius:12px;
+                            padding:11px 14px;
+                            font-size:13px;
+                        ">
+
+                    <option value="">Todos</option>
+
+                    <option value="activo"
+                        @selected(request('estado_programa') == 'activo')>
+                        Activos
+                    </option>
+
+                    <option value="finalizado"
+                        @selected(request('estado_programa') == 'finalizado')>
+                        Finalizados
+                    </option>
+
+                </select>
+            </div>
+
             {{-- BOTON --}}
             <button type="submit"
                     style="
@@ -169,16 +206,17 @@
         @else
 
             {{-- Encabezados de la Tabla --}}
-            <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 80px; gap:0; border-bottom:1px solid #e0ddd6; background:#f5f3ee; padding:0 20px;">
+            <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 120px 80px; gap:0; border-bottom:1px solid #e0ddd6; background:#f5f3ee; padding:0 20px;">
                 <div style="padding:10px 8px; font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">Persona</div>
                 <div style="padding:10px 8px; font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">DNI</div>
-                <div style="padding:10px 8px; font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">Estado / Datos</div>
+                <div style="padding:10px 8px; font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">Sexo / Sede</div>
+                <div style="padding:10px 8px; font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">Estado</div>
                 <div style="padding:10px 8px;"></div>
             </div>
 
             {{-- Filas de Personas --}}
             @foreach($personas as $persona)
-                <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 80px; gap:0; border-bottom:1px solid #f0ede8; padding:0 20px; transition:background .15s;"
+                <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 120px 80px; gap:0; border-bottom:1px solid #f0ede8; padding:0 20px; transition:background .15s;"
                      onmouseover="this.style.background='#fafaf8'" onmouseout="this.style.background='white'">
 
                     {{-- Columna Nombre y Avatar --}}
@@ -247,6 +285,47 @@
 
                     </div>
 
+                    {{-- Estado Programa --}}
+                    <div style="padding:14px 8px; display:flex; align-items:center;">
+
+                        @php
+                            $registroPrograma = $persona->personaPrograma
+                                ->where('programa_id', $programa->id)
+                                ->sortByDesc('created_at')
+                                ->first();
+                        @endphp
+
+                        @if($registroPrograma && is_null($registroPrograma->fecha_fin))
+
+                            <span style="
+                                background:#ecfdf5;
+                                color:#047857;
+                                border:1px solid #a7f3d0;
+                                border-radius:20px;
+                                padding:4px 10px;
+                                font-size:11px;
+                                font-weight:700;
+                            ">
+                                Activo
+                            </span>
+
+                        @else
+
+                            <span style="
+                                background:#fef2f2;
+                                color:#b91c1c;
+                                border:1px solid #fecaca;
+                                border-radius:20px;
+                                padding:4px 10px;
+                                font-size:11px;
+                                font-weight:700;
+                            ">
+                                Finalizado
+                            </span>
+
+                        @endif
+
+                    </div>
                     {{-- Columna Acciones --}}
                     <div style="padding:14px 8px; display:flex; align-items:center; justify-content:flex-end;">
                         <a href="{{ route('personas.show', $persona) }}"

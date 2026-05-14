@@ -97,4 +97,9 @@ class User extends Authenticatable
     {
         return in_array($this->rol_id, [3,5]);
     }
+
+    public function esRecepcion()
+    {
+        return $this->rol_id == 6;
+    }
 }
