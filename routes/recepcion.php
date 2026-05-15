@@ -13,6 +13,10 @@ Route::prefix('recepcion')
             return view('frontend.recepcion.dashboard');
         })->name('dashboard');
 
-        Route::resource('ingresos', IngresoController::class);
+        Route::get(
+            '/buscar-personas',
+            [IngresoController::class, 'buscarPersonas']
+        )->name('personas.buscar');
 
-});
+        Route::resource('ingresos', IngresoController::class);
+    });

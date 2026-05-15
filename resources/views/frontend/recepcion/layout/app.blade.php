@@ -135,5 +135,6 @@
     Comunidad · Mesa de Entrada
 </footer>
 
+@stack('scripts')
 </body>
 </html>

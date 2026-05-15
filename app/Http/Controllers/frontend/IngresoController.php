@@ -5,13 +5,19 @@ namespace App\Http\Controllers\frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Ingreso;
 use App\Models\Persona;
+use App\Models\Derivacion;
 use Illuminate\Http\Request;
 
 class IngresoController extends Controller
 {
     public function index()
     {
-        $ingresos = Ingreso::with('persona')
+        $ingresos = Ingreso::with([
+                'persona',
+                'derivacion',
+                'menor',
+                'usuario'
+            ])
             ->latest()
             ->get();
 
@@ -23,88 +29,87 @@ class IngresoController extends Controller
 
     public function create()
     {
-        $personas = Persona::orderBy('apellido')
+        $derivaciones = Derivacion::where('activo', 1)
             ->orderBy('nombre')
             ->get();
 
         return view(
             'frontend.recepcion.ingresos.create',
-            compact('personas')
+            compact('derivaciones')
         );
     }
 
     public function store(Request $request)
     {
         $request->validate([
-
-            'persona_texto' => 'required',
-
-            'fecha_ingreso' => 'required',
-
+            'fecha_ingreso' => 'required|date',
             'hora_ingreso'  => 'required',
-
+            'dni'           => 'nullable',
+            'apellido'      => 'required',
+            'nombre'        => 'required',
+            'menor_dni'       => 'nullable',
+            'menor_apellido'  => 'nullable',
+            'menor_nombre'    => 'nullable',
+            'derivacion_id' => 'nullable|exists:derivaciones,id',
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | PERSONA EXISTENTE
-        |--------------------------------------------------------------------------
-        */
-
-        $personaId = null;
-
-        $nombre = null;
-        $apellido = null;
-
-        if ($request->persona_id) {
-
-            $personaId = $request->persona_id;
-
-        } else {
-
-            /*
-            |--------------------------------------------------------------------------
-            | Persona manual
-            |--------------------------------------------------------------------------
-            */
-
-            $texto = trim($request->persona_texto);
-
-            $partes = preg_split('/\s+/', $texto);
-
-            $apellido = array_shift($partes);
-
-            $nombre = implode(' ', $partes);
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | INGRESO
-        |--------------------------------------------------------------------------
-        */
-
         Ingreso::create([
-
-            'persona_id'    => $personaId,
-
-            'nombre'        => $nombre,
-
-            'apellido'      => $apellido,
-
+            'persona_id'    => $request->persona_id,
+            'dni'           => $request->dni,
+            'apellido'      => $request->apellido,
+            'nombre'        => $request->nombre,
             'fecha_ingreso' => $request->fecha_ingreso,
-
             'hora_ingreso'  => $request->hora_ingreso,
-
-            'derivacion'    => $request->derivacion,
-
+            'derivacion_id' => $request->derivacion_id,
             'observaciones' => $request->observaciones,
-
+            'menor_persona_id' => $request->menor_persona_id,
+            'menor_dni'        => $request->menor_dni,
+            'menor_apellido'   => $request->menor_apellido,
+            'menor_nombre'     => $request->menor_nombre,
             'user_id'       => auth()->id(),
-
         ]);
 
         return redirect()
             ->route('recepcion.ingresos.index')
             ->with('success', 'Ingreso registrado correctamente');
+    }
+
+    public function buscarPersonas(Request $request)
+    {
+        $term = trim($request->texto);
+
+        if (!$term || strlen($term) < 2) {
+            return response()->json([]);
+        }
+
+        $personas = Persona::query()
+
+            ->where(function ($query) use ($term) {
+
+                $query->whereRaw(
+                    'CAST(dni AS CHAR) LIKE ?',
+                    ["%{$term}%"]
+                )
+                ->orWhere(
+                    'apellido',
+                    'LIKE',
+                    "%{$term}%"
+                )
+                ->orWhere(
+                    'nombre',
+                    'LIKE',
+                    "%{$term}%"
+                );
+
+            })
+            ->select([
+                'id',
+                'nombre',
+                'apellido',
+                'dni'
+            ])
+            ->limit(8)
+            ->get();
+        return response()->json($personas);
     }
 }

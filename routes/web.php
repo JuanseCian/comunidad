@@ -93,3 +93,4 @@ require __DIR__.'/atenciones.php';
 
 //rutas para recepcion
 require __DIR__.'/recepcion.php';
+require __DIR__.'/mercaderia.php';

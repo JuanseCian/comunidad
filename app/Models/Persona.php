@@ -180,11 +180,11 @@ class Persona extends Model
     }
 
     public function atenciones()
-{
-    return $this->hasMany(Atencion::class)
-                ->with('adjuntos')
-                ->latest('fecha_atencion');
-}
+    {
+        return $this->hasMany(Atencion::class)
+                    ->with('adjuntos')
+                    ->latest('fecha_atencion');
+    }
 
     public function trabajos()
     {
@@ -202,8 +202,6 @@ class Persona extends Model
     {
         return \Carbon\Carbon::parse($this->fecha_nacimiento)->age;
     }
-
-   
 
     public function alertaPrograma()
     {
