@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 14, 2026 at 02:43 PM
+-- Generation Time: May 15, 2026 at 03:00 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -372,6 +372,30 @@ INSERT INTO `cud` (`id`, `persona_id`, `tiene_cud`, `numero_cud`, `fecha_emision
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `derivaciones`
+--
+
+CREATE TABLE `derivaciones` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `derivaciones`
+--
+
+INSERT INTO `derivaciones` (`id`, `nombre`, `activo`, `created_at`, `updated_at`) VALUES
+(1, 'Género', 1, '2026-05-15 13:31:31', '2026-05-15 13:31:31'),
+(2, 'PRODENYA', 1, '2026-05-15 13:31:31', '2026-05-15 13:31:31'),
+(3, 'Comunidad', 1, '2026-05-15 13:31:31', '2026-05-15 13:31:31'),
+(4, 'Sepelio', 1, '2026-05-15 13:31:31', '2026-05-15 13:31:31');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `discapacidad`
 --
 
@@ -634,15 +658,20 @@ INSERT INTO `grupo_familiar` (`id`, `persona_id`, `familia_id`, `nombre`, `docum
 
 CREATE TABLE `ingresos` (
   `id` bigint UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
   `persona_id` bigint UNSIGNED DEFAULT NULL,
+  `menor_persona_id` bigint UNSIGNED DEFAULT NULL,
+  `menor_dni` varchar(50) DEFAULT NULL,
+  `menor_apellido` varchar(255) DEFAULT NULL,
+  `menor_nombre` varchar(255) DEFAULT NULL,
+  `dni` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `apellido` varchar(255) DEFAULT NULL,
-  `user_id` bigint UNSIGNED NOT NULL,
   `fecha_ingreso` date NOT NULL,
   `hora_ingreso` time NOT NULL,
-  `derivacion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `derivacion_id` bigint UNSIGNED DEFAULT NULL,
   `observaciones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -650,11 +679,13 @@ CREATE TABLE `ingresos` (
 -- Dumping data for table `ingresos`
 --
 
-INSERT INTO `ingresos` (`id`, `persona_id`, `nombre`, `created_at`, `updated_at`, `apellido`, `user_id`, `fecha_ingreso`, `hora_ingreso`, `derivacion`, `observaciones`) VALUES
-(1, NULL, '', '2026-05-14 17:31:56', '2026-05-14 17:31:56', 'cian', 13, '2026-05-14', '14:31:00', NULL, NULL),
-(2, NULL, 'Juan Segundo', '2026-05-14 17:32:39', '2026-05-14 17:32:39', 'Cian', 13, '2026-05-14', '14:32:00', 'Prodenya', 'aa'),
-(3, NULL, 'Daniela', '2026-05-14 17:37:12', '2026-05-14 17:37:12', 'Abal', 13, '2026-05-14', '14:36:00', 'Genero', NULL),
-(4, NULL, 'Marcelo', '2026-05-14 17:41:11', '2026-05-14 17:41:11', 'Garcia', 13, '2026-05-14', '14:41:00', 'Prodenya', NULL);
+INSERT INTO `ingresos` (`id`, `user_id`, `persona_id`, `menor_persona_id`, `menor_dni`, `menor_apellido`, `menor_nombre`, `dni`, `nombre`, `created_at`, `updated_at`, `apellido`, `fecha_ingreso`, `hora_ingreso`, `derivacion_id`, `observaciones`) VALUES
+(6, 13, NULL, NULL, NULL, NULL, NULL, '450322394', 'Juan Segundo', '2026-05-15 15:32:07', '2026-05-15 15:32:07', 'cian', '2026-05-15', '12:31:00', NULL, 'a'),
+(7, 13, NULL, NULL, NULL, NULL, NULL, NULL, 'Juan Segundo', '2026-05-15 16:17:17', '2026-05-15 16:17:17', 'Cian', '2026-05-15', '13:17:00', NULL, 'a'),
+(8, 13, 14, NULL, NULL, NULL, NULL, '41899221', 'Daniela', '2026-05-15 16:18:07', '2026-05-15 16:18:07', 'Abal', '2026-05-15', '13:17:00', NULL, 'f'),
+(9, 13, NULL, NULL, NULL, NULL, NULL, NULL, 'ndnwd', '2026-05-15 16:18:23', '2026-05-15 16:18:23', 'nuuun', '2026-05-15', '13:18:00', NULL, 'ws'),
+(10, 13, 65, 60, '8934983', 'Mosquera', 'Alejo', '5757575', 'Marcelo', '2026-05-15 17:32:06', '2026-05-15 17:32:06', 'Garcia', '2026-05-15', '14:31:00', 2, 'aa'),
+(11, 13, 14, 13, '45032239', 'Cian', 'Juan Segundo', '41899221', 'Daniela', '2026-05-15 17:36:06', '2026-05-15 17:36:06', 'Abal', '2026-05-15', '14:34:00', 2, ',');
 
 -- --------------------------------------------------------
 
@@ -1555,6 +1586,12 @@ ALTER TABLE `cud`
   ADD KEY `fk_cud_persona` (`persona_id`);
 
 --
+-- Indexes for table `derivaciones`
+--
+ALTER TABLE `derivaciones`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `discapacidad`
 --
 ALTER TABLE `discapacidad`
@@ -1624,7 +1661,9 @@ ALTER TABLE `grupo_familiar`
 ALTER TABLE `ingresos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_ingresos_persona` (`persona_id`),
-  ADD KEY `fk_ingresos_user` (`user_id`);
+  ADD KEY `fk_ingresos_user` (`user_id`),
+  ADD KEY `ingresos_derivacion_id_foreign` (`derivacion_id`),
+  ADD KEY `ingresos_menor_persona_id_foreign` (`menor_persona_id`);
 
 --
 -- Indexes for table `localidad`
@@ -1860,6 +1899,12 @@ ALTER TABLE `cud`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `derivaciones`
+--
+ALTER TABLE `derivaciones`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `discapacidad`
 --
 ALTER TABLE `discapacidad`
@@ -1911,7 +1956,7 @@ ALTER TABLE `grupo_familiar`
 -- AUTO_INCREMENT for table `ingresos`
 --
 ALTER TABLE `ingresos`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `localidad`
@@ -2104,7 +2149,9 @@ ALTER TABLE `grupo_familiar`
 --
 ALTER TABLE `ingresos`
   ADD CONSTRAINT `fk_ingresos_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_ingresos_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_ingresos_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ingresos_derivacion_id_foreign` FOREIGN KEY (`derivacion_id`) REFERENCES `derivaciones` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `ingresos_menor_persona_id_foreign` FOREIGN KEY (`menor_persona_id`) REFERENCES `personas` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `localidad`
