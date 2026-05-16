@@ -19,7 +19,7 @@
             <div class="col-lg-7">
                 <p style="display:inline-flex; align-items:center; gap:6px; background:white; border:1px solid #b3e0f5; border-radius:40px; padding:5px 14px; font-size:12.5px; font-weight:700; color:#0879a8; margin-bottom:1rem; box-shadow: 0 1px 6px rgba(13,146,194,0.1);">
                     <i class="bi bi-circle-fill" style="font-size:7px; color:#17a385;"></i>
-                    Sistema activo · {{ now()->isoFormat('dddd D [de] MMMM, YYYY') }}
+                    Sistema activo · {{ now()->locale('es')->isoFormat('dddd D [de] MMMM, YYYY') }}
                 </p>
                 <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(1.6rem,4vw,2.4rem); color:#0f172a; margin-bottom:0.5rem; line-height:1.2;">
              Bienvenido, 

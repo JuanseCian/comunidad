@@ -244,7 +244,7 @@
                     </div>
 
                     {{-- Columna Extra (puedes ajustarla según tus campos) --}}
-                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                    <div style="padding:14px 8px; display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
 
                         @if($persona->sexo)
                             <span style="
