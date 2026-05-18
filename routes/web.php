@@ -88,6 +88,8 @@ require __DIR__.'/persona.php';
 
 require __DIR__.'/grupoFamiliar.php';
 
+require __DIR__.'/familias.php';
+
 require __DIR__.'/atenciones.php';
 
 

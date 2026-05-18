@@ -48,6 +48,21 @@ class MercaderiaController extends Controller
             );
         }
 
+        $tieneBeneficioMercaderia = false;
+
+        if ($persona) {
+
+            $tieneBeneficioMercaderia = $persona
+                ->personaBeneficio()
+                ->whereHas('beneficio', function ($q) {
+
+                    $q->where('nombre', 'Mercadería');
+
+                })
+                ->where('activo', 1)
+                ->exists();
+        }
+
         $familiaId = null;
         if ($persona && $persona->familia_id) {
             $familiaId = $persona->familia_id;

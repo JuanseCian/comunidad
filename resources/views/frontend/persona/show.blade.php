@@ -1004,10 +1004,28 @@
                         {{-- Código visible a la derecha --}}
                         @if($persona->familia)
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <span id="codigo-familia"
-                                  style="font-family:monospace; font-size:15px; font-weight:800; color:var(--blue); letter-spacing:2px;">
+                            <a href="{{ route('familias.show', $persona->familia->id) }}"
+                            id="codigo-familia"
+                            style="
+                                    font-family:monospace;
+                                    font-size:15px;
+                                    font-weight:800;
+                                    color:var(--blue);
+                                    letter-spacing:2px;
+                                    text-decoration:none;
+                                    display:inline-flex;
+                                    align-items:center;
+                                    gap:6px;
+                                    transition:all .15s;
+                            "
+                            onmouseover="this.style.opacity='0.8'"
+                            onmouseout="this.style.opacity='1'">
+
                                 {{ $persona->familia->codigo_formateado }}
-                            </span>
+
+                                <i class="bi bi-box-arrow-up-right"
+                                style="font-size:12px;"></i>
+                            </a>
                             <button type="button" onclick="copiarCodigo()" title="Copiar código"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid var(--border); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--slate); transition:all .15s;"
                                     onmouseover="this.style.borderColor='var(--blue)'; this.style.color='var(--blue)'"
@@ -1015,6 +1033,32 @@
                                 <i class="bi bi-clipboard" id="icon-copiar" style="font-size:12px;"></i>
                             </button>
                         </div>
+                        @endif
+                        
+                        @if($persona->familia)
+
+                        <div style="
+                            border-top:1px solid var(--border-sm);
+                            padding-top:16px;
+                            margin-top:16px;
+                        ">
+
+                            <a href="{{ route('familias.show', $persona->familia->id) }}"
+                            class="sp-btn-primary"
+                            style="
+                                    text-decoration:none;
+                                    display:inline-flex;
+                                    align-items:center;
+                                    gap:8px;
+                            ">
+
+                                <i class="bi bi-people-fill"></i>
+                                Ver grupo familiar completo
+
+                            </a>
+
+                        </div>
+
                         @endif
                     </div>
 

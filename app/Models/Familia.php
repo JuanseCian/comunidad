@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Models\Mercaderia;
 
 class Familia extends Model
 {
@@ -43,5 +44,10 @@ class Familia extends Model
         return substr($this->codigo, 0, 3)
              . '-' . substr($this->codigo, 3, 3)
              . '-' . substr($this->codigo, 6, 3);
+    }
+
+    public function mercaderias()
+    {
+        return $this->hasMany(Mercaderia::class, 'familia_id');
     }
 }
