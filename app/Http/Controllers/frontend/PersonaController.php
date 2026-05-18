@@ -572,9 +572,32 @@ class PersonaController extends Controller
     public function rechazarPersona($id)
     {
         $persona = Persona::findOrFail($id);
-        
-        $persona->delete(); 
+
+        $familia = $persona->familia_id ? Familia::find($persona->familia_id) : null;
+
+        $persona->delete();
+
+        // Si la familia quedó sin personas, eliminarla también
+        if ($familia && $familia->personas()->count() === 0) {
+            $familia->delete();
+        }
 
         return redirect()->back()->with('warning', "La solicitud de alta ha sido rechazada y eliminada.");
+    }
+
+    public function destroy($id)
+    {
+        $persona = Persona::findOrFail($id);
+
+        $familia = $persona->familia_id ? Familia::find($persona->familia_id) : null;
+
+        $persona->delete();
+
+        // Si la familia quedó sin personas, eliminarla también
+        if ($familia && $familia->personas()->count() === 0) {
+            $familia->delete();
+        }
+
+        return redirect()->route('personas.index')->with('success', 'Persona eliminada correctamente.');
     }
 }
