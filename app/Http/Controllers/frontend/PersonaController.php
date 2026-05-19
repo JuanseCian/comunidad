@@ -277,6 +277,7 @@ class PersonaController extends Controller
             'nivelEstudio',
             'sedeOrigen',
             'familia.personas',
+            'familia.mercaderiasActivas.usuario', 
             'cud',
             'personaPrograma.programa',
             'personaBeneficio.beneficio',

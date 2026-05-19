@@ -10,13 +10,26 @@ use App\Models\Persona;
 
 class MercaderiaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->search;
+
         $mercaderias = Mercaderia::with([
                 'persona',
                 'familia',
                 'usuario'
             ])
+            ->when($search, function ($query) use ($search) {
+
+                $query->where(function ($q) use ($search) {
+
+                    $q->where('nombre', 'like', "%{$search}%")
+                    ->orWhere('apellido', 'like', "%{$search}%")
+                    ->orWhere('dni', 'like', "%{$search}%");
+
+                });
+
+            })
             ->latest()
             ->get();
 

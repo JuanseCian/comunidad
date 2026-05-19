@@ -50,4 +50,11 @@ class Familia extends Model
     {
         return $this->hasMany(Mercaderia::class, 'familia_id');
     }
+
+    public function mercaderiasActivas()
+    {
+        return $this->hasMany(\App\Models\Mercaderia::class)
+            ->whereDate('fecha_entrega', '>=', now()->subDays(30))
+            ->latest('fecha_entrega');
+    }
 }

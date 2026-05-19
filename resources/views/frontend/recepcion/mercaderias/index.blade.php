@@ -43,6 +43,50 @@
 
     @endif
 
+    {{-- BUSCADOR --}}
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="GET"
+                  action="{{ route('recepcion.mercaderias.index') }}">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-10">
+
+                        <label class="form-label fw-semibold">
+                            Buscar persona
+                        </label>
+
+                        <input type="text"
+                               name="search"
+                               class="form-control"
+                               placeholder="Buscar por nombre, apellido o DNI..."
+                               value="{{ request('search') }}">
+
+                    </div>
+
+                    <div class="col-md-2 d-grid">
+
+                        <button class="btn btn-primary">
+
+                            <i class="bi bi-search"></i>
+
+                            Buscar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
     {{-- TABLA --}}
     <div class="card border-0 shadow-sm">
 
@@ -72,6 +116,14 @@
                                 Fecha
                             </th>
 
+                            <th width="180">
+                                Próximo retiro
+                            </th>
+
+                            <th width="160">
+                                Estado
+                            </th>
+
                             <th>
                                 Registrado por
                             </th>
@@ -83,6 +135,17 @@
                     <tbody>
 
                         @forelse($mercaderias as $m)
+
+                            @php
+
+                                $fechaEntrega = \Carbon\Carbon::parse($m->fecha_entrega);
+
+                                // PLAZO DE 30 DÍAS
+                                $proximoRetiro = $fechaEntrega->copy()->addDays(30);
+
+                                $puedeRetirar = now()->greaterThanOrEqualTo($proximoRetiro);
+
+                            @endphp
 
                             <tr>
 
@@ -144,7 +207,37 @@
                                 {{-- FECHA --}}
                                 <td>
 
-                                    {{ \Carbon\Carbon::parse($m->fecha_entrega)->format('d/m/Y') }}
+                                    {{ $fechaEntrega->format('d/m/Y') }}
+
+                                </td>
+
+                                {{-- PRÓXIMO RETIRO --}}
+                                <td>
+
+                                    {{ $proximoRetiro->format('d/m/Y') }}
+
+                                </td>
+
+                                {{-- ESTADO --}}
+                                <td>
+
+                                    @if($puedeRetirar)
+
+                                        <span class="badge bg-success">
+
+                                            Puede retirar
+
+                                        </span>
+
+                                    @else
+
+                                        <span class="badge bg-danger">
+
+                                            En espera
+
+                                        </span>
+
+                                    @endif
 
                                 </td>
 
@@ -165,7 +258,7 @@
 
                             <tr>
 
-                                <td colspan="5"
+                                <td colspan="7"
                                     class="text-center py-5">
 
                                     <div class="d-flex flex-column align-items-center">
@@ -178,30 +271,16 @@
 
                                         </div>
 
-                                        <small class="text-muted">
-
-                                            Las entregas de mercadería aparecerán aquí.
-
-                                        </small>
-
+                                        <small class="text-muted">Las entregas de mercadería aparecerán aquí.</small>
                                     </div>
-
                                 </td>
-
                             </tr>
-
                         @endforelse
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 @endsection
