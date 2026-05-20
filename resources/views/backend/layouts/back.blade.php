@@ -69,7 +69,7 @@
                             <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                             <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Dashboard</span>
                         </a>
-                        <a href="#" class="flex items-center p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
+                        <a href="{{ route('usuarios.index') }}" class="flex items-center p-3 hover:bg-zinc-800/50 hover:text-zinc-100 rounded-xl transition-all group">
                             <i data-lucide="users" class="w-5 h-5"></i>
                             <span x-show="sidebarOpen" class="ml-3 font-medium text-sm">Usuarios</span>
                         </a>
@@ -155,11 +155,36 @@
             </nav>
 
            
-            <div class="p-4 border-t border-zinc-800 bg-sidebar/50">
-                <a href="{{ route('home') }}" class="flex items-center p-3 text-zinc-500 hover:text-white transition-colors group">
-                    <i data-lucide="log-out" class="w-5 h-5"></i>
-                    <span x-show="sidebarOpen" class="ml-3 text-sm font-medium">Cerrar Sesión</span>
+            <div class="p-4 border-t border-zinc-800 bg-sidebar/50 space-y-2">
+
+                {{-- VOLVER AL HOME --}}
+                <a href="{{ route('home') }}"
+                class="flex items-center p-3 text-zinc-400 hover:bg-zinc-800/50 hover:text-white rounded-xl transition-all group">
+
+                    <i data-lucide="house" class="w-5 h-5"></i>
+
+                    <span x-show="sidebarOpen"
+                        class="ml-3 text-sm font-medium">
+                        Volver al Home
+                    </span>
                 </a>
+
+                {{-- CERRAR SESIÓN --}}
+                <form method="POST" action="{{ route('logout') }}">
+                @csrf
+
+                <button type="submit"
+                    class="w-full flex items-center p-3 text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-xl transition-all group">
+
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+
+                    <span x-show="sidebarOpen"
+                        class="ml-3 text-sm font-medium">
+                        Cerrar Sesión
+                    </span>
+                </button>
+            </form>
+
             </div>
         </aside>
 

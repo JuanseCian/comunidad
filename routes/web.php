@@ -36,15 +36,26 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::prefix('backend')->middleware(['auth', 'checkrole:1,2,3,5'])->group(function () {
+Route::prefix('admin')
+    ->middleware(['auth'])
+    ->group(function () {
 
-    Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+        Route::get('/usuarios', [UserController::class, 'index'])
+            ->name('usuarios.index');
 
-    Route::put('/usuarios/{user}/aprobar', [UserController::class, 'aprobar'])->name('usuarios.aprobar');
+        Route::put('/usuarios/{user}/aprobar', [UserController::class, 'aprobar'])
+            ->name('usuarios.aprobar');
 
-    Route::put('/usuarios/{user}/rol', [UserController::class, 'cambiarRol'])->name('usuarios.rol');
+        Route::put('/usuarios/{user}/rol', [UserController::class, 'cambiarRol'])
+            ->name('usuarios.rol');
 
-});
+        Route::put('/usuarios/{user}/bloquear', [UserController::class, 'bloquear'])
+            ->name('usuarios.bloquear');
+
+        Route::put('/usuarios/{user}/reactivar', [UserController::class, 'reactivar'])
+            ->name('usuarios.reactivar');
+
+    });
 
 
 require __DIR__.'/auth.php';
