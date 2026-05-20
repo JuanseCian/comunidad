@@ -328,7 +328,7 @@
 
 
             <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap:0; border-bottom:1px solid #e0ddd6; background:#f5f3ee; padding:0 20px;">
-                @foreach(['Persona', 'DNI', 'Localidad / Barrio', 'Grupo familiar', 'Sede', ''] as $col)
+                    @foreach(['Persona', 'DNI', 'Localidad / Barrio', 'Grupo familiar', 'Código GF', ''] as $col)
                     <div style="padding:10px 8px; font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">{{ $col }}</div>
                 @endforeach
             </div>
@@ -400,12 +400,23 @@
                     </div>
 
                     <div style="padding:14px 8px; display:flex; align-items:center;">
-                        @if($p->sedeOrigen)
-                            <span style="background:#e6f5fb; color:#0879a8; border:1px solid #b3e0f5; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px; display:block;">
-                                {{ $p->sedeOrigen->nombre }}
+                        @if($p->familia)
+                            <span style="
+                                background:#f5f3ff;
+                                color:#6d28d9;
+                                border:1px solid #d8b4fe;
+                                border-radius:20px;
+                                padding:3px 10px;
+                                font-size:12px;
+                                font-weight:700;
+                                white-space:nowrap;
+                            ">
+                                {{ $p->familia->codigo }}
                             </span>
                         @else
-                            <span style="font-size:12.5px; color:#94a3b4;">—</span>
+                            <span style="font-size:12.5px; color:#94a3b4;">
+                                Sin código
+                            </span>
                         @endif
                     </div>
 

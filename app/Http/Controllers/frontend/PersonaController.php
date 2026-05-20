@@ -38,6 +38,7 @@ class PersonaController extends Controller
             'domicilio.barrio',
             'sedeOrigen',
             'grupoFamiliar',
+            'familia',
         ])->where('estado', 'aprobado');
 
         if ($request->filled('q')) {
