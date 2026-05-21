@@ -9,216 +9,292 @@
     </title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            /* Paleta de colores unificada */
+            --teal-50:  #e8f9f5;
+            --teal-100: #c2eee3;
+            --teal-300: #5dc9a8;
+            --teal-400: #2db896;
+            --teal-500: #17a385;
+            --teal-600: #0e8a70;
+            --teal-700: #086f59;
 
-        :root{
-            --primary:#2563eb;
-            --secondary:#0f172a;
-            --bg:#f1f5f9;
-            --text:#1e293b;
+            --sky-50:   #e6f5fb;
+            --sky-100:  #b3e0f5;
+            --sky-300:  #4dbde8;
+            --sky-400:  #1aaad8;
+            --sky-500:  #0d92c2;
+            --sky-600:  #0879a8;
+            --sky-700:  #045f87;
+
+            --mint-50:  #f0fdf9;
+            --mint-100: #d0f4ec;
+
+            --neutral-50:  #f8fafb;
+            --neutral-100: #eef2f5;
+            --neutral-200: #dde3ea;
+            --neutral-400: #94a3b4;
+            --neutral-600: #536070;
+            --neutral-800: #1e293b;
+            --neutral-900: #0f172a;
+
+            /* Degradados temáticos */
+            --grad-main: linear-gradient(135deg, #0d92c2 0%, #17a385 100%);
+            --grad-soft: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%);
+            --grad-nav:  linear-gradient(180deg, #0879a8 0%, #0e8a70 100%);
+
+            /* Sombras y Radios */
+            --shadow-sm: 0 1px 3px rgba(13,146,194,.08), 0 1px 2px rgba(0,0,0,.04);
+            --shadow-md: 0 4px 16px rgba(13,146,194,.12), 0 2px 6px rgba(0,0,0,.05);
+            --shadow-lg: 0 10px 32px rgba(13,146,194,.16), 0 4px 10px rgba(0,0,0,.06);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
         }
 
-        *{
-            box-sizing:border-box;
+        * {
+            box-sizing: border-box;
         }
 
-        body{
-            margin:0;
-            background:
-                radial-gradient(circle at top left, rgba(59,130,246,.08), transparent 28%),
-                radial-gradient(circle at bottom right, rgba(16,185,129,.08), transparent 25%),
-                var(--bg);
-            min-height:100vh;
-            font-family:'Inter',sans-serif;
-            color:var(--text);
+        body {
+            margin: 0;
+            background: 
+                radial-gradient(circle at top left, rgba(13,146,194,.06), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(23,163,133,.06), transparent 25%),
+                var(--neutral-50);
+            min-height: 100vh;
+            font-family: 'Nunito', sans-serif;
+            color: var(--neutral-800);
         }
 
         /* SIDEBAR */
-
-        .sidebar{
-            width:260px;
-            height:100vh;
-            position:fixed;
-            left:0;
-            top:0;
-            background:linear-gradient(180deg,#0f172a 0%, #1e293b 55%, #334155 100%);
-            padding:24px 18px;
-            display:flex;
-            flex-direction:column;
-            justify-content:space-between;
-            box-shadow:8px 0 25px rgba(15,23,42,.08);
-            z-index:1000;
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: var(--grad-nav);
+            padding: 24px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 6px 0 25px rgba(8,121,168,.15);
+            z-index: 1000;
         }
 
-        .brand{
-            text-decoration:none;
-            color:white;
-            display:flex;
-            align-items:center;
-            gap:14px;
-            margin-bottom:35px;
+        .brand {
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 35px;
         }
 
-        .brand-logo{
-            width:48px;
-            height:48px;
-            border-radius:14px;
-            background:linear-gradient(135deg,#3b82f6,#06b6d4);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:1.2rem;
-            box-shadow:0 8px 20px rgba(59,130,246,.25);
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            color: white;
         }
 
-        .brand h5{
-            margin:0;
-            font-weight:700;
-            font-size:1rem;
+        .brand-text h5 {
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            letter-spacing: .3px;
         }
 
-        .brand span{
-            color:rgba(255,255,255,.65);
-            font-size:.82rem;
+        .brand-text span {
+            color: rgba(255, 255, 255, .65);
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            display: block;
+            margin-top: 2px;
         }
 
-        .sidebar-links{
-            display:flex;
-            flex-direction:column;
-            gap:10px;
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .sidebar-links a{
-            text-decoration:none;
-            color:rgba(255,255,255,.78);
-            padding:13px 15px;
-            border-radius:14px;
-            display:flex;
-            align-items:center;
-            gap:12px;
-            font-weight:500;
-            transition:.2s ease;
+        .sidebar-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, .8);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 13.5px;
+            transition: all .2s ease;
         }
 
-        .sidebar-links a i{
-            font-size:1rem;
+        .sidebar-links a i {
+            font-size: 1.05rem;
+            opacity: 0.9;
         }
 
         .sidebar-links a:hover,
-        .sidebar-links a.active{
-            background:rgba(255,255,255,.08);
-            color:white;
-            transform:translateX(2px);
+        .sidebar-links a.active {
+            background: rgba(255, 255, 255, .14);
+            color: white;
+            transform: translateX(4px);
         }
 
-        .logout-btn{
-            width:100%;
-            border:none;
-            background:rgba(255,255,255,.08);
-            color:white;
-            padding:12px;
-            border-radius:14px;
-            transition:.2s;
-            font-weight:600;
+        .sidebar-links a.active {
+            background: white;
+            color: var(--sky-700);
+            box-shadow: var(--shadow-sm);
         }
 
-        .logout-btn:hover{
-            background:rgba(255,255,255,.14);
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-btn {
+            width: 100%;
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #ef4444;
+            padding: 11px;
+            border-radius: var(--radius-md);
+            transition: all .2s;
+            font-weight: 700;
+            font-size: 13.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: #fee2e2;
         }
 
         /* CONTENT */
-
-        .main{
-            margin-left:260px;
-            min-height:100vh;
-            padding:26px;
+        .main {
+            margin-left: 260px;
+            min-height: 100vh;
+            padding: 26px;
         }
 
-        .topbar{
-            background:rgba(255,255,255,.75);
-            backdrop-filter:blur(14px);
-            border:1px solid rgba(255,255,255,.5);
-            border-radius:20px;
-            padding:18px 22px;
-            margin-bottom:26px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            box-shadow:0 8px 30px rgba(15,23,42,.04);
+        .topbar {
+            background: rgba(255, 255, 255, .8);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, .6);
+            border-radius: var(--radius-xl);
+            padding: 18px 24px;
+            margin-bottom: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
         }
 
-        .topbar-title h4{
-            margin:0;
-            font-weight:700;
-            color:#0f172a;
+        .topbar-title h4 {
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            color: var(--neutral-900);
+            font-size: 1.25rem;
         }
 
-        .topbar-title p{
-            margin:2px 0 0;
-            color:#64748b;
-            font-size:.92rem;
+        .topbar-title p {
+            margin: 4px 0 0;
+            color: var(--neutral-600);
+            font-size: .88rem;
+            font-weight: 500;
         }
 
-        .topbar-badge{
-            background:linear-gradient(135deg,#3b82f6,#06b6d4);
-            color:white;
-            padding:10px 16px;
-            border-radius:999px;
-            font-size:.85rem;
-            font-weight:600;
-            box-shadow:0 8px 18px rgba(59,130,246,.18);
+        .topbar-badge {
+            background: var(--grad-main);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: .82rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(13,146,194,.18);
+            display: flex;
+            align-items: center;
         }
 
-        .content{
-            animation:fade .25s ease;
+        .content {
+            animation: fade .25s ease;
         }
 
-        @keyframes fade{
-            from{
-                opacity:0;
-                transform:translateY(8px);
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
             }
-            to{
-                opacity:1;
-                transform:translateY(0);
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        footer{
-            margin-top:40px;
-            text-align:center;
-            color:#64748b;
-            font-size:.9rem;
+        footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            text-align: center;
+            color: var(--neutral-400);
+            font-size: .82rem;
+            font-weight: 600;
+            border-top: 1px solid var(--neutral-200);
         }
 
         /* MOBILE */
-
-        @media(max-width:992px){
-
-            .sidebar{
-                width:100%;
-                height:auto;
-                position:relative;
-                border-radius:0 0 24px 24px;
+        @media(max-width: 992px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+                padding: 20px;
             }
 
-            .main{
-                margin-left:0;
-                padding:18px;
+            .brand {
+                margin-bottom: 20px;
             }
 
-            .topbar{
-                flex-direction:column;
-                align-items:flex-start;
-                gap:14px;
+            .logout-btn {
+                margin-top: 15px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 18px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+                padding: 16px;
             }
         }
-
     </style>
-
 </head>
 
 <body>
@@ -227,82 +303,52 @@
     <aside class="sidebar">
 
         <div>
-
             {{-- BRAND --}}
-            <a href="{{ route('recepcion.dashboard') }}"
-               class="brand">
-
+            <a href="{{ route('recepcion.dashboard') }}" class="brand">
                 <div class="brand-logo">
                     <i class="bi bi-grid-1x2-fill"></i>
                 </div>
-
-                <div>
-
-                    <h5>
-                        Comunidad
-                    </h5>
-
-                    <span>
-                        Mesa de Entrada
-                    </span>
-
+                <div class="brand-text">
+                    <h5>Comunidad</h5>
+                    <span>Mesa de Entrada</span>
                 </div>
-
             </a>
 
             {{-- LINKS --}}
             <div class="sidebar-links">
-
                 <a href="{{ route('recepcion.dashboard') }}"
                    class="{{ request()->routeIs('recepcion.dashboard') ? 'active' : '' }}">
-
                     <i class="bi bi-house-door-fill"></i>
-
                     Inicio
                 </a>
 
                 <a href="{{ route('recepcion.ingresos.index') }}"
                    class="{{ request()->routeIs('recepcion.ingresos.*') ? 'active' : '' }}">
-
                     <i class="bi bi-journal-text"></i>
-
                     Ingresos
                 </a>
 
                 <a href="{{ route('recepcion.mercaderias.index') }}"
                    class="{{ request()->routeIs('recepcion.mercaderias.*') ? 'active' : '' }}">
-
                     <i class="bi bi-box-seam"></i>
-
                     Mercadería
                 </a>
 
                 <a href="{{ route('personas.index') }}"
                    class="{{ request()->routeIs('personas.*') ? 'active' : '' }}">
-
                     <i class="bi bi-people-fill"></i>
-
                     Personas
                 </a>
-
             </div>
-
         </div>
 
         {{-- LOGOUT --}}
-        <form action="{{ route('logout') }}"
-              method="POST">
-
+        <form action="{{ route('logout') }}" method="POST" class="logout-form">
             @csrf
-
             <button class="logout-btn">
-
-                <i class="bi bi-box-arrow-right me-2"></i>
-
+                <i class="bi bi-box-arrow-right"></i>
                 Cerrar sesión
-
             </button>
-
         </form>
 
     </aside>
@@ -312,41 +358,25 @@
 
         {{-- TOPBAR --}}
         <div class="topbar">
-
             <div class="topbar-title">
-
-                <h4>
-                    Panel de Recepción
-                </h4>
-
-                <p>
-                    Gestión rápida y organizada de atención social.
-                </p>
-
+                <h4>Panel de Recepción</h4>
+                <p>Gestión rápida y organizada de atención social.</p>
             </div>
 
             <div class="topbar-badge">
-
-                <i class="bi bi-activity me-1"></i>
-
+                <i class="bi bi-activity me-1.5"></i>
                 Sistema activo
-
             </div>
-
         </div>
 
         {{-- CONTENT --}}
         <div class="content">
-
             @yield('content')
-
         </div>
 
         {{-- FOOTER --}}
         <footer>
-
             Comunidad · Mesa de Entrada
-
         </footer>
 
     </main>

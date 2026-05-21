@@ -8,469 +8,307 @@
 
 @include('frontend.estadisticas.partials.navbar')
 
-{{-- KPIs --}}
-<div class="row g-4 mb-4">
+<div class="container-fluid px-0 py-2">
 
-    <div class="col-md-4">
-
-        @include('frontend.estadisticas.partials.card', [
-            'title' => 'Total Ingresos',
-            'value' => $totalIngresos,
-            'icon' => 'bi bi-box-arrow-in-right'
-        ])
-
-    </div>
-
-    <div class="col-md-4">
-
-        @include('frontend.estadisticas.partials.card', [
-            'title' => 'Ingresos Hoy',
-            'value' => $ingresosHoy,
-            'icon' => 'bi bi-calendar-day'
-        ])
-
-    </div>
-
-    <div class="col-md-4">
-
-        @include('frontend.estadisticas.partials.card', [
-            'title' => 'Ingresos del Mes',
-            'value' => $ingresosMes,
-            'icon' => 'bi bi-calendar-month'
-        ])
-
-    </div>
-
-</div>
-
-{{-- TIMELINE --}}
-<div class="stats-card p-4 mb-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-
-            <h5 class="fw-bold mb-1">
-                Línea Temporal de Ingresos
-            </h5>
-
-            <small class="text-muted">
-                Evolución mensual durante el año
-            </small>
-
+    {{-- KPIs --}}
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            @include('frontend.estadisticas.partials.card', [
+                'title' => 'Total Ingresos',
+                'value' => $totalIngresos,
+                'icon' => 'bi bi-box-arrow-in-right'
+            ])
         </div>
 
-        <div class="badge bg-primary px-3 py-2">
-
-            {{ now()->year }}
-
+        <div class="col-md-4">
+            @include('frontend.estadisticas.partials.card', [
+                'title' => 'Ingresos Hoy',
+                'value' => $ingresosHoy,
+                'icon' => 'bi bi-calendar-day'
+            ])
         </div>
 
+        <div class="col-md-4">
+            @include('frontend.estadisticas.partials.card', [
+                'title' => 'Ingresos del Mes',
+                'value' => $ingresosMes,
+                'icon' => 'bi bi-calendar-month'
+            ])
+        </div>
     </div>
 
-    <div class="timeline-wrapper">
+    {{-- TIMELINE --}}
+    <div class="card border-0 shadow-sm p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h5 class="fw-bold mb-1 text-dark">Línea Temporal de Ingresos</h5>
+                <small class="text-muted">Evolución mensual durante el año en curso</small>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-bold">
+                {{ now()->year }}
+            </span>
+        </div>
 
-        @foreach($mensuales as $item)
-
-            <div class="timeline-item">
-
-                <div class="timeline-line"></div>
-
-                <div class="timeline-dot"></div>
-
-                <div class="timeline-month">
-
-                    {{ $item->periodo }}
-
+        <div class="timeline-wrapper pb-2">
+            @foreach($mensuales as $item)
+                <div class="timeline-item">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-month text-uppercase">{{ $item->periodo }}</div>
+                    <div class="timeline-value text-dark mt-1">{{ $item->total }}</div>
                 </div>
+            @endforeach
+        </div>
+    </div>
 
-                <div class="timeline-value">
-
-                    {{ $item->total }}
-
-                </div>
-
+    {{-- CONTROLES DE FILTRADO --}}
+    <div class="card border-0 shadow-sm p-4 mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold text-secondary small mb-2">
+                    <i class="bi bi-pie-chart text-muted me-1"></i> Tipo de gráfico
+                </label>
+                <select id="chartType" class="form-select shadow-sm">
+                    <option value="bar" selected>Histograma de Barras</option>
+                    <option value="line">Gráfico de Líneas</option>
+                    <option value="doughnut">Vista de Donut</option>
+                    <option value="pie">Vista de Torta (Pie)</option>
+                </select>
             </div>
 
-        @endforeach
-
+            <div class="col-md-4">
+                <label class="form-label fw-semibold text-secondary small mb-2">
+                    <i class="bi bi-segmented-nav text-muted me-1"></i> Agrupar información
+                </label>
+                <select id="groupType" class="form-select shadow-sm">
+                    <option value="mensual" selected>Ingresos Mensuales</option>
+                    <option value="derivacion">Distribución por Derivación</option>
+                </select>
+            </div>
+        </div>
     </div>
 
-</div>
-
-{{-- CONTROLES --}}
-<div class="stats-card p-4 mb-4">
-
-    <div class="row g-3 align-items-end">
-
-        {{-- Tipo gráfico --}}
-        <div class="col-md-3">
-
-            <label class="form-label fw-bold small">
-
-                Tipo de gráfico
-
-            </label>
-
-            <select id="chartType"
-                    class="form-select">
-
-                <option value="bar">
-                    Histograma
-                </option>
-
-                <option value="line">
-                    Línea
-                </option>
-
-                <option value="doughnut">
-                    Donut
-                </option>
-
-                <option value="pie">
-                    Pie
-                </option>
-
-            </select>
-
+    {{-- GRÁFICOS Y PANEL LATERAL --}}
+    <div class="row g-4">
+        <div class="col-lg-8">
+            @include('frontend.estadisticas.partials.chart', [
+                'title' => 'Visualización Estadística Dinámica',
+                'chartId' => 'mainChart'
+            ])
         </div>
 
-        {{-- Agrupar por --}}
-        <div class="col-md-4">
-
-            <label class="form-label fw-bold small">
-
-                Agrupar información
-
-            </label>
-
-            <select id="groupType"
-                    class="form-select">
-
-                <option value="mensual">
-                    Ingresos Mensuales
-                </option>
-
-                <option value="derivacion">
-                    Derivaciones
-                </option>
-
-            </select>
-
-        </div>
-
-    </div>
-
-</div>
-
-{{-- GRÁFICOS --}}
-<div class="row g-4">
-
-    <div class="col-lg-8">
-
-        @include('frontend.estadisticas.partials.chart', [
-            'title' => 'Visualización Estadística',
-            'chartId' => 'mainChart'
-        ])
-
-    </div>
-
-    <div class="col-lg-4">
-
-        <div class="stats-card p-4 h-100">
-
-            <h5 class="fw-bold mb-4">
-
-                Usuarios con más ingresos
-
-            </h5>
-
-            @foreach($usuarios as $usuario)
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-
-                    <div class="d-flex align-items-center gap-2">
-
-                        <div class="mini-user-dot"></div>
-
-                        <span>
-
-                            {{ $usuario->username }}
-
-                        </span>
-
-                    </div>
-
-                    <strong>
-
-                        {{ $usuario->total_ingresos }}
-
-                    </strong>
-
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm p-4 h-100">
+                <h5 class="fw-bold mb-4 text-dark">Rendimiento de Operadores</h5>
+                
+                <div class="d-flex flex-column gap-3">
+                    @foreach($usuarios as $usuario)
+                        <div class="d-flex justify-content-between align-items-center p-2.5 rounded-3 hover-bg-light">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-light border p-2 rounded-circle text-success d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                    <i class="bi bi-person text-secondary"></i>
+                                </span>
+                                <span class="fw-medium text-dark">{{ $usuario->username }}</span>
+                            </div>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1.5 fw-bold">
+                                {{ $usuario->total_ingresos }}
+                            </span>
+                        </div>
+                    @endforeach
                 </div>
-
-            @endforeach
-
+            </div>
         </div>
-
     </div>
 
 </div>
 
-{{-- DATOS --}}
+{{-- DATOS Y RENDERIZADO CON CHART.JS OPTIMIZADO --}}
 <script>
+    {{-- Inyección de colecciones PHP a arrays puros de JavaScript --}}
+    const mensualLabels = [@foreach($mensuales as $item) '{{ $item->periodo }}', @endforeach];
+    const mensualData = [@foreach($mensuales as $item) {{ $item->total }}, @endforeach];
 
-    /*
-    |--------------------------------------------------------------------------
-    | DATOS MENSUALES
-    |--------------------------------------------------------------------------
-    */
+    const derivacionLabels = [@foreach($derivaciones as $item) '{{ $item->nombre }}', @endforeach];
+    const derivacionData = [@foreach($derivaciones as $item) {{ $item->total }}, @endforeach];
 
-    const mensualLabels = [
-
-        @foreach($mensuales as $item)
-
-            '{{ $item->periodo }}',
-
-        @endforeach
-
-    ];
-
-    const mensualData = [
-
-        @foreach($mensuales as $item)
-
-            {{ $item->total }},
-
-        @endforeach
-
-    ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | DATOS DERIVACIONES
-    |--------------------------------------------------------------------------
-    */
-
-    const derivacionLabels = [
-
-        @foreach($derivaciones as $item)
-
-            '{{ $item->nombre }}',
-
-        @endforeach
-
-    ];
-
-    const derivacionData = [
-
-        @foreach($derivaciones as $item)
-
-            {{ $item->total }},
-
-        @endforeach
-
-    ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | CONFIGURACIÓN
-    |--------------------------------------------------------------------------
-    */
-
-    const ctx = document.getElementById('mainChart');
-
+    const ctx = document.getElementById('mainChart').getContext('2d');
     const chartTypeSelect = document.getElementById('chartType');
-
     const groupTypeSelect = document.getElementById('groupType');
-
     let currentChart;
 
-    /*
-    |--------------------------------------------------------------------------
-    | RENDER CHART
-    |--------------------------------------------------------------------------
-    */
+    {{-- Paleta estricta del Dashboard Comunidad --}}
+    const colors = {
+        primary: '#198754',       {{-- Verde Bootstrap Success --}}
+        primaryLight: '#d1e7dd',
+        darkText: '#212529',
+        mutedText: '#6c757d',
+        palette: ['#198754', '#0d6efd', '#ffc107', '#dc3545', '#0dcaf0', '#6610f2', '#fd7e14', '#20c997']
+    };
 
-    function renderChart()
-    {
-        if(currentChart)
-        {
+    function renderChart() {
+        if(currentChart) {
             currentChart.destroy();
         }
 
         let labels = [];
         let data = [];
+        const isDerivacion = groupTypeSelect.value === 'derivacion';
+        const type = chartTypeSelect.value;
 
-        if(groupTypeSelect.value === 'derivacion')
-        {
+        if(isDerivacion) {
             labels = derivacionLabels;
             data = derivacionData;
-        }
-        else
-        {
+        } else {
             labels = mensualLabels;
             data = mensualData;
         }
 
+        {{-- Configuración de gradiente dinámico para barras y líneas --}}
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(25, 135, 84, 0.35)');
+        gradient.addColorStop(1, 'rgba(25, 135, 84, 0.01)');
+
+        let datasetConfig = {
+            label: isDerivacion ? 'Casos por Derivación' : 'Ingresos Mensuales',
+            data: data,
+            tension: 0.35,
+            borderWidth: 2.5
+        };
+
+        {{-- Ajustes estéticos según el tipo de gráfico --}}
+        if (type === 'pie' || type === 'doughnut') {
+            datasetConfig.backgroundColor = colors.palette.slice(0, data.length);
+            datasetConfig.borderColor = '#ffffff';
+            datasetConfig.borderWidth = 2;
+        } else if (type === 'line') {
+            datasetConfig.borderColor = colors.primary;
+            datasetConfig.backgroundColor = gradient;
+            datasetConfig.fill = true;
+            datasetConfig.pointBackgroundColor = colors.primary;
+            datasetConfig.pointBorderColor = '#fff';
+            datasetConfig.pointRadius = 4;
+            datasetConfig.pointHoverRadius = 6;
+        } else { {{-- Barras --}}
+            datasetConfig.borderColor = colors.primary;
+            datasetConfig.backgroundColor = 'rgba(25, 135, 84, 0.85)';
+            datasetConfig.borderRadius = 6;
+            datasetConfig.borderSkipped = false;
+        }
+
         currentChart = new Chart(ctx, {
-
-            type: chartTypeSelect.value,
-
+            type: type,
             data: {
-
                 labels: labels,
-
-                datasets: [{
-
-                    label: 'Ingresos',
-
-                    data: data,
-
-                    borderWidth: 2,
-
-                    tension: .4,
-
-                    fill: true
-
-                }]
+                datasets: [datasetConfig]
             },
-
             options: {
-
                 responsive: true,
-
                 maintainAspectRatio: false,
-
                 plugins: {
-
                     legend: {
-
-                        display: true
-
+                        display: (type === 'pie' || type === 'doughnut'),
+                        position: 'bottom',
+                        labels: {
+                            color: colors.darkText,
+                            font: { family: 'inherit', size: 12, weight: '500' },
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        padding: 12,
+                        backgroundColor: 'rgba(33, 37, 41, 0.95)',
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 13 },
+                        cornerRadius: 6,
+                        boxPadding: 6
+                    }
+                },
+                scales: (type === 'pie' || type === 'doughnut') ? {} : {
+                    y: {
+                        grid: { color: 'rgba(0, 0, 0, 0.04)', drawBorder: false },
+                        ticks: { color: colors.mutedText, font: { size: 11 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: colors.mutedText, font: { size: 11, weight: '500' } }
                     }
                 }
             }
         });
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | INIT
-    |--------------------------------------------------------------------------
-    */
-
+    {{-- Inicialización y listeners --}}
     renderChart();
-
-    /*
-    |--------------------------------------------------------------------------
-    | EVENTS
-    |--------------------------------------------------------------------------
-    */
-
     chartTypeSelect.addEventListener('change', renderChart);
-
     groupTypeSelect.addEventListener('change', renderChart);
-
 </script>
 
-{{-- ESTILOS --}}
+@push('styles')
 <style>
+    .timeline-wrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        overflow-x: auto;
+        padding-top: 15px;
+    }
 
-.timeline-wrapper{
+    .timeline-item {
+        min-width: 100px;
+        text-align: center;
+        position: relative;
+        flex-grow: 1;
+    }
 
-    display:flex;
+    .timeline-item:not(:last-child) .timeline-line {
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background: #e9ecef;
+        z-index: 1;
+    }
 
-    justify-content:space-between;
+    .timeline-dot {
+        width: 14px;
+        height: 14px;
+        background: #198754;
+        border-radius: 50%;
+        margin: auto;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 0 0 5px rgba(25, 135, 84, 0.15);
+        transition: all 0.2s ease;
+    }
 
-    gap:14px;
+    .timeline-item:hover .timeline-dot {
+        transform: scale(1.2);
+        background: #157347;
+    }
 
-    overflow-x:auto;
+    .timeline-month {
+        margin-top: 14px;
+        font-size: 0.75rem;
+        color: #6c757d;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
 
-    padding-top:10px;
-}
+    .timeline-value {
+        font-size: 1.35rem;
+        font-weight: 800;
+    }
 
-.timeline-item{
+    .hover-bg-light:hover {
+        background-color: #f8f9fa;
+        transition: background-color 0.2s ease-in-out;
+    }
 
-    min-width:90px;
-
-    text-align:center;
-
-    position:relative;
-}
-
-.timeline-line{
-
-    position:absolute;
-
-    top:6px;
-
-    left:50%;
-
-    width:100%;
-
-    height:2px;
-
-    background:#dbeafe;
-
-    z-index:1;
-}
-
-.timeline-dot{
-
-    width:14px;
-
-    height:14px;
-
-    background:#2563eb;
-
-    border-radius:50%;
-
-    margin:auto;
-
-    position:relative;
-
-    z-index:2;
-
-    box-shadow:0 0 0 5px rgba(37,99,235,.12);
-}
-
-.timeline-month{
-
-    margin-top:14px;
-
-    font-size:13px;
-
-    color:#64748b;
-
-    font-weight:700;
-}
-
-.timeline-value{
-
-    font-size:22px;
-
-    font-weight:800;
-
-    margin-top:4px;
-}
-
-.mini-user-dot{
-
-    width:10px;
-
-    height:10px;
-
-    border-radius:50%;
-
-    background:#3b82f6;
-}
-
-#mainChart{
-
-    min-height:420px;
-}
-
+    #mainChart {
+        min-height: 400px;
+    }
 </style>
+@endpush
 
 @endsection
