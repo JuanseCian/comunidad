@@ -103,6 +103,8 @@ require __DIR__.'/familias.php';
 
 require __DIR__.'/atenciones.php';
 
+require __DIR__.'/estadistica.php';
+
 
 //rutas para recepcion
 require __DIR__.'/recepcion.php';

@@ -171,19 +171,19 @@
 
                 {{-- CERRAR SESIÓN --}}
                 <form method="POST" action="{{ route('logout') }}">
-                @csrf
+                    @csrf
 
-                <button type="submit"
-                    class="w-full flex items-center p-3 text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-xl transition-all group">
+                    <button type="submit"
+                        class="w-full flex items-center p-3 text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-xl transition-all group">
 
-                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
 
-                    <span x-show="sidebarOpen"
-                        class="ml-3 text-sm font-medium">
-                        Cerrar Sesión
-                    </span>
-                </button>
-            </form>
+                        <span x-show="sidebarOpen"
+                            class="ml-3 text-sm font-medium">
+                            Cerrar Sesión
+                        </span>
+                    </button>
+                </form>
 
             </div>
         </aside>

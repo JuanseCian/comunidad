@@ -277,6 +277,87 @@
 
         .badge-admin:hover { background: rgba(255,255,255,.26); color: white; }
 
+                /* Estadísticas */
+        .btn-estadisticas{
+            background: linear-gradient(
+                135deg,
+                #ffffff 0%,
+                #f0fdf9 100%
+            );
+
+            color: var(--teal-700);
+
+            border: 1px solid rgba(255,255,255,.35);
+
+            border-radius: 10px;
+
+            padding: 7px 14px;
+
+            font-size: 12.5px;
+
+            font-weight: 800;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            text-decoration: none;
+
+            transition:
+                transform .18s,
+                box-shadow .18s,
+                background .18s;
+
+            box-shadow:
+                0 4px 12px rgba(0,0,0,.12),
+                0 0 0 1px rgba(255,255,255,.25);
+
+            white-space: nowrap;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .btn-estadisticas::before{
+            content:'';
+
+            position:absolute;
+
+            inset:0;
+
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255,255,255,.35),
+                transparent
+            );
+
+            transform: translateX(-100%);
+
+            transition: transform .6s;
+        }
+
+        .btn-estadisticas:hover::before{
+            transform: translateX(100%);
+        }
+
+        .btn-estadisticas:hover{
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 22px rgba(0,0,0,.18),
+                0 0 20px rgba(23,163,133,.22);
+
+            color: var(--teal-700);
+        }
+
+        .btn-estadisticas i{
+            font-size: 14px;
+        }
+
         /* Botón login (visitantes) */
         .btn-nav-login {
             background: white;
@@ -757,8 +838,16 @@
 
     {{-- Right zone --}}
     <div class="nav-right">
-        @auth
+        @auth   
+            {{-- Estadísticas --}}
+            <a href="{{ route('estadisticas.dashboard') }}"
+               class="btn-estadisticas">
 
+                <i class="bi bi-graph-up-arrow"></i>
+
+                Estadísticas
+
+            </a>
 
             {{-- Admin (solo rol 3) --}}
             @if(auth()->user()->rol_id == 3)
