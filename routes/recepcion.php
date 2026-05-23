@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\frontend\IngresoController;
 
-
 Route::prefix('recepcion')
     ->middleware(['auth', 'checkrole:6'])
     ->name('recepcion.')
@@ -13,10 +12,12 @@ Route::prefix('recepcion')
             return view('frontend.recepcion.dashboard');
         })->name('dashboard');
 
+        // Búsqueda de personas para autocomplete de ingresos
         Route::get(
-            '/buscar-personas',
+            '/ingresos/buscar-personas',
             [IngresoController::class, 'buscarPersonas']
-        )->name('personas.buscar');
+        )->name('ingresos.buscar-personas');
 
         Route::resource('ingresos', IngresoController::class);
+
     });
