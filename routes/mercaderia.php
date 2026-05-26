@@ -1,30 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\frontend\MercaderiaController;
 
 Route::prefix('recepcion')
-
-    ->middleware([
-        'auth',
-        'checkrole:6'
-    ])
-
+    ->middleware(['auth', 'checkrole:6'])
     ->name('recepcion.')
-
     ->group(function () {
 
+        // Búsqueda de personas para autocomplete de mercaderías
         Route::get(
             '/mercaderias/buscar-personas',
             [MercaderiaController::class, 'buscarPersonas']
-        )->name(
-            'mercaderias.buscar-personas'
-        );
+        )->name('mercaderias.buscar-personas');
 
-        Route::resource(
-            'mercaderias',
-            MercaderiaController::class
-        );
+        Route::resource('mercaderias', MercaderiaController::class);
 
     });

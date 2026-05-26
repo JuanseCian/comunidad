@@ -16,7 +16,7 @@ class IngresoController extends Controller
                 'persona',
                 'derivacion',
                 'menor',
-                'usuario'
+                'usuario',
             ])
             ->latest()
             ->get();
@@ -42,38 +42,42 @@ class IngresoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'fecha_ingreso' => 'required|date',
-            'hora_ingreso'  => 'required',
-            'dni'           => 'nullable',
-            'apellido'      => 'required',
-            'nombre'        => 'required',
-            'menor_dni'       => 'nullable',
-            'menor_apellido'  => 'nullable',
-            'menor_nombre'    => 'nullable',
-            'derivacion_id' => 'nullable|exists:derivaciones,id',
+            'fecha_ingreso'  => 'required|date',
+            'hora_ingreso'   => 'required',
+            'dni'            => 'nullable',
+            'apellido'       => 'required',
+            'nombre'         => 'required',
+            'derivacion_id'  => 'nullable|exists:derivaciones,id',
+            'menor_dni'      => 'nullable',
+            'menor_apellido' => 'nullable',
+            'menor_nombre'   => 'nullable',
         ]);
 
         Ingreso::create([
-            'persona_id'    => $request->persona_id,
-            'dni'           => $request->dni,
-            'apellido'      => $request->apellido,
-            'nombre'        => $request->nombre,
-            'fecha_ingreso' => $request->fecha_ingreso,
-            'hora_ingreso'  => $request->hora_ingreso,
-            'derivacion_id' => $request->derivacion_id,
-            'observaciones' => $request->observaciones,
-            'menor_persona_id' => $request->menor_persona_id,
+            'persona_id'       => $request->persona_id    ?: null,
+            'dni'              => $request->dni,
+            'apellido'         => $request->apellido,
+            'nombre'           => $request->nombre,
+            'fecha_ingreso'    => $request->fecha_ingreso,
+            'hora_ingreso'     => $request->hora_ingreso,
+            'derivacion_id'    => $request->derivacion_id ?: null,
+            'observaciones'    => $request->observaciones,
+            'menor_persona_id' => $request->menor_persona_id ?: null,
             'menor_dni'        => $request->menor_dni,
             'menor_apellido'   => $request->menor_apellido,
             'menor_nombre'     => $request->menor_nombre,
-            'user_id'       => auth()->id(),
+            'user_id'          => auth()->id(),
         ]);
 
         return redirect()
             ->route('recepcion.ingresos.index')
-            ->with('success', 'Ingreso registrado correctamente');
+            ->with('success', 'Ingreso registrado correctamente.');
     }
 
+    /**
+     * Búsqueda de personas para autocomplete (persona principal y menor).
+     * Ruta: recepcion.ingresos.buscar-personas
+     */
     public function buscarPersonas(Request $request)
     {
         $term = trim($request->texto);
@@ -83,33 +87,15 @@ class IngresoController extends Controller
         }
 
         $personas = Persona::query()
-
             ->where(function ($query) use ($term) {
-
-                $query->whereRaw(
-                    'CAST(dni AS CHAR) LIKE ?',
-                    ["%{$term}%"]
-                )
-                ->orWhere(
-                    'apellido',
-                    'LIKE',
-                    "%{$term}%"
-                )
-                ->orWhere(
-                    'nombre',
-                    'LIKE',
-                    "%{$term}%"
-                );
-
+                $query->whereRaw('CAST(dni AS CHAR) LIKE ?', ["%{$term}%"])
+                      ->orWhere('apellido', 'LIKE', "%{$term}%")
+                      ->orWhere('nombre',   'LIKE', "%{$term}%");
             })
-            ->select([
-                'id',
-                'nombre',
-                'apellido',
-                'dni'
-            ])
+            ->select(['id', 'nombre', 'apellido', 'dni'])
             ->limit(8)
             ->get();
+
         return response()->json($personas);
     }
 }
