@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Frontend\Estadisticas;
 
 use App\Http\Controllers\Controller;
-
 use App\Models\Mercaderia;
 
 class MercaderiaEstadisticaController extends Controller
@@ -11,33 +10,39 @@ class MercaderiaEstadisticaController extends Controller
     public function index()
     {
         $totalMercaderias = Mercaderia::count();
-        $mercaderiasActivas = Mercaderia::where(
-            'estado',
-            'activa'
+
+        $mercaderiasMes = Mercaderia::whereMonth(
+            'fecha_entrega',
+            now()->month
+        )->whereYear(
+            'fecha_entrega',
+            now()->year
         )->count();
 
-        $mercaderiasRetiradas = Mercaderia::where(
-            'estado',
-            'retirada'
+        $mercaderiasHoy = Mercaderia::whereDate(
+            'fecha_entrega',
+            now()
         )->count();
 
-        $mercaderiasVencidas = Mercaderia::where(
-            'estado',
-            'vencida'
-        )->count();
+        $nucleosAsistidos = Mercaderia::whereNotNull(
+            'nucleo_conviviente_id'
+        )->distinct(
+            'nucleo_conviviente_id'
+        )->count(
+            'nucleo_conviviente_id'
+        );
 
-        $ultimasMercaderias = Mercaderia::latest()
-            ->limit(20)
-            ->get();
+        $ultimasMercaderias = Mercaderia::latest(
+            'fecha_entrega'
+        )->limit(20)->get();
 
         return view(
             'frontend.estadisticas.mercaderias.index',
             compact(
                 'totalMercaderias',
-                'mercaderiasActivas',
-                'mercaderiasRetiradas',
-                'mercaderiasVencidas',
-
+                'mercaderiasMes',
+                'mercaderiasHoy',
+                'nucleosAsistidos',
                 'ultimasMercaderias'
             )
         );

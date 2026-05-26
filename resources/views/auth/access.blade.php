@@ -205,6 +205,19 @@
         }
         .switch-link a:hover { text-decoration: underline; }
 
+        .forgot-link{
+            font-size: 12.5px;
+            color: #2563b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all .2s ease;
+        }
+
+        .forgot-link:hover{
+            color: #0ea5e9;
+            text-decoration: underline;
+        }
+
         /* ── ALERTAS ────────────────────────────────────────── */
         .alert-danger-custom {
             background: #fef2f2;
@@ -424,6 +437,12 @@
                                             </svg>
                                         </button>
                                     </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end mb-3">
+                                    <a href="{{ route('password.request') }}" class="forgot-link">
+                                        ¿Olvidaste tu contraseña?
+                                    </a>
                                 </div>
 
                                 <button class="btn-main" type="submit">Ingresar</button>

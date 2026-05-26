@@ -35,7 +35,6 @@ class DestinatarioEstadisticaController extends Controller
             compact(
                 'totalDestinatarios',
                 'nuevosMes',
-
                 'barrios',
                 'zonas',
                 'generos',

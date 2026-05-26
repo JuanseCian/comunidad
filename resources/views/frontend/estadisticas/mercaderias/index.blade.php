@@ -23,9 +23,9 @@
     <div class="col-md-3">
 
         @include('frontend.estadisticas.partials.card', [
-            'title' => 'Activas',
-            'value' => $mercaderiasActivas,
-            'icon' => 'bi bi-check-circle'
+            'title' => 'Entregas del Mes',
+            'value' => $mercaderiasMes,
+            'icon' => 'bi bi-calendar-check'
         ])
 
     </div>
@@ -33,9 +33,9 @@
     <div class="col-md-3">
 
         @include('frontend.estadisticas.partials.card', [
-            'title' => 'Retiradas',
-            'value' => $mercaderiasRetiradas,
-            'icon' => 'bi bi-box-arrow-up'
+            'title' => 'Entregas Hoy',
+            'value' => $mercaderiasHoy,
+            'icon' => 'bi bi-clock-history'
         ])
 
     </div>
@@ -43,9 +43,9 @@
     <div class="col-md-3">
 
         @include('frontend.estadisticas.partials.card', [
-            'title' => 'Vencidas',
-            'value' => $mercaderiasVencidas,
-            'icon' => 'bi bi-exclamation-circle'
+            'title' => 'Núcleos Asistidos',
+            'value' => $nucleosAsistidos,
+            'icon' => 'bi bi-people'
         ])
 
     </div>
