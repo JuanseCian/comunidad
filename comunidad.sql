@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 21, 2026 at 12:13 PM
+-- Generation Time: May 26, 2026 at 03:56 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -82,6 +82,13 @@ CREATE TABLE `atenciones` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `atenciones`
+--
+
+INSERT INTO `atenciones` (`id`, `persona_id`, `usuario_id`, `sede_id`, `tipo`, `descripcion`, `fecha_atencion`, `proxima_atencion`, `created_at`, `updated_at`) VALUES
+(10, 70, 1, NULL, 'entrevista', 'AA', '2026-05-21 00:00:00', NULL, '2026-05-22 14:59:43', '2026-05-22 14:59:43');
 
 -- --------------------------------------------------------
 
@@ -516,7 +523,8 @@ CREATE TABLE `familias` (
 
 INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
 (49, '6XL344I5T', '2026-05-20 14:58:42', '2026-05-20 14:58:42'),
-(50, 'CDK768WH9', '2026-05-20 15:00:39', '2026-05-20 15:00:39');
+(50, 'CDK768WH9', '2026-05-20 15:00:39', '2026-05-20 15:00:39'),
+(51, 'J9Q624LIT', '2026-05-22 14:47:58', '2026-05-22 14:47:58');
 
 -- --------------------------------------------------------
 
@@ -615,7 +623,13 @@ CREATE TABLE `ingresos` (
 INSERT INTO `ingresos` (`id`, `user_id`, `persona_id`, `menor_persona_id`, `menor_dni`, `menor_apellido`, `menor_nombre`, `dni`, `nombre`, `created_at`, `updated_at`, `apellido`, `fecha_ingreso`, `hora_ingreso`, `derivacion_id`, `observaciones`) VALUES
 (6, 13, NULL, NULL, NULL, NULL, NULL, '450322394', 'Juan Segundo', '2026-05-15 15:32:07', '2026-05-15 15:32:07', 'cian', '2026-05-15', '12:31:00', NULL, 'a'),
 (7, 13, NULL, NULL, NULL, NULL, NULL, NULL, 'Juan Segundo', '2026-05-15 16:17:17', '2026-05-15 16:17:17', 'Cian', '2026-05-15', '13:17:00', NULL, 'a'),
-(9, 13, NULL, NULL, NULL, NULL, NULL, NULL, 'ndnwd', '2026-05-15 16:18:23', '2026-05-15 16:18:23', 'nuuun', '2026-05-15', '13:18:00', NULL, 'ws');
+(9, 13, NULL, NULL, NULL, NULL, NULL, NULL, 'ndnwd', '2026-05-15 16:18:23', '2026-05-15 16:18:23', 'nuuun', '2026-05-15', '13:18:00', NULL, 'ws'),
+(13, 13, 69, NULL, NULL, NULL, NULL, '41899221', 'Daniela Belén', '2026-05-21 19:07:11', '2026-05-21 19:07:11', 'Abal', '2026-05-21', '13:07:00', 1, 'a'),
+(14, 13, 68, 69, '41899221', 'Abal', 'Daniela Belén', '45032239', 'Juan Segundo', '2026-05-21 19:07:37', '2026-05-21 19:07:37', 'cian', '2026-05-21', '13:07:00', 2, NULL),
+(15, 13, NULL, NULL, NULL, NULL, NULL, '8', 'ss', '2026-05-21 19:32:18', '2026-05-21 19:32:18', 'aa', '2026-05-21', '13:31:00', 3, 'a'),
+(16, 13, 68, NULL, NULL, NULL, NULL, '45032239', 'Juan Segundo', '2026-05-21 19:33:04', '2026-05-21 19:33:04', 'cian', '2026-04-14', '13:32:00', 3, 'a'),
+(17, 13, 69, NULL, NULL, NULL, NULL, '41899221', 'Daniela Belén', '2026-05-21 19:33:20', '2026-05-21 19:33:20', 'Abal', '2026-06-20', '13:33:00', 3, 'a'),
+(18, 13, 68, NULL, NULL, NULL, NULL, '45032239', 'Juan Segundo', '2026-05-22 17:27:08', '2026-05-22 17:27:08', 'cian', '2026-05-22', '11:26:00', 1, 'a');
 
 -- --------------------------------------------------------
 
@@ -858,6 +872,7 @@ CREATE TABLE `mercaderias` (
   `id` bigint UNSIGNED NOT NULL,
   `persona_id` bigint UNSIGNED DEFAULT NULL,
   `familia_id` bigint UNSIGNED DEFAULT NULL,
+  `nucleo_conviviente_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Núcleo conviviente que retiró el paquete',
   `user_id` bigint UNSIGNED DEFAULT NULL,
   `dni` varchar(50) DEFAULT NULL,
   `apellido` varchar(255) NOT NULL,
@@ -865,15 +880,18 @@ CREATE TABLE `mercaderias` (
   `fecha_entrega` date NOT NULL,
   `observaciones` text,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `anio_entrega` smallint UNSIGNED GENERATED ALWAYS AS (year(`fecha_entrega`)) STORED COMMENT 'Año calculado automáticamente de fecha_entrega',
+  `mes_entrega` tinyint UNSIGNED GENERATED ALWAYS AS (month(`fecha_entrega`)) STORED COMMENT 'Mes calculado automáticamente de fecha_entrega'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `mercaderias`
 --
 
-INSERT INTO `mercaderias` (`id`, `persona_id`, `familia_id`, `user_id`, `dni`, `apellido`, `nombre`, `fecha_entrega`, `observaciones`, `created_at`, `updated_at`) VALUES
-(6, NULL, NULL, 13, '41899221', 'Abal', 'Daniela', '2026-05-19', 'a', '2026-05-19 17:10:35', '2026-05-19 17:10:35');
+INSERT INTO `mercaderias` (`id`, `persona_id`, `familia_id`, `nucleo_conviviente_id`, `user_id`, `dni`, `apellido`, `nombre`, `fecha_entrega`, `observaciones`, `created_at`, `updated_at`) VALUES
+(6, NULL, NULL, NULL, 13, '41899221', 'Abal', 'Daniela', '2026-05-19', 'a', '2026-05-19 17:10:35', '2026-05-19 17:10:35'),
+(7, 68, 49, NULL, 13, '45032239', 'cian', 'Juan Segundo', '2026-05-26', NULL, '2026-05-26 18:53:54', '2026-05-26 18:53:54');
 
 -- --------------------------------------------------------
 
@@ -919,6 +937,24 @@ INSERT INTO `niveles_estudio` (`id`, `nombre`) VALUES
 (4, 'Universidad'),
 (5, 'Primario Incompleto'),
 (6, 'Secundario Incompleto');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nucleos_convivientes`
+--
+
+CREATE TABLE `nucleos_convivientes` (
+  `id` bigint UNSIGNED NOT NULL,
+  `familia_id` bigint UNSIGNED NOT NULL,
+  `domicilio_id` bigint UNSIGNED DEFAULT NULL,
+  `descripcion` varchar(255) DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `created_by` bigint UNSIGNED DEFAULT NULL,
+  `updated_by` bigint UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -1037,7 +1073,8 @@ CREATE TABLE `personas` (
 
 INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `cud_numero`, `cud_vencimiento`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`, `estado`, `creado_por_id`) VALUES
 (68, 49, 'Juan Segundo', 'cian', 'juansegundocian@gmail.com', '2003-11-05', 1, '45032239', NULL, 1, NULL, 16, 1, 5, NULL, '03364318066', 3, 0, 'O+', '2026-05-20 14:58:42', '2026-05-20 14:58:42', NULL, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 1, 'aprobado', NULL),
-(69, 49, 'Daniela Belén', 'Abal', NULL, '1999-02-22', 1, '41899221', NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 'AB+', '2026-05-20 15:00:39', '2026-05-20 15:32:00', NULL, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
+(69, 49, 'Daniela Belén', 'Abal', NULL, '1999-02-22', 1, '41899221', NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, 3, 0, 'AB+', '2026-05-20 15:00:39', '2026-05-20 15:32:00', NULL, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL),
+(70, 51, 'Alejo', 'mosquera', NULL, '2009-09-27', 1, '43056618', '347328910', 1, NULL, NULL, NULL, NULL, NULL, NULL, 5, 0, 'A-', '2026-05-22 14:47:58', '2026-05-22 14:47:58', NULL, 3, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
 
 -- --------------------------------------------------------
 
@@ -1057,6 +1094,27 @@ CREATE TABLE `persona_beneficio` (
   `registrado_por` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `persona_beneficio`
+--
+
+INSERT INTO `persona_beneficio` (`id`, `persona_id`, `beneficio_id`, `fecha_otorgamiento`, `fecha_vencimiento`, `monto`, `activo`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
+(7, 70, 4, '2026-05-22', NULL, NULL, 1, NULL, 1, '2026-05-22 14:59:50', '2026-05-22 14:59:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `persona_nucleo`
+--
+
+CREATE TABLE `persona_nucleo` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nucleo_id` bigint UNSIGNED NOT NULL,
+  `persona_id` bigint UNSIGNED DEFAULT NULL,
+  `grupo_familiar_id` bigint UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -1088,7 +1146,8 @@ CREATE TABLE `persona_programa` (
 
 INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `sede_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `en_adaptacion`, `fecha_limite_adaptacion`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
 (63, 68, 1, 1, '2026-05-20', NULL, 1, 'tutor', 0, NULL, NULL, NULL, '2026-05-20 14:59:09', '2026-05-20 14:59:09'),
-(64, 69, 1, 1, '2026-05-20', '2026-05-20', 1, 'destinatario', 0, NULL, NULL, NULL, '2026-05-20 15:00:47', '2026-05-20 15:00:48');
+(64, 69, 1, 1, '2026-05-20', '2026-05-20', 1, 'destinatario', 0, NULL, NULL, NULL, '2026-05-20 15:00:47', '2026-05-20 15:00:48'),
+(65, 70, 1, 2, '2026-05-22', NULL, 1, 'destinatario', 0, NULL, NULL, NULL, '2026-05-22 14:48:29', '2026-05-22 14:48:29');
 
 -- --------------------------------------------------------
 
@@ -1387,13 +1446,231 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `nombre`, `apellido`, `email`, `password`, `rol_id`, `sede_id`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'admin', 'admin', 'admin', 'admin@gmail.com', '$2y$12$02kKXEoepSLtTXByGXq9gu6SPmhPMZQ9AWY5xLT.h5v5uyHHiC2eW', 3, NULL, NULL, '2026-04-15 22:19:26', '2026-04-15 22:19:26'),
-(8, 'juanse', 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', '$2y$12$VGe9zAy3tNkzzeto4I/TY.X8.YrBptmrfLrOtkmpMFfhEbsonDU1y', 4, NULL, NULL, '2026-04-21 16:51:32', '2026-04-21 16:51:32'),
 (9, 'pepe', 'pepe', 'pipi', 'pe@gmail.com', '$2y$12$SLck36S.1hliGIO8arwxx.OFZp3uh023w.Muv886goXmSvn0JEmC6', 4, NULL, NULL, '2026-04-24 16:59:14', '2026-05-12 14:42:40'),
 (10, 'dani', 'daniela', 'abal', 'dani@gmail.com', '$2y$12$b/vbv3r90qddImz9aeB58O7zZuPb7DhD4t7sX/QW2thsSgBocl9E.', 3, NULL, NULL, '2026-04-24 17:00:39', '2026-05-06 17:47:37'),
 (11, 'coordinador', 'coordinador', 'coordinador', 'coordinador@gmail.com', '$2y$12$V8ICYWY8Q/YMgLc58r.TKOKZaWvDviT3VusjEEYMpEBbLp.SylF3i', 2, NULL, NULL, '2026-05-04 14:53:51', '2026-05-12 14:43:00'),
 (12, 'tecnico', 'tecnico', 'tecnico', 'tecnico@gmail.com', '$2y$12$tebvZbPrFy.1/aat0fRjDeD/BJg3bU6GQu98Z7irjK4uDw2CcX5TW', 1, NULL, NULL, '2026-05-10 02:13:55', '2026-05-10 02:13:55'),
 (13, 'Recepcion', 'recepcion', 'recepcion', 'recepcion@gmail.com', '$2y$12$3rRXAzT.P4RiOxlfh.3jTeFsTDObocwlx3x3KRC1TuOBl5.i8jQrW', 6, NULL, NULL, '2026-05-14 16:37:22', '2026-05-20 16:19:22'),
-(14, 'brunomassoco', 'Bruno', 'Massocco', 'b@gmail.com', '$2y$12$LIHF/iNmKruKppV5vLHptOhNrfHwsSQ0boc5ebYvrQWqdSeGyDZZG', 2, NULL, NULL, '2026-05-20 16:14:54', '2026-05-20 16:18:58');
+(14, 'brunomassoco', 'Bruno', 'Massocco', 'b@gmail.com', '$2y$12$LIHF/iNmKruKppV5vLHptOhNrfHwsSQ0boc5ebYvrQWqdSeGyDZZG', 2, NULL, NULL, '2026-05-20 16:14:54', '2026-05-20 16:18:58'),
+(15, 'juanse', 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', '$2y$12$XD3v1UgTYt7pKV31QIKJEurulLq885megUP71wh2MQrLaEkSG74hW', 1, NULL, 'JMVKqS63sbobU3ix9DY5OOFjehP3el66Aifp8uSrr0QfwfOSlGXHep8JYBU8', '2026-05-26 15:42:01', '2026-05-26 15:48:21');
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_atenciones_mensuales`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_atenciones_mensuales` (
+`periodo` varchar(7)
+,`tipo` enum('visita_domiciliaria','entrevista','llamado','derivacion','seguimiento','otro')
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_atenciones_por_usuario`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_atenciones_por_usuario` (
+`id` bigint unsigned
+,`total` bigint
+,`username` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_barrios_mas_activos`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_barrios_mas_activos` (
+`barrio` varchar(30)
+,`total_ingresos` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_beneficios_por_barrio`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_beneficios_por_barrio` (
+`barrio` varchar(30)
+,`beneficio` varchar(100)
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_beneficios_totales`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_beneficios_totales` (
+`id` bigint unsigned
+,`nombre` varchar(100)
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_dashboard_general`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_dashboard_general` (
+`total_atenciones` bigint
+,`total_beneficios` bigint
+,`total_familias` bigint
+,`total_ingresos` bigint
+,`total_personas` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_destinatarios_cobertura`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_destinatarios_cobertura` (
+`cobertura` varchar(100)
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_destinatarios_genero`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_destinatarios_genero` (
+`genero` varchar(100)
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_destinatarios_por_barrio`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_destinatarios_por_barrio` (
+`barrio_id` bigint unsigned
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_destinatarios_por_zona`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_destinatarios_por_zona` (
+`id` bigint unsigned
+,`total` bigint
+,`zona` varchar(50)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_familias_por_barrio`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_familias_por_barrio` (
+`barrio` varchar(30)
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_ingresos_diarios`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_ingresos_diarios` (
+`fecha_ingreso` date
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_ingresos_mensuales`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_ingresos_mensuales` (
+`periodo` varchar(7)
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_ingresos_por_derivacion`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_ingresos_por_derivacion` (
+`derivacion` varchar(255)
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_ingresos_por_usuario`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_ingresos_por_usuario` (
+`id` bigint unsigned
+,`total_ingresos` bigint
+,`username` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_personas_por_barrio`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_personas_por_barrio` (
+`barrio` varchar(30)
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_promedio_grupo_familiar`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_promedio_grupo_familiar` (
+`familia_id` bigint unsigned
+,`integrantes` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_tipos_atenciones`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_tipos_atenciones` (
+`tipo` enum('visita_domiciliaria','entrevista','llamado','derivacion','seguimiento','otro')
+,`total` bigint
+);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `vw_zonas_mas_activas`
+-- (See below for the actual view)
+--
+CREATE TABLE `vw_zonas_mas_activas` (
+`total` bigint
+,`zona` varchar(50)
+);
 
 -- --------------------------------------------------------
 
@@ -1418,6 +1695,177 @@ INSERT INTO `zona_barrio` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
 (3, 'OESTE', NULL, NULL),
 (4, 'CENTRO', NULL, NULL),
 (5, 'DELEGACIONES', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_atenciones_mensuales`
+--
+DROP TABLE IF EXISTS `vw_atenciones_mensuales`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_atenciones_mensuales`  AS SELECT date_format(`atenciones`.`fecha_atencion`,'%Y-%m') AS `periodo`, `atenciones`.`tipo` AS `tipo`, count(0) AS `total` FROM `atenciones` GROUP BY `periodo`, `atenciones`.`tipo``tipo`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_atenciones_por_usuario`
+--
+DROP TABLE IF EXISTS `vw_atenciones_por_usuario`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_atenciones_por_usuario`  AS SELECT `u`.`id` AS `id`, `u`.`username` AS `username`, count(`a`.`id`) AS `total` FROM (`atenciones` `a` join `users` `u` on((`a`.`usuario_id` = `u`.`id`))) GROUP BY `u`.`id`, `u`.`username``username`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_barrios_mas_activos`
+--
+DROP TABLE IF EXISTS `vw_barrios_mas_activos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_barrios_mas_activos`  AS SELECT `b`.`nombre` AS `barrio`, count(`i`.`id`) AS `total_ingresos` FROM (((`ingresos` `i` join `personas` `p` on((`i`.`persona_id` = `p`.`id`))) join `domicilio` `d` on((`p`.`domicilio_id` = `d`.`id`))) join `barrio` `b` on((`d`.`barrio_id` = `b`.`id`))) GROUP BY `b`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_beneficios_por_barrio`
+--
+DROP TABLE IF EXISTS `vw_beneficios_por_barrio`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_beneficios_por_barrio`  AS SELECT `ba`.`nombre` AS `barrio`, `be`.`nombre` AS `beneficio`, count(`bp`.`id`) AS `total` FROM ((((`beneficio_persona` `bp` join `personas` `p` on((`bp`.`persona_id` = `p`.`id`))) join `domicilio` `d` on((`p`.`domicilio_id` = `d`.`id`))) join `barrio` `ba` on((`d`.`barrio_id` = `ba`.`id`))) join `beneficios` `be` on((`bp`.`beneficio_id` = `be`.`id`))) GROUP BY `ba`.`nombre`, `be`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_beneficios_totales`
+--
+DROP TABLE IF EXISTS `vw_beneficios_totales`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_beneficios_totales`  AS SELECT `b`.`id` AS `id`, `b`.`nombre` AS `nombre`, count(`bp`.`id`) AS `total` FROM (`beneficios` `b` left join `beneficio_persona` `bp` on((`b`.`id` = `bp`.`beneficio_id`))) GROUP BY `b`.`id`, `b`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_dashboard_general`
+--
+DROP TABLE IF EXISTS `vw_dashboard_general`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_dashboard_general`  AS SELECT (select count(0) from `personas`) AS `total_personas`, (select count(0) from `familias`) AS `total_familias`, (select count(0) from `ingresos`) AS `total_ingresos`, (select count(0) from `atenciones`) AS `total_atenciones`, (select count(0) from `beneficio_persona`) AS `total_beneficios``total_beneficios`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_destinatarios_cobertura`
+--
+DROP TABLE IF EXISTS `vw_destinatarios_cobertura`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_destinatarios_cobertura`  AS SELECT `c`.`nombre` AS `cobertura`, count(`gf`.`id`) AS `total` FROM (`grupo_familiar` `gf` join `cobertura` `c` on((`gf`.`cobertura_id` = `c`.`id`))) GROUP BY `c`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_destinatarios_genero`
+--
+DROP TABLE IF EXISTS `vw_destinatarios_genero`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_destinatarios_genero`  AS SELECT `gp`.`nombre` AS `genero`, count(`p`.`id`) AS `total` FROM (`personas` `p` join `genero_percibido` `gp` on((`p`.`genero_percibido_id` = `gp`.`id`))) GROUP BY `gp`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_destinatarios_por_barrio`
+--
+DROP TABLE IF EXISTS `vw_destinatarios_por_barrio`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_destinatarios_por_barrio`  AS SELECT `personas`.`barrio_id` AS `barrio_id`, count(0) AS `total` FROM `personas` WHERE (`personas`.`barrio_id` is not null) GROUP BY `personas`.`barrio_id``barrio_id`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_destinatarios_por_zona`
+--
+DROP TABLE IF EXISTS `vw_destinatarios_por_zona`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_destinatarios_por_zona`  AS SELECT `zb`.`id` AS `id`, `zb`.`nombre` AS `zona`, count(`p`.`id`) AS `total` FROM (((`personas` `p` join `domicilio` `d` on((`p`.`domicilio_id` = `d`.`id`))) join `barrio` `b` on((`d`.`barrio_id` = `b`.`id`))) join `zona_barrio` `zb` on((`b`.`zona_barrio_id` = `zb`.`id`))) GROUP BY `zb`.`id`, `zb`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_familias_por_barrio`
+--
+DROP TABLE IF EXISTS `vw_familias_por_barrio`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_familias_por_barrio`  AS SELECT `b`.`nombre` AS `barrio`, count(distinct `gf`.`familia_id`) AS `total` FROM (((`grupo_familiar` `gf` join `personas` `p` on((`gf`.`persona_id` = `p`.`id`))) join `domicilio` `d` on((`p`.`domicilio_id` = `d`.`id`))) join `barrio` `b` on((`d`.`barrio_id` = `b`.`id`))) GROUP BY `b`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_ingresos_diarios`
+--
+DROP TABLE IF EXISTS `vw_ingresos_diarios`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_ingresos_diarios`  AS SELECT `ingresos`.`fecha_ingreso` AS `fecha_ingreso`, count(0) AS `total` FROM `ingresos` GROUP BY `ingresos`.`fecha_ingreso``fecha_ingreso`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_ingresos_mensuales`
+--
+DROP TABLE IF EXISTS `vw_ingresos_mensuales`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_ingresos_mensuales`  AS SELECT date_format(`ingresos`.`fecha_ingreso`,'%Y-%m') AS `periodo`, count(0) AS `total` FROM `ingresos` GROUP BY `periodo``periodo`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_ingresos_por_derivacion`
+--
+DROP TABLE IF EXISTS `vw_ingresos_por_derivacion`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_ingresos_por_derivacion`  AS SELECT `d`.`nombre` AS `derivacion`, count(`i`.`id`) AS `total` FROM (`ingresos` `i` left join `derivaciones` `d` on((`i`.`derivacion_id` = `d`.`id`))) GROUP BY `d`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_ingresos_por_usuario`
+--
+DROP TABLE IF EXISTS `vw_ingresos_por_usuario`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_ingresos_por_usuario`  AS SELECT `u`.`id` AS `id`, `u`.`username` AS `username`, count(`i`.`id`) AS `total_ingresos` FROM (`ingresos` `i` join `users` `u` on((`i`.`user_id` = `u`.`id`))) GROUP BY `u`.`id`, `u`.`username``username`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_personas_por_barrio`
+--
+DROP TABLE IF EXISTS `vw_personas_por_barrio`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_personas_por_barrio`  AS SELECT `b`.`nombre` AS `barrio`, count(0) AS `total` FROM ((`personas` `p` join `domicilio` `d` on((`p`.`domicilio_id` = `d`.`id`))) join `barrio` `b` on((`d`.`barrio_id` = `b`.`id`))) GROUP BY `b`.`nombre``nombre`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_promedio_grupo_familiar`
+--
+DROP TABLE IF EXISTS `vw_promedio_grupo_familiar`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_promedio_grupo_familiar`  AS SELECT `grupo_familiar`.`familia_id` AS `familia_id`, count(0) AS `integrantes` FROM `grupo_familiar` GROUP BY `grupo_familiar`.`familia_id``familia_id`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_tipos_atenciones`
+--
+DROP TABLE IF EXISTS `vw_tipos_atenciones`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_tipos_atenciones`  AS SELECT `atenciones`.`tipo` AS `tipo`, count(0) AS `total` FROM `atenciones` GROUP BY `atenciones`.`tipo``tipo`  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `vw_zonas_mas_activas`
+--
+DROP TABLE IF EXISTS `vw_zonas_mas_activas`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_zonas_mas_activas`  AS SELECT `zb`.`nombre` AS `zona`, count(`i`.`id`) AS `total` FROM ((((`ingresos` `i` join `personas` `p` on((`i`.`persona_id` = `p`.`id`))) join `domicilio` `d` on((`p`.`domicilio_id` = `d`.`id`))) join `barrio` `b` on((`d`.`barrio_id` = `b`.`id`))) join `zona_barrio` `zb` on((`b`.`zona_barrio_id` = `zb`.`id`))) GROUP BY `zb`.`nombre``nombre`  ;
 
 --
 -- Indexes for dumped tables
@@ -1606,9 +2054,12 @@ ALTER TABLE `localidad`
 --
 ALTER TABLE `mercaderias`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_nucleo_mes_anio` (`nucleo_conviviente_id`,`anio_entrega`,`mes_entrega`),
   ADD KEY `mercaderias_persona_id_foreign` (`persona_id`),
   ADD KEY `mercaderias_familia_id_foreign` (`familia_id`),
-  ADD KEY `mercaderias_user_id_foreign` (`user_id`);
+  ADD KEY `mercaderias_user_id_foreign` (`user_id`),
+  ADD KEY `idx_mercaderia_nucleo` (`nucleo_conviviente_id`),
+  ADD KEY `idx_mercaderia_periodo` (`anio_entrega`,`mes_entrega`);
 
 --
 -- Indexes for table `migrations`
@@ -1621,6 +2072,16 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `niveles_estudio`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `nucleos_convivientes`
+--
+ALTER TABLE `nucleos_convivientes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_nucleo_familia` (`familia_id`),
+  ADD KEY `idx_nucleo_domicilio` (`domicilio_id`),
+  ADD KEY `fk_nucleo_created_by` (`created_by`),
+  ADD KEY `fk_nucleo_updated_by` (`updated_by`);
 
 --
 -- Indexes for table `password_reset_tokens`
@@ -1673,6 +2134,17 @@ ALTER TABLE `persona_beneficio`
   ADD KEY `idx_pb_persona` (`persona_id`),
   ADD KEY `idx_pb_beneficio` (`beneficio_id`),
   ADD KEY `fk_pb_registrado_por` (`registrado_por`);
+
+--
+-- Indexes for table `persona_nucleo`
+--
+ALTER TABLE `persona_nucleo`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_persona_nucleo` (`persona_id`,`nucleo_id`),
+  ADD UNIQUE KEY `uq_grupo_familiar_nucleo` (`grupo_familiar_id`,`nucleo_id`),
+  ADD KEY `idx_pn_nucleo` (`nucleo_id`),
+  ADD KEY `idx_pn_persona` (`persona_id`),
+  ADD KEY `idx_pn_grupo_familiar` (`grupo_familiar_id`);
 
 --
 -- Indexes for table `persona_programa`
@@ -1783,7 +2255,7 @@ ALTER TABLE `adjuntos_descargas`
 -- AUTO_INCREMENT for table `atenciones`
 --
 ALTER TABLE `atenciones`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `auditoria`
@@ -1873,7 +2345,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `familias`
 --
 ALTER TABLE `familias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `genero_percibido`
@@ -1891,7 +2363,7 @@ ALTER TABLE `grupo_familiar`
 -- AUTO_INCREMENT for table `ingresos`
 --
 ALTER TABLE `ingresos`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `localidad`
@@ -1903,7 +2375,7 @@ ALTER TABLE `localidad`
 -- AUTO_INCREMENT for table `mercaderias`
 --
 ALTER TABLE `mercaderias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -1916,6 +2388,12 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `niveles_estudio`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `nucleos_convivientes`
+--
+ALTER TABLE `nucleos_convivientes`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `permisos`
@@ -1939,13 +2417,19 @@ ALTER TABLE `personas`
 -- AUTO_INCREMENT for table `persona_beneficio`
 --
 ALTER TABLE `persona_beneficio`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `persona_nucleo`
+--
+ALTER TABLE `persona_nucleo`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `persona_programa`
 --
 ALTER TABLE `persona_programa`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `persona_trabajo`
@@ -1999,7 +2483,7 @@ ALTER TABLE `tipo_documento`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `zona_barrio`
@@ -2106,9 +2590,19 @@ ALTER TABLE `localidad`
 -- Constraints for table `mercaderias`
 --
 ALTER TABLE `mercaderias`
+  ADD CONSTRAINT `fk_mercaderia_nucleo` FOREIGN KEY (`nucleo_conviviente_id`) REFERENCES `nucleos_convivientes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `mercaderias_familia_id_foreign` FOREIGN KEY (`familia_id`) REFERENCES `familias` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `mercaderias_persona_id_foreign` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `mercaderias_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `nucleos_convivientes`
+--
+ALTER TABLE `nucleos_convivientes`
+  ADD CONSTRAINT `fk_nucleo_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_nucleo_domicilio` FOREIGN KEY (`domicilio_id`) REFERENCES `domicilio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_nucleo_familia` FOREIGN KEY (`familia_id`) REFERENCES `familias` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_nucleo_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `personas`
@@ -2136,6 +2630,14 @@ ALTER TABLE `persona_beneficio`
   ADD CONSTRAINT `fk_pb_beneficio` FOREIGN KEY (`beneficio_id`) REFERENCES `beneficios` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_pb_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_pb_registrado_por` FOREIGN KEY (`registrado_por`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `persona_nucleo`
+--
+ALTER TABLE `persona_nucleo`
+  ADD CONSTRAINT `fk_pn_grupo_familiar` FOREIGN KEY (`grupo_familiar_id`) REFERENCES `grupo_familiar` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pn_nucleo` FOREIGN KEY (`nucleo_id`) REFERENCES `nucleos_convivientes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_pn_persona` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `persona_programa`
