@@ -14,6 +14,8 @@ use App\Models\Cobertura;
 use App\Models\SituacionOcupacional;
 use App\Models\CondicionInactividad;
 use App\Models\CategoriaOcupacional;
+use App\Models\NucleoConviviente;
+use App\Models\PersonaNucleo;
 use Illuminate\Http\Request;
 
 
@@ -62,20 +64,50 @@ class GrupoFamiliarController extends Controller
             'condicion_inactividad_id'  => 'nullable|exists:condicion_inactividad,id',
             'categoria_ocupacional_id'  => 'nullable|exists:categoria_ocupacional,id',
             'ingresos'                  => 'nullable|numeric|min:0',
+            'es_conviviente'            => 'nullable|boolean',
         ]);
 
-
         $validated['persona_id']  = $persona->id;
-        $validated['familia_id']  = $persona->familia_id;  
+        $validated['familia_id']  = $persona->familia_id;
         $validated['created_by']  = auth()->id();
-
 
         foreach (['discapacidad_permanente','discapacidad_tratamiento','enfermedad_tratamiento',
                   'embarazo','control_embarazo','esquema_vacunacion'] as $campo) {
             $validated[$campo] = $request->boolean($campo);
         }
 
-        GrupoFamiliar::create($validated);
+        $esConviviente = $request->boolean('es_conviviente');
+        unset($validated['es_conviviente']);
+
+        $integrante = GrupoFamiliar::create($validated);
+
+        // Si el integrante convive con el titular, vincularlo al núcleo conviviente
+        // de ESA persona específica (no de cualquier titular de la familia).
+        // Si no existe, se crea uno nuevo asociado al domicilio del titular.
+        if ($esConviviente && $persona->familia_id) {
+            $nucleo = NucleoConviviente::firstOrCreate(
+                [
+                    'familia_id' => $persona->familia_id,
+                    'activo'     => true,
+                    'domicilio_id' => $persona->domicilio_id,
+                ],
+                [
+                    'descripcion' => 'Núcleo principal',
+                    'created_by'  => auth()->id(),
+                ]
+            );
+
+            PersonaNucleo::firstOrCreate([
+                'nucleo_id'         => $nucleo->id,
+                'grupo_familiar_id' => $integrante->id,
+            ]);
+
+            // Vincular también a la persona titular al mismo núcleo (persona_id)
+            PersonaNucleo::firstOrCreate([
+                'nucleo_id'  => $nucleo->id,
+                'persona_id' => $persona->id,
+            ]);
+        }
 
         return redirect()
             ->route('personas.show', $persona)

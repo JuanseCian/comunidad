@@ -177,4 +177,25 @@ class GrupoFamiliar extends Model
 	{
 		return $this->belongsTo(SituacionOcupacional::class);
 	}
+
+	/**
+	 * Núcleos convivientes a los que pertenece este integrante (via persona_nucleo).
+	 */
+	public function nucleosConvivientes()
+	{
+		return $this->belongsToMany(
+			NucleoConviviente::class,
+			'persona_nucleo',
+			'grupo_familiar_id',
+			'nucleo_id'
+		)->using(PersonaNucleo::class);
+	}
+
+	/**
+	 * ¿Este integrante está registrado como conviviente en algún núcleo?
+	 */
+	public function getEsConvivienteAttribute(): bool
+	{
+		return $this->nucleosConvivientes()->exists();
+	}
 }

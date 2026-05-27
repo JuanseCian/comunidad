@@ -1042,33 +1042,43 @@
         </div>
         
 
-        {{-- ── Fila 5: Código de grupo familiar ── --}}
+        {{-- ── Fila 5: Grupo familiar (unificado) ── --}}
         <div class="row g-3 mb-3">
             <div class="col-12 sp-anim sp-anim-5">
                 <div class="sp-card">
+
+                    {{-- HEADER --}}
                     <div class="sp-card-header">
                         <div class="sp-card-header-left">
                             <div class="sp-dot" style="background:var(--blue);"></div>
-                            <span class="sp-card-title">Código de grupo familiar</span>
+                            <span class="sp-card-title">
+                                Grupo familiar
+                                @if($persona->grupoFamiliar && $persona->grupoFamiliar->count())
+                                    <span class="sp-count">{{ $persona->grupoFamiliar->count() }}</span>
+                                @endif
+                            </span>
                         </div>
-
-                        @if($persona->familia)
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <a href="{{ route('familias.show', $persona->familia->id) }}"
-                                   id="codigo-familia"
-                                   style="font-family:monospace; font-size:15px; font-weight:800; color:var(--blue); letter-spacing:2px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all .15s;"
-                                   onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-                                    {{ $persona->familia->codigo_formateado }}
-                                    <i class="bi bi-box-arrow-up-right" style="font-size:12px;"></i>
-                                </a>
-                                <button type="button" onclick="copiarCodigo()" title="Copiar código"
-                                        style="width:28px; height:28px; border-radius:7px; border:1px solid var(--border); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--slate); transition:all .15s;"
-                                        onmouseover="this.style.borderColor='var(--blue)'; this.style.color='var(--blue)'"
-                                        onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--slate)'">
-                                    <i class="bi bi-clipboard" id="icon-copiar" style="font-size:12px;"></i>
-                                </button>
-                            </div>
-                        @endif
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            {{-- Código + copiar --}}
+                            @if($persona->familia)
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <a href="{{ route('familias.show', $persona->familia->id) }}"
+                                       id="codigo-familia"
+                                       style="font-family:monospace; font-size:14px; font-weight:800; color:var(--blue); letter-spacing:2px; text-decoration:none; display:inline-flex; align-items:center; gap:5px;"
+                                       onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">
+                                        {{ $persona->familia->codigo_formateado }}
+                                        <i class="bi bi-box-arrow-up-right" style="font-size:11px;"></i>
+                                    </a>
+                                    <button type="button" onclick="copiarCodigo()" title="Copiar código"
+                                            style="width:26px; height:26px; border-radius:6px; border:1px solid var(--border); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--slate); transition:all .15s;"
+                                            onmouseover="this.style.borderColor='var(--blue)'; this.style.color='var(--blue)'"
+                                            onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--slate)'">
+                                        <i class="bi bi-clipboard" id="icon-copiar" style="font-size:11px;"></i>
+                                    </button>
+                                </div>
+                            @endif
+                            <a href="{{ route('personas.grupo-familiar.create', $persona) }}" class="sp-card-action">+ Agregar integrante</a>
+                        </div>
                     </div>
 
                     <div class="sp-card-body">
@@ -1085,14 +1095,31 @@
                             </div>
                         @endif
 
-                        {{-- Integrantes --}}
-                        @if($persona->familia && $persona->familia->personas->count() > 1)
+                        @php
+                            // Personas del mismo grupo familiar (titulares vinculadas al mismo familia_id)
+                            $integrantesFamilia = $persona->familia?->personas ?? collect();
+
+                            // Miembros del grupo_familiar (tabla grupo_familiar, no personas)
+                            $miembrosGF = $persona->grupoFamiliar ?? collect();
+                            $totalGF    = $miembrosGF->count();
+
+                            // Discriminación conviviente/externo via nucleos_convivientes
+                            $convivientesIds = collect();
+                            if ($totalGF > 0 && $persona->nucleosConvivientes->isNotEmpty()) {
+                                $convivientesIds = $persona->nucleosConvivientes
+                                    ->flatMap(fn($n) => $n->miembrosGrupoFamiliar->pluck('id'))
+                                    ->unique();
+                            }
+                        @endphp
+
+                        {{-- ── Personas del mismo grupo (titulares) ── --}}
+                        @if($integrantesFamilia->count() > 1)
                             <div style="font-size:10.5px; font-weight:800; color:var(--slate); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px;">
-                                Integrantes del grupo
-                                <span class="sp-count">{{ $persona->familia->personas->count() }}</span>
+                                Personas del grupo
+                                <span class="sp-count">{{ $integrantesFamilia->count() }}</span>
                             </div>
-                            <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
-                                @foreach($persona->familia->personas as $integrante)
+                            <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:20px;">
+                                @foreach($integrantesFamilia as $integrante)
                                     @php $esCurrent = $integrante->id === $persona->id; @endphp
                                     <div style="display:flex; align-items:center; gap:10px; padding:9px 13px; background:{{ $esCurrent ? 'var(--blue-lt)' : 'var(--bg)' }}; border-radius:10px; border:1px solid {{ $esCurrent ? 'var(--blue-brd)' : 'var(--border)' }};">
                                         <div style="width:32px; height:32px; border-radius:50%; background:{{ $esCurrent ? 'linear-gradient(135deg,var(--blue),var(--teal))' : 'var(--border)' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
@@ -1126,16 +1153,169 @@
                                     </div>
                                 @endforeach
                             </div>
+                        @endif
+
+                        {{-- ── Integrantes separados por convivencia ── --}}
+                        @if($totalGF > 0)
+                            @php
+                                $convivientes = $miembrosGF->filter(fn($m) => $convivientesIds->contains($m->id));
+                                $externos     = $miembrosGF->reject(fn($m) => $convivientesIds->contains($m->id));
+                            @endphp
+
+                            @php
+                                // Macro para la tabla de integrantes (evitar repetición)
+                                $tablaIntegrantes = function($coleccion) { return $coleccion; };
+                            @endphp
+
+                            <div style="border-top:{{ $integrantesFamilia->count() > 1 ? '1px solid var(--border-sm)' : 'none' }}; padding-top:{{ $integrantesFamilia->count() > 1 ? '18px' : '0' }}; margin-top:{{ $integrantesFamilia->count() > 1 ? '4px' : '0' }}; display:flex; flex-direction:column; gap:20px;">
+
+                                {{-- SECCIÓN CONVIVIENTES --}}
+                                @if($convivientes->isNotEmpty())
+                                    <div>
+                                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                                            <span style="display:inline-flex; align-items:center; gap:5px; background:var(--teal-lt); color:var(--teal-dk); border:1px solid var(--teal-brd); border-radius:20px; padding:3px 11px; font-size:11px; font-weight:800;">
+                                                <i class="bi bi-house-fill" style="font-size:10px;"></i> Núcleo conviviente
+                                            </span>
+                                            <span style="font-size:11px; color:var(--muted); font-weight:600;">{{ $convivientes->count() }} {{ $convivientes->count() == 1 ? 'integrante' : 'integrantes' }}</span>
+                                        </div>
+                                        <div style="overflow-x:auto; border:1px solid var(--teal-brd); border-radius:12px; overflow:hidden;">
+                                            <table class="sp-table" style="margin:0;">
+                                                <thead>
+                                                    <tr style="background:var(--teal-lt);">
+                                                        <th style="color:var(--teal-dk);">Nombre</th>
+                                                        <th style="color:var(--teal-dk);">Documento</th>
+                                                        <th style="color:var(--teal-dk);">Nacimiento</th>
+                                                        <th style="color:var(--teal-dk);">Cobertura</th>
+                                                        <th style="color:var(--teal-dk);">Situación</th>
+                                                        <th style="color:var(--teal-dk);">Ingresos</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($convivientes as $m)
+                                                        <tr>
+                                                            <td>
+                                                                <div style="font-weight:700; color:var(--ink);">{{ $m->nombre }}</div>
+                                                                <div style="font-size:11.5px; color:var(--muted); margin-top:2px;">{{ $m->relacion_titular ?? '—' }}</div>
+                                                            </td>
+                                                            <td style="color:var(--slate);">{{ $m->tipo_documento?->nombre ?? '' }} {{ $m->numero_documento ?? '—' }}</td>
+                                                            <td style="color:var(--slate);">{{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}</td>
+                                                            <td>
+                                                                @if($m->cobertura?->nombre)
+                                                                    <span class="sp-tag-blue" style="font-size:11.5px; padding:2px 9px;">{{ $m->cobertura->nombre }}</span>
+                                                                @else
+                                                                    <span style="color:var(--muted);">—</span>
+                                                                @endif
+                                                            </td>
+                                                            <td style="color:var(--slate);">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
+                                                            <td style="font-weight:700; color:var(--ink);">{{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- SECCIÓN EXTERNOS --}}
+                                @if($externos->isNotEmpty())
+                                    <div>
+                                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                                            <span style="display:inline-flex; align-items:center; gap:5px; background:#fffbeb; color:#b45309; border:1px solid #fcd34d; border-radius:20px; padding:3px 11px; font-size:11px; font-weight:800;">
+                                                <i class="bi bi-people-fill" style="font-size:10px;"></i> Externos al domicilio
+                                            </span>
+                                            <span style="font-size:11px; color:var(--muted); font-weight:600;">{{ $externos->count() }} {{ $externos->count() == 1 ? 'integrante' : 'integrantes' }}</span>
+                                        </div>
+                                        <div style="overflow-x:auto; border:1px solid #fcd34d; border-radius:12px; overflow:hidden;">
+                                            <table class="sp-table" style="margin:0;">
+                                                <thead>
+                                                    <tr style="background:#fffbeb;">
+                                                        <th style="color:#b45309;">Nombre</th>
+                                                        <th style="color:#b45309;">Documento</th>
+                                                        <th style="color:#b45309;">Nacimiento</th>
+                                                        <th style="color:#b45309;">Cobertura</th>
+                                                        <th style="color:#b45309;">Situación</th>
+                                                        <th style="color:#b45309;">Ingresos</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($externos as $m)
+                                                        <tr>
+                                                            <td>
+                                                                <div style="font-weight:700; color:var(--ink);">{{ $m->nombre }}</div>
+                                                                <div style="font-size:11.5px; color:var(--muted); margin-top:2px;">{{ $m->relacion_titular ?? '—' }}</div>
+                                                            </td>
+                                                            <td style="color:var(--slate);">{{ $m->tipo_documento?->nombre ?? '' }} {{ $m->numero_documento ?? '—' }}</td>
+                                                            <td style="color:var(--slate);">{{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}</td>
+                                                            <td>
+                                                                @if($m->cobertura?->nombre)
+                                                                    <span class="sp-tag-blue" style="font-size:11.5px; padding:2px 9px;">{{ $m->cobertura->nombre }}</span>
+                                                                @else
+                                                                    <span style="color:var(--muted);">—</span>
+                                                                @endif
+                                                            </td>
+                                                            <td style="color:var(--slate);">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
+                                                            <td style="font-weight:700; color:var(--ink);">{{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- Si no hay nucleos cargados, muestra todos sin separación --}}
+                                @if($convivientesIds->isEmpty())
+                                    <div style="overflow-x:auto; border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+                                        <table class="sp-table" style="margin:0;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th>Documento</th>
+                                                    <th>Nacimiento</th>
+                                                    <th>Cobertura</th>
+                                                    <th>Situación</th>
+                                                    <th>Ingresos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($miembrosGF as $m)
+                                                    <tr>
+                                                        <td>
+                                                            <div style="font-weight:700; color:var(--ink);">{{ $m->nombre }}</div>
+                                                            <div style="font-size:11.5px; color:var(--muted); margin-top:2px;">{{ $m->relacion_titular ?? '—' }}</div>
+                                                        </td>
+                                                        <td style="color:var(--slate);">{{ $m->tipo_documento?->nombre ?? '' }} {{ $m->numero_documento ?? '—' }}</td>
+                                                        <td style="color:var(--slate);">{{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}</td>
+                                                        <td>
+                                                            @if($m->cobertura?->nombre)
+                                                                <span class="sp-tag-blue" style="font-size:11.5px; padding:2px 9px;">{{ $m->cobertura->nombre }}</span>
+                                                            @else
+                                                                <span style="color:var(--muted);">—</span>
+                                                            @endif
+                                                        </td>
+                                                        <td style="color:var(--slate);">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
+                                                        <td style="font-weight:700; color:var(--ink);">{{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
+
+                            </div>
                         @else
-                            <div class="sp-empty" style="padding:16px 0 10px;">
+                            <div class="sp-empty" style="{{ $integrantesFamilia->count() > 1 ? 'padding:16px 0 4px;' : '' }}">
                                 <div class="sp-empty-icon" style="background:var(--blue-lt); color:var(--blue);">
                                     <i class="bi bi-people"></i>
                                 </div>
-                                Sin personas vinculadas a este grupo aún.
+                                <p style="margin:0 0 14px;">Sin integrantes registrados.</p>
+                                <a href="{{ route('personas.grupo-familiar.create', $persona) }}" class="sp-btn-primary" style="display:inline-flex; font-size:13px;">
+                                    <i class="bi bi-person-plus-fill"></i> Agregar el primero
+                                </a>
                             </div>
                         @endif
 
-                        {{-- Link al grupo completo --}}
+                        {{-- ── Link al grupo completo ── --}}
                         @if($persona->familia)
                             <div style="border-top:1px solid var(--border-sm); padding-top:16px; margin-top:16px;">
                                 <a href="{{ route('familias.show', $persona->familia->id) }}" class="sp-btn-primary"
@@ -1145,7 +1325,7 @@
                             </div>
                         @endif
 
-                        {{-- Vincular a grupo existente --}}
+                        {{-- ── Vincular a grupo existente ── --}}
                         @if(in_array(auth()->user()->rol_id, [2,3,5]))
                             <div style="border-top:1px solid var(--border-sm); padding-top:16px; margin-top:16px;">
                                 <div style="font-size:10.5px; font-weight:800; color:var(--slate); text-transform:uppercase; letter-spacing:.07em; margin-bottom:8px;">
@@ -1324,73 +1504,6 @@
             </div>
         </div>{{-- /fila 6 --}}
 
-        {{-- ── Fila 7: Grupo familiar conviviente ── --}}
-        <div class="row g-3 mb-3">
-            <div class="col-12 sp-anim sp-anim-5">
-                <div class="sp-card">
-                    <div class="sp-card-header">
-                        <div class="sp-card-header-left">
-                            <div class="sp-dot" style="background:var(--blue);"></div>
-                            <span class="sp-card-title">
-                                Grupo familiar
-                                @if($persona->grupoFamiliar && $persona->grupoFamiliar->count())
-                                    <span class="sp-count">{{ $persona->grupoFamiliar->count() }}</span>
-                                @endif
-                            </span>
-                        </div>
-                        <a href="{{ route('personas.grupo-familiar.create', $persona) }}" class="sp-card-action">+ Agregar integrante</a>
-                    </div>
-
-                    @if($persona->grupoFamiliar && $persona->grupoFamiliar->count())
-                        <div style="overflow-x:auto;">
-                            <table class="sp-table">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Documento</th>
-                                        <th>Nacimiento</th>
-                                        <th>Cobertura</th>
-                                        <th>Situación</th>
-                                        <th>Ingresos</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($persona->grupoFamiliar as $m)
-                                        <tr>
-                                            <td>
-                                                <div style="font-weight:700; color:var(--ink);">{{ $m->nombre }}</div>
-                                                <div style="font-size:11.5px; color:var(--muted); margin-top:2px;">{{ $m->relacion_titular ?? '—' }}</div>
-                                            </td>
-                                            <td style="color:var(--slate);">{{ $m->tipo_documento?->nombre?->nombre ?? '' }} {{ $m->numero_documento ?? '—' }}</td>
-                                            <td style="color:var(--slate);">{{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}</td>
-                                            <td>
-                                                @if($m->cobertura?->nombre)
-                                                    <span class="sp-tag-blue" style="font-size:11.5px; padding:2px 9px;">{{ $m->cobertura->nombre }}</span>
-                                                @else
-                                                    <span style="color:var(--muted);">—</span>
-                                                @endif
-                                            </td>
-                                            <td style="color:var(--slate);">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
-                                            <td style="font-weight:700; color:var(--ink);">{{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="sp-empty">
-                            <div class="sp-empty-icon" style="background:var(--blue-lt); color:var(--blue);">
-                                <i class="bi bi-people"></i>
-                            </div>
-                            <p style="margin:0 0 14px;">Sin integrantes registrados.</p>
-                            <a href="{{ route('personas.grupo-familiar.create', $persona) }}" class="sp-btn-primary" style="display:inline-flex; font-size:13px;">
-                                <i class="bi bi-person-plus-fill"></i> Agregar el primero
-                            </a>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>{{-- /fila 7 --}}
 
         {{-- ── Fila 8: Intervenciones ── --}}
         <div class="row g-3">

@@ -25,6 +25,7 @@ use App\Models\PersonaTrabajo;
 use App\Models\SituacionOcupacional;
 use App\Models\CategoriaOcupacional;
 use App\Models\Beneficio;
+use App\Models\NucleoConviviente;
 use Illuminate\Support\Facades\Auth;
 
 class PersonaController extends Controller
@@ -39,6 +40,7 @@ class PersonaController extends Controller
             'sedeOrigen',
             'grupoFamiliar',
             'familia',
+            'nucleosConvivientes.miembrosGrupoFamiliar',
         ])->where('estado', 'aprobado');
 
         if ($request->filled('q')) {

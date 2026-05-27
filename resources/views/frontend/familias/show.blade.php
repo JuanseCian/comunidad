@@ -246,60 +246,129 @@
                                     {{-- FAMILIARES --}}
                                     @if($persona->grupoFamiliar && $persona->grupoFamiliar->count() > 0)
 
+                                        @php
+                                            // IDs de grupo_familiar que comparten núcleo con esta persona
+                                            $nucleoIds = $persona->nucleosConvivientes?->pluck('id') ?? collect();
+                                            $gfConvIds = collect();
+                                            if ($nucleoIds->isNotEmpty()) {
+                                                $gfConvIds = $persona->nucleosConvivientes
+                                                    ->flatMap(fn($n) => $n->miembrosGrupoFamiliar->pluck('id'))
+                                                    ->unique();
+                                            }
+                                            $convivientes = $persona->grupoFamiliar->filter(fn($f) => $gfConvIds->contains($f->id));
+                                            $externos     = $persona->grupoFamiliar->reject(fn($f) => $gfConvIds->contains($f->id));
+                                        @endphp
+
                                         <div class="mt-4 pt-4 border-top">
 
                                             <div class="d-flex align-items-center gap-2 mb-3">
-
                                                 <i class="bi bi-people text-secondary"></i>
-
-                                                <div class="fw-semibold">
-                                                    Familiares asociados
-                                                </div>
-
+                                                <div class="fw-semibold">Familiares asociados</div>
+                                                <span class="badge bg-secondary-subtle text-secondary rounded-pill">
+                                                    {{ $persona->grupoFamiliar->count() }}
+                                                </span>
                                             </div>
 
-                                            <div class="row g-3">
-
-                                                @foreach($persona->grupoFamiliar as $familiar)
-
-                                                    <div class="col-md-6">
-
-                                                        <div class="border rounded-4 p-3 bg-light h-100">
-
-                                                            <div class="fw-bold text-dark mb-1">
-
-                                                                {{ $familiar->apellido }},
-                                                                {{ $familiar->nombre }}
-
-                                                            </div>
-
-                                                            <div class="small text-muted mb-1">
-
-                                                                <i class="bi bi-diagram-2 me-1"></i>
-
-                                                                {{ $familiar->parentesco ?? 'Sin parentesco registrado' }}
-
-                                                            </div>
-
-                                                            @if($familiar->fecha_nacimiento)
-
-                                                                <div class="small text-muted">
-
-                                                                    <i class="bi bi-calendar-event me-1"></i>
-
-                                                                    {{ \Carbon\Carbon::parse($familiar->fecha_nacimiento)->format('d/m/Y') }}
-
-                                                                </div>
-
-                                                            @endif
-
-                                                        </div>
-
+                                            {{-- CONVIVIENTES --}}
+                                            @if($convivientes->isNotEmpty())
+                                                <div class="mb-3">
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="badge rounded-pill px-3 py-1"
+                                                              style="background:#e8f9f5; color:#0e8a70; border:1px solid #9fe1cb; font-size:11px; font-weight:700;">
+                                                            <i class="bi bi-house-fill me-1" style="font-size:9px;"></i>
+                                                            Núcleo conviviente
+                                                        </span>
+                                                        <span class="text-muted" style="font-size:11px;">
+                                                            {{ $convivientes->count() }} {{ $convivientes->count() == 1 ? 'integrante' : 'integrantes' }}
+                                                        </span>
                                                     </div>
+                                                    <div class="row g-2">
+                                                        @foreach($convivientes as $familiar)
+                                                            <div class="col-md-6">
+                                                                <div class="rounded-4 p-3 h-100"
+                                                                     style="background:#f0fdf8; border:1px solid #9fe1cb;">
+                                                                    <div class="fw-bold text-dark mb-1">
+                                                                        {{ $familiar->nombre }}
+                                                                    </div>
+                                                                    <div class="small text-muted mb-1">
+                                                                        <i class="bi bi-diagram-2 me-1"></i>
+                                                                        {{ $familiar->relacion_titular ?? 'Sin parentesco registrado' }}
+                                                                    </div>
+                                                                    @if($familiar->fecha_nacimiento)
+                                                                        <div class="small text-muted">
+                                                                            <i class="bi bi-calendar-event me-1"></i>
+                                                                            {{ \Carbon\Carbon::parse($familiar->fecha_nacimiento)->format('d/m/Y') }}
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endif
 
-                                                @endforeach
+                                            {{-- EXTERNOS --}}
+                                            @if($externos->isNotEmpty())
+                                                <div>
+                                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                                        <span class="badge rounded-pill px-3 py-1"
+                                                              style="background:#fffbeb; color:#b45309; border:1px solid #fcd34d; font-size:11px; font-weight:700;">
+                                                            <i class="bi bi-people-fill me-1" style="font-size:9px;"></i>
+                                                            Externos al domicilio
+                                                        </span>
+                                                        <span class="text-muted" style="font-size:11px;">
+                                                            {{ $externos->count() }} {{ $externos->count() == 1 ? 'integrante' : 'integrantes' }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="row g-2">
+                                                        @foreach($externos as $familiar)
+                                                            <div class="col-md-6">
+                                                                <div class="rounded-4 p-3 h-100"
+                                                                     style="background:#fffdf5; border:1px solid #fcd34d;">
+                                                                    <div class="fw-bold text-dark mb-1">
+                                                                        {{ $familiar->nombre }}
+                                                                    </div>
+                                                                    <div class="small text-muted mb-1">
+                                                                        <i class="bi bi-diagram-2 me-1"></i>
+                                                                        {{ $familiar->relacion_titular ?? 'Sin parentesco registrado' }}
+                                                                    </div>
+                                                                    @if($familiar->fecha_nacimiento)
+                                                                        <div class="small text-muted">
+                                                                            <i class="bi bi-calendar-event me-1"></i>
+                                                                            {{ \Carbon\Carbon::parse($familiar->fecha_nacimiento)->format('d/m/Y') }}
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endif
 
-                                            </div>
+                                            {{-- Fallback: sin núcleos cargados, muestra todos sin separación --}}
+                                            @if($gfConvIds->isEmpty())
+                                                <div class="row g-3">
+                                                    @foreach($persona->grupoFamiliar as $familiar)
+                                                        <div class="col-md-6">
+                                                            <div class="border rounded-4 p-3 bg-light h-100">
+                                                                <div class="fw-bold text-dark mb-1">
+                                                                    {{ $familiar->nombre }}
+                                                                </div>
+                                                                <div class="small text-muted mb-1">
+                                                                    <i class="bi bi-diagram-2 me-1"></i>
+                                                                    {{ $familiar->relacion_titular ?? 'Sin parentesco registrado' }}
+                                                                </div>
+                                                                @if($familiar->fecha_nacimiento)
+                                                                    <div class="small text-muted">
+                                                                        <i class="bi bi-calendar-event me-1"></i>
+                                                                        {{ \Carbon\Carbon::parse($familiar->fecha_nacimiento)->format('d/m/Y') }}
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
 
                                         </div>
 

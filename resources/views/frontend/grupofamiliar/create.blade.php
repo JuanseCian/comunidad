@@ -135,6 +135,29 @@
                     </select>
                 </div>
 
+                {{-- CONVIVIENTE --}}
+                <div class="col-12">
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 16px; background:#f8fafe; border-radius:12px; border:1px solid #e0ddd6;">
+                        <div>
+                            <div style="font-size:14px; color:#0f172a; font-weight:600;">
+                                <i class="bi bi-house-fill" style="color:#0d92c2; margin-right:6px;"></i>
+                                Convive en el mismo domicilio
+                            </div>
+                            <div style="font-size:11.5px; color:#94a3b4; margin-top:2px;">
+                                Marcá si este integrante vive con el titular. Determina si forma parte del núcleo conviviente.
+                            </div>
+                        </div>
+                        <label style="position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer; margin:0 0 0 16px;">
+                            <input type="checkbox" name="es_conviviente" value="1" id="chk-conviviente"
+                                   {{ old('es_conviviente') ? 'checked' : '' }}
+                                   style="opacity:0; width:0; height:0; position:absolute;">
+                            <span class="toggle-slider" style="position:absolute; inset:0; background:{{ old('es_conviviente') ? '#0d92c2' : '#c8c4bb' }}; border-radius:24px; transition:background .2s;">
+                                <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; background:white; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); display:block; transform:{{ old('es_conviviente') ? 'translateX(18px)' : 'translateX(0)' }};"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -450,6 +473,18 @@ document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault();
   }
 });
+
+// Toggle conviviente
+(function() {
+  const chk = document.getElementById('chk-conviviente');
+  if (!chk) return;
+  chk.addEventListener('change', function() {
+    const track = chk.closest('label').querySelector('.toggle-slider');
+    const thumb = track.querySelector('span');
+    track.style.background = chk.checked ? '#0d92c2' : '#c8c4bb';
+    thumb.style.transform   = chk.checked ? 'translateX(18px)' : 'translateX(0)';
+  });
+})();
 </script>
 
 @endsection

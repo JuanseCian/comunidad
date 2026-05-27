@@ -52,6 +52,7 @@ class FamiliaController extends Controller
     {
         $familia = Familia::with([
             'personas.grupoFamiliar',
+            'personas.nucleosConvivientes.miembrosGrupoFamiliar',
             'personas.personaPrograma.programa',
             'personas.personaBeneficio.beneficio',
             'mercaderias.usuario',
