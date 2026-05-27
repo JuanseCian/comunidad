@@ -1,317 +1,306 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comunidad | Estadísticas</title>
     
-    <!-- Google Fonts (Inter para una estética de dashboard premium) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap 5 & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('bi_theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
 
     <style>
         :root {
-            --sidebar-width: 260px;
+            --sidebar-width-expanded: 260px;
+            --sidebar-width-collapsed: 78px;
+            --sidebar-width: var(--sidebar-width-expanded);
+            --bi-blue: #1e70e4;
+            
+            /* Variables dinámicas dependientes del tema */
+            --bi-body-bg: #f8fafc;
+            --bi-sidebar-bg: #ffffff;
+            --bi-sidebar-border: #eaeef3;
+            --bi-icon-bg: #f1f5f9;
+            --bi-icon-color: #64748b;
+            --bi-icon-hover-bg: #e2e8f0;
+        }
+
+        /* Sobreescritura adaptativa cuando Bootstrap pasa a Modo Oscuro */
+        [data-bs-theme="dark"] {
+            --bi-body-bg: #0b0f19;
+            --bi-sidebar-bg: #111827;
+            --bi-sidebar-border: #1f2937;
+            --bi-icon-bg: #1f2937;
+            --bi-icon-color: #9ca3af;
+            --bi-icon-hover-bg: #374151;
         }
 
         body {
-            background: #f8fafc;
+            background: var(--bi-body-bg);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: #1e293b;
+            transition: background 0.25s ease;
             overflow-x: hidden;
         }
 
-        /* --- SIDEBAR --- */
+        body.sidebar-collapsed {
+            --sidebar-width: var(--sidebar-width-collapsed);
+        }
+
+        /* --- SIDEBAR POWER BI ADAPTATIVO --- */
         .stats-sidebar {
             width: var(--sidebar-width);
             min-height: 100vh;
-            background: linear-gradient(180deg, #0f172a, #1e293b);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1030;
-            transition: transform 0.3s ease;
-        }
-
-        .stats-sidebar a {
-            color: #94a3b8;
-            text-decoration: none;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-radius: 10px;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-
-        .stats-sidebar a:hover, 
-        .stats-sidebar a.active {
-            background: rgba(255, 255, 255, 0.08);
-            color: #ffffff;
-        }
-
-        .stats-sidebar a.active {
-            background: #2563eb;
-            color: #ffffff;
-        }
-
-        /* --- MAIN CONTENT CONTAINER --- */
-        .stats-wrapper {
-            margin-left: var(--sidebar-width);
-            min-height: 100vh;
-            transition: margin 0.3s ease;
-        }
-
-        .stats-content {
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* --- COMPONENTES GLOBALES DE ESTADÍSTICAS --- */
-        .stats-card {
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            border-radius: 16px;
-            background: #ffffff;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .stats-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-        }
-
-        .stats-card-gradient {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #ffffff;
-            border: none;
-        }
-
-        .stats-title {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 600;
-            color: #64748b;
-        }
-
-        .stats-card-gradient .stats-title {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .stats-value {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: #0f172a;
-        }
-
-        .stats-card-gradient .stats-value {
-            color: #ffffff;
-        }
-
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 991.98px) {
-            .stats-sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .stats-sidebar.show {
-                transform: translateX(0);
-            }
-
-            .stats-wrapper {
-                margin-left: 0;
-            }
-        }
-
-        /* Estilos base del Sidebar y su animación */
-        .stats-sidebar {
-            width: 260px;
-            min-height: 100vh;
-            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            background: var(--bi-sidebar-bg);
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1040;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 1px solid var(--bi-sidebar-border);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease, border-color 0.25s ease;
+            overflow: hidden;
         }
 
-        /* Enlaces internos del Sidebar */
         .stats-sidebar .nav-link {
-            color: #94a3b8;
-            padding: 12px 16px;
-            border-radius: 12px;
+            color: var(--bi-icon-color);
+            padding: 10px 14px;
+            margin: 2px 0 2px 12px;
+            border-radius: 20px 0 0 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
             font-weight: 500;
+            font-size: 0.92rem;
             transition: all 0.2s ease;
+            white-space: nowrap;
+            text-decoration: none;
+            position: relative;
         }
 
-        .stats-sidebar .nav-link:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: #f8fafc;
+        .stats-sidebar .nav-link i {
+            min-width: 38px;
+            height: 38px;
+            font-size: 1.15rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--bi-icon-bg);
+            color: var(--bi-icon-color);
+            transition: all 0.25s ease;
         }
 
+        .stats-sidebar .nav-link:hover i {
+            background: var(--bi-icon-hover-bg);
+            color: var(--bs-heading-color);
+        }
+
+        /* ACTIVO (Mantiene el indicador curvo azul de la foto en ambos modos) */
         .stats-sidebar .nav-link.active {
-            background: #2563eb;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            color: var(--bi-blue) !important;
+            background: transparent;
+            margin-left: 0;
+            padding-left: 12px;
+            font-weight: 600;
         }
 
-        /* Contenedor del contenido que respeta el espacio del sidebar */
+        .stats-sidebar .nav-link.active i {
+            background: var(--bi-blue);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(30, 112, 228, 0.25);
+        }
+
+        .stats-sidebar .nav-link.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--bi-blue);
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Control de desvanecimiento de textos al colapsar */
+        .stats-sidebar .nav-link span,
+        .stats-sidebar .sidebar-brand-text,
+        .stats-sidebar .sidebar-footer-text {
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        body.sidebar-collapsed .stats-sidebar .nav-link span,
+        body.sidebar-collapsed .stats-sidebar .sidebar-brand-text,
+        body.sidebar-collapsed .stats-sidebar .sidebar-footer-text {
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+            overflow: hidden;
+            margin: 0 !important;
+        }
+
+        /* --- WRAPPER Y NAVBAR SUPERIOR --- */
         .stats-wrapper {
-            margin-left: 260px;
+            margin-left: var(--sidebar-width);
             min-height: 100vh;
-            background: #f8fafc;
             transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bi-top-header {
+            background: var(--bi-sidebar-bg);
+            border-bottom: 1px solid var(--bi-sidebar-border);
+            padding: 10px 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.25s ease, border-color 0.25s ease;
         }
 
         .stats-content {
             padding: 2rem;
+            flex-grow: 1;
         }
 
-        /* Efectos hover sutiles para elementos interactivos */
-        .stats-avatar:hover {
-            transform: scale(1.05);
-            border-color: #cbd5e1 !important;
+        /* Botón Switch de Modo */
+        .theme-toggle-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bi-icon-color);
+            background: var(--bi-icon-bg);
+            border: 1px solid var(--bi-sidebar-border);
+            transition: all 0.2s ease;
+        }
+        .theme-toggle-btn:hover {
+            background: var(--bi-icon-hover-bg);
+            color: var(--bs-heading-color);
         }
 
-        .stats-card {
-            transition: transform 0.22s ease, box-shadow 0.22s ease;
-        }
-        .stats-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px -5px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02) !important;
-        }
-
-        /* --- LÓGICA RESPONSIVE PARA EL SLIDEBAR --- */
+        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 991.98px) {
             .stats-sidebar {
-                transform: translateX(-100%); /* Oculto por defecto en móviles */
+                transform: translateX(-100%);
+                width: var(--sidebar-width-expanded) !important;
             }
-            
+            body.sidebar-collapsed .stats-sidebar {
+                transform: translateX(-100%);
+            }
             .stats-sidebar.show {
-                transform: translateX(0); /* Desliza hacia adentro */
-                box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+                transform: translateX(0);
+                box-shadow: 10px 0 30px rgba(0,0,0,0.15);
             }
-
-            .stats-wrapper {
-                margin-left: 0; /* Ocupa toda la pantalla en móviles */
+            .stats-wrapper, body.sidebar-collapsed .stats-wrapper {
+                margin-left: 0;
             }
-            
-            .stats-content {
-                padding: 1.25rem;
-            }
-        }
-
-        .stats-filters{
-            background:white;
-
-            padding:20px;
-
-            border-radius:18px;
-
-            box-shadow:0 8px 24px rgba(0,0,0,.05);
-        }
-
-        .stats-filters .form-label{
-            color:#64748b;
-        }
-
-        .stats-filters .form-select{
-            border-radius:12px;
-            min-height:46px;
-        }
-
-        .stats-filters .btn{
-            border-radius:12px;
-            min-height:46px;
-            font-weight:700;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Sidebar (Asume que hereda la clase .stats-sidebar dentro de su partial) -->
     @include('frontend.estadisticas.partials.sidebar')
 
-    <!-- Contenedor Principal -->
     <div class="stats-wrapper">
         
-        <!-- Navbar para Móviles (Solo visible en pantallas chicas) -->
-        <header class="navbar navbar-expand-lg navbar-light bg-white border-bottom d-lg-none px-3 py-2 sticky-top">
-            <button class="btn btn-outline-secondary btn-sm me-2" type="button" onclick="toggleSidebar()">
-                <i class="bi bi-list fs-4"></i>
-            </button>
-            <span class="navbar-brand fw-bold fs-6 mb-0">Comunidad Estadísticas</span>
+        <header class="bi-top-header">
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-sm rounded-3 border-0 text-secondary d-flex align-items-center justify-content-center" 
+                        type="button" onclick="toggleSidebar()" style="width: 36px; height: 36px; background: var(--bi-icon-bg); color: var(--bi-icon-color) !important;">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+                <span class="text-muted small d-none d-md-inline ms-1">
+                    Módulos Analíticos / <strong class="text-body">Reporte Ejecutivo</strong>
+                </span>
+            </div>
+            
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn theme-toggle-btn" type="button" onclick="toggleTheme()" id="themeToggle" title="Cambiar tema visual">
+                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                </button>
+
+                <div class="vr opacity-25" style="height: 24px; color: var(--bi-icon-color)"></div>
+
+                <div class="text-end" style="line-height: 1.2;">
+                    <span class="text-muted d-block" style="font-size: 0.72rem; font-weight: 500;">Última actualización</span>
+                    <span class="text-body fw-bold" style="font-size: 0.8rem;">26/5/2026 22:07</span>
+                </div>
+            </div>
         </header>
 
-        <!-- Contenido de la Vista -->
         <main class="stats-content">
             @yield('content')
-            
         </main>
         
     </div>
 
-    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Script para controlar el menú en móviles -->
     <script>
+        // 1. Manejo del Sidebar
         function toggleSidebar() {
-            const sidebar = document.querySelector('.stats-sidebar');
-            if (sidebar) {
-                sidebar.classList.toggle('show');
-            }
-        }
-        
-        // Cerrar sidebar si se hace click fuera en móviles
-        document.addEventListener('click', function(event) {
-            const sidebar = document.querySelector('.stats-sidebar');
-            const toggleBtn = document.querySelector('.navbar-expand-lg button');
-            
-            if (window.innerWidth < 992 && sidebar && sidebar.classList.contains('show')) {
-                if (!sidebar.contains(event.target) && !toggleBtn.contains(event.target)) {
-                    sidebar.classList.remove('show');
-                }
-            }
-        });
-        
-    </script>
-    <script>
-        // Función encargada de deslizar el menú
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar) {
-                sidebar.classList.toggle('show');
+            if (window.innerWidth >= 992) {
+                document.body.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('bi_sidebar_state', document.body.classList.contains('sidebar-collapsed') ? 'collapsed' : 'expanded');
+            } else {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) sidebar.classList.toggle('show');
             }
         }
 
-        // Cierra el sidebar automáticamente si se clickea fuera de él estando en móviles
-        document.addEventListener('click', function (event) {
-            const sidebar = document.getElementById('sidebar');
-            const toggles = document.querySelectorAll('[onclick="toggleSidebar()"]');
+        // 2. Lógica del Switch de Modo Claro / Oscuro
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const currentTheme = htmlEl.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             
+            htmlEl.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('bi_theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'dark') {
+                icon.className = 'bi bi-sun-fill';
+            } else {
+                icon.className = 'bi bi-moon-stars-fill';
+            }
+        }
+
+        // Al cargar la página, sincronizar estados y Tooltips
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.innerWidth >= 992) {
+                if (localStorage.getItem('bi_sidebar_state') === 'collapsed') {
+                    document.body.classList.add('sidebar-collapsed');
+                }
+            }
+            // Sincronizar icono inicial del botón de tema
+            const activeTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            updateThemeIcon(activeTheme);
+        });
+        
+        // Cerrar offcanvas al clickear fuera (Móvil)
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const menuBtn = document.querySelector('.bi-top-header button');
             if (window.innerWidth < 992 && sidebar && sidebar.classList.contains('show')) {
-                let clickedToggle = false;
-                toggles.forEach(t => { if(t.contains(event.target)) clickedToggle = true; });
-                
-                if (!sidebar.contains(event.target) && !clickedToggle) {
+                if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
                     sidebar.classList.remove('show');
                 }
             }

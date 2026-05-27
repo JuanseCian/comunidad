@@ -568,29 +568,7 @@
             </div>
         </div>
     </div>
-
-
-    <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; margin-bottom:1.25rem; overflow:hidden;">
-        <div style="padding:14px 22px 12px; border-bottom:1px solid #e0ddd6; display:flex; align-items:center; gap:12px;">
-            <div style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#0d92c2,#1aaad8); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:800; flex-shrink:0;">5</div>
-            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#0f172a;">Sistema</span>
-            <span style="font-size:12px; color:#94a3b4; margin-left:auto;">Datos administrativos internos</span>
-        </div>
-        <div style="padding:22px;">
-            <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Sede de origen</label>
-            <select name="sede_origen_id"
-                    style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
-                    onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
-                <option value="">— Seleccionar —</option>
-                @foreach($sedes as $item)
-                    <option value="{{ $item->id }}" {{ old('sede_origen_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
-                @endforeach
-            </select>
-            <p style="font-size:11.5px; color:#94a3b4; margin-top:5px; margin-bottom:0;">Sede desde donde se registra esta persona.</p>
-        </div>
-    </div>
-
-
+    
     <div style="display:flex; align-items:center; justify-content:space-between; padding-top:1rem; border-top:1px solid #e0ddd6; margin-top:.5rem;">
         <a href="{{ route('personas.index') }}" style="height:42px; padding:0 20px; background:white; color:#536070; border:1px solid #c8c4bb; border-radius:10px; font-family:inherit; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:7px; text-decoration:none; transition:background .15s;" onmouseover="this.style.background='#f5f3ee'" onmouseout="this.style.background='white'">
             <i class="bi bi-arrow-left" style="font-size:13px;"></i> Cancelar

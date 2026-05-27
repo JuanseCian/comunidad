@@ -16,43 +16,73 @@ class IngresoEstadisticaController extends Controller
 {
     public function index(Request $request)
     {
-        $anio = $request->anio ?? now()->year;
+        $anio        = $request->anio ?? now()->year;
+        $mes         = $request->mes;
+        $derivacion  = $request->derivacion;
 
-        $totalIngresos = Ingreso::count();
 
-        $ingresosHoy = Ingreso::whereDate(
-            'fecha_ingreso',
-            now()
-        )->count();
+        $query = Ingreso::query();
 
-        $ingresosMes = Ingreso::whereYear(
-                'fecha_ingreso',
-                $anio
-            )
-            ->whereMonth(
-                'fecha_ingreso',
-                now()->month
-            )
+        $query->whereYear('fecha_ingreso', $anio);
+
+        if ($mes) {
+            $query->whereMonth('fecha_ingreso', $mes);
+        }
+
+        if ($derivacion) {
+            $query->where('derivacion_id', $derivacion);
+        }
+
+        $totalIngresos = (clone $query)->count();
+
+        $ingresosHoy = (clone $query)
+            ->whereDate('fecha_ingreso', now())
             ->count();
 
-        $mensuales = IngresoMensual::orderBy('periodo')
+        $ingresosMes = (clone $query)
+            ->whereMonth('fecha_ingreso', now()->month)
+            ->count();
+
+        $mensuales = (clone $query)
+            ->selectRaw("
+                MONTH(fecha_ingreso) as numero_mes,
+                DATE_FORMAT(fecha_ingreso, '%b') as periodo,
+                COUNT(*) as total
+            ")
+            ->groupBy('numero_mes', 'periodo')
+            ->orderBy('numero_mes')
             ->get();
 
-        $diarios = IngresoDiario::orderBy('fecha_ingreso')
+        $diarios = (clone $query)
+            ->selectRaw("
+                DATE(fecha_ingreso) as fecha_ingreso,
+                COUNT(*) as total
+            ")
+            ->groupBy('fecha_ingreso')
+            ->orderBy('fecha_ingreso')
             ->get();
 
-        $usuarios = IngresoPorUsuario::orderByDesc('total_ingresos')
-            ->get();
-
-        $derivaciones = Ingreso::select(
-                'derivaciones.nombre',
-                DB::raw('COUNT(ingresos.id) as total')
+        $usuarios = (clone $query)
+            ->join('users', 'ingresos.user_id', '=', 'users.id')
+            ->select(
+                'users.id',
+                'users.username',
+                DB::raw('COUNT(ingresos.id) as total_ingresos')
             )
-            ->join(
+            ->groupBy('users.id', 'users.username')
+            ->orderByDesc('total_ingresos')
+            ->get();
+
+        $derivaciones = Ingreso::join(
                 'derivaciones',
                 'ingresos.derivacion_id',
                 '=',
                 'derivaciones.id'
+            )
+            ->select(
+                'derivaciones.id',
+                'derivaciones.nombre',
+                DB::raw('COUNT(ingresos.id) as total')
             )
             ->groupBy(
                 'derivaciones.id',
@@ -61,12 +91,13 @@ class IngresoEstadisticaController extends Controller
             ->orderByDesc('total')
             ->get();
 
-        $timeline = Ingreso::with('derivacion')
+        $timeline = (clone $query)
+            ->with('derivacion')
             ->latest('created_at')
             ->take(15)
             ->get();
-
-        $horas = Ingreso::selectRaw("
+        $horas = (clone $query)
+            ->selectRaw("
                 HOUR(hora_ingreso) as hora,
                 COUNT(*) as total
             ")
@@ -92,5 +123,5 @@ class IngresoEstadisticaController extends Controller
                 'anio'
             )
         );
-    }
+    }   
 }

@@ -158,11 +158,39 @@
 
     <div class="row g-3">
         @php
-        $servicios = [
-            ['icon'=>'bi-box-seam','titulo'=>'Entrega de Mercadería','desc'=>'Logística de insumos alimentarios del barrio.','color'=>'#0d92c2','colorBg'=>'#e6f5fb','colorBo'=>'#b3e0f5','route'=>'#'],
-            ['icon'=>'bi-journal-medical','titulo'=>'Asistencia de Sepelio','desc'=>'Servicio de contención y asistencia social.','color'=>'#17a385','colorBg'=>'#e8f9f5','colorBo'=>'#9fe1cb','route'=>'#'],
-        ];
-        @endphp
+            $user = auth()->user();
+            $routeMercaderia = '#';
+            if ($user) {
+
+                if ($user->rol_id == 6) {
+                    $routeMercaderia = route('recepcion.mercaderias.index');
+                } elseif (in_array($user->rol_id, [2,3])) {
+                    $routeMercaderia = route('panel.mercaderias.index');
+                }
+            }
+
+            $servicios = [
+                [
+                    'icon'    => 'bi-box-seam',
+                    'titulo'  => 'Entrega de Mercadería',
+                    'desc'    => 'Logística de insumos alimentarios del barrio.',
+                    'color'   => '#0d92c2',
+                    'colorBg' => '#e6f5fb',
+                    'colorBo' => '#b3e0f5',
+                    'route'   => $routeMercaderia
+                ],
+
+                [
+                    'icon'    => 'bi-journal-medical',
+                    'titulo'  => 'Asistencia de Sepelio',
+                    'desc'    => 'Servicio de contención y asistencia social.',
+                    'color'   => '#17a385',
+                    'colorBg' => '#e8f9f5',
+                    'colorBo' => '#9fe1cb',
+                    'route'   => '#'
+                ],
+            ];
+            @endphp
         @foreach($servicios as $s)
         <div class="col-md-6">
             <a href="{{ $s['route'] }}" style="text-decoration:none; display:block;">
