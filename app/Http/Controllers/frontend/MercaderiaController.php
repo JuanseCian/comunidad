@@ -130,4 +130,31 @@ class MercaderiaController extends Controller
 
         return response()->json($personas);
     }
+
+    public function readonlyIndex(Request $request)
+    {
+        $query = Mercaderia::with(['familia', 'usuario']);
+
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                ->orWhere('apellido', 'like', "%{$search}%")
+                ->orWhere('dni', 'like', "%{$search}%");
+            });
+        }
+
+        $mercaderias = $query
+            ->latest()
+            ->paginate(20);
+
+        $readonly = true;
+
+        return view(
+            'frontend.recepcion.mercaderias.index',
+            compact('mercaderias', 'readonly')
+        );
+    }
 }

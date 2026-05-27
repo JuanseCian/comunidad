@@ -6,238 +6,235 @@
 
 @section('content')
 
-@include('frontend.estadisticas.partials.navbar')
-
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid px-0 py-2">
 
     {{-- =========================
-        ENCABEZADO Y CONTROL DE FILTROS
+        ENCABEZADO Y FILTROS INTEGRADOS (ESTILO POWER BI)
     ========================== --}}
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 pb-3 border-bottom border-light-subtle">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
         <div>
-            <h4 class="fw-bold tracking-tight text-dark mb-1">Panel Estadístico de Ingresos</h4>
-            <p class="text-muted small mb-0">Visualización dinámica y análisis de registros en tiempo real</p>
+            <div class="stats-meta mb-1">Visualización dinámica y análisis de registros en tiempo real</div>
+            <h4 class="fw-bold tracking-tight text-dark m-0" style="font-size: 1.75rem;">Panel Estadístico de <span style="color: var(--sn-blue); font-weight: 400;">Ingresos</span></h4>
         </div>
 
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
             <button 
-                class="btn btn-white border border-light-subtle btn-sm d-flex align-items-center gap-2 px-3 py-2 shadow-xs transition-all duration-200 hover-bg-light" 
+                class="btn btn-white border border-light-subtle btn-sm d-flex align-items-center gap-2 px-3 py-2 shadow-xs rounded-3 transition-all" 
                 type="button" 
                 data-bs-toggle="collapse" 
                 data-bs-target="#collapseFilters" 
                 aria-expanded="false" 
                 aria-controls="collapseFilters"
+                style="min-height: 40px;"
             >
                 <i class="bi bi-sliders2 text-secondary"></i>
-                <span class="fw-medium text-secondary">Configurar Vista</span>
+                <span class="fw-medium text-secondary small">Filtrar Datos</span>
                 <i class="bi bi-chevron-down small text-muted toggle-icon"></i>
             </button>
 
-            <div class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-semibold rounded-2 shadow-xs">
-                <i class="bi bi-calendar3 me-1.5"></i> {{ now()->format('d/m/Y') }}
+            <div class="badge bg-light text-dark border border-light-subtle px-3 py-2 fw-semibold rounded-3 shadow-xs d-flex align-items-center gap-2" style="min-height: 40px; font-size: 0.85rem;">
+                <i class="bi bi-calendar3 text-primary"></i> {{ now()->format('d/m/Y') }}
             </div>
         </div>
     </div>
 
-    {{-- =========================
-        FILTROS COLAPSABLES
-    ========================== --}}
+    {{-- COLAPSIBLE DE FILTROS --}}
     <div class="collapse mb-4" id="collapseFilters">
-        <div class="card border border-light-subtle bg-body-tertiary shadow-sm p-4 rounded-3">
-            <h6 class="fw-bold text-secondary mb-3 small text-uppercase tracking-wider">
-                <i class="bi bi-funnel me-1.5 text-primary"></i> Parámetros de Análisis
-            </h6>
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label fw-medium text-muted small">
-                        <i class="bi bi-calendar-event me-1"></i> Año Histórico
-                    </label>
-                    <select class="form-select border-light-subtle shadow-xs rounded-2 focus-ring" onchange="window.location=this.value">
-                        @for($i = now()->year; $i >= 2024; $i--)
-                            <option value="?anio={{ $i }}" {{ ($anio ?? now()->year) == $i ? 'selected' : '' }}>
-                                {{ $i }}
-                            </option>
-                        @endfor
-                    </select>
-                </div>
+        <div class="card border border-light-subtle shadow-sm rounded-4 overflow-hidden">
+            <div class="card-body p-4 bg-light-subtle">
+                <form method="GET">
+                    <div class="row g-3">
+                        {{-- Año --}}
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Año</label>
+                            <select name="anio" class="form-select rounded-3 small" onchange="this.form.submit()">
+                                @for($i = now()->year; $i >= 2024; $i--)
+                                    <option value="{{ $i }}" {{ request('anio', now()->year) == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
 
-                <div class="col-md-3">
-                    <label class="form-label fw-medium text-muted small">
-                        <i class="bi bi-bar-chart-line me-1"></i> Visualización
-                    </label>
-                    <select id="chartType" class="form-select border-light-subtle shadow-xs rounded-2 focus-ring">
-                        <option value="line" selected>Líneas continuas</option>
-                        <option value="bar">Barras de densidad</option>
-                        <option value="doughnut">Gráfico de Dona</option>
-                        <option value="pie">Gráfico de Torta</option>
-                    </select>
-                </div>
+                        {{-- Mes --}}
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Mes</label>
+                            <select name="mes" class="form-select rounded-3 small" onchange="this.form.submit()">
+                                <option value="">Todos los meses</option>
+                                @foreach([1=>'Enero', 2=>'Febrero', 3=>'Marzo', 4=>'Abril', 5=>'Mayo', 6=>'Junio', 7=>'Julio', 8=>'Agosto', 9=>'Septiembre', 10=>'Octubre', 11=>'Noviembre', 12=>'Diciembre'] as $num => $mes)
+                                    <option value="{{ $num }}" {{ request('mes') == $num ? 'selected' : '' }}>{{ $mes }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                <div class="col-md-3">
-                    <label class="form-label fw-medium text-muted small">
-                        <i class="bi bi-diagram-3 me-1"></i> Segmentación
-                    </label>
-                    <select id="groupType" class="form-select border-light-subtle shadow-xs rounded-2 focus-ring">
-                        <option value="mensual" selected>Evolución Mensual</option>
-                        <option value="derivacion">Por Derivaciones</option>
-                        <option value="horas">Carga Horaria</option>
-                    </select>
-                </div>
+                        {{-- Derivación --}}
+                        <div class="col-md-3">
+                            <label class="form-label small fw-semibold text-muted">Derivación</label>
+                            <select name="derivacion" class="form-select rounded-3 small" onchange="this.form.submit()">
+                                <option value="">Todas las derivaciones</option>
+                                @foreach($derivaciones as $d)
+                                    <option value="{{ $d->id }}" {{ request('derivacion') == $d->id ? 'selected' : '' }}>{{ $d->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                <div class="col-md-3">
-                    <label class="form-label fw-medium text-muted small">
-                        <i class="bi bi-activity me-1"></i> Origen de Datos
-                    </label>
-                    <div class="stats-status-box border border-light-subtle shadow-xs rounded-2 bg-white">
-                        <span class="pulse-dot"></span>
-                        <span class="small fw-medium text-dark">Sincronizado en Vivo</span>
+                        {{-- Reiniciar --}}
+                        <div class="col-md-3 d-flex align-items-end">
+                            <a href="{{ route('estadisticas.ingresos') }}" class="btn btn-white border rounded-3 w-100 fw-medium small d-flex align-items-center justify-content-center gap-2" style="min-height: 38px;">
+                                <i class="bi bi-arrow-counterclockwise"></i> Reiniciar filtros
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 
     {{-- =========================
-        KPIs (REUTILIZANDO TU PARTIAL CARD)
+        TARJETAS DE PRESENTACIÓN (KPIs)
     ========================== --}}
     <div class="row g-3 mb-4">
         <div class="col-6 col-xl-3">
-            @include('frontend.estadisticas.partials.card', [
-                'title' => 'Total Ingresos',
-                'value' => $totalIngresos,
-                'icon' => 'bi bi-box-arrow-in-right',
-                'color' => 'success'
-            ])
+            @include('frontend.estadisticas.partials.card', ['title' => 'Total Ingresos', 'value' => $totalIngresos, 'icon' => 'bi bi-box-arrow-in-right', 'color' => 'primary'])
         </div>
-
         <div class="col-6 col-xl-3">
-            @include('frontend.estadisticas.partials.card', [
-                'title' => 'Ingresos Hoy',
-                'value' => $ingresosHoy,
-                'icon' => 'bi bi-calendar-day',
-                'color' => 'primary'
-            ])
+            @include('frontend.estadisticas.partials.card', ['title' => 'Ingresos Hoy', 'value' => $ingresosHoy, 'icon' => 'bi bi-calendar-day', 'color' => 'success'])
         </div>
-
         <div class="col-6 col-xl-3">
-            @include('frontend.estadisticas.partials.card', [
-                'title' => 'Ingresos del Mes',
-                'value' => $ingresosMes,
-                'icon' => 'bi bi-calendar-month',
-                'color' => 'warning'
-            ])
+            @include('frontend.estadisticas.partials.card', ['title' => 'Ingresos del Mes', 'value' => $ingresosMes, 'icon' => 'bi bi-bar-chart-line', 'color' => 'info'])
         </div>
-
         <div class="col-6 col-xl-3">
-            @include('frontend.estadisticas.partials.card', [
-                'title' => 'Derivación Principal',
-                'value' => $topDerivacion->nombre ?? 'Sin datos',
-                'icon' => 'bi bi-diagram-3',
-                'color' => 'info',
-                'isText' => true {{-- Flag para que el partial baje el tamaño si es texto --}}
-            ])
+            @include('frontend.estadisticas.partials.card', ['title' => 'Derivación Principal', 'value' => $topDerivacion->nombre ?? 'Sin datos', 'icon' => 'bi bi-diagram-3', 'color' => 'warning', 'isText' => true])
         </div>
     </div>
 
-    {{-- =========================
-        TIMELINE HORIZONTAL
-    ========================== --}}
-    <div class="card border border-light-subtle shadow-sm p-4 mb-4 rounded-3">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <div>
-                <h5 class="fw-bold tracking-tight text-dark mb-0">Línea Temporal de Ingresos</h5>
-                <p class="text-muted small mb-0">Evolución mensual del sistema</p>
-            </div>
-            <span class="badge bg-body-secondary border text-secondary px-3 py-2 fw-medium rounded-2">
-                Período {{ $anio ?? now()->year }}
-            </span>
-        </div>
-
-        <div class="timeline-wrapper pb-2">
-            @foreach($mensuales as $item)
-                <div class="timeline-item">
-                    <div class="timeline-line"></div>
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-month">{{ $item->periodo }}</div>
-                    <div class="timeline-value text-dark">{{ $item->total }}</div>
+        {{-- NUEVA SECCIÓN DE ÚLTIMOS INGRESOS EN ACORDEÓN (DEBAJO DE LA LÍNEA DE TIEMPO) --}}
+        <div class="accordion accordion-flush" id="accordionRecentActivity">
+            <div class="accordion-item border-0">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed px-4 py-3 fw-semibold text-secondary small bg-light-subtle d-flex gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRecent" aria-expanded="false" aria-controls="collapseRecent">
+                        <i class="bi bi-clock-history text-primary"></i> Ver Detalle de Últimos Ingresos Registrados
+                    </button>
+                </h2>
+                <div id="collapseRecent" class="accordion-collapse collapse" data-bs-parent="#accordionRecentActivity">
+                    <div class="accordion-body p-4 bg-white design-scroll" style="max-height: 380px; overflow-y: auto;">
+                        <div class="row g-3">
+                            @forelse($timeline as $item)
+                                <div class="col-12 col-md-6 col-xl-4">
+                                    <div class="p-3 border rounded-3 bg-light-subtle h-100 d-flex flex-column justify-content-between transition-all hover-bg-light">
+                                        <div>
+                                            <div class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+                                                <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.75rem;">
+                                                    <i class="bi bi-person"></i>
+                                                </div>
+                                                {{ $item->nombre }} {{ $item->apellido }}
+                                            </div>
+                                            <small class="text-muted d-block mb-2">
+                                                <i class="bi bi-clock me-1"></i> {{ $item->created_at->format('d/m/Y H:i') }}
+                                            </small>
+                                        </div>
+                                        @if($item->derivacion)
+                                            <div>
+                                                <span class="badge bg-white text-secondary border rounded-2 px-2 py-1.5 font-monospace" style="font-size: 0.75rem;">
+                                                    {{ $item->derivacion->nombre }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-12 text-center py-3 text-muted small">No hay registros recientes disponibles.</div>
+                            @endforelse
+                        </div>
+                    </div>
                 </div>
-            @endforeach
+            </div>
         </div>
     </div>
 
     {{-- =========================
-        CONTENIDO PRINCIPAL
+        DISTRIBUCIÓN DE GRÁFICOS Y OPERADORES
     ========================== --}}
     <div class="row g-4">
-        {{-- Gráfico Principal Reutilizado --}}
-        <div class="col-lg-8">
-            @include('frontend.estadisticas.partials.chart', [
-                'title' => 'Visualización Estadística Dinámica',
-                'chartId' => 'mainChart'
-            ])
-        </div>
 
-        <div class="col-lg-4">
-            <div class="d-flex flex-column gap-4">
-                {{-- Gráfico Donut Reutilizado --}}
-                @include('frontend.estadisticas.partials.chart', [
-                    'title' => 'Distribución General de Derivaciones',
-                    'chartId' => 'donutChart'
-                ])
-
-                {{-- Actividad Reciente --}}
-                <div class="card border border-light-subtle shadow-sm p-4 rounded-3">
-                    <div class="mb-4">
-                        <h5 class="fw-bold tracking-tight text-dark mb-0">Actividad Reciente</h5>
-                        <p class="text-muted small mb-0">Últimos ingresos registrados en plataforma</p>
-                    </div>
-
-                    <div class="activity-container ps-1">
-                        @foreach($timeline as $item)
-                            <div class="timeline-activity">
-                                <div class="timeline-dot-mini"></div>
-                                <div class="flex-grow-1 min-w-0">
-                                    <div class="fw-semibold text-dark text-truncate small">
-                                        {{ $item->nombre }} {{ $item->apellido }}
-                                    </div>
-                                    <small class="text-muted d-block mb-1.5" style="font-size: 0.75rem;">
-                                        <i class="bi bi-clock me-1"></i>{{ $item->created_at->format('d/m/Y H:i') }}
-                                    </small>
-                                    @if($item->derivacion)
-                                        <span class="badge bg-light text-secondary border font-monospace px-2 py-1" style="font-size: 0.7rem;">
-                                            {{ $item->derivacion->nombre }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
+        {{-- GRÁFICO DINÁMICO PRINCIPAL --}}
+        <div class="col-xl-8">
+            <div class="card border border-light-subtle shadow-xs rounded-4 h-100 bg-white">
+                <div class="p-4 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h5 class="fw-bold mb-1" style="font-size: 1.15rem;">Visualización Estadística</h5>
+                            <small class="text-muted">Distribución y comportamiento volumétrico de ingresos</small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <select id="chartType" class="form-select form-select-sm rounded-3 bg-light border-0 small fw-medium text-secondary" style="height: 36px;">
+                                <option value="line">Líneas</option>
+                                <option value="bar">Barras</option>
+                                <option value="doughnut">Dona</option>
+                                <option value="pie">Torta</option>
+                            </select>
+                            <select id="groupType" class="form-select form-select-sm rounded-3 bg-light border-0 small fw-medium text-secondary" style="height: 36px;">
+                                <option value="mensual">Mensual</option>
+                                <option value="derivacion">Derivaciones</option>
+                                <option value="horas">Horarios</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-
-                {{-- Rendimiento de Operadores --}}
-                <div class="card border border-light-subtle shadow-sm p-4 rounded-3">
-                    <h5 class="fw-bold tracking-tight text-dark mb-3">Rendimiento de Operadores</h5>
-                    <div class="d-flex flex-column gap-2 design-scroll" style="max-height: 280px; overflow-y: auto;">
-                        @foreach($usuarios as $usuario)
-                            <div class="operator-item p-2 rounded-2 d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center gap-3 min-w-0">
-                                    <div class="operator-avatar border border-light-subtle shadow-xs bg-body-secondary text-secondary">
-                                        <i class="bi bi-person text-secondary-emphasis"></i>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <div class="fw-semibold text-dark text-truncate small">{{ $usuario->username }}</div>
-                                        <small class="text-muted d-block" style="font-size: 0.75rem;">Módulo Operador</small>
-                                    </div>
-                                </div>
-                                <div class="operator-count font-monospace shadow-xs border border-success-subtle">
-                                    {{ $usuario->total_ingresos }}
-                                </div>
-                            </div>
-                        @endforeach
+                <div class="p-4">
+                    <div style="height: 380px; position: relative;">
+                        <canvas id="mainChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
+
+        {{-- COLUMNA LATERAL UNIFICADA: TORTA + DETALLE OPERADORES --}}
+        <div class="col-xl-4">
+            <div class="d-flex flex-column gap-4">
+
+                {{-- GRÁFICO DE TORTA DE DERIVACIONES --}}
+                <div class="card border border-light-subtle shadow-xs rounded-4 bg-white">
+                    <div class="p-4 border-bottom">
+                        <h6 class="fw-bold mb-1" style="font-size: 1.05rem;">Distribución de Derivaciones</h6>
+                        <small class="text-muted">Sectores institucionales con mayor demanda</small>
+                    </div>
+                    <div class="p-4">
+                        <div style="height: 240px; position: relative;">
+                            <canvas id="donutChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- MOVIDO DEBAJO DEL GRÁFICO: CONTROL DE CARGAS POR OPERADOR --}}
+                <div class="card border border-light-subtle shadow-xs rounded-4 bg-white">
+                    <div class="p-4 border-bottom">
+                        <h6 class="fw-bold mb-1" style="font-size: 1.05rem;">Cargas por Usuario</h6>
+                        <small class="text-muted">Volumen de ingresos procesados por cada operador</small>
+                    </div>
+                    <div class="p-3 design-scroll" style="max-height: 260px; overflow-y: auto;">
+                        @forelse($usuarios as $usuario)
+                            <div class="operator-row">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="operator-avatar shadow-2xs">
+                                        <i class="bi bi-person-workspace"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold small text-dark">{{ $usuario->username }}</div>
+                                        <small class="text-muted" style="font-size: 0.75rem;">Operador del Sistema</small>
+                                    </div>
+                                </div>
+                                <span class="operator-badge shadow-3xs">
+                                    {{ $usuario->total_ingresos }}
+                                </span>
+                            </div>
+                        @empty
+                            <div class="text-center py-3 text-muted small">Sin operadores activos registrados.</div>
+                        @endforelse
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -263,9 +260,10 @@
 
         let currentChart;
 
+        // Paleta refinada estilo Power BI (Tonos azules, grises limpios y acentos corporativos)
         const colors = {
-            primary: '#198754',
-            palette: ['#198754', '#0d6efd', '#ffc107', '#dc3545', '#0dcaf0', '#6f42c1', '#fd7e14', '#20c997']
+            primary: '#0070f3',
+            palette: ['#0070f3', '#4b8df8', '#10b981', '#f59e0b', '#3b82f6', '#6366f1', '#8b5cf6', '#ec4899']
         };
 
         function renderChart() {
@@ -279,15 +277,15 @@
             }
 
             const type = chartTypeSelect.value;
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(25, 135, 84, 0.2)');
-            gradient.addColorStop(1, 'rgba(25, 135, 84, 0.00)');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+            gradient.addColorStop(0, 'rgba(0, 112, 243, 0.15)');
+            gradient.addColorStop(1, 'rgba(0, 112, 243, 0.00)');
 
             let datasetConfig = {
-                label: 'Registros',
+                label: 'Registros Procesados',
                 data: data,
                 borderWidth: 2.5,
-                tension: 0.3
+                tension: 0.35
             };
 
             if(type === 'line'){
@@ -302,8 +300,8 @@
                 datasetConfig.borderColor = '#fff';
                 datasetConfig.borderWidth = 2;
             } else {
-                datasetConfig.backgroundColor = 'rgba(25, 135, 84, 0.85)';
-                datasetConfig.borderRadius = 4;
+                datasetConfig.backgroundColor = 'rgba(0, 112, 243, 0.85)';
+                datasetConfig.borderRadius = 6;
             }
 
             currentChart = new Chart(ctx, {
@@ -316,12 +314,12 @@
                         legend: {
                             display: type === 'pie' || type === 'doughnut',
                             position: 'bottom',
-                            labels: { boxWidth: 12, padding: 15, font: { size: 11, family: 'system-ui' } }
+                            labels: { boxWidth: 10, padding: 15, font: { size: 11, family: 'Inter' } }
                         }
                     },
                     scales: (type === 'pie' || type === 'doughnut') ? {} : {
-                        y: { grid: { color: '#f1f3f5' }, border: { dash: [5, 5] }, ticks: { font: { size: 11 } } },
-                        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+                        y: { grid: { color: '#f1f5f9' }, border: { dash: [4, 4] }, ticks: { font: { size: 11, family: 'Inter' }, color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Inter' }, color: '#64748b' } }
                     }
                 }
             });
@@ -337,8 +335,8 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11 } } } },
-                    cutout: '75%'
+                    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 8, padding: 10, font: { size: 10, family: 'Inter' }, color: '#64748b' } } },
+                    cutout: '70%'
                 }
             });
         }
@@ -357,154 +355,34 @@
 @push('styles')
 <style>
     .tracking-tight { letter-spacing: -0.02em; }
-    .tracking-wider { letter-spacing: 0.04em; }
-    .shadow-xs { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
-    .btn-white { background-color: #fff; }
+    .shadow-xs { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04); }
+    .btn-white { background-color: #fff; color: #475569; }
     .hover-bg-light:hover { background-color: #f8fafc !important; }
     .toggle-icon { transition: transform 0.2s ease; }
     
-    .stats-status-box {
-        height: 38px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0 12px;
-    }
+    .design-scroll::-webkit-scrollbar { height: 5px; width: 5px; }
+    .design-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
 
-    .pulse-dot {
-        width: 7px;
-        height: 7px;
-        background: #198754;
-        border-radius: 50%;
-        animation: pulse 2s infinite;
-    }
+    /* Estilos Línea de Tiempo Superior */
+    .timeline-modern { display: flex; justify-content: space-between; gap: 18px; overflow-x: auto; padding-bottom: 10px; }
+    .timeline-modern-item { min-width: 95px; position: relative; text-align: center; flex: 1; }
+    .timeline-modern-line { position: absolute; top: 18px; left: 50%; width: 100%; height: 2px; background: #e2e8f0; z-index: 1; }
+    .timeline-modern-item:last-child .timeline-modern-line { display: none; }
+    .timeline-modern-dot { width: 14px; height: 14px; background: var(--sn-blue); border-radius: 50%; margin: auto; position: relative; z-index: 2; border: 3px solid #fff; box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.15); }
+    .timeline-modern-content { margin-top: 12px; }
+    .timeline-modern-month { display: block; font-size: .7rem; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 4px; }
+    .timeline-modern-total { font-size: 1.25rem; font-weight: 700; color: #0f172a; }
 
-    @keyframes pulse {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.5); }
-        70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(25, 135, 84, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); }
-    }
+    /* Estilos Filas Operadores */
+    .operator-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 12px; transition: .2s; }
+    .operator-row:hover { background: #f8fafc; }
+    .operator-avatar { width: 36px; height: 36px; border-radius: 10px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; color: #475569; }
+    .operator-badge { background: #e6f0ff; color: var(--sn-blue); padding: 5px 10px; border-radius: 8px; font-weight: 700; font-size: .8rem; }
 
-    .timeline-wrapper {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        overflow-x: auto;
-    }
-    .timeline-wrapper::-webkit-scrollbar, .design-scroll::-webkit-scrollbar {
-        height: 5px; width: 5px;
-    }
-    .timeline-wrapper::-webkit-scrollbar-thumb, .design-scroll::-webkit-scrollbar-thumb {
-        background: #e2e8f0; border-radius: 10px;
-    }
-
-    .timeline-item {
-        min-width: 90px;
-        text-align: center;
-        position: relative;
-        flex-grow: 1;
-    }
-
-    .timeline-item:not(:last-child) .timeline-line {
-        position: absolute;
-        top: 6px;
-        left: 50%;
-        width: 100%;
-        height: 2px;
-        background: #f1f3f5;
-        z-index: 1;
-    }
-
-    .timeline-dot {
-        width: 14px;
-        height: 14px;
-        background: #198754;
-        border-radius: 50%;
-        margin: auto;
-        position: relative;
-        z-index: 2;
-        border: 3px solid #fff;
-        box-shadow: 0 0 0 1px #198754;
-    }
-
-    .timeline-month {
-        margin-top: 12px;
-        font-size: .65rem;
-        color: #64748b;
-        font-weight: 700;
-        text-transform: uppercase;
-    }
-
-    .timeline-value {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-top: 1px;
-        letter-spacing: -0.02em;
-    }
-
-    .timeline-activity {
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        position: relative;
-        padding-bottom: 16px;
-    }
-
-    .timeline-activity:not(:last-child)::before {
-        content: '';
-        position: absolute;
-        left: 5px;
-        top: 14px;
-        width: 1px;
-        height: 100%;
-        background: #e2e8f0;
-    }
-
-    .timeline-dot-mini {
-        width: 11px;
-        height: 11px;
-        background: #fff;
-        border-radius: 50%;
-        margin-top: 4px;
-        position: relative;
-        z-index: 2;
-        border: 3px solid #198754;
-        flex-shrink: 0;
-    }
-
-    .activity-container {
-        max-height: 320px;
-        overflow-y: auto;
-    }
-    .activity-container::-webkit-scrollbar { width: 4px; }
-    .activity-container::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
-
-    .operator-item {
-        transition: all 0.2s ease;
-    }
-    .operator-item:hover {
-        background-color: #f8fafc;
-    }
-
-    .operator-avatar {
-        width: 34px;
-        height: 34px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.95rem;
-        flex-shrink: 0;
-    }
-
-    .operator-count {
-        padding: 4px 10px;
-        border-radius: 6px;
-        background: #f0fdf4;
-        color: #166534;
-        font-weight: 700;
-        font-size: 0.8rem;
-    }
+    /* Personalización Acordeón Flujo Limpio */
+    .accordion-button:not(.collapsed) { background-color: #f8fafc; color: var(--sn-blue); box-shadow: none; }
+    .accordion-button::after { background-size: 0.85rem; }
+    .accordion-button:focus { box-shadow: none; border-color: transparent; }
 </style>
 @endpush
 

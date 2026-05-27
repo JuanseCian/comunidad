@@ -14,11 +14,13 @@
                 Registro y control de entregas de módulos alimentarios o asistencia mensual
             </p>
         </div>
-        <a href="{{ route('recepcion.mercaderias.create') }}"
-           class="btn btn-success d-inline-flex align-items-center gap-2 shadow-sm fw-semibold px-3">
-            <i class="bi bi-plus-circle-fill"></i>
-            <span>Nueva entrega</span>
-        </a>
+        @if(empty($readonly))
+            <a href="{{ route('recepcion.mercaderias.create') }}"
+            class="btn btn-success d-inline-flex align-items-center gap-2 shadow-sm fw-semibold px-3">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Nueva entrega</span>
+            </a>
+        @endif
     </div>
 
     {{-- ALERTAS --}}
@@ -41,7 +43,9 @@
     {{-- BUSCADOR --}}
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
-            <form method="GET" action="{{ route('recepcion.mercaderias.index') }}">
+            <form method="GET" action="{{ empty($readonly)
+                                        ? route('recepcion.mercaderias.index')
+                                        : route('panel.mercaderias.index') }}">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-12">
                         <label class="form-label fw-semibold text-secondary small mb-2">Buscar beneficiario</label>

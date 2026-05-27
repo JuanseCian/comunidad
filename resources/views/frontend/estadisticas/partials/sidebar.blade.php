@@ -1,9 +1,15 @@
-<aside class="stats-sidebar d-flex flex-column p-3" id="sidebar">
-    <div class="d-flex align-items-center justify-content-between px-2 mb-4 mt-2">
-        <h3 class="text-white fw-bold mb-0 flex-grow-1 fs-4">
-            <i class="bi bi-shield-shaded text-primary me-2"></i>Comunidad
-        </h3>
-        <button class="btn text-white-50 d-lg-none p-1 border-0" onclick="toggleSidebar()" aria-label="Cerrar menú">
+<aside class="stats-sidebar d-flex flex-column py-3 pe-0 text-start" id="sidebar">
+    
+    <div class="d-flex align-items-center px-3 mb-4 mt-1 gap-2 border-bottom pb-3" style="height: 50px; border-color: var(--bi-sidebar-border) !important;">
+        <div class="d-flex align-items-center justify-content-center rounded-circle fw-bold flex-shrink-0 border" 
+             style="width: 40px; height: 40px; font-size: 0.85rem; background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0369a1; border-color: #bae6fd !important;">
+            SN
+        </div>
+        <div class="overflow-hidden sidebar-brand-text">
+            <h5 class="fw-bold text-gradient mb-0" style="font-size: 1rem; letter-spacing: -0.01em;">Comunidad</h5>
+            <span class="text-muted" style="font-size: 0.68rem; font-weight: 500;">Estadísticas Generales</span>
+        </div>
+        <button class="btn text-muted d-lg-none p-1 border-0 ms-auto" onclick="toggleSidebar()" aria-label="Cerrar menú">
             <i class="bi bi-x-lg fs-5"></i>
         </button>
     </div>
@@ -24,26 +30,24 @@
 
         @foreach($menuItems as $item)
             <a href="{{ route($item['route']) }}" 
-               class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
-                <i class="bi {{ $item['icon'] }} fs-5"></i>
-                <span>{{ $item['label'] }}</span>
+               class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}"
+               title="{{ $item['label'] }}">
+                <i class="bi {{ $item['icon'] }}"></i>
+                <span class="ms-3">{{ $item['label'] }}</span>
             </a>
         @endforeach
-
-        
     </nav>
 
-    <div class="pt-3 border-top border-secondary border-opacity-25 px-2">
-         <a href="{{ route('home') }}"
-                class="flex items-center p-3 text-zinc-400 hover:bg-zinc-800/50 hover:text-white rounded-xl transition-all group">
-
-                    <i data-lucide="house" class="w-5 h-5"></i>
-
-                    <span x-show="sidebarOpen"
-                        class="ml-3 text-sm font-medium">
-                        Volver al Home
-                    </span>
-                </a>
-        <span class="text-muted small">Desarrollo Humano</span>
+    <div class="pt-3 border-top px-3 d-flex flex-column gap-1" style="border-color: var(--bi-sidebar-border) !important;">
+        <a href="{{ route('home') }}" 
+           class="nav-link p-2 rounded-3 border-0 m-0 d-flex align-items-center"
+           style="background: rgba(239, 68, 68, 0.08); color: #f43f5e;"
+           title="Volver al Home">
+            <i class="bi bi-box-arrow-left m-0 d-flex align-items-center justify-content-center" style="background: transparent; width:24px; height:24px; font-size:1rem;"></i>
+            <span class="ms-2 small fw-semibold">Volver al Home</span>
+        </a>
+        <div class="sidebar-footer-text mt-2 ps-1">
+            <span class="text-secondary fw-medium" style="font-size: 0.7rem; letter-spacing: 0.02em;">Desarrollo Humano</span>
+        </div>
     </div>
 </aside>

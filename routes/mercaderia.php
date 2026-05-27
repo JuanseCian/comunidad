@@ -17,3 +17,15 @@ Route::prefix('recepcion')
         Route::resource('mercaderias', MercaderiaController::class);
 
     });
+
+Route::prefix('panel')
+    ->middleware(['auth', 'checkrole:2,3']) // Admin y Coordinador
+    ->name('panel.')
+    ->group(function () {
+
+        Route::get(
+            '/mercaderias',
+            [MercaderiaController::class, 'readonlyIndex']
+        )->name('mercaderias.index');
+
+    });
