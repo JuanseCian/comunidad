@@ -21,19 +21,11 @@ class NucleoConviviente extends Model
         'activo' => 'boolean',
     ];
 
-    // ─── Relaciones ──────────────────────────────────────────────────────────
-
-    /**
-     * Familia a la que pertenece este núcleo.
-     */
     public function familia()
     {
         return $this->belongsTo(Familia::class, 'familia_id');
     }
 
-    /**
-     * Domicilio del núcleo conviviente.
-     */
     public function domicilio()
     {
         return $this->belongsTo(Domicilio::class, 'domicilio_id');
@@ -49,7 +41,7 @@ class NucleoConviviente extends Model
             'persona_nucleo',
             'nucleo_id',
             'persona_id'
-        )->using(PersonaNucleo::class)->withPivot('grupo_familiar_id');
+        )->using(PersonaNucleoP::class)->withPivot('grupo_familiar_id');
     }
 
     /**
@@ -62,6 +54,6 @@ class NucleoConviviente extends Model
             'persona_nucleo',
             'nucleo_id',
             'grupo_familiar_id'
-        )->using(PersonaNucleo::class);
+        )->using(PersonaNucleoP::class);
     }
 }

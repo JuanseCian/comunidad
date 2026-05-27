@@ -178,15 +178,15 @@ class Persona extends Model
     {
         return $this->hasMany(PersonaBeneficio::class, 'persona_id');
     }
-    public function nucleosConvivientes()
-    {
-        return $this->belongsToMany(
-            \App\Models\NucleoConviviente::class,
-            'persona_nucleo',
-            'persona_id',
-            'nucleo_id'
-        )->using(\App\Models\PersonaNucleo::class)->withPivot('grupo_familiar_id');
-    }
+   public function nucleosConvivientes()
+{
+    return $this->belongsToMany(
+        \App\Models\NucleoConviviente::class,
+        'persona_nucleo',
+        'persona_id',
+        'nucleo_id'
+    )->using(\App\Models\PersonaNucleoP::class)->withPivot('grupo_familiar_id');
+}
     
 
     public function idsGrupoFamiliarConviviente()

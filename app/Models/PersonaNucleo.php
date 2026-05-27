@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Usado para inserts directos: PersonaNucleo::firstOrCreate([...])
+ */
 class PersonaNucleo extends Model
 {
     protected $table = 'persona_nucleo';
 
-    // La tabla tiene created_at pero no updated_at
     const UPDATED_AT = null;
 
     protected $fillable = [
@@ -16,8 +18,6 @@ class PersonaNucleo extends Model
         'persona_id',
         'grupo_familiar_id',
     ];
-
-    // ─── Relaciones ──────────────────────────────────────────────────────────
 
     public function nucleo()
     {
