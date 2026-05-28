@@ -176,17 +176,17 @@
 
         /* Botón Switch de Modo */
         .theme-toggle-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--bi-icon-color);
-            background: var(--bi-icon-bg);
-            border: 1px solid var(--bi-sidebar-border);
-            transition: all 0.2s ease;
-        }
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: var(--bi-icon-bg);
+    border: 1px solid var(--bi-sidebar-border);
+    transition: all 0.2s ease;
+}
         .theme-toggle-btn:hover {
             background: var(--bi-icon-hover-bg);
             color: var(--bs-heading-color);
