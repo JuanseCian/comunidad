@@ -204,6 +204,54 @@
     #modalSugerenciaPrograma { transition: all 0.3s ease-in-out; }
     #modalSugerenciaPrograma .sp-btn-primary { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     #modalSugerenciaPrograma .sp-btn-primary:hover { transform: scale(1.02); }
+
+    /* ── Cards colapsables ────────────────── */
+    .sp-card-header.sp-collapsible {
+        cursor: pointer;
+        user-select: none;
+        transition: background .15s;
+    }
+    .sp-card-header.sp-collapsible:hover {
+        background: #eef4f8;
+    }
+    .sp-collapse-icon {
+        width: 22px; height: 22px;
+        border-radius: 6px;
+        background: var(--blue-lt);
+        border: 1px solid var(--blue-brd);
+        color: var(--blue-dk);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px;
+        margin-left: 6px;
+        flex-shrink: 0;
+        transition: background .15s, transform .25s ease;
+    }
+    .sp-card-header.sp-collapsible:hover .sp-collapse-icon {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: white;
+    }
+    .sp-collapse-icon.rotated {
+        transform: rotate(-180deg);
+    }
+    .sp-card-body.sp-collapsible-body {
+        overflow: hidden;
+        transition: max-height .3s ease, opacity .25s ease, padding .3s ease;
+        max-height: 2000px;
+        opacity: 1;
+    }
+    .sp-card-body.sp-collapsible-body.collapsed {
+        max-height: 0 !important;
+        opacity: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .sp-card.is-collapsed {
+        height: auto !important;
+    }
+    .sp-card-header.sp-collapsible .sp-card-header-left {
+        flex: 1;
+    }
 </style>
 
 {{-- ══════════════════════════════════════════
@@ -1982,6 +2030,53 @@ function toggleAdjuntos(id) {
     const panel = document.getElementById('adjuntos-' + id);
     panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
+
+// ── Cards colapsables ──────────────────────────────────────────────
+(function initCollapsibleCards() {
+    document.querySelectorAll('.sp-card-header').forEach(function(header) {
+        // Excluir headers que contengan botones de edición o acciones importantes
+        const card = header.closest('.sp-card');
+        if (!card) return;
+
+        const body = card.querySelector('.sp-card-body');
+        if (!body) return;
+
+        // Agregar clase collapsible
+        header.classList.add('sp-collapsible');
+        body.classList.add('sp-collapsible-body');
+
+        // Agregar ícono chevron al final del header
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-chevron-up sp-collapse-icon';
+        // Insertar el icono como wrapper
+        const iconWrapper = document.createElement('span');
+        iconWrapper.className = 'sp-collapse-icon';
+        iconWrapper.innerHTML = '<i class="bi bi-chevron-up"></i>';
+        header.appendChild(iconWrapper);
+
+        // Estado inicial: colapsado
+        let collapsed = true;
+        body.classList.add('collapsed');
+        iconWrapper.querySelector('i').className = 'bi bi-chevron-down';
+        card.classList.add('is-collapsed');
+
+        header.addEventListener('click', function(e) {
+            // No colapsar si se hizo clic en el botón Editar u otro botón/link de acción
+            if (e.target.closest('.sp-card-action, button, a, input, select')) return;
+
+            collapsed = !collapsed;
+            if (collapsed) {
+                body.classList.add('collapsed');
+                iconWrapper.querySelector('i').className = 'bi bi-chevron-down';
+                card.classList.add('is-collapsed');
+            } else {
+                body.classList.remove('collapsed');
+                iconWrapper.querySelector('i').className = 'bi bi-chevron-up';
+                card.classList.remove('is-collapsed');
+            }
+        });
+    });
+})();
 </script>
 
 @endsection
