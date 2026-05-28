@@ -1233,9 +1233,11 @@
                                                         <th style="color:var(--teal-dk);">Nombre</th>
                                                         <th style="color:var(--teal-dk);">Documento</th>
                                                         <th style="color:var(--teal-dk);">Nacimiento</th>
+                                                        <th style="color:var(--teal-dk);">Dirección</th>
                                                         <th style="color:var(--teal-dk);">Cobertura</th>
                                                         <th style="color:var(--teal-dk);">Situación</th>
                                                         <th style="color:var(--teal-dk);">Ingresos</th>
+                                                        <th style="color:var(--teal-dk);"></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -1247,6 +1249,7 @@
                                                             </td>
                                                             <td style="color:var(--slate);">{{ $m->tipo_documento?->nombre ?? '' }} {{ $m->numero_documento ?? '—' }}</td>
                                                             <td style="color:var(--slate);">{{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}</td>
+                                                            <td style="color:var(--slate); font-size:12.5px;">{{ $m->direccion ?? '—' }}</td>
                                                             <td>
                                                                 @if($m->cobertura?->nombre)
                                                                     <span class="sp-tag-blue" style="font-size:11.5px; padding:2px 9px;">{{ $m->cobertura->nombre }}</span>
@@ -1256,6 +1259,13 @@
                                                             </td>
                                                             <td style="color:var(--slate);">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
                                                             <td style="font-weight:700; color:var(--ink);">{{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}</td>
+                                                            <td style="white-space:nowrap;">
+                                                                <button type="button"
+                                                                    onclick="abrirModalEditarIntegrante({{ $m->id }}, {{ json_encode($m->nombre) }}, {{ json_encode($m->relacion_titular) }}, {{ json_encode($m->numero_documento) }}, {{ json_encode($m->fecha_nacimiento) }}, {{ $m->ingresos ?? 'null' }}, {{ json_encode($m->direccion) }})"
+                                                                    class="sp-card-action" style="border:none; cursor:pointer; font-family:inherit;">
+                                                                    <i class="bi bi-pencil-fill" style="font-size:10px;"></i> Editar
+                                                                </button>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -1280,9 +1290,11 @@
                                                         <th style="color:#b45309;">Nombre</th>
                                                         <th style="color:#b45309;">Documento</th>
                                                         <th style="color:#b45309;">Nacimiento</th>
+                                                        <th style="color:#b45309;">Dirección</th>
                                                         <th style="color:#b45309;">Cobertura</th>
                                                         <th style="color:#b45309;">Situación</th>
                                                         <th style="color:#b45309;">Ingresos</th>
+                                                        <th style="color:#b45309;"></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -1294,6 +1306,7 @@
                                                             </td>
                                                             <td style="color:var(--slate);">{{ $m->tipo_documento?->nombre ?? '' }} {{ $m->numero_documento ?? '—' }}</td>
                                                             <td style="color:var(--slate);">{{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}</td>
+                                                            <td style="color:var(--slate); font-size:12.5px;">{{ $m->direccion ?? '—' }}</td>
                                                             <td>
                                                                 @if($m->cobertura?->nombre)
                                                                     <span class="sp-tag-blue" style="font-size:11.5px; padding:2px 9px;">{{ $m->cobertura->nombre }}</span>
@@ -1303,6 +1316,13 @@
                                                             </td>
                                                             <td style="color:var(--slate);">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
                                                             <td style="font-weight:700; color:var(--ink);">{{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}</td>
+                                                            <td style="white-space:nowrap;">
+                                                                <button type="button"
+                                                                    onclick="abrirModalEditarIntegrante({{ $m->id }}, {{ json_encode($m->nombre) }}, {{ json_encode($m->relacion_titular) }}, {{ json_encode($m->numero_documento) }}, {{ json_encode($m->fecha_nacimiento) }}, {{ $m->ingresos ?? 'null' }}, {{ json_encode($m->direccion) }})"
+                                                                    class="sp-card-action" style="border:none; cursor:pointer; font-family:inherit;">
+                                                                    <i class="bi bi-pencil-fill" style="font-size:10px;"></i> Editar
+                                                                </button>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -1320,9 +1340,11 @@
                                                     <th>Nombre</th>
                                                     <th>Documento</th>
                                                     <th>Nacimiento</th>
+                                                    <th>Dirección</th>
                                                     <th>Cobertura</th>
                                                     <th>Situación</th>
                                                     <th>Ingresos</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -1334,6 +1356,7 @@
                                                         </td>
                                                         <td style="color:var(--slate);">{{ $m->tipo_documento?->nombre ?? '' }} {{ $m->numero_documento ?? '—' }}</td>
                                                         <td style="color:var(--slate);">{{ $m->fecha_nacimiento ? \Carbon\Carbon::parse($m->fecha_nacimiento)->format('d/m/Y') : '—' }}</td>
+                                                        <td style="color:var(--slate); font-size:12.5px;">{{ $m->direccion ?? '—' }}</td>
                                                         <td>
                                                             @if($m->cobertura?->nombre)
                                                                 <span class="sp-tag-blue" style="font-size:11.5px; padding:2px 9px;">{{ $m->cobertura->nombre }}</span>
@@ -1343,6 +1366,13 @@
                                                         </td>
                                                         <td style="color:var(--slate);">{{ $m->situacion_ocupacional?->nombre ?? '—' }}</td>
                                                         <td style="font-weight:700; color:var(--ink);">{{ $m->ingresos ? '$' . number_format($m->ingresos, 0, ',', '.') : '—' }}</td>
+                                                        <td style="white-space:nowrap;">
+                                                            <button type="button"
+                                                                onclick="abrirModalEditarIntegrante({{ $m->id }}, {{ json_encode($m->nombre) }}, {{ json_encode($m->relacion_titular) }}, {{ json_encode($m->numero_documento) }}, {{ json_encode($m->fecha_nacimiento) }}, {{ $m->ingresos ?? 'null' }}, {{ json_encode($m->direccion) }})"
+                                                                class="sp-card-action" style="border:none; cursor:pointer; font-family:inherit;">
+                                                                <i class="bi bi-pencil-fill" style="font-size:10px;"></i> Editar
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -1820,6 +1850,67 @@
     </div>
 </div>
 
+{{-- Modal: Editar integrante del grupo familiar --}}
+@if(Auth::user()->puedeEditar())
+<div id="modalEditarIntegrante"
+     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:1050; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:white; border-radius:16px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25);">
+        <div style="padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+            <div style="font-weight:700; font-size:15px; color:var(--ink);">
+                <i class="bi bi-person-fill me-2" style="color:var(--blue);"></i>
+                Editar integrante
+            </div>
+            <button type="button" onclick="document.getElementById('modalEditarIntegrante').style.display='none'"
+                    style="background:none; border:none; font-size:20px; color:var(--muted); cursor:pointer; line-height:1;">&times;</button>
+        </div>
+        <form method="POST" id="formEditarIntegrante" style="padding:20px 22px;">
+            @csrf
+            @method('PUT')
+            <input type="hidden" id="edit_integrante_id" name="id">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label style="font-size:11px; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Nombre completo <span style="color:#e74c3c;">*</span></label>
+                    <input type="text" id="edit_integrante_nombre" name="nombre" required
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:inherit; color:var(--ink);">
+                </div>
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Relación con el titular</label>
+                    <input type="text" id="edit_integrante_relacion" name="relacion_titular" placeholder="Ej: Hijo/a, Cónyuge..."
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:inherit; color:var(--ink);">
+                </div>
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">N° de documento</label>
+                    <input type="text" id="edit_integrante_documento" name="numero_documento" placeholder="Ej: 12345678"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:inherit; color:var(--ink);">
+                </div>
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Fecha de nacimiento</label>
+                    <input type="date" id="edit_integrante_nacimiento" name="fecha_nacimiento"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:inherit; color:var(--ink);">
+                </div>
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Ingresos mensuales ($)</label>
+                    <input type="number" id="edit_integrante_ingresos" name="ingresos" min="0" step="1" placeholder="0"
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:inherit; color:var(--ink);">
+                </div>
+                <div class="col-12">
+                    <label style="font-size:11px; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Dirección</label>
+                    <input type="text" id="edit_integrante_direccion" name="direccion" placeholder="Calle, número, piso..."
+                           style="width:100%; height:40px; padding:0 12px; border:1px solid var(--border); border-radius:10px; font-size:14px; font-family:inherit; color:var(--ink);">
+                </div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
+                <button type="button" onclick="document.getElementById('modalEditarIntegrante').style.display='none'"
+                        class="sp-btn-ghost">Cancelar</button>
+                <button type="submit" class="sp-btn-primary">
+                    <i class="bi bi-check-circle me-1"></i> Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
 {{-- Modal: Registro / actualización de trabajo --}}
 @if(Auth::user()->puedeEditar())
 <div id="modalNuevoTrabajo"
@@ -1968,7 +2059,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-        const modales = ['modalNuevoTrabajo', 'modalPrograma', 'modalSugerenciaPrograma', 'modalEditarPrograma'];
+        const modales = ['modalNuevoTrabajo', 'modalPrograma', 'modalSugerenciaPrograma', 'modalEditarPrograma', 'modalEditarIntegrante'];
         modales.forEach(id => {
             const m = document.getElementById(id);
             if (m) m.style.display = 'none';
@@ -2024,6 +2115,19 @@ function copiarCodigo() {
             icon.style.color = '';
         }, 2000);
     });
+}
+
+
+function abrirModalEditarIntegrante(id, nombre, relacion, documento, nacimiento, ingresos, direccion) {
+    document.getElementById('edit_integrante_id').value         = id;
+    document.getElementById('edit_integrante_nombre').value     = nombre    ?? '';
+    document.getElementById('edit_integrante_relacion').value   = relacion  ?? '';
+    document.getElementById('edit_integrante_documento').value  = documento ?? '';
+    document.getElementById('edit_integrante_nacimiento').value = nacimiento ? nacimiento.substring(0, 10) : '';
+    document.getElementById('edit_integrante_ingresos').value   = ingresos  ?? '';
+    document.getElementById('edit_integrante_direccion').value  = direccion ?? '';
+    document.getElementById('formEditarIntegrante').action = '/grupo-familiar/' + id;
+    document.getElementById('modalEditarIntegrante').style.display = 'flex';
 }
 
 function toggleAdjuntos(id) {

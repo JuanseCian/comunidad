@@ -13,6 +13,8 @@ Route::prefix('personas/{persona}/grupo-familiar')
 
        
         Route::post('/', [GrupoFamiliarController::class, 'store'])->name('store');
+        Route::get('/grupo-familiar/{grupoFamiliar}/edit', [GrupoFamiliarController::class, 'edit'])->name('grupo-familiar.edit');
+        Route::put('/grupo-familiar/{grupoFamiliar}', [GrupoFamiliarController::class, 'update'])->name('grupo-familiar.update');
     });
 
 
