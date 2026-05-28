@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\frontend\PersonaController;
 use App\Http\Controllers\frontend\PersonaProgramaController;
+use App\Http\Controllers\frontend\GrupoFamiliarController;
 use App\Http\Middleware\CheckRole;
 
 Route::middleware(['auth'])->group(function () {
@@ -21,7 +22,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/personas/{id}/datos', [PersonaController::class, 'updateDatos'])->name('personas.updateDatos');
         Route::put('/personas/{id}/domicilio', [PersonaController::class, 'updateDomicilio'])->name('personas.updateDomicilio');
         
-       
+       Route::get('/grupo-familiar/{grupoFamiliar}/edit', [GrupoFamiliarController::class, 'edit'])->name('grupo-familiar.edit');
+        Route::put('/grupo-familiar/{grupoFamiliar}', [GrupoFamiliarController::class, 'update'])->name('grupo-familiar.update');
         Route::post('/persona-programa', [PersonaProgramaController::class, 'store'])->name('persona-programa.store');
         Route::put('/persona-programa/{id}', [PersonaProgramaController::class, 'update'])->name('persona-programa.update');
         Route::post('/personas/{id}/cambiar-programa', [PersonaController::class, 'cambiarPrograma'])->name('personas.cambiarPrograma');
