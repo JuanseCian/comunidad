@@ -357,18 +357,7 @@
     <main class="main">
 
         {{-- TOPBAR --}}
-        <div class="topbar">
-            <div class="topbar-title">
-                <h4>Panel de Recepción</h4>
-                <p>Gestión rápida y organizada de atención social.</p>
-            </div>
-
-            <div class="topbar-badge">
-                <i class="bi bi-activity me-1.5"></i>
-                Sistema activo
-            </div>
-        </div>
-
+      
         {{-- CONTENT --}}
         <div class="content">
             @yield('content')

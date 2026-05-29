@@ -35,10 +35,11 @@ class Atencion extends Model
     {
         return $this->belongsTo(Sede::class);
     }
+    
     public function adjuntos()
-{
-    return $this->hasMany(\App\Models\Adjunto::class, 'entidad_id')
-                ->where('entidad_tipo', 'atencion')
-                ->latest();
-}
+    {
+        return $this->hasMany(\App\Models\Adjunto::class, 'entidad_id')
+                    ->where('entidad_tipo', 'atencion')
+                    ->latest();
+    }
 }

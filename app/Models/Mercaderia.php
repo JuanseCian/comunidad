@@ -42,4 +42,6 @@ class Mercaderia extends Model
             'user_id'
         );
     }
+
+    
 }

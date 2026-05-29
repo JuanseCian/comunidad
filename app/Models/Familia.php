@@ -12,20 +12,10 @@ class Familia extends Model
 
     protected $fillable = ['codigo'];
 
-    // -------------------------------------------------------
-    // Relaciones
-    // -------------------------------------------------------
-
     public function personas()
     {
         return $this->hasMany(Persona::class, 'familia_id');
     }
-
-    // -------------------------------------------------------
-    // Generación de código único
-    // Formato: 3 letras mayúsculas + 3 dígitos + 3 letras mayúsculas
-    // Ejemplo: KAR-482-XTQ  →  guardado sin guiones: KAR482XTQ
-    // -------------------------------------------------------
 
     public static function generarCodigo(): string
     {
@@ -38,7 +28,19 @@ class Familia extends Model
         return $codigo;
     }
 
-    // Devuelve el código formateado con guiones para mostrar en UI
+    public static function eliminarSiVacia($familiaId): void
+    {
+        $familia = self::find($familiaId);
+
+        if (!$familia) {
+            return;
+        }
+
+        if ($familia->personas()->count() === 0) {
+            $familia->delete();
+        }
+    }
+
     public function getCodigoFormateadoAttribute(): string
     {
         return substr($this->codigo, 0, 3)

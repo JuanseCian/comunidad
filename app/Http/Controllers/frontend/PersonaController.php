@@ -379,40 +379,59 @@ class PersonaController extends Controller
 
         $persona = Persona::findOrFail($id);
 
-        // Normalizar: quitar guiones y mayúsculas
+        $familiaAnterior = $persona->familia_id
+            ? Familia::find($persona->familia_id)
+            : null;
+
         $codigo = strtoupper(str_replace('-', '', $request->codigo));
 
         $familia = Familia::where('codigo', $codigo)->first();
 
         if (!$familia) {
             return back()
-                ->withErrors(['codigo' => 'No existe ningún grupo con ese código.'])
+                ->withErrors([
+                    'codigo' => 'No existe ningún grupo con ese código.'
+                ])
                 ->withInput();
         }
 
         if ($familia->id === $persona->familia_id) {
-            return back()->with('familia_error', 'Esta persona ya pertenece a ese grupo.');
+            return back()->with(
+                'familia_error',
+                'Esta persona ya pertenece a ese grupo.'
+            );
         }
 
-        // Si la familia anterior quedó vacía al desvincular, se puede dejar
-        // (no se borra automáticamente para no romper referencias)
         $persona->familia_id = $familia->id;
         $persona->save();
 
-        return back()->with('familia_success', 'Persona vinculada al grupo correctamente.');
+        if (
+            $familiaAnterior &&
+            $familiaAnterior->personas()->count() === 0
+        ) {
+            $familiaAnterior->delete();
+        }
+
+        return back()->with(
+            'familia_success',
+            'Persona vinculada al grupo correctamente.'
+        );
     }
 
     public function desvincularFamilia($id)
     {
         $persona = Persona::findOrFail($id);
 
-        // Crear un grupo nuevo para esta persona
         $nuevaFamilia = Familia::create([
             'codigo' => Familia::generarCodigo(),
         ]);
 
-        $persona->familia_id = $nuevaFamilia->id;
+        $familiaAnteriorId = $persona->familia_id;
+
+        $persona->familia_id = $familia->id;
         $persona->save();
+
+        Familia::eliminarSiVacia($familiaAnteriorId);
 
         return back()->with('familia_success', 'Persona desvinculada. Se le asignó un nuevo grupo.');
     }
@@ -581,10 +600,7 @@ class PersonaController extends Controller
 
         $persona->delete();
 
-        // Si la familia quedó sin personas, eliminarla también
-        if ($familia && $familia->personas()->count() === 0) {
-            $familia->delete();
-        }
+        Familia::eliminarSiVacia($familia?->id);
 
         return redirect()->back()->with('warning', "La solicitud de alta ha sido rechazada y eliminada.");
     }
@@ -592,15 +608,11 @@ class PersonaController extends Controller
     public function destroy($id)
     {
         $persona = Persona::findOrFail($id);
-
         $familia = $persona->familia_id ? Familia::find($persona->familia_id) : null;
 
         $persona->delete();
 
-        // Si la familia quedó sin personas, eliminarla también
-        if ($familia && $familia->personas()->count() === 0) {
-            $familia->delete();
-        }
+        Familia::eliminarSiVacia($familia?->id);
 
         return redirect()->route('personas.index')->with('success', 'Persona eliminada correctamente.');
     }

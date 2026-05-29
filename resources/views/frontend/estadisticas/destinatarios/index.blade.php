@@ -9,29 +9,250 @@
 <div class="container-fluid px-0 py-2">
 
     {{-- =========================
-        HEADER
+    ENCABEZADO Y FILTROS INTEGRADOS
     ========================== --}}
+
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
 
-        <div>
-            <div class="stats-meta mb-1">
-                Visualización demográfica y territorial de destinatarios
-            </div>
-
-            <h4 class="fw-bold tracking-tight text-dark m-0" style="font-size: 1.75rem;">
-                Panel Estadístico de
-                <span style="color: var(--sn-blue); font-weight: 400;">
-                    Destinatarios
-                </span>
-            </h4>
+    <div>
+        <div class="stats-meta mb-1">
+            Visualización demográfica y territorial de destinatarios
         </div>
 
-        <div class="badge bg-light text-dark border border-light-subtle px-3 py-2 fw-semibold rounded-3 shadow-xs d-flex align-items-center gap-2">
+        <h4 class="fw-bold tracking-tight text-dark m-0" style="font-size: 1.75rem;">
+            Panel Estadístico de
+            <span style="color: var(--sn-blue); font-weight: 400;">
+                Destinatarios
+            </span>
+        </h4>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+
+        {{-- BOTÓN FILTROS --}}
+        <button
+            class="btn btn-white border border-light-subtle btn-sm d-flex align-items-center gap-2 px-3 py-2 shadow-xs rounded-3 transition-all"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseFilters"
+            aria-expanded="false"
+            aria-controls="collapseFilters"
+            style="min-height: 40px;"
+        >
+            <i class="bi bi-sliders2 text-secondary"></i>
+
+            <span class="fw-medium text-secondary small">
+                Filtrar Datos
+            </span>
+
+            <i class="bi bi-chevron-down small text-muted toggle-icon"></i>
+        </button>
+
+        {{-- FECHA --}}
+        <div class="badge bg-light text-dark border border-light-subtle px-3 py-2 fw-semibold rounded-3 shadow-xs d-flex align-items-center gap-2"
+            style="min-height: 40px; font-size: 0.85rem;">
+
             <i class="bi bi-calendar3 text-primary"></i>
+
             {{ now()->format('d/m/Y') }}
         </div>
 
+        </div>
+
     </div>
+
+    {{-- =========================
+    FILTROS COLAPSABLES
+    ========================== --}}
+
+    <div class="collapse mb-4" id="collapseFilters">
+
+    <div class="card border border-light-subtle shadow-sm rounded-4 overflow-hidden">
+
+        <div class="card-body p-4 bg-light-subtle">
+
+            <form method="GET">
+
+                <div class="row g-3">
+
+                    {{-- AÑO --}}
+                    <div class="col-md-2">
+
+                        <label class="form-label small fw-semibold text-muted">
+                            Año
+                        </label>
+
+                        <select name="anio"
+                                class="form-select rounded-3 small"
+                                onchange="this.form.submit()">
+
+                            @for($i = now()->year; $i >= 2024; $i--)
+                                <option value="{{ $i }}"
+                                    {{ request('anio', now()->year) == $i ? 'selected' : '' }}>
+                                    {{ $i }}
+                                </option>
+                            @endfor
+
+                        </select>
+
+                    </div>
+
+                    {{-- MES --}}
+                    <div class="col-md-2">
+
+                        <label class="form-label small fw-semibold text-muted">
+                            Mes
+                        </label>
+
+                        <select name="mes"
+                                class="form-select rounded-3 small"
+                                onchange="this.form.submit()">
+
+                            <option value="">
+                                Todos
+                            </option>
+
+                            @foreach([
+                                1=>'Enero',
+                                2=>'Febrero',
+                                3=>'Marzo',
+                                4=>'Abril',
+                                5=>'Mayo',
+                                6=>'Junio',
+                                7=>'Julio',
+                                8=>'Agosto',
+                                9=>'Septiembre',
+                                10=>'Octubre',
+                                11=>'Noviembre',
+                                12=>'Diciembre'
+                            ] as $num => $mes)
+
+                                <option value="{{ $num }}"
+                                    {{ request('mes') == $num ? 'selected' : '' }}>
+                                    {{ $mes }}
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    {{-- BARRIO --}}
+                    <div class="col-md-2">
+
+                        <label class="form-label small fw-semibold text-muted">
+                            Barrio
+                        </label>
+
+                        <select name="barrio"
+                                class="form-select rounded-3 small"
+                                onchange="this.form.submit()">
+
+                            <option value="">
+                                Todos
+                            </option>
+
+                            @foreach($barrios as $barrio)
+
+                                <option value="{{ $barrio->id }}"
+                                    {{ request('barrio') == $barrio->id ? 'selected' : '' }}>
+
+                                    {{ $barrio->nombre }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    {{-- ZONA --}}
+                    <div class="col-md-2">
+
+                        <label class="form-label small fw-semibold text-muted">
+                            Zona
+                        </label>
+
+                        <select name="zona"
+                                class="form-select rounded-3 small"
+                                onchange="this.form.submit()">
+
+                            <option value="">
+                                Todas
+                            </option>
+
+                            @foreach($zonas as $zona)
+
+                                <option value="{{ $zona->id }}"
+                                    {{ request('zona') == $zona->id ? 'selected' : '' }}>
+
+                                    {{ $zona->nombre }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    {{-- GENERO --}}
+                    <div class="col-md-2">
+
+                        <label class="form-label small fw-semibold text-muted">
+                            Género
+                        </label>
+
+                        <select name="genero"
+                                class="form-select rounded-3 small"
+                                onchange="this.form.submit()">
+
+                            <option value="">
+                                Todos
+                            </option>
+
+                            @foreach($generos as $genero)
+
+                                <option value="{{ $genero->id }}"
+                                    {{ request('genero') == $genero->id ? 'selected' : '' }}>
+
+                                    {{ $genero->nombre }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    {{-- RESETEAR --}}
+                    <div class="col-md-2 d-flex align-items-end">
+
+                        <a href="{{ route('estadisticas.destinatarios') }}"
+                        class="btn btn-white border rounded-3 w-100 fw-medium small d-flex align-items-center justify-content-center gap-2"
+                        style="min-height: 38px;">
+
+                            <i class="bi bi-arrow-counterclockwise"></i>
+
+                            Reiniciar
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    </div>
+
 
     {{-- =========================
         KPIs
@@ -322,6 +543,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+
+const collapsable = document.getElementById('collapseFilters');
+const icon = document.querySelector('.toggle-icon');
+
+if(collapsable){
+
+collapsable.addEventListener('show.bs.collapse', () => {
+    icon.style.transform = 'rotate(180deg)';
+});
+
+collapsable.addEventListener('hide.bs.collapse', () => {
+    icon.style.transform = 'rotate(0deg)';
+});
+
+}
+
+
 </script>
 
 @push('styles')
@@ -407,6 +645,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 .accordion-button::after {
     background-size: .85rem;
+}
+
+.btn-white {
+background-color: #fff;
+color: #475569;
+}
+
+.toggle-icon {
+transition: transform .2s ease;
 }
 
 </style>

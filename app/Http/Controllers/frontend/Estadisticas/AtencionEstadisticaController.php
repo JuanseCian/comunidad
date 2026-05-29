@@ -4,30 +4,115 @@ namespace App\Http\Controllers\Frontend\Estadisticas;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\Atencion;
+use Illuminate\Http\Request;
 
-use App\Models\Estadisticas\AtencionMensual;
-use App\Models\Estadisticas\AtencionPorUsuario;
-use App\Models\Estadisticas\TipoAtencion;
+use App\Models\Atencion;
+use App\Models\User;
+
+use Carbon\Carbon;
+use DB;
 
 class AtencionEstadisticaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $totalAtenciones = Atencion::count();
+        $anio = $request->anio ?? now()->year;
+        $mes  = $request->mes;
+        $tipo = $request->tipo;
+        $vista = $request->vista ?? 'mes';
+
+        $query = Atencion::query()
+            ->with(['persona', 'users']);
+
+        $query->whereYear('fecha_atencion', $anio);
+
+        if ($mes) {
+            $query->whereMonth('fecha_atencion', $mes);
+        }
+
+        if ($tipo) {
+            $query->where('tipo', $tipo);
+        }
+
+        $totalAtenciones = (clone $query)->count();
 
         $atencionesMes = Atencion::whereMonth(
             'fecha_atencion',
             now()->month
         )->count();
 
-        $mensuales = AtencionMensual::orderBy('periodo')
+        $atencionesHoy = Atencion::whereDate(
+            'fecha_atencion',
+            today()
+        )->count();
+
+        $tiposMasUsados = (clone $query)
+            ->select(
+                'tipo',
+                DB::raw('COUNT(*) as total')
+            )
+            ->groupBy('tipo')
+            ->orderByDesc('total')
             ->get();
 
-        $usuarios = AtencionPorUsuario::orderByDesc('total')
+        $usuarios = (clone $query)
+            ->select(
+                'usuario_id',
+                DB::raw('COUNT(*) as total')
+            )
+            ->with('users')
+            ->groupBy('usuario_id')
+            ->orderByDesc('total')
             ->get();
 
-        $tipos = TipoAtencion::orderByDesc('total')
+        if ($vista === 'dia') {
+
+            $timeline = (clone $query)
+                ->selectRaw("
+                    DATE(fecha_atencion) as periodo,
+                    COUNT(*) as total
+                ")
+                ->groupBy('periodo')
+                ->orderBy('periodo')
+                ->get();
+
+        } elseif ($vista === 'semana') {
+
+            $timeline = (clone $query)
+                ->selectRaw("
+                    YEARWEEK(fecha_atencion, 1) as periodo,
+                    COUNT(*) as total
+                ")
+                ->groupBy('periodo')
+                ->orderBy('periodo')
+                ->get();
+
+        } elseif ($vista === 'anio') {
+
+            $timeline = (clone $query)
+                ->selectRaw("
+                    YEAR(fecha_atencion) as periodo,
+                    COUNT(*) as total
+                ")
+                ->groupBy('periodo')
+                ->orderBy('periodo')
+                ->get();
+
+        } else {
+
+            $timeline = (clone $query)
+                ->selectRaw("
+                    DATE_FORMAT(fecha_atencion, '%Y-%m') as periodo,
+                    COUNT(*) as total
+                ")
+                ->groupBy('periodo')
+                ->orderBy('periodo')
+                ->get();
+        }
+
+        $ultimasAtenciones = (clone $query)
+            ->latest('fecha_atencion')
+            ->take(10)
             ->get();
 
         return view(
@@ -35,10 +120,15 @@ class AtencionEstadisticaController extends Controller
             compact(
                 'totalAtenciones',
                 'atencionesMes',
-
-                'mensuales',
+                'atencionesHoy',
+                'tiposMasUsados',
                 'usuarios',
-                'tipos'
+                'timeline',
+                'ultimasAtenciones',
+                'anio',
+                'mes',
+                'tipo',
+                'vista'
             )
         );
     }

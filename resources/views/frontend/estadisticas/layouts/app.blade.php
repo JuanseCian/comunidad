@@ -106,7 +106,7 @@
             color: var(--bs-heading-color);
         }
 
-        /* ACTIVO (Mantiene el indicador curvo azul de la foto en ambos modos) */
+        /* ACTIVO (Mantiene el indicador curvo azul en ambos modos) */
         .stats-sidebar .nav-link.active {
             color: var(--bi-blue) !important;
             background: transparent;
@@ -150,6 +150,60 @@
             margin: 0 !important;
         }
 
+        /* --- NUEVOS ESTILOS EXCLUSIVOS PARA ELEMENTOS ACORDEÓN / COLLAPSE --- */
+        .stats-sidebar .nav-link .bi-chevron-down {
+            min-width: auto;
+            height: auto;
+            background: transparent !important;
+            color: var(--bi-icon-color);
+            margin-left: auto;
+            margin-right: 15px;
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .stats-sidebar .nav-link:hover .bi-chevron-down {
+            color: var(--bs-heading-color);
+        }
+
+        /* Rotar flecha indicadora cuando esté desplegado */
+        .stats-sidebar .nav-link[aria-expanded="true"] .bi-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        /* Estilización interna del menú colapsable */
+        .stats-sidebar .collapse {
+            background: rgba(0, 0, 0, 0.02);
+            margin-left: 12px;
+            border-radius: 12px 0 0 12px;
+        }
+        
+        [data-bs-theme="dark"] .stats-sidebar .collapse {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .stats-sidebar .collapse .nav-link {
+            padding-left: 1rem;
+            font-size: 0.88rem;
+            margin-top: 1px;
+            margin-bottom: 1px;
+        }
+
+        .stats-sidebar .collapse .nav-link i {
+            min-width: 32px;
+            height: 32px;
+            font-size: 1rem;
+            background: transparent !important;
+        }
+
+        /* Evitar saltos visuales o desbordamientos de la flecha al estar colapsado en PC */
+        body.sidebar-collapsed .stats-sidebar .nav-link .bi-chevron-down {
+            opacity: 0 !important;
+            width: 0 !important;
+            margin: 0 !important;
+            display: none !important;
+        }
+
         /* --- WRAPPER Y NAVBAR SUPERIOR --- */
         .stats-wrapper {
             margin-left: var(--sidebar-width);
@@ -176,17 +230,18 @@
 
         /* Botón Switch de Modo */
         .theme-toggle-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    background: var(--bi-icon-bg);
-    border: 1px solid var(--bi-sidebar-border);
-    transition: all 0.2s ease;
-}
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bi-icon-color);
+            background: var(--bi-icon-bg);
+            border: 1px solid var(--bi-sidebar-border);
+            transition: all 0.2s ease;
+        }
+        
         .theme-toggle-btn:hover {
             background: var(--bi-icon-hover-bg);
             color: var(--bs-heading-color);
@@ -274,6 +329,7 @@
             updateThemeIcon(newTheme);
         }
 
+        // Sincronizar icono del tema
         function updateThemeIcon(theme) {
             const icon = document.getElementById('themeIcon');
             if (theme === 'dark') {
@@ -283,19 +339,18 @@
             }
         }
 
-        // Al cargar la página, sincronizar estados y Tooltips
+        // Al cargar la página, sincronizar estados
         document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth >= 992) {
                 if (localStorage.getItem('bi_sidebar_state') === 'collapsed') {
                     document.body.classList.add('sidebar-collapsed');
                 }
             }
-            // Sincronizar icono inicial del botón de tema
             const activeTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
             updateThemeIcon(activeTheme);
         });
         
-        // Cerrar offcanvas al clickear fuera (Móvil)
+        // Cerrar al clickear fuera (Mobile)
         document.addEventListener('click', function(e) {
             const sidebar = document.getElementById('sidebar');
             const menuBtn = document.querySelector('.bi-top-header button');

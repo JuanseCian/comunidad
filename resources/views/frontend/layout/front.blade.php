@@ -885,7 +885,7 @@
         <div class="footer-inner">
             <div class="footer-brand">
                 <i class="bi bi-heart-pulse-fill"></i>
-                Gestión Social · Comunidad
+                Secretaría de Desarrollo Humano · Comunidad
             </div>
             <p>&copy; {{ date('Y') }} &nbsp;·&nbsp; Innovación para la Comunidad</p>
         </div>
