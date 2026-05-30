@@ -817,7 +817,7 @@
                 <i class="bi bi-person-badge"></i> Recepción
             </a>
         </li>
-        <li class="nav-dropdown">
+        <li class="nav-dropdown" style="display: none;">
             <span class="dd-toggle">
                 <i class="bi bi-collection"></i> Programas
                 <i class="bi bi-chevron-down" style="font-size:9px;margin-left:2px;"></i>
