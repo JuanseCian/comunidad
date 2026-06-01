@@ -32,7 +32,7 @@ class PersonaBeneficioController extends Controller
             return back()->with('warning', 'La persona ya posee este beneficio activo.');
         }
 
-        PersonaBeneficio::create([
+        $personaBeneficio = PersonaBeneficio::create([
             'persona_id'         => $persona->id,
             'beneficio_id'       => $request->beneficio_id,
             'fecha_otorgamiento' => $request->fecha_otorgamiento ?? now(),
@@ -42,6 +42,25 @@ class PersonaBeneficioController extends Controller
             'observaciones'      => $request->observaciones,
             'registrado_por'     => auth()->id(),
         ]);
+
+        $beneficio = Beneficio::find($request->beneficio_id);
+
+        if (
+            str_contains(
+                strtolower($beneficio->nombre),
+                'plan'
+            ) &&
+            str_contains(
+                strtolower($beneficio->nombre),
+                'vida'
+            )
+        ) {
+
+            return redirect()->route(
+                'plan-mas-vida.create',
+                $personaBeneficio->id
+            );
+        }
 
         return back()->with('success', 'Beneficio asignado correctamente.');
     }

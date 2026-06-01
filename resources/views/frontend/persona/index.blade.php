@@ -4,477 +4,285 @@
 
 @section('content')
 
-<div style="background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2rem 0 1.5rem;">
+{{-- HEADER DE LA SECCIÓN --}}
+<div class="page-header-gradient border-bottom pb-4 pt-5 mb-4">
     <div class="container">
         <div class="row align-items-center g-3">
             <div class="col">
-                <p style="font-size:12px; font-weight:700; color:#0879a8; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:4px;">
-                    <a href="{{ route('dashboard') }}" style="color:#0879a8; text-decoration:none;">Inicio</a>
-                    <span style="opacity:.4; margin:0 6px;">/</span>
+                <p class="text-uppercase fw-bold text-primary small tracking-wide mb-1">
+                    <a href="{{ route('dashboard') }}" class="text-decoration-none">Inicio</a>
+                    <span class="text-muted mx-1">/</span>
                     Personas
                 </p>
-                <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(1.4rem,3vw,2rem); color:#0f172a; margin:0; line-height:1.2;">
+                <h1 class="fw-bolder text-dark mb-1 lh-sm" style="font-size: clamp(1.4rem, 3vw, 2rem);">
                     Padrón de Personas
                 </h1>
-                <p style="color:#536070; font-size:13.5px; font-weight:500; margin:4px 0 0;">
+                <p class="text-secondary fw-medium small mb-0">
                     {{ $personas->total() }} {{ $personas->total() === 1 ? 'persona registrada' : 'personas registradas' }}
-                    @if(request('q') || request('sede_id') || request('barrio_id'))
-                        <span style="background:#e6f5fb; color:#0879a8; border:1px solid #b3e0f5; border-radius:20px; padding:2px 10px; font-size:11.5px; font-weight:700; margin-left:6px;">Filtrado</span>
+                    
+                    @php
+                        // Verificamos de forma limpia si hay algún filtro aplicado
+                        $hayFiltros = request()->anyFilled(['q', 'sede_id', 'barrio_id', 'programa_id', 'edad_desde', 'edad_hasta', 'sexo_id', 'trabaja']);
+                    @endphp
+
+                    @if($hayFiltros)
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-2 px-2 py-1">Filtrado</span>
                     @endif
                 </p>
             </div>
             <div class="col-auto">
-                <a href="{{ route('personas.create') }}" style="
-                    display:inline-flex; align-items:center; gap:8px;
-                    background:linear-gradient(135deg,#0d92c2,#17a385);
-                    color:white; text-decoration:none;
-                    padding:10px 20px; border-radius:12px;
-                    font-family:'Plus Jakarta Sans',sans-serif;
-                    font-weight:700; font-size:14px;
-                    box-shadow:0 4px 14px rgba(13,146,194,0.3);
-                    transition: transform .2s, box-shadow .2s;
-                " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 22px rgba(13,146,194,0.4)'"
-                   onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(13,146,194,0.3)'">
-                    <i class="bi bi-person-plus-fill"></i> Nueva persona
+                <a href="{{ route('personas.create') }}" class="btn btn-gradient-primary shadow-sm rounded-4 fw-bold px-4 py-2 hover-lift">
+                    <i class="bi bi-person-plus-fill me-2"></i> Nueva persona
                 </a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container py-4">
+<div class="container pb-5">
 
+    {{-- ALERTAS --}}
+    @if(session('success'))
+        <div class="alert alert-success d-flex align-items-center rounded-4 border-success-subtle mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <div class="fw-semibold small">{{ session('success') }}</div>
+        </div>
+    @endif
 
-    <form method="GET" action="{{ route('personas.index') }}">
-
-        <div style="
-            background:white;
-            border:1px solid #e0ddd6;
-            border-radius:18px;
-            overflow:hidden;
-            margin-bottom:1.4rem;
-            box-shadow:0 2px 10px rgba(15,23,42,.03);
-        ">
-
-            {{-- HEADER --}}
-            <div style="
-                padding:14px 20px;
-                border-bottom:1px solid #f1efe9;
-                background:#fcfcfb;
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-                flex-wrap:wrap;
-                gap:10px;
-            ">
-
+    {{-- SECCIÓN DE FILTROS --}}
+    <form method="GET" action="{{ route('personas.index') }}" class="mb-4">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            
+            {{-- HEADER DEL FILTRO (Click para colapsar) --}}
+            <div class="card-header bg-light border-bottom-0 d-flex justify-content-between align-items-center p-3 cursor-pointer" 
+                 data-bs-toggle="collapse" 
+                 data-bs-target="#filtrosCollapse" 
+                 aria-expanded="{{ $hayFiltros ? 'true' : 'false' }}">
+                
                 <div>
-                    <div style="
-                        font-size:13px;
-                        font-weight:800;
-                        color:#0f172a;
-                        font-family:'Plus Jakarta Sans',sans-serif;
-                    ">
-                        Filtros de búsqueda
+                    <div class="fw-bolder text-dark small">
+                        <i class="bi bi-funnel-fill text-primary me-1"></i> Filtros de búsqueda
                     </div>
-
-                    <div style="
-                        font-size:12px;
-                        color:#64748b;
-                        margin-top:2px;
-                    ">
-                        Filtrá personas por sede, edad, programas y más.
-                    </div>
+                    <div class="text-muted" style="font-size: 12px;">Filtrá personas por sede, edad, programas y más.</div>
                 </div>
 
-                @php
-                    $hayFiltros =
-                        request('q') ||
-                        request('sede_id') ||
-                        request('barrio_id') ||
-                        request('programa_id') ||
-                        request('edad_desde') ||
-                        request('edad_hasta') ||
-                        request('sexo_id');
-                @endphp
-
-                @if($hayFiltros)
-                    <a href="{{ route('personas.index') }}"
-                    style="
-                            font-size:12px;
-                            font-weight:700;
-                            color:#dc2626;
-                            text-decoration:none;
-                            display:flex;
-                            align-items:center;
-                            gap:5px;
-                    ">
-                        <i class="bi bi-x-circle"></i>
-                        Limpiar filtros
-                    </a>
-                @endif
+                <div class="d-flex align-items-center gap-3">
+                    @if($hayFiltros)
+                        <a href="{{ route('personas.index') }}" class="text-danger fw-bold small text-decoration-none z-index-2" onclick="event.stopPropagation();">
+                            <i class="bi bi-x-circle"></i> Limpiar filtros
+                        </a>
+                    @endif
+                    <i class="bi bi-chevron-down text-muted transition-transform"></i>
+                </div>
             </div>
 
-            {{-- BODY --}}
-            <div style="padding:20px;">
-
-                <div class="row g-3">
-
-                    {{-- BUSCADOR --}}
-                    <div class="col-lg-4">
-                        <label class="form-label small fw-bold text-uppercase text-secondary">
-                            Buscar
-                        </label>
-
-                        <div style="position:relative;">
-                            <i class="bi bi-search"
-                            style="
-                                    position:absolute;
-                                    left:12px;
-                                    top:50%;
-                                    transform:translateY(-50%);
-                                    color:#94a3b8;
-                            "></i>
-
-                            <input
-                                type="text"
-                                name="q"
-                                value="{{ request('q') }}"
-                                placeholder="Nombre, apellido o DNI"
-                                class="form-control"
-                                style="
-                                    height:42px;
-                                    border-radius:12px;
-                                    padding-left:38px;
-                                    border:1px solid #d6d3cd;
-                                ">
+            {{-- CUERPO DEL FILTRO (Colapsable) --}}
+            <div class="collapse {{ $hayFiltros ? 'show' : '' }}" id="filtrosCollapse">
+                <div class="card-body bg-white border-top">
+                    <div class="row g-3">
+                        
+                        <div class="col-lg-4">
+                            <label class="form-label small fw-bold text-uppercase text-secondary">Buscar</label>
+                            <div class="position-relative">
+                                <i class="bi bi-search position-absolute top-50 translate-middle-y text-muted ms-3"></i>
+                                <input type="text" name="q" value="{{ request('q') }}" placeholder="Nombre, apellido o DNI" class="form-control rounded-3 ps-5">
+                            </div>
                         </div>
-                    </div>
 
-                    {{-- SEDE --}}
-                    <div class="col-lg-2 col-md-4">
-                        <label class="form-label small fw-bold text-uppercase text-secondary">
-                            Sede
-                        </label>
+                        <div class="col-lg-2 col-md-4">
+                            <label class="form-label small fw-bold text-uppercase text-secondary">Sede</label>
+                            <select name="sede_id" class="form-select rounded-3">
+                                <option value="">Todas</option>
+                                @foreach($sedes as $sede)
+                                    <option value="{{ $sede->id }}" @selected(request('sede_id') == $sede->id)>{{ $sede->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                        <select name="sede_id"
-                                class="form-select"
-                                style="height:42px; border-radius:12px;">
-                            <option value="">Todas</option>
+                        <div class="col-lg-2 col-md-4">
+                            <label class="form-label small fw-bold text-uppercase text-secondary">Programa</label>
+                            <select name="programa_id" class="form-select rounded-3">
+                                <option value="">Todos</option>
+                                @foreach($programas as $programa)
+                                    <option value="{{ $programa->id }}" @selected(request('programa_id') == $programa->id)>{{ $programa->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                            @foreach($sedes as $sede)
-                                <option value="{{ $sede->id }}"
-                                    {{ request('sede_id') == $sede->id ? 'selected' : '' }}>
-                                    {{ $sede->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="col-lg-2 col-md-4">
+                            <label class="form-label small fw-bold text-uppercase text-secondary">Sexo</label>
+                            <select name="sexo_id" class="form-select rounded-3">
+                                <option value="">Todos</option>
+                                @foreach($sexos as $sexo)
+                                    <option value="{{ $sexo->id }}" @selected(request('sexo_id') == $sexo->id)>{{ $sexo->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    {{-- PROGRAMA --}}
-                    <div class="col-lg-2 col-md-4">
-                        <label class="form-label small fw-bold text-uppercase text-secondary">
-                            Programa
-                        </label>
+                        <div class="col-lg-2 col-md-4">
+                            <label class="form-label small fw-bold text-uppercase text-secondary">Barrio</label>
+                            <select name="barrio_id" class="form-select rounded-3">
+                                <option value="">Todos</option>
+                                @foreach($barrios as $barrio)
+                                    <option value="{{ $barrio->id }}" @selected(request('barrio_id') == $barrio->id)>{{ $barrio->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                        <select name="programa_id"
-                                class="form-select"
-                                style="height:42px; border-radius:12px;">
-                            <option value="">Todos</option>
+                        <div class="col-lg-2 col-md-3">
+                            <label class="form-label small fw-bold text-uppercase text-secondary">Edad desde</label>
+                            <input type="number" name="edad_desde" value="{{ request('edad_desde') }}" min="0" class="form-control rounded-3">
+                        </div>
 
-                            @foreach($programas as $programa)
-                                <option value="{{ $programa->id }}"
-                                    {{ request('programa_id') == $programa->id ? 'selected' : '' }}>
-                                    {{ $programa->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="col-lg-2 col-md-3">
+                            <label class="form-label small fw-bold text-uppercase text-secondary">Edad hasta</label>
+                            <input type="number" name="edad_hasta" value="{{ request('edad_hasta') }}" min="0" class="form-control rounded-3">
+                        </div>
 
-                    {{-- SEXO --}}
-                    <div class="col-lg-2 col-md-4">
-                        <label class="form-label small fw-bold text-uppercase text-secondary">
-                            Sexo
-                        </label>
+                        <div class="col-lg-2 col-md-3">
+                            <label class="form-label small fw-bold text-uppercase text-secondary">Trabajo</label>
+                            <select name="trabaja" class="form-select rounded-3">
+                                <option value="">Todos</option>
+                                <option value="1" @selected(request('trabaja') === '1')>Trabaja</option>
+                                <option value="0" @selected(request('trabaja') === '0')>No trabaja</option>
+                            </select>
+                        </div>
 
-                        <select name="sexo_id"
-                                class="form-select"
-                                style="height:42px; border-radius:12px;">
-                            <option value="">Todos</option>
+                        <div class="col-lg-2 col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-gradient-primary w-100 rounded-3 fw-bold">
+                                <i class="bi bi-search me-1"></i> Aplicar
+                            </button>
+                        </div>
 
-                            @foreach($sexos as $sexo)
-                                <option value="{{ $sexo->id }}"
-                                    {{ request('sexo_id') == $sexo->id ? 'selected' : '' }}>
-                                    {{ $sexo->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- BARRIO --}}
-                    <div class="col-lg-2 col-md-4">
-                        <label class="form-label small fw-bold text-uppercase text-secondary">
-                            Barrio
-                        </label>
-
-                        <select name="barrio_id"
-                                class="form-select"
-                                style="height:42px; border-radius:12px;">
-                            <option value="">Todos</option>
-
-                            @foreach($barrios as $barrio)
-                                <option value="{{ $barrio->id }}"
-                                    {{ request('barrio_id') == $barrio->id ? 'selected' : '' }}>
-                                    {{ $barrio->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    {{-- EDAD DESDE --}}
-                    <div class="col-lg-2 col-md-3">
-                        <label class="form-label small fw-bold text-uppercase text-secondary">
-                            Edad desde
-                        </label>
-
-                        <input type="number"
-                            name="edad_desde"
-                            value="{{ request('edad_desde') }}"
-                            min="0"
-                            class="form-control"
-                            style="height:42px; border-radius:12px;">
-                    </div>
-                    {{-- EDAD HASTA --}}
-                    <div class="col-lg-2 col-md-3">
-                        <label class="form-label small fw-bold text-uppercase text-secondary">
-                            Edad hasta
-                        </label>
-                        <input type="number"
-                            name="edad_hasta"
-                            value="{{ request('edad_hasta') }}"
-                            min="0"
-                            class="form-control"
-                            style="height:42px; border-radius:12px;">
-                    </div>
-                    {{-- TRABAJA --}}
-                    <div class="col-lg-2 col-md-3">
-                        <label class="form-label small fw-bold text-uppercase text-secondary">
-                            Trabajo
-                        </label>
-
-                        <select name="trabaja"
-                                class="form-select"
-                                style="height:42px; border-radius:12px;">
-                            <option value="">Todos</option>
-                            <option value="1" {{ request('trabaja') === '1' ? 'selected' : '' }}>
-                                Trabaja
-                            </option>
-                            <option value="0" {{ request('trabaja') === '0' ? 'selected' : '' }}>
-                                No trabaja
-                            </option>
-                        </select>
-                    </div>
-
-                    {{-- BOTONES --}}
-                    <div class="col-lg-2 col-md-3 d-flex align-items-end">
-                        <button type="submit"
-                                class="btn w-100"
-                                style="
-                                    height:42px;
-                                    border-radius:12px;
-                                    background:linear-gradient(135deg,#0d92c2,#17a385);
-                                    color:white;
-                                    font-weight:700;
-                                    border:none;
-                                ">
-                            <i class="bi bi-funnel-fill"></i>
-                            Filtrar
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
 
-  
-    @if(session('success'))
-        <div style="background:#e8f9f5; border:1px solid #9fe1cb; border-radius:12px; padding:12px 18px; margin-bottom:1.25rem; color:#0e8a70; font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:10px;">
-            <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
-        </div>
-    @endif
-
-
-    <div style="background:white; border:1px solid #e0ddd6; border-radius:16px; overflow:hidden;">
-
+    {{-- LISTADO DE PERSONAS --}}
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
         @if($personas->isEmpty())
-            <div style="text-align:center; padding:4rem 2rem;">
-                <div style="width:64px; height:64px; background:#e6f5fb; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:28px; color:#0d92c2;">
-                    <i class="bi bi-people"></i>
+            <div class="text-center py-5">
+                <div class="icon-circle bg-primary-subtle text-primary mb-3 mx-auto">
+                    <i class="bi bi-people fs-2"></i>
                 </div>
-                <p style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:16px; color:#0f172a; margin:0 0 6px;">Sin resultados</p>
-                <p style="font-size:13.5px; color:#536070; margin:0 0 20px;">
-                    @if(request('q') || request('sede_id') || request('barrio_id'))
-                        No se encontraron personas con los filtros aplicados.
-                    @else
-                        Todavía no hay personas registradas en el sistema.
-                    @endif
+                <h5 class="fw-bold text-dark">Sin resultados</h5>
+                <p class="text-muted small mb-4">
+                    {{ $hayFiltros ? 'No se encontraron personas con los filtros aplicados.' : 'Todavía no hay personas registradas en el sistema.' }}
                 </p>
-                <a href="{{ route('personas.create') }}" style="display:inline-flex; align-items:center; gap:6px; background:#0d92c2; color:white; text-decoration:none; padding:9px 18px; border-radius:10px; font-weight:700; font-size:13.5px;">
-                    <i class="bi bi-person-plus-fill"></i> Registrar primera persona
+                <a href="{{ route('personas.create') }}" class="btn btn-primary rounded-3 fw-bold small px-4">
+                    <i class="bi bi-person-plus-fill me-2"></i> Registrar primera persona
                 </a>
             </div>
-
         @else
-
-
-            <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap:0; border-bottom:1px solid #e0ddd6; background:#f5f3ee; padding:0 20px;">
-                    @foreach(['Persona', 'DNI', 'Localidad / Barrio', 'Grupo familiar', 'Código GF', ''] as $col)
-                    <div style="padding:10px 8px; font-size:11px; font-weight:800; color:#536070; text-transform:uppercase; letter-spacing:.08em;">{{ $col }}</div>
+            {{-- Cabecera del Grid --}}
+            <div class="list-grid header-grid bg-light border-bottom text-secondary fw-bold text-uppercase small px-4 py-2">
+                @foreach(['Persona', 'DNI', 'Localidad / Barrio', 'Grupo familiar', 'Código GF', 'Acciones'] as $col)
+                    <div>{{ $col }}</div>
                 @endforeach
             </div>
 
-
+            {{-- Filas --}}
             @foreach($personas as $p)
-                <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap:0; border-bottom:1px solid #f0ede8; padding:0 20px; transition:background .15s;"
-                     onmouseover="this.style.background='#fafaf8'" onmouseout="this.style.background='white'">
-
-
-                    <div style="padding:14px 8px; display:flex; align-items:center; gap:12px; min-width:0;">
-                        <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#e6f5fb,#e8f9f5); border:1px solid #b3e0f5; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13px; color:#0879a8; flex-shrink:0;">
+                <div class="list-grid row-grid border-bottom px-4 py-3 align-items-center">
+                    
+                    {{-- Persona --}}
+                    <div class="d-flex align-items-center gap-3 overflow-hidden">
+                        <div class="avatar-circle bg-primary-subtle text-primary fw-bold border border-primary-subtle flex-shrink-0">
                             {{ strtoupper(substr($p->nombre, 0, 1)) }}{{ strtoupper(substr($p->apellido, 0, 1)) }}
                         </div>
-                        <div style="min-width:0;">
-                            <div style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:14px; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                                {{ $p->apellido }}, {{ $p->nombre }}
-                            </div>
-                            <div style="font-size:11.5px; color:#536070; margin-top:1px; display:flex; align-items:center; gap:6px;">
-                                @if($p->fecha_nacimiento)
-                                    <span>{{ \Carbon\Carbon::parse($p->fecha_nacimiento)->age }} años</span>
-                                @endif
-                                @if($p->sexo)
-                                    <span style="opacity:.4;">·</span>
-                                    <span>{{ $p->sexo->nombre }}</span>
-                                @endif
-                                @if($p->trabaja)
-                                    <span style="opacity:.4;">·</span>
-                                    <span style="color:#17a385; font-weight:600;">Trabaja</span>
-                                @endif
+                        <div class="text-truncate">
+                            <div class="fw-bold text-dark text-truncate">{{ $p->apellido }}, {{ $p->nombre }}</div>
+                            <div class="small text-muted d-flex align-items-center gap-1">
+                                @if($p->fecha_nacimiento) <span>{{ \Carbon\Carbon::parse($p->fecha_nacimiento)->age }} años</span> @endif
+                                @if($p->sexo) <span class="opacity-50">·</span> <span>{{ $p->sexo->nombre }}</span> @endif
+                                @if($p->trabaja) <span class="opacity-50">·</span> <span class="text-success fw-semibold">Trabaja</span> @endif
                             </div>
                         </div>
                     </div>
 
-
-                    <div style="padding:14px 8px; display:flex; align-items:center;">
-                        <div>
-                            <div style="font-size:13.5px; font-weight:600; color:#0f172a;">{{ $p->dni ?? '—' }}</div>
-                            @if($p->tipoDocumento)
-                                <div style="font-size:11px; color:#94a3b4; margin-top:1px;">{{ $p->tipoDocumento->nombre }}</div>
-                            @endif
-                        </div>
+                    {{-- DNI --}}
+                    <div>
+                        <div class="fw-semibold text-dark small">{{ $p->dni ?? '—' }}</div>
+                        @if($p->tipoDocumento) <div class="text-muted" style="font-size: 11px;">{{ $p->tipoDocumento->nombre }}</div> @endif
                     </div>
 
-
-                    <div style="padding:14px 8px; display:flex; align-items:center;">
-                        <div>
-                            <div style="font-size:13px; color:#0f172a; font-weight:500;">
-                                {{ $p->localidad?->nombre ?? '—' }}
+                    {{-- Barrio --}}
+                    <div>
+                        <div class="text-dark fw-medium small">{{ $p->localidad?->nombre ?? '—' }}</div>
+                        @if($p->domicilio?->barrio)
+                            <div class="text-muted" style="font-size: 11px;">
+                                <i class="bi bi-geo-alt"></i> {{ $p->domicilio->barrio->nombre }}
                             </div>
-                            @if($p->domicilio?->barrio)
-                                <div style="font-size:11.5px; color:#536070; margin-top:1px;">
-                                    <i class="bi bi-geo-alt" style="font-size:10px;"></i>
-                                    {{ $p->domicilio->barrio->nombre }}
-                                </div>
-                            @endif
-                        </div>
+                        @endif
                     </div>
 
-                    <div style="padding:14px 8px; display:flex; align-items:center;">
+                    {{-- Integrantes --}}
+                    <div>
                         @php $total = $p->grupoFamiliar?->count() ?? 0; @endphp
                         @if($total > 0)
-                            <span style="background:#e8f9f5; color:#0e8a70; border:1px solid #9fe1cb; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:700;">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
                                 {{ $total }} {{ $total === 1 ? 'integrante' : 'integrantes' }}
                             </span>
                         @else
-                            <span style="font-size:12.5px; color:#94a3b4;">Sin registrar</span>
+                            <span class="text-muted small">Sin registrar</span>
                         @endif
                     </div>
 
-                    <div style="padding:14px 8px; display:flex; align-items:center;">
+                    {{-- Código Familia --}}
+                    <div>
                         @if($p->familia)
-                            <span style="
-                                background:#f5f3ff;
-                                color:#6d28d9;
-                                border:1px solid #d8b4fe;
-                                border-radius:20px;
-                                padding:3px 10px;
-                                font-size:12px;
-                                font-weight:700;
-                                white-space:nowrap;
-                            ">
+                            <span class="badge bg-purple-subtle text-purple border border-purple-subtle rounded-pill">
                                 {{ $p->familia->codigo }}
                             </span>
                         @else
-                            <span style="font-size:12.5px; color:#94a3b4;">
-                                Sin código
-                            </span>
+                            <span class="text-muted small">Sin código</span>
                         @endif
                     </div>
 
-                    <div style="padding:14px 8px; display:flex; align-items:center; justify-content:flex-end; gap:6px;">
-                        <a href="{{ route('personas.show', $p) }}"
-                           style="width:32px; height:32px; background:#e6f5fb; border:1px solid #b3e0f5; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#0879a8; text-decoration:none; transition:background .15s;"
-                           title="Ver ficha"
-                           onmouseover="this.style.background='#0d92c2'; this.style.color='white'; this.style.borderColor='#0d92c2'"
-                           onmouseout="this.style.background='#e6f5fb'; this.style.color='#0879a8'; this.style.borderColor='#b3e0f5'">
-                            <i class="bi bi-eye-fill" style="font-size:13px;"></i>
+                    {{-- Botones --}}
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ route('personas.show', $p) }}" class="btn btn-sm btn-action btn-outline-primary" title="Ver ficha">
+                            <i class="bi bi-eye-fill"></i>
                         </a>
-                        <a href="{{ route('personas.grupo-familiar.create', $p) }}"
-                           style="width:32px; height:32px; background:#e8f9f5; border:1px solid #9fe1cb; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#0e8a70; text-decoration:none; transition:background .15s;"
-                           title="Agregar familiar"
-                           onmouseover="this.style.background='#17a385'; this.style.color='white'; this.style.borderColor='#17a385'"
-                           onmouseout="this.style.background='#e8f9f5'; this.style.color='#0e8a70'; this.style.borderColor='#9fe1cb'">
-                            <i class="bi bi-person-plus" style="font-size:13px;"></i>
+                        <a href="{{ route('personas.grupo-familiar.create', $p) }}" class="btn btn-sm btn-action btn-outline-success" title="Agregar familiar">
+                            <i class="bi bi-person-plus"></i>
                         </a>
                     </div>
-
                 </div>
             @endforeach
 
+            {{-- Paginación Customizada --}}
             @if($personas->hasPages())
-                <div style="padding:16px 20px; border-top:1px solid #e0ddd6; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-                    <span style="font-size:13px; color:#536070;">
+                <div class="bg-white p-3 border-top d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <span class="small text-muted">
                         Mostrando {{ $personas->firstItem() }}–{{ $personas->lastItem() }} de {{ $personas->total() }}
                     </span>
-                    <div style="display:flex; gap:4px; align-items:center;">
-
+                    
+                    {{-- Si preferís usar la paginación de Laravel nativa con Bootstrap, simplemente usá: --}}
+                    {{-- {{ $personas->appends(request()->query())->links() }} --}}
+                    
+                    {{-- Si querés mantener tu diseño de cuadrados, acá está optimizado: --}}
+                    <div class="d-flex gap-1 align-items-center pagination-custom">
                         @if($personas->onFirstPage())
-                            <span style="width:34px; height:34px; border:1px solid #e0ddd6; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#c8c4bb; font-size:13px;">
-                                <i class="bi bi-chevron-left"></i>
-                            </span>
+                            <span class="page-box disabled"><i class="bi bi-chevron-left"></i></span>
                         @else
-                            <a href="{{ $personas->previousPageUrl() }}" style="width:34px; height:34px; border:1px solid #c8c4bb; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#536070; text-decoration:none; transition:all .15s;" onmouseover="this.style.background='#0d92c2'; this.style.color='white'; this.style.borderColor='#0d92c2'" onmouseout="this.style.background='white'; this.style.color='#536070'; this.style.borderColor='#c8c4bb'">
-                                <i class="bi bi-chevron-left" style="font-size:13px;"></i>
-                            </a>
+                            <a href="{{ $personas->previousPageUrl() }}" class="page-box"><i class="bi bi-chevron-left"></i></a>
                         @endif
-
 
                         @foreach($personas->getUrlRange(max(1, $personas->currentPage()-2), min($personas->lastPage(), $personas->currentPage()+2)) as $page => $url)
                             @if($page == $personas->currentPage())
-                                <span style="width:34px; height:34px; background:linear-gradient(135deg,#0d92c2,#1aaad8); color:white; border:1px solid #0d92c2; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;">{{ $page }}</span>
+                                <span class="page-box active">{{ $page }}</span>
                             @else
-                                <a href="{{ $url }}" style="width:34px; height:34px; border:1px solid #c8c4bb; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#536070; text-decoration:none; font-size:13px; transition:all .15s;" onmouseover="this.style.background='#e6f5fb'; this.style.borderColor='#b3e0f5'" onmouseout="this.style.background='white'; this.style.borderColor='#c8c4bb'">{{ $page }}</a>
+                                <a href="{{ $url }}" class="page-box">{{ $page }}</a>
                             @endif
                         @endforeach
 
-
                         @if($personas->hasMorePages())
-                            <a href="{{ $personas->nextPageUrl() }}" style="width:34px; height:34px; border:1px solid #c8c4bb; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#536070; text-decoration:none; transition:all .15s;" onmouseover="this.style.background='#0d92c2'; this.style.color='white'; this.style.borderColor='#0d92c2'" onmouseout="this.style.background='white'; this.style.color='#536070'; this.style.borderColor='#c8c4bb'">
-                                <i class="bi bi-chevron-right" style="font-size:13px;"></i>
-                            </a>
+                            <a href="{{ $personas->nextPageUrl() }}" class="page-box"><i class="bi bi-chevron-right"></i></a>
                         @else
-                            <span style="width:34px; height:34px; border:1px solid #e0ddd6; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#c8c4bb; font-size:13px;">
-                                <i class="bi bi-chevron-right"></i>
-                            </span>
+                            <span class="page-box disabled"><i class="bi bi-chevron-right"></i></span>
                         @endif
                     </div>
                 </div>
@@ -483,5 +291,35 @@
         @endif
     </div>
 </div>
+
+{{-- ESTILOS CSS EXTRAÍDOS (Podés moverlos a tu app.css) --}}
+<style>
+    .page-header-gradient { background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); }
+    .btn-gradient-primary { background: linear-gradient(135deg, #0d92c2, #17a385); color: white; border: none; transition: all 0.2s; }
+    .btn-gradient-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(13,146,194,0.3); color: white; }
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .cursor-pointer { cursor: pointer; }
+    
+    .list-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap: 10px; }
+    .row-grid { transition: background 0.15s ease; background-color: white; }
+    .row-grid:hover { background-color: #f8fafc; }
+    
+    .avatar-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .icon-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    
+    .btn-action { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.15s; }
+    
+    .bg-purple-subtle { background-color: #f3e8ff; }
+    .text-purple { color: #6b21a8; }
+    .border-purple-subtle { border-color: #d8b4fe !important; }
+
+    .pagination-custom .page-box { width: 34px; height: 34px; border-radius: 8px; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; text-decoration: none; color: #64748b; background: white; transition: all 0.2s; }
+    .pagination-custom a.page-box:hover { background: #e6f5fb; border-color: #b3e0f5; color: #0879a8; }
+    .pagination-custom .page-box.active { background: linear-gradient(135deg, #0d92c2, #1aaad8); color: white; border-color: #0d92c2; font-weight: bold; }
+    .pagination-custom .page-box.disabled { color: #cbd5e1; background: #f8fafc; cursor: not-allowed; }
+
+    [data-bs-toggle="collapse"][aria-expanded="true"] .bi-chevron-down { transform: rotate(180deg); }
+    .transition-transform { transition: transform 0.3s ease; }
+</style>
 
 @endsection

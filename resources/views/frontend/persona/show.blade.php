@@ -726,7 +726,7 @@
 
                             <select name="beneficio_id"
                                     class="form-select"
-                                    style="min-width:220px; border-radius:12px; height:40px; font-size:13px;">
+                                    style="width:150px; border-radius:12px; height:40px; font-size:13px;">
 
                                 <option value="">
                                     Seleccionar beneficio
@@ -887,8 +887,39 @@
 
                                                     @endif
 
-                                                </div>
+                                                    @if(str_contains(strtolower($pb->beneficio->nombre), 'vida'))
 
+                                                    @if($pb->planMasVida)
+
+                                                        <div class="d-flex gap-2 mt-3">
+
+                                                            <a href="{{ route('plan-mas-vida.show', $pb->planMasVida->id) }}"
+                                                            class="btn btn-sm btn-primary">
+                                                                <i class="bi bi-eye"></i>
+                                                                Ver ficha
+                                                            </a>
+
+                                                            <a href="{{ route('plan-mas-vida.edit', $pb->planMasVida->id) }}"
+                                                            class="btn btn-sm btn-warning">
+                                                                <i class="bi bi-pencil"></i>
+                                                                Editar
+                                                            </a>
+
+                                                        </div>
+
+                                                    @else
+
+                                                        <a href="{{ route('plan-mas-vida.create', $pb->id) }}"
+                                                        class="btn btn-sm btn-success mt-3">
+                                                            <i class="bi bi-file-earmark-plus"></i>
+                                                            Completar ficha
+                                                        </a>
+
+                                                    @endif
+
+                                                @endif
+                                                </div>
+                                                
                                                 {{-- FOOTER --}}
                                                 <div class="mt-4 d-flex justify-content-end">
 

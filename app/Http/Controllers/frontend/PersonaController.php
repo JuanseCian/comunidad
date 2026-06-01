@@ -286,6 +286,8 @@ class PersonaController extends Controller
             'personaBeneficio.beneficio',
             'trabajos.situacionOcupacional',
             'trabajos.categoriaOcupacional',
+            'personaBeneficio.beneficio',
+            'personaBeneficio.planMasVida',
         ])->findOrFail($id);
 
         if (!$persona->familia_id) {

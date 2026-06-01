@@ -357,7 +357,7 @@
     <main class="main">
 
         {{-- TOPBAR --}}
-      
+
         {{-- CONTENT --}}
         <div class="content">
             @yield('content')

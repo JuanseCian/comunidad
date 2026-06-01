@@ -69,4 +69,12 @@ class PersonaBeneficio extends Model
 	{
 		return $this->belongsTo(User::class, 'registrado_por');
 	}
+
+	public function planMasVida()
+	{
+		return $this->hasOne(
+			PlanMasVidaFicha::class,
+			'persona_beneficio_id'
+		);
+	}
 }
