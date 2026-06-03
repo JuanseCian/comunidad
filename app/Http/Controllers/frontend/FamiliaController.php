@@ -55,7 +55,11 @@ class FamiliaController extends Controller
             'personas.nucleosConvivientes.miembrosGrupoFamiliar',
             'personas.personaPrograma.programa',
             'personas.personaBeneficio.beneficio',
+
             'mercaderias.usuario',
+
+            'sepelios.usuario',
+            'sepelios.persona',
         ])->findOrFail($id);
 
         return view(

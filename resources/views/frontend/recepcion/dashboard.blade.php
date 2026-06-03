@@ -139,7 +139,7 @@
         font-size: 0.9rem;
     }
 
-    /* VARIACIONES TEMÁTICAS (INGRESOS: SKY / MERCADERÍA: TEAL) */
+    /* VARIACIONES TEMÁTICAS */
     
     /* Variación Sky (Ingresos) */
     .theme-sky .section-title i { color: var(--sky-500); }
@@ -162,6 +162,17 @@
     .theme-teal .action-btn:hover .action-icon { background: var(--teal-500); color: white; }
     .theme-teal .action-btn:hover .action-text h5 { color: var(--teal-700); }
     .theme-teal .action-btn:hover .action-arrow { color: var(--teal-600); transform: translateX(4px); }
+
+    /* Variación Indigo/Purple (Sepelios) */
+    .theme-purple .section-title i { color: #6f42c1; }
+    .theme-purple .action-icon { background: #f3f0fa; color: #6f42c1; }
+    .theme-purple .action-btn:hover {
+        border-color: #b8a2e3;
+        background: linear-gradient(95deg, white 0%, #f3f0fa 100%);
+    }
+    .theme-purple .action-btn:hover .action-icon { background: #6f42c1; color: white; }
+    .theme-purple .action-btn:hover .action-text h5 { color: #492790; }
+    .theme-purple .action-btn:hover .action-arrow { color: #6f42c1; transform: translateX(4px); }
 </style>
 
 {{-- HEADER UNIFICADO --}}
@@ -174,7 +185,7 @@
 <div class="row g-4">
 
     {{-- BLOQUE 1: ATENCIÓN SOCIAL E INGRESOS --}}
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div class="section-card theme-sky">
             <div class="section-title">
                 <i class="bi bi-person-bounding-box"></i>
@@ -214,7 +225,7 @@
     </div>
 
     {{-- BLOQUE 2: GESTIÓN DE MERCADERÍA --}}
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div class="section-card theme-teal">
             <div class="section-title">
                 <i class="bi bi-box-seam-fill"></i>
@@ -245,6 +256,46 @@
                         <div class="action-text">
                             <h5>Registro de Entregas</h5>
                             <p>Historial de retiros.</p>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right action-arrow"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- BLOQUE 3: SERVICIOS DE SEPELIO --}}
+    <div class="col-lg-4">
+        <div class="section-card theme-purple">
+            <div class="section-title">
+                <i class="bi bi-heart-pulse-fill"></i>
+                <h4>Gestión de Sepelios</h4>
+            </div>
+
+            <div class="action-row">
+                {{-- NUEVA SOLICITUD DE SEPELIO --}}
+                <a href="{{ route('recepcion.sepelios.create') }}" class="action-btn">
+                    <div class="action-btn-content">
+                        <div class="action-icon">
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                        </div>
+                        <div class="action-text">
+                            <h5>Nueva Solicitud</h5>
+                            <p>Registrar una nueva asistencia o cobertura de sepelio.</p>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right action-arrow"></i>
+                </a>
+
+                {{-- HISTORIAL / SEGUIMIENTO DE SEPELIOS --}}
+                <a href="{{ route('recepcion.sepelios.index') }}" class="action-btn">
+                    <div class="action-btn-content">
+                        <div class="action-icon">
+                            <i class="bi bi-archive-fill"></i>
+                        </div>
+                        <div class="action-text">
+                            <h5>Historial y Trámites</h5>
+                            <p>Consultar estados, órdenes emitidas y expedientes.</p>
                         </div>
                     </div>
                     <i class="bi bi-chevron-right action-arrow"></i>

@@ -178,16 +178,16 @@ class Persona extends Model
     {
         return $this->hasMany(PersonaBeneficio::class, 'persona_id');
     }
-   public function nucleosConvivientes()
-{
-    return $this->belongsToMany(
-        \App\Models\NucleoConviviente::class,
-        'persona_nucleo',
-        'persona_id',
-        'nucleo_id'
-    )->using(\App\Models\PersonaNucleoP::class)->withPivot('grupo_familiar_id');
-}
-    
+    public function nucleosConvivientes()
+    {
+        return $this->belongsToMany(
+            \App\Models\NucleoConviviente::class,
+            'persona_nucleo',
+            'persona_id',
+            'nucleo_id'
+        )->using(\App\Models\PersonaNucleoP::class)->withPivot('grupo_familiar_id');
+    }
+        
 
     public function idsGrupoFamiliarConviviente()
     {
@@ -290,5 +290,10 @@ class Persona extends Model
                 $pp->update(['fecha_fin' => $cumple]);
             }
         }
+    }
+
+    public function sepelios()
+    {
+        return $this->hasMany(Sepelio::class);
     }
 }

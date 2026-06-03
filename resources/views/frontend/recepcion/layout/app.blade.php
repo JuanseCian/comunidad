@@ -334,6 +334,12 @@
                     Mercadería
                 </a>
 
+                <a href="{{ route('recepcion.sepelios.index') }}"
+                   class="{{ request()->routeIs('recepcion.sepelios.*') ? 'active' : '' }}">
+                    <i class="bi bi-heartbreak"></i>
+                    Sepelios
+                </a>
+
                 <a href="{{ route('personas.index') }}"
                    class="{{ request()->routeIs('personas.*') ? 'active' : '' }}">
                     <i class="bi bi-people-fill"></i>

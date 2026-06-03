@@ -59,4 +59,9 @@ class Familia extends Model
             ->whereDate('fecha_entrega', '>=', now()->subDays(30))
             ->latest('fecha_entrega');
     }
+
+    public function sepelios()
+    {
+        return $this->hasMany(Sepelio::class);
+    }
 }

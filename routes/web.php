@@ -109,3 +109,4 @@ require __DIR__.'/estadistica.php';
 //rutas para recepcion
 require __DIR__.'/recepcion.php';
 require __DIR__.'/mercaderia.php';
+require __DIR__.'/sepelios.php';
