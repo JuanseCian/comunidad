@@ -149,6 +149,8 @@ class Persona extends Model
             'persona_id',
             'programa_id'
         )->withPivot([
+            'activo',
+            'sede_id',
             'rol',
             'fecha_inicio',
             'fecha_fin'
@@ -295,5 +297,10 @@ class Persona extends Model
     public function sepelios()
     {
         return $this->hasMany(Sepelio::class);
+    }
+
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class);
     }
 }

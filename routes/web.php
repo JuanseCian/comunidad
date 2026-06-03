@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\backend\UserController;
 use App\Http\Controllers\frontend\AtencionController;
+use App\Http\Controllers\frontend\AsistenciaController;
 use App\Models\Atencion;
 use App\Models\Persona;
 /*
@@ -105,7 +106,7 @@ require __DIR__.'/atenciones.php';
 
 require __DIR__.'/estadistica.php';
 
-
+require __DIR__.'/asistencia.php';
 //rutas para recepcion
 require __DIR__.'/recepcion.php';
 require __DIR__.'/mercaderia.php';

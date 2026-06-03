@@ -806,35 +806,43 @@
     </a>
 
     {{-- Nav links --}}
-    <ul class="nav-links ms-1" id="navLinks">
-        <li>
-            <a href="{{ route('home') }}" @class(['active' => request()->routeIs('home')])>
-                <i class="bi bi-house-door"></i> Inicio
-            </a>
-        </li>
-        <li>
-            <a href="#" @class(['active' => request()->routeIs('recepcion.*')])>
-                <i class="bi bi-person-badge"></i> Recepción
-            </a>
-        </li>
-        <li class="nav-dropdown" style="display: none;">
-            <span class="dd-toggle">
-                <i class="bi bi-collection"></i> Programas
-                <i class="bi bi-chevron-down" style="font-size:9px;margin-left:2px;"></i>
-            </span>
-            <div class="dd-menu">
-                <a href="#"><i class="bi bi-mortarboard"></i> Envión</a>
-                <a href="#"><i class="bi bi-egg-fried"></i> UDI / Más Vida</a>
-                <a href="#"><i class="bi bi-heart-pulse"></i> Bajo Peso</a>
-                <a href="#"><i class="bi bi-building-up"></i> Multiespacio</a>
-            </div>
-        </li>
-        <li>
-            <a href="#" @class(['active' => request()->routeIs('mercaderia.*')])>
-                <i class="bi bi-box-seam"></i> Mercadería
-            </a>
-        </li>
-    </ul>
+   <ul class="nav-links ms-1" id="navLinks">
+    <li>
+        <a href="{{ route('home') }}" @class(['active' => request()->routeIs('home')])>
+            <i class="bi bi-house-door"></i> Inicio
+        </a>
+    </li>
+    <li>
+        <a href="#" style="display: none;" @class(['active' => request()->routeIs('recepcion.*')])>
+            <i class="bi bi-person-badge"></i> Recepción
+        </a>
+    </li>
+    <li class="nav-dropdown" style="display: none;">
+        <span class="dd-toggle">
+            <i class="bi bi-collection"></i> Programas
+            <i class="bi bi-chevron-down" style="font-size:9px;margin-left:2px;"></i>
+        </span>
+        <div class="dd-menu">
+            <a href="#"><i class="bi bi-mortarboard"></i> Envión</a>
+            <a href="#"><i class="bi bi-egg-fried"></i> UDI / Más Vida</a>
+            <a href="#"><i class="bi bi-heart-pulse"></i> Bajo Peso</a>
+            <a href="#"><i class="bi bi-building-up"></i> Multiespacio</a>
+        </div>
+    </li>
+    <li>
+        <a href="#" style="display: none;"@class(['active' => request()->routeIs('mercaderia.*')])>
+            <i class="bi bi-box-seam"></i> Mercadería
+        </a>
+    </li>
+ 
+    {{-- ★ NUEVO ÍTEM: Asistencia ★ --}}
+    <li>
+        <a href="{{ route('asistencia.index') }}"
+           @class(['active' => request()->routeIs('asistencia.*')])>
+            <i class="bi bi-calendar-check"></i> Asistencia
+        </a>
+    </li>
+</ul>
 
     {{-- Right zone --}}
     <div class="nav-right">
