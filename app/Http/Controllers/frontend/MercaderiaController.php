@@ -10,27 +10,109 @@ use App\Models\Persona;
 
 class MercaderiaController extends Controller
 {
+    
     public function index(Request $request)
     {
         $search = $request->search;
+        $tipoFiltro = $request->tipo_filtro;
+        $mes = $request->mes;
+        $anio = $request->anio;
 
-        $mercaderias = Mercaderia::with([
-                'persona',
-                'familia',
-                'usuario'
-            ])
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('nombre', 'like', "%{$search}%")
-                      ->orWhere('apellido', 'like', "%{$search}%")
-                      ->orWhere('dni', 'like', "%{$search}%");
-                });
-            })
-            ->latest()
-            ->get();
+        $query = Mercaderia::with([
+            'persona',
+            'familia',
+            'usuario'
+        ]);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                ->orWhere('apellido', 'like', "%{$search}%")
+                ->orWhere('dni', 'like', "%{$search}%");
+            });
+        }
+
+        // FILTRO POR MES
+        if ($tipoFiltro === 'mes') {
+
+            $query->whereMonth(
+                'fecha_entrega',
+                $mes ?: now()->month
+            );
+
+            $query->whereYear(
+                'fecha_entrega',
+                $anio ?: now()->year
+            );
+        }
+
+        // FILTRO POR SEMANA
+        if ($tipoFiltro === 'semana') {
+
+            $inicioSemana = now()->startOfWeek();
+            $finSemana = now()->endOfWeek();
+
+            $query->whereBetween(
+                'fecha_entrega',
+                [$inicioSemana, $finSemana]
+            );
+        }
+
+        // FILTRO POR AÑO
+        if ($tipoFiltro === 'anio') {
+
+            $query->whereYear(
+                'fecha_entrega',
+                $anio ?: now()->year
+            );
+        }
+
+        $mercaderias = $query
+            ->orderByDesc('fecha_entrega')
+            ->paginate(15); 
 
         return view(
             'frontend.recepcion.mercaderias.index',
+            compact(
+                'mercaderias',
+                'tipoFiltro',
+                'mes',
+                'anio'
+            )
+        );
+    }
+
+    public function imprimir(Request $request)
+    {
+        $query = Mercaderia::query();
+
+        if ($request->tipo_filtro == 'mes') {
+
+            $query->whereMonth(
+                'fecha_entrega',
+                $request->mes
+            );
+
+            $query->whereYear(
+                'fecha_entrega',
+                $request->anio
+            );
+        }
+
+        if ($request->tipo_filtro == 'anio') {
+
+            $query->whereYear(
+                'fecha_entrega',
+                $request->anio
+            );
+        }
+
+        $mercaderias = $query
+            ->orderBy('apellido')
+            ->get();
+
+        return view(
+            'frontend.recepcion.mercaderias.imprimir',
             compact('mercaderias')
         );
     }
