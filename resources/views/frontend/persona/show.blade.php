@@ -518,96 +518,218 @@
         {{-- ── Fila 2: CUD · Programas ── --}}
         <div class="row g-3 mb-3">
 
-            {{-- CUD — Discapacidad --}}
-            <div class="col-md-6 sp-anim sp-anim-4">
-                <div class="sp-card">
-                    <div class="sp-card-header">
-                        <div class="sp-card-header-left">
-                            <div class="sp-dot" style="background:var(--amber);"></div>
-                            <span class="sp-card-title">CUD — Discapacidad</span>
-                        </div>
+               <div class="col-md-6 sp-anim sp-anim-4">
+            <div class="sp-card">
+
+                <div class="sp-card-header">
+                    <div class="sp-card-header-left">
+                        <div class="sp-dot" style="background:var(--amber);"></div>
+                        <span class="sp-card-title">CUD — Discapacidad</span>
                     </div>
-                    <div class="sp-card-body">
 
+                    @if(in_array(auth()->user()->rol_id, [2,3,5]))
+                        <button type="button"
+                                onclick="toggleEdit('cud')"
+                                class="sp-card-action">
+                            Editar
+                        </button>
+                    @endif
+                </div>
+
+                <div class="sp-card-body">
+
+                    <form action="{{ route('personas.updateCud', $persona->id) }}"
+                        method="POST">
+
+                        @csrf
+                        @method('PUT')
+
+                        {{-- Discapacidad --}}
                         <div class="sp-data-row">
-                            <span class="sp-label"><i class="bi bi-person-wheelchair" style="margin-right:5px; font-size:12px;"></i>Discapacidad</span>
-                            <span class="sp-val">{{ $persona->discapacidad->nombre ?? '—' }}</span>
+                            <span class="sp-label">
+                                <i class="bi bi-person-wheelchair" style="margin-right:5px;font-size:12px;"></i>
+                                Discapacidad
+                            </span>
+
+                            <span class="sp-val view-cud">
+                                {{ $persona->discapacidad->nombre ?? '—' }}
+                            </span>
+
+                            <select name="discapacidad_id"
+                                    class="form-select edit-cud"
+                                    style="display:none;">
+                                <option value="">Seleccionar</option>
+
+                                @foreach($discapacidades as $d)
+                                    <option value="{{ $d->id }}"
+                                        @selected($persona->discapacidad_id == $d->id)>
+                                        {{ $d->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
+                        {{-- Permanente --}}
                         <div class="sp-data-row">
-                            <span class="sp-label"><i class="bi bi-infinity" style="margin-right:5px; font-size:12px;"></i>Permanente</span>
-                            @if($persona->discapacidad_permanente)
-                                <span class="sp-badge-yes">Sí</span>
-                            @else
-                                <span class="sp-badge-no">No</span>
-                            @endif
+                            <span class="sp-label">
+                                <i class="bi bi-infinity" style="margin-right:5px;font-size:12px;"></i>
+                                Permanente
+                            </span>
+
+                            <span class="view-cud">
+                                @if($persona->discapacidad_permanente)
+                                    <span class="sp-badge-yes">Sí</span>
+                                @else
+                                    <span class="sp-badge-no">No</span>
+                                @endif
+                            </span>
+
+                            <select name="discapacidad_permanente"
+                                    class="form-select edit-cud"
+                                    style="display:none;">
+                                <option value="1" @selected($persona->discapacidad_permanente)>
+                                    Sí
+                                </option>
+                                <option value="0" @selected(!$persona->discapacidad_permanente)>
+                                    No
+                                </option>
+                            </select>
                         </div>
 
+                        {{-- Tratamiento --}}
                         <div class="sp-data-row">
-                            <span class="sp-label"><i class="bi bi-heart-pulse" style="margin-right:5px; font-size:12px;"></i>En tratamiento</span>
-                            @if($persona->discapacidad_tratamiento)
-                                <span class="sp-badge-yes">Sí</span>
-                            @elseif(is_null($persona->discapacidad_tratamiento))
-                                <span class="sp-val">—</span>
-                            @else
-                                <span class="sp-badge-no">No</span>
-                            @endif
+                            <span class="sp-label">
+                                <i class="bi bi-heart-pulse" style="margin-right:5px;font-size:12px;"></i>
+                                En tratamiento
+                            </span>
+
+                            <span class="view-cud">
+                                @if($persona->discapacidad_tratamiento)
+                                    <span class="sp-badge-yes">Sí</span>
+                                @elseif(is_null($persona->discapacidad_tratamiento))
+                                    —
+                                @else
+                                    <span class="sp-badge-no">No</span>
+                                @endif
+                            </span>
+
+                            <select name="discapacidad_tratamiento"
+                                    class="form-select edit-cud"
+                                    style="display:none;">
+                                <option value="">Seleccionar</option>
+                                <option value="1" @selected($persona->discapacidad_tratamiento === 1)>
+                                    Sí
+                                </option>
+                                <option value="0" @selected($persona->discapacidad_tratamiento === 0)>
+                                    No
+                                </option>
+                            </select>
                         </div>
 
-                        @if($persona->caratula)
-                            <div class="sp-data-row">
-                                <span class="sp-label"><i class="bi bi-folder2" style="margin-right:5px; font-size:12px;"></i>Carátula</span>
-                                <span class="sp-val">{{ $persona->caratula }}</span>
-                            </div>
-                        @endif
-
-                        {{-- CUD --}}
-                        <div class="sp-data-row" style="margin-top:8px; padding-top:12px; border-top:1px solid var(--border-sm);">
-                            <span class="sp-label"><i class="bi bi-patch-check" style="margin-right:5px; font-size:12px;"></i>N° CUD</span>
-                            <span class="sp-val">{{ $persona->cud->numero_cud ?? '—' }}</span>
-                        </div>
-
+                        {{-- Carátula --}}
                         <div class="sp-data-row">
-                            <span class="sp-label"><i class="bi bi-calendar-check" style="margin-right:5px; font-size:12px;"></i>Emisión CUD</span>
-                            <span class="sp-val">{{ $persona->cud?->fecha_emision ? $persona->cud->fecha_emision->format('d/m/Y') : '—' }}</span>
+                            <span class="sp-label">
+                                <i class="bi bi-folder2" style="margin-right:5px;font-size:12px;"></i>
+                                Carátula
+                            </span>
+
+                            <span class="sp-val view-cud">
+                                {{ $persona->caratula ?? '—' }}
+                            </span>
+
+                            <input type="text"
+                                name="caratula"
+                                value="{{ $persona->caratula }}"
+                                class="form-control edit-cud"
+                                style="display:none;">
                         </div>
 
+                        {{-- Número CUD --}}
+                        <div class="sp-data-row"
+                            style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border-sm);">
+
+                            <span class="sp-label">
+                                <i class="bi bi-patch-check" style="margin-right:5px;font-size:12px;"></i>
+                                N° CUD
+                            </span>
+
+                            <span class="sp-val view-cud">
+                                {{ $persona->cud->numero_cud ?? '—' }}
+                            </span>
+
+                            <input type="text"
+                                name="numero_cud"
+                                value="{{ $persona->cud->numero_cud ?? '' }}"
+                                class="form-control edit-cud"
+                                style="display:none;">
+                        </div>
+
+                        {{-- Emisión --}}
+                        <div class="sp-data-row">
+                            <span class="sp-label">
+                                <i class="bi bi-calendar-check" style="margin-right:5px;font-size:12px;"></i>
+                                Emisión CUD
+                            </span>
+
+                            <span class="sp-val view-cud">
+                                {{ $persona->cud?->fecha_emision ? $persona->cud->fecha_emision->format('d/m/Y') : '—' }}
+                            </span>
+
+                            <input type="date"
+                                name="fecha_emision"
+                                value="{{ optional($persona->cud?->fecha_emision)->format('Y-m-d') }}"
+                                class="form-control edit-cud"
+                                style="display:none;">
+                        </div>
+
+                        {{-- Vencimiento --}}
+                        <div class="sp-data-row">
+                            <span class="sp-label">
+                                <i class="bi bi-calendar-x" style="margin-right:5px;font-size:12px;"></i>
+                                Vencimiento CUD
+                            </span>
+
+                            <span class="sp-val view-cud">
+                                {{ $persona->cud?->fecha_vencimiento ? $persona->cud->fecha_vencimiento->format('d/m/Y') : '—' }}
+                            </span>
+
+                            <input type="date"
+                                name="fecha_vencimiento"
+                                value="{{ optional($persona->cud?->fecha_vencimiento)->format('Y-m-d') }}"
+                                class="form-control edit-cud"
+                                style="display:none;">
+                        </div>
+
+                        {{-- Observaciones --}}
                         <div class="sp-data-row" style="border-bottom:none;">
-                            <span class="sp-label"><i class="bi bi-calendar-x" style="margin-right:5px; font-size:12px;"></i>Vencimiento CUD</span>
-                            @if($persona->cud?->fecha_vencimiento)
-                                @php $venc = $persona->cud->fecha_vencimiento @endphp
-                                <span class="sp-val" style="color:{{ $venc->isPast() ? '#b91c1c' : ($venc->diffInDays(now()) <= 60 ? '#d97706' : 'inherit') }};">
-                                    {{ $venc->format('d/m/Y') }}
-                                    @if($venc->isPast())
-                                        <span class="sp-pill" style="background:#fef2f2; color:#b91c1c; border-color:#fecaca; font-size:10px; margin-left:4px;">Vencido</span>
-                                    @elseif($venc->diffInDays(now()) <= 60)
-                                        <span class="sp-pill" style="background:#fffbeb; color:#d97706; border-color:#fde68a; font-size:10px; margin-left:4px;">Por vencer</span>
-                                    @endif
-                                </span>
-                            @else
-                                <span class="sp-val">—</span>
-                            @endif
+                            <span class="sp-label">
+                                <i class="bi bi-chat-left-text" style="margin-right:5px;font-size:12px;"></i>
+                                Observaciones
+                            </span>
+
+                            <span class="sp-val view-cud">
+                                {{ $persona->cud->observaciones ?? '—' }}
+                            </span>
+
+                            <textarea name="observaciones"
+                                    class="form-control edit-cud"
+                                    rows="3"
+                                    style="display:none;">{{ $persona->cud->observaciones ?? '' }}</textarea>
                         </div>
 
-                        @if($persona->cud?->observaciones)
-                            <div class="sp-data-row" style="border-bottom:none; margin-top:4px;">
-                                <span class="sp-label"><i class="bi bi-chat-left-text" style="margin-right:5px; font-size:12px;"></i>Observaciones</span>
-                                <span class="sp-val" style="font-style:italic;">{{ $persona->cud->observaciones }}</span>
-                            </div>
-                        @endif
+                        <button type="submit"
+                                class="sp-btn-primary edit-cud"
+                                style="display:none;margin-top:12px;">
+                            Guardar cambios
+                        </button>
 
-                        @if(!$persona->discapacidad && !$persona->cud)
-                            <div class="sp-empty" style="padding:14px 0 4px;">
-                                <div class="sp-empty-icon" style="background:var(--amber-lt); color:var(--amber);">
-                                    <i class="bi bi-patch-question"></i>
-                                </div>
-                                Sin registro de discapacidad ni CUD
-                            </div>
-                        @endif
+                    </form>
 
-                    </div>
                 </div>
             </div>
+        </div>
+            
+                
 
             {{-- Programas de asistencia --}}
             <div class="col-md-6 sp-anim sp-anim-4">

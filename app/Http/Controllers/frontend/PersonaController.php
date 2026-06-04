@@ -310,9 +310,51 @@ class PersonaController extends Controller
             'sedes'            => Sede::where('activa', 1)->orderBy('nombre')->get(['id', 'nombre']),
             'situaciones_ocup' => SituacionOcupacional::orderBy('nombre')->get(),
             'categorias_ocup'  => CategoriaOcupacional::orderBy('nombre')->get(),
+            'discapacidades' => Discapacidad::orderBy('nombre')->get(),
         ]);
     }
+public function updateCud(Request $request, $id)
+{
+    if (!in_array(auth()->user()->rol_id, [2,3,5])) {
+        abort(403, 'No tenés permisos para editar esta información');
+    }
 
+    $persona = Persona::findOrFail($id);
+
+    $request->validate([
+        'discapacidad_id'           => 'nullable|exists:discapacidad,id',
+        'discapacidad_permanente'   => 'nullable|boolean',
+        'discapacidad_tratamiento'  => 'nullable|boolean',
+        'caratula'                  => 'nullable|string|max:255',
+        'numero_cud'                => 'nullable|string|max:100',
+        'fecha_emision'             => 'nullable|date',
+        'fecha_vencimiento'         => 'nullable|date',
+        'observaciones'             => 'nullable|string|max:1000',
+    ]);
+
+    $persona->update([
+        'discapacidad_id'          => $request->discapacidad_id,
+        'discapacidad_permanente'  => $request->discapacidad_permanente,
+        'discapacidad_tratamiento' => $request->discapacidad_tratamiento,
+        'caratula'                 => $request->caratula,
+    ]);
+
+    Cud::updateOrCreate(
+        ['persona_id' => $persona->id],
+        [
+            'tiene_cud'         => !empty($request->numero_cud),
+            'numero_cud'        => $request->numero_cud,
+            'fecha_emision'     => $request->fecha_emision,
+            'fecha_vencimiento' => $request->fecha_vencimiento,
+            'observaciones'     => $request->observaciones,
+        ]
+    );
+
+    return back()->with(
+        'success',
+        'Información de discapacidad y CUD actualizada correctamente.'
+    );
+}
     public function cambiarPrograma(Request $request, $id)
     {
         $persona = Persona::findOrFail($id);

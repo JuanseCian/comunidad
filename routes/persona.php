@@ -33,5 +33,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/personas', [PersonaController::class, 'index'])->name('personas.index');
         Route::get('/personas/{id}', [PersonaController::class, 'show'])->name('personas.show');
     });
-
+    Route::put(
+        '/personas/{persona}/cud',
+        [PersonaController::class, 'updateCud']
+    )->name('personas.updateCud');
 });
