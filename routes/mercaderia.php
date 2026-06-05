@@ -29,3 +29,8 @@ Route::prefix('panel')
         )->name('mercaderias.index');
 
     });
+
+Route::get(
+    '/mercaderias/imprimir',
+    [MercaderiaController::class, 'imprimir']
+)->name('recepcion.mercaderias.imprimir');

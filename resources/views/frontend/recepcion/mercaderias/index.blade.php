@@ -7,20 +7,28 @@
 <div class="container-fluid py-4">
 
     {{-- CABECERA --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
         <div>
             <h2 class="fw-bold mb-1 text-dark">Mercadería</h2>
             <p class="text-muted small mb-0">
                 Registro y control de entregas de módulos alimentarios o asistencia mensual
             </p>
         </div>
-        @if(empty($readonly))
-            <a href="{{ route('recepcion.mercaderias.create') }}"
-            class="btn btn-success d-inline-flex align-items-center gap-2 shadow-sm fw-semibold px-3">
-                <i class="bi bi-plus-circle-fill"></i>
-                <span>Nueva entrega</span>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('recepcion.mercaderias.imprimir', request()->all()) }}"
+               target="_blank"
+               class="btn btn-outline-primary d-inline-flex align-items-center gap-2">
+                <i class="bi bi-printer"></i>
+                <span>Imprimir listado</span>
             </a>
-        @endif
+            @if(empty($readonly))
+                <a href="{{ route('recepcion.mercaderias.create') }}"
+                   class="btn btn-success d-inline-flex align-items-center gap-2 shadow-sm fw-semibold">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Nueva entrega</span>
+                </a>
+            @endif
+        </div>
     </div>
 
     {{-- ALERTAS --}}
@@ -40,13 +48,16 @@
         </div>
     @endif
 
-    {{-- BUSCADOR --}}
+    {{-- FORMULARIO DE BÚSQUEDA Y FILTROS UNIFICADOS --}}
+    @php
+        $actionRoute = empty($readonly) ? route('recepcion.mercaderias.index') : route('panel.mercaderias.index');
+    @endphp
+
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
-            <form method="GET" action="{{ empty($readonly)
-                                        ? route('recepcion.mercaderias.index')
-                                        : route('panel.mercaderias.index') }}">
-                <div class="row g-3 align-items-end">
+            <form method="GET" action="{{ $actionRoute }}" id="filter-form">
+                <div class="row g-3">
+                    {{-- Buscador Principal --}}
                     <div class="col-md-12">
                         <label class="form-label fw-semibold text-secondary small mb-2">Buscar beneficiario</label>
                         <div class="input-group shadow-sm">
@@ -58,18 +69,76 @@
                                    class="form-control border-start-0 ps-0"
                                    placeholder="Escribí el nombre, apellido o DNI de la persona..."
                                    value="{{ request('search') }}">
-                            @if(request('search'))
-                                <a href="{{ route('recepcion.mercaderias.index') }}"
+                            @if(request('search') || request('tipo_filtro') || request('mes') || request('anio'))
+                                <a href="{{ $actionRoute }}"
                                    class="btn btn-outline-secondary border-start-0 d-inline-flex align-items-center"
-                                   title="Limpiar búsqueda">
+                                   title="Limpiar filtros">
                                     <i class="bi bi-x-lg"></i>
                                 </a>
                             @endif
                             <button class="btn btn-primary px-4 fw-semibold" type="submit">Buscar</button>
                         </div>
                     </div>
+
+                    {{-- Selects de Filtros Avanzados (Se envían al cambiar o al dar Buscar) --}}
+                    <div class="col-md-4">
+                        <label class="form-label text-secondary small fw-medium">Período</label>
+                        <select name="tipo_filtro" class="form-select select-filter">
+                            <option value="">Todos</option>
+                            <option value="mes" {{ request('tipo_filtro') == 'mes' ? 'selected' : '' }}>Mes</option>
+                            <option value="semana" {{ request('tipo_filtro') == 'semana' ? 'selected' : '' }}>Semana actual</option>
+                            <option value="anio" {{ request('tipo_filtro') == 'anio' ? 'selected' : '' }}>Año</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label text-secondary small fw-medium">Mes</label>
+                        <select name="mes" class="form-select select-filter">
+                            <option value="">Seleccionar mes...</option>
+                            @for($i=1; $i<=12; $i++)
+                                <option value="{{ $i }}" {{ request('mes') == $i ? 'selected' : '' }}>
+                                    {{ Str::ucfirst(\Carbon\Carbon::create()->month($i)->locale('es')->monthName) }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label text-secondary small fw-medium">Año</label>
+                        <select name="anio" class="form-select select-filter">
+                            @for($i = now()->year; $i >= 2023; $i--)
+                                <option value="{{ $i }}" {{ request('anio', now()->year) == $i ? 'selected' : '' }}>
+                                    {{ $i }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex gap-2">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            <i class="bi bi-funnel-fill me-1"></i>
+                            Aplicar
+                        </button>
+
+                        <a href="{{ route(empty($readonly)
+                                    ? 'recepcion.mercaderias.index'
+                                    : 'panel.mercaderias.index') }}"
+                        class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </a>
+
+                    </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    {{-- RECUENTO TOTAL --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="text-secondary small">
+            <strong>Total entregas encontradas:</strong> 
+            <span class="badge bg-info text-dark px-2 py-1 fs-6 ms-1">{{ $mercaderias->total() ?? $mercaderias->count() }}</span>
         </div>
     </div>
 
@@ -80,7 +149,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-uppercase fs-7 text-muted border-bottom">
                         <tr>
-                            <th width="90"  class="ps-4 text-center">ID</th>
+                            <th width="90" class="ps-4 text-center">ID</th>
                             <th>Persona</th>
                             <th>Grupo Familiar</th>
                             <th width="140">Fecha Entrega</th>
@@ -91,16 +160,11 @@
                     </thead>
                     <tbody>
                         @forelse($mercaderias as $m)
+                            {{-- NOTA: Lo ideal es pasar estas variables calculadas desde el Controlador --}}
                             @php
                                 $fechaEntrega = \Carbon\Carbon::parse($m->fecha_entrega);
-
-                                /*
-                                 * La lógica de negocio es: una entrega por familia por MES CALENDARIO.
-                                 * El próximo retiro está habilitado a partir del primer día del mes
-                                 * siguiente al de la entrega.
-                                 */
                                 $habilitadoDesde = $fechaEntrega->copy()->addMonthNoOverflow()->startOfMonth();
-                                $puedeRetirar    = now()->greaterThanOrEqualTo($habilitadoDesde);
+                                $puedeRetirar = now()->greaterThanOrEqualTo($habilitadoDesde);
                             @endphp
                             <tr>
                                 {{-- ID --}}
@@ -116,8 +180,8 @@
                                         {{ $m->apellido }}, {{ $m->nombre }}
                                     </div>
                                     @if($m->dni)
-                                        <small class="text-muted">
-                                            <span class="fw-medium">DNI:</span> {{ $m->dni }}
+                                        <small class="text-muted block">
+                                            <span class="fw-medium text-secondary">DNI:</span> {{ $m->dni }}
                                         </small>
                                     @endif
                                 </td>
@@ -190,9 +254,27 @@
                     </tbody>
                 </table>
             </div>
+            
+            {{-- PAGINACIÓN (Si se usa paginate() en el controlador) --}}
+            @if(method_exists($mercaderias, 'links'))
+                <div class="card-footer bg-white border-0 py-3 structure-pagination">
+                    {{ $mercaderias->appends(request()->query())->links() }}
+                </div>
+            @endif
         </div>
     </div>
 
 </div>
 
+@endsection
+
+{{-- SCRIPT OPCIONAL PARA AUTO-ENVIAR AL CAMBIAR LOS SELECTS --}}
+@section('scripts')
+<script>
+    document.querySelectorAll('.select-filter').forEach(select => {
+        select.addEventListener('change', () => {
+            document.getElementById('filter-form').submit();
+        });
+    });
+</script>
 @endsection
