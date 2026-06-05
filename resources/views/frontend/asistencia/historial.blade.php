@@ -236,7 +236,7 @@
     <div class="hi-cal">
         <div class="hi-cal-head">
             <i class="bi bi-calendar-week" style="pointer-events:none"></i>
-            {{ ucfirst(\Carbon\Carbon::createFromDate($anio, $mes, 1)->translatedFormat('F Y')) }}
+            {{ ucfirst(\Carbon\Carbon::createFromDate($anio, $mes, 1)->locale('es')->isoFormat('MMMM YYYY')) }}
         </div>
         <div class="hi-cal-body">
             <div class="hi-cal-grid">
@@ -306,7 +306,7 @@
                     @foreach($asistencias->sortByDesc('fecha') as $reg)
                     <tr>
                         <td class="hi-td-fecha">
-                            {{ \Carbon\Carbon::parse($reg->fecha)->translatedFormat('l j \d\e F') }}
+                            {{ ucfirst(\Carbon\Carbon::parse($reg->fecha)->locale('es')->isoFormat('dddd D [de] MMMM')) }}
                         </td>
                         <td>
                             @if($reg->presente)

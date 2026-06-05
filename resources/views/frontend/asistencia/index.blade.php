@@ -279,7 +279,7 @@
                             <i class="bi bi-clock-history" style="pointer-events:none"></i> Fecha pasada
                         </span>
                     @endif
-                    {{ \Carbon\Carbon::parse($fecha)->translatedFormat('l j \d\e F \d\e Y') }}
+                    {{ \Carbon\Carbon::parse($fecha)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY') }}
                     @if(!$esHoy)
                         <a href="{{ route('asistencia.index') }}" class="asi-link-today">
                             <i class="bi bi-arrow-counterclockwise" style="pointer-events:none"></i> Volver a hoy
