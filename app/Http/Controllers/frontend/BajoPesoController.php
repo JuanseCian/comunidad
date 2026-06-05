@@ -1,0 +1,252 @@
+<?php
+
+namespace App\Http\Controllers\frontend;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\Models\BajoPeso;
+use App\Models\Familia;
+use App\Models\Persona;
+use Carbon\Carbon;
+
+class BajoPesoController extends Controller
+{
+    public function index()
+    {
+        $beneficiarios = BajoPeso::with([
+            'familia',
+            'persona',
+            'entregas'
+        ])
+        ->latest()
+        ->paginate(20);
+
+        return view(
+            'frontend.recepcion.bajo-peso.index',
+            compact('beneficiarios')
+        );
+    }
+
+    public function create()
+    {
+        $personas = Persona::whereNotNull('fecha_nacimiento')
+            ->get()
+            ->filter(function ($persona) {
+                return $persona->edad <= 6;
+            })
+            ->sortBy('apellido');
+
+        return view(
+            'frontend.recepcion.bajo-peso.create',
+            compact('personas')
+        );
+    }
+
+    public function datosPersona($id)
+    {
+        $persona = Persona::with('familia')
+            ->findOrFail($id);
+
+        return response()->json([
+            'id' => $persona->id,
+            'nombre' => $persona->nombre,
+            'apellido' => $persona->apellido,
+            'dni' => $persona->dni,
+            'edad' => $persona->edad,
+            'fecha_nacimiento' => optional($persona->fecha_nacimiento)
+                ->format('d/m/Y'),
+            'familia_id' => $persona->familia_id,
+            'familia_codigo' => optional($persona->familia)->codigo,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'persona_id' => 'required',
+
+            'tutor_nombre' => 'nullable|string|max:255',
+            'tutor_dni' => 'nullable|string|max:20',
+            'tutor_parentezco' => 'nullable|string|max:255',
+            
+            'certificado_bajo_peso' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
+            'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',    
+        ]);
+
+        $certificado = null;
+        $informe = null;
+
+        if ($request->hasFile('certificado_bajo_peso')) {
+
+            $certificado = $request
+                ->file('certificado_bajo_peso')
+                ->store('bajo_peso/certificados', 'public');
+        }
+
+        if ($request->hasFile('informe_socioambiental')) {
+
+            $informe = $request
+                ->file('informe_socioambiental')
+                ->store('bajo_peso/socioambientales', 'public');
+        }
+
+        $persona = Persona::findOrFail(
+            $request->persona_id
+        );
+
+        if ($persona->edad > 6) {
+
+            return back()
+                ->withErrors([
+                    'persona_id' =>
+                    'El beneficiario no puede superar los 6 años.'
+                ])
+                ->withInput();
+        }
+
+        if ($request->persona_id) {
+
+            $persona = Persona::findOrFail(
+                $request->persona_id
+            );
+
+        } else {
+
+            $familia = Familia::create([
+                'codigo' => Familia::generarCodigo()
+            ]);
+
+            $persona = Persona::create([
+                'familia_id' => $familia->id,
+                'nombre' => $request->nombre,
+                'apellido' => $request->apellido,
+                'dni' => $request->dni,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+                'estado' => 'aprobado'
+            ]);
+        }
+        BajoPeso::create([
+
+            'familia_id' => $persona->familia_id,
+            'persona_id' => $persona->id,
+
+            'diagnostico' => $request->diagnostico,
+            'tratamiento' => $request->tratamiento,
+
+            'certificado_bajo_peso' => $certificado,
+            'informe_socioambiental' => $informe,
+            
+            'tutor_nombre' => $request->tutor_nombre,
+            'tutor_dni' => $request->tutor_dni,
+            'tutor_parentezco' => $request->tutor_parentezco,
+
+            'observaciones' => $request->observaciones,
+        ]);
+
+        return redirect()
+            ->route('bajo-peso.index')
+            ->with('success', 'Beneficiario registrado correctamente.');
+    }
+
+    public function buscarMenores(Request $request)
+    {
+        $term = trim($request->texto ?? '');
+
+        if (!$term || strlen($term) < 2) {
+            return response()->json([]);
+        }
+
+        $personas = Persona::with('familia')
+            ->where(function ($query) use ($term) {
+
+                $query->whereRaw(
+                        'CAST(dni AS CHAR) LIKE ?',
+                        ["%{$term}%"]
+                    )
+                    ->orWhere('apellido', 'LIKE', "%{$term}%")
+                    ->orWhere('nombre', 'LIKE', "%{$term}%");
+            })
+            ->orderBy('apellido')
+            ->orderBy('nombre')
+            ->limit(20)
+            ->get()
+            ->filter(function ($persona) {
+
+                return $persona->fecha_nacimiento
+                    && $persona->edad <= 6;
+            })
+            ->map(function ($persona) {
+
+                return [
+                    'id' => $persona->id,
+                    'nombre' => $persona->nombre,
+                    'apellido' => $persona->apellido,
+                    'dni' => $persona->dni,
+                    'fecha_nacimiento' => optional($persona->fecha_nacimiento)
+                        ? $persona->fecha_nacimiento->format('Y-m-d')
+                        : null,
+                    'edad' => $persona->edad,
+                    'familia_id' => $persona->familia_id,
+                    'familia_codigo' => optional($persona->familia)->codigo,
+                ];
+            })
+            ->take(8)
+            ->values();
+
+        return response()->json($personas);
+    }
+
+    public function show($id)
+    {
+        $beneficiario = BajoPeso::with([
+            'familia',
+            'persona',
+            'entregas'
+        ])->findOrFail($id);
+
+        return view(
+            'frontend.recepcion.bajo_peso.show',
+            compact('beneficiario')
+        );
+    }
+
+    public function edit($id)
+    {
+        $beneficiario = BajoPeso::findOrFail($id);
+
+        return view(
+            'frontend.recepcion.bajo_peso.edit',
+            compact('beneficiario')
+        );
+    }
+
+    public function update(Request $request, $id)
+    {
+        $beneficiario = BajoPeso::findOrFail($id);
+
+        $beneficiario->update([
+            'diagnostico' => $request->diagnostico,
+            'tratamiento' => $request->tratamiento,
+            'tutor_nombre' => $request->tutor_nombre,
+            'tutor_dni' => $request->tutor_dni,
+            'tutor_parentezco' => $request->tutor_parentezco,
+            'observaciones' => $request->observaciones,
+            'activo' => $request->activo
+        ]);
+
+        return redirect()
+            ->route('bajo-peso.show', $id)
+            ->with('success', 'Registro actualizado.');
+    }
+
+    public function destroy($id)
+    {
+        BajoPeso::findOrFail($id)->delete();
+
+        return back()->with(
+            'success',
+            'Registro eliminado correctamente.'
+        );
+    }
+}
