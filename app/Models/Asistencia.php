@@ -11,6 +11,7 @@ class Asistencia extends Model
         'fecha',
         'presente',
         'registrado_por',
+        'observaciones',
     ];
 
     protected $casts = [
