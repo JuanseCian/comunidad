@@ -173,6 +173,17 @@
     .theme-purple .action-btn:hover .action-icon { background: #6f42c1; color: white; }
     .theme-purple .action-btn:hover .action-text h5 { color: #492790; }
     .theme-purple .action-btn:hover .action-arrow { color: #6f42c1; transform: translateX(4px); }
+
+    /* Variación Warning (Bajo Peso) */
+    .theme-warning .section-title i { color: #ffc107; }
+    .theme-warning .action-icon { background: #fff9e6; color: #d39e00; }
+    .theme-warning .action-btn:hover {
+        border-color: #ffe082;
+        background: linear-gradient(95deg, white 0%, #fff9e6 100%);
+    }
+    .theme-warning .action-btn:hover .action-icon { background: #ffc107; color: #212529; }
+    .theme-warning .action-btn:hover .action-text h5 { color: #856404; }
+    .theme-warning .action-btn:hover .action-arrow { color: #d39e00; transform: translateX(4px); }
 </style>
 
 {{-- HEADER UNIFICADO --}}
@@ -296,6 +307,46 @@
                         <div class="action-text">
                             <h5>Historial y Trámites</h5>
                             <p>Consultar estados, órdenes emitidas y expedientes.</p>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right action-arrow"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- BLOQUE 4: PROGRAMA BAJO PESO --}}
+    <div class="col-lg-4">
+        <div class="section-card theme-warning">
+            <div class="section-title">
+                <i class="bi bi-heart-fill"></i>
+                <h4>Programa Bajo Peso</h4>
+            </div>
+
+            <div class="action-row">
+                {{-- NUEVO BENEFICIARIO --}}
+                <a href="{{ route('bajo-peso.create') }}" class="action-btn">
+                    <div class="action-btn-content">
+                        <div class="action-icon">
+                            <i class="bi bi-person-plus-fill"></i>
+                        </div>
+                        <div class="action-text">
+                            <h5>Nuevo Beneficiario</h5>
+                            <p>Registrar un niño dentro del programa.</p>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right action-arrow"></i>
+                </a>
+
+                {{-- HISTORIAL Y ENTREGAS --}}
+                <a href="{{ route('bajo-peso.index') }}" class="action-btn">
+                    <div class="action-btn-content">
+                        <div class="action-icon">
+                            <i class="bi bi-archive-fill"></i>
+                        </div>
+                        <div class="action-text">
+                            <h5>Historial y Entregas</h5>
+                            <p>Consultar beneficiarios y bolsones entregados.</p>
                         </div>
                     </div>
                     <i class="bi bi-chevron-right action-arrow"></i>

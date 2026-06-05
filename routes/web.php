@@ -107,7 +107,9 @@ require __DIR__.'/atenciones.php';
 require __DIR__.'/estadistica.php';
 
 require __DIR__.'/asistencia.php';
+
 //rutas para recepcion
 require __DIR__.'/recepcion.php';
 require __DIR__.'/mercaderia.php';
 require __DIR__.'/sepelios.php';
+require __DIR__.'/bajopeso.php';
