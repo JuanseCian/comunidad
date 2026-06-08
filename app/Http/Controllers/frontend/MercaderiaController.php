@@ -140,19 +140,34 @@ class MercaderiaController extends Controller
             }
         }
 
-        // Verificar si la familia ya retiró este mes
+        // Verificar si la familia retiró en los últimos 30 días
         if ($familiaId) {
             $fechaEntrega = \Carbon\Carbon::parse($request->fecha_entrega);
 
-            $yaRetiro = Mercaderia::where('familia_id', $familiaId)
-                ->whereMonth('fecha_entrega', $fechaEntrega->month)
-                ->whereYear('fecha_entrega', $fechaEntrega->year)
-                ->exists();
+            $ultimoRetiro = Mercaderia::where('familia_id', $familiaId)
+                ->orderByDesc('fecha_entrega')
+                ->value('fecha_entrega');
 
-            if ($yaRetiro) {
-                return back()
-                    ->withInput()
-                    ->with('error', 'Esta familia ya retiró mercadería este mes.');
+            if ($ultimoRetiro) {
+                $diasTranscurridos = \Carbon\Carbon::parse($ultimoRetiro)
+                    ->diffInDays($fechaEntrega, false);
+
+                if ($diasTranscurridos < 30) {
+                    $diasRestantes = 30 - (int) $diasTranscurridos;
+                    $proximaFecha  = \Carbon\Carbon::parse($ultimoRetiro)
+                        ->addDays(30)
+                        ->locale('es')
+                        ->isoFormat('D [de] MMMM [de] YYYY');
+
+                    return back()
+                        ->withInput()
+                        ->with(
+                            'error',
+                            "Esta familia retiró mercadería hace {$diasTranscurridos} día(s). " .
+                            "Podrá retirar nuevamente el {$proximaFecha} " .
+                            "({$diasRestantes} día(s) restante(s))."
+                        );
+                }
             }
         }
 
@@ -190,23 +205,34 @@ class MercaderiaController extends Controller
             ->limit(8)
             ->get()
             ->map(function ($persona) {
-                // Indicar si la familia ya retiró este mes
+                // Indicar si la familia retiró en los últimos 30 días
                 $familiaYaRetiro = false;
+                $diasDesdeRetiro = null;
 
                 if ($persona->familia_id) {
-                    $familiaYaRetiro = Mercaderia::where('familia_id', $persona->familia_id)
-                        ->whereMonth('fecha_entrega', now()->month)
-                        ->whereYear('fecha_entrega', now()->year)
-                        ->exists();
+                    $ultimoRetiro = Mercaderia::where('familia_id', $persona->familia_id)
+                        ->orderByDesc('fecha_entrega')
+                        ->value('fecha_entrega');
+
+                    if ($ultimoRetiro) {
+                        $dias = \Carbon\Carbon::parse($ultimoRetiro)
+                            ->diffInDays(now(), false);
+
+                        if ($dias < 30) {
+                            $familiaYaRetiro = true;
+                            $diasDesdeRetiro = (int) $dias;
+                        }
+                    }
                 }
 
                 return [
-                    'id'               => $persona->id,
-                    'nombre'           => $persona->nombre,
-                    'apellido'         => $persona->apellido,
-                    'dni'              => $persona->dni,
-                    'familia_id'       => $persona->familia_id,
+                    'id'                => $persona->id,
+                    'nombre'            => $persona->nombre,
+                    'apellido'          => $persona->apellido,
+                    'dni'               => $persona->dni,
+                    'familia_id'        => $persona->familia_id,
                     'familia_ya_retiro' => $familiaYaRetiro,
+                    'dias_desde_retiro' => $diasDesdeRetiro,
                 ];
             });
 
