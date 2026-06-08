@@ -127,18 +127,24 @@
                                             @endif
                                         </div>
                                     @endif
-                                    @if($tieneBajoPeso)
+                                     @if($tieneBajoPeso)
                                         <div class="col-sm-6">
                                             <div class="gf-info-box">
                                                 <div class="gf-info-label">
                                                     <i class="bi bi-heart-pulse text-danger"></i>
-                                                    Bajo Peso
+                                                    Programa Bajo Peso
                                                 </div>
 
-                                                <span class="gf-tag gf-tag-red">
-                                                    Desde
-                                                    {{ \Carbon\Carbon::parse($tieneBajoPeso->fecha_ingreso)->format('d/m/Y') }}
-                                                </span>
+                                                <div class="mt-1">
+                                                    <span class="gf-tag gf-tag-red">
+                                                        Activo
+                                                    </span>
+
+                                                    <span class="gf-tag">
+                                                        Desde
+                                                        {{ $tieneBajoPeso->created_at->format('d/m/Y') }}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     @endif
@@ -278,6 +284,50 @@
                         @endforelse
                     </div>
                 </div>
+            </div>
+
+            <div class="gf-card mb-3">
+
+                <div class="gf-card-body gf-card-body-tight">
+
+                    <div class="gf-info-label mb-2">
+                        Programa Bajo Peso
+                    </div>
+
+                    @php
+                        $menoresBajoPeso = $familia->personas
+                            ->filter(fn($p) => $p->bajoPesoActivo);
+                    @endphp
+
+                    <div class="gf-sidebar-row">
+                        <span class="gf-sidebar-label">
+                            Cupos utilizados
+                        </span>
+
+                        <span class="gf-count-pill">
+                            {{ $menoresBajoPeso->count() }}/3
+                        </span>
+                    </div>
+
+                    @foreach($menoresBajoPeso as $menor)
+
+                        <div class="gf-sidebar-row">
+
+                            <span>
+                                {{ $menor->apellido }},
+                                {{ $menor->nombre }}
+                            </span>
+
+                            <span class="gf-tag gf-tag-red">
+                                Activo
+                            </span>
+
+                        </div>
+
+                    @endforeach
+
+                </div>
+
             </div>
 
             {{-- Sepelios colapsable --}}

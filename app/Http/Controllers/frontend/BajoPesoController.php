@@ -95,6 +95,68 @@ class BajoPesoController extends Controller
             $request->persona_id
         );
 
+        $cantidadGrupo = BajoPeso::where('activo', 1)
+            ->where('familia_id', $persona->familia_id)
+            ->count();
+
+        if ($cantidadGrupo >= 3) {
+
+            return back()
+                ->withErrors([
+                    'persona_id' =>
+                    'Este grupo familiar ya posee 3 menores registrados en Bajo Peso.'
+                ])
+                ->withInput();
+        }
+
+        $beneficiariosActivos = BajoPeso::where(
+                'familia_id',
+                $persona->familia_id
+            )
+            ->where('activo', 1)
+            ->count();
+
+        if ($beneficiariosActivos >= 3) {
+
+            return back()
+                ->withErrors([
+                    'persona_id' =>
+                    'Este grupo familiar ya posee el máximo de 3 beneficiarios de Bajo Peso.'
+                ])
+                ->withInput();
+        }
+
+        $yaExiste = BajoPeso::where(
+                'persona_id',
+                $persona->id
+            )
+            ->where('activo', 1)
+            ->exists();
+
+        if ($yaExiste) {
+
+            return back()
+                ->withErrors([
+                    'persona_id' =>
+                    'La persona ya se encuentra registrada en el programa.'
+                ])
+                ->withInput();
+        }
+        
+        $existe = BajoPeso::where('persona_id', $persona->id)
+            ->where('activo', 1)
+            ->exists();
+
+        if ($existe) {
+
+            return back()
+                ->withErrors([
+                    'persona_id' =>
+                    'La persona ya se encuentra registrada en el programa Bajo Peso.'
+                ])
+                ->withInput();
+        }
+
         if ($persona->edad > 6) {
 
             return back()
