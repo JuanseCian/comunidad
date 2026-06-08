@@ -20,7 +20,7 @@
                     Sistema activo · {{ now()->locale('es')->isoFormat('dddd D [de] MMMM, YYYY') }}
                 </p>
                 <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(1.6rem,4vw,2.3rem); color:#0f172a; margin-bottom:0.5rem; line-height:1.2;">
-                    Bienvenido,
+                    Bienvenidoss,
                     <span style="background:linear-gradient(135deg,#0d92c2,#17a385); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
                         @auth {{ auth()->user()->nombre }} @else Invitado @endauth
                     </span>

@@ -206,18 +206,18 @@ class BajoPesoController extends Controller
         ])->findOrFail($id);
 
         return view(
-            'frontend.recepcion.bajo_peso.show',
+            'frontend.recepcion.bajo-peso.show',
             compact('beneficiario')
         );
     }
 
     public function edit($id)
     {
-        $beneficiario = BajoPeso::findOrFail($id);
+        $bajoPeso = BajoPeso::findOrFail($id);
 
         return view(
-            'frontend.recepcion.bajo_peso.edit',
-            compact('beneficiario')
+            'frontend.recepcion.bajo-peso.edit',
+            compact('bajoPeso')
         );
     }
 
