@@ -44,7 +44,7 @@ class PlanMasVidaController extends Controller
             'trabajador_social' => $request->trabajador_social,
         ]);
 
-        foreach ($request->integrantes as $integrante) {
+        foreach ($request->integrantes ?? [] as $integrante) {
             PlanMasVidaIntegrante::create([
                 'ficha_id' => $ficha->id,
                 'apellido_nombre' => $integrante['apellido_nombre'] ?? null,

@@ -881,6 +881,8 @@
                                 $persona->familia &&
                                 $persona->familia->mercaderiasActivas &&
                                 $persona->familia->mercaderiasActivas->count();
+                            
+                            $tieneBajoPeso = $persona->bajoPesoActivo;
                         @endphp
 
                         @if($tieneBeneficios || $tieneMercaderia)
@@ -1197,6 +1199,7 @@
                                 @endif
 
                             </div>
+                            
 
                         @else
 
@@ -1235,8 +1238,106 @@
 
                         @endif
 
+                        @if($tieneBajoPeso)
+    
+                            <div class="col-xl-4 col-md-6">
+    
+                                <div style="
+                                    border:1px solid #fecaca;
+                                    border-radius:18px;
+                                    padding:16px;
+                                    background:#fff5f5;
+                                    height:100%;
+                                ">
+    
+                                    {{-- TOP --}}
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+    
+                                        <div>
+    
+                                            <div style="
+                                                font-weight:800;
+                                                font-size:15px;
+                                                color:#991b1b;
+                                                margin-bottom:4px;
+                                            ">
+                                                Programa Bajo Peso
+                                            </div>
+    
+                                            <div style="
+                                                font-size:12px;
+                                                color:#7f1d1d;
+                                            ">
+                                                Beneficiario activo
+                                            </div>
+    
+                                        </div>
+    
+                                        <span style="
+                                            background:#fee2e2;
+                                            color:#991b1b;
+                                            border:1px solid #fca5a5;
+                                            padding:4px 10px;
+                                            border-radius:999px;
+                                            font-size:11px;
+                                            font-weight:700;
+                                        ">
+                                            Activo
+                                        </span>
+    
+                                    </div>
+    
+                                    {{-- INFO --}}
+                                    <div style="
+                                        display:flex;
+                                        flex-direction:column;
+                                        gap:10px;
+                                        font-size:13px;
+                                    ">
+    
+                                        <div>
+                                            <span style="color:#7f1d1d;">
+                                                Desde:
+                                            </span>
+    
+                                            <strong>
+                                                {{ $persona->bajoPesoActivo->created_at->format('d/m/Y') }}
+                                            </strong>
+                                        </div>
+    
+                                        @if($persona->bajoPesoActivo->diagnostico)
+                                            <div>
+                                                <span style="color:#7f1d1d;">
+                                                    Diagnóstico:
+                                                </span>
+    
+                                                <div style="margin-top:4px;">
+                                                    {{ Str::limit($persona->bajoPesoActivo->diagnostico, 80) }}
+                                                </div>
+                                            </div>
+                                        @endif
+    
+                                    </div>
+    
+                                    <div class="mt-3">
+    
+                                        <a href="{{ route('bajo-peso.show', $persona->bajoPesoActivo->id) }}"
+                                        class="btn btn-sm btn-danger">
+    
+                                            <i class="bi bi-eye"></i>
+                                            Ver ficha
+                                        </a>
+    
+                                    </div>
+    
+                                </div>
+    
+                            </div>
+    
+                            @endif
                     </div>
 
+                    
                 </div>
 
             </div>

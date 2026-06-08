@@ -53,6 +53,7 @@
                         @php
                             $programasActivos = $persona->personaPrograma->whereNull('fecha_fin')->filter(fn($pp) => $pp->programa);
                             $beneficiosActivos = $persona->personaBeneficio->where('activo', 1)->filter(fn($pb) => $pb->beneficio);
+                            $tieneBajoPeso = $persona->bajoPesoActivo;
                             $tieneInfo = $programasActivos->count() || $beneficiosActivos->count() || ($persona->grupoFamiliar && $persona->grupoFamiliar->count());
                             $collapseId = 'persona-' . $persona->id;
                             $openByDefault = $index === 0;
@@ -124,6 +125,21 @@
                                                     </div>
                                                 </div>
                                             @endif
+                                        </div>
+                                    @endif
+                                    @if($tieneBajoPeso)
+                                        <div class="col-sm-6">
+                                            <div class="gf-info-box">
+                                                <div class="gf-info-label">
+                                                    <i class="bi bi-heart-pulse text-danger"></i>
+                                                    Bajo Peso
+                                                </div>
+
+                                                <span class="gf-tag gf-tag-red">
+                                                    Desde
+                                                    {{ \Carbon\Carbon::parse($tieneBajoPeso->fecha_ingreso)->format('d/m/Y') }}
+                                                </span>
+                                            </div>
                                         </div>
                                     @endif
 

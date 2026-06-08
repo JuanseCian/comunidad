@@ -55,6 +55,7 @@ class FamiliaController extends Controller
             'personas.nucleosConvivientes.miembrosGrupoFamiliar',
             'personas.personaPrograma.programa',
             'personas.personaBeneficio.beneficio',
+            'personas.bajoPesoActivo',
 
             'mercaderias.usuario',
 
