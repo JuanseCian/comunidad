@@ -79,16 +79,24 @@ class BajoPesoController extends Controller
 
         if ($request->hasFile('certificado_bajo_peso')) {
 
+            \Illuminate\Support\Facades\Storage::makeDirectory(
+                'bajo_peso/certificados'
+            );
+
             $certificado = $request
-                ->file('certificado_bajo_peso')
-                ->store('bajo_peso/certificados', 'public');
+    ->file('certificado_bajo_peso')
+    ->store('bajo_peso/certificados', 'public');
         }
 
         if ($request->hasFile('informe_socioambiental')) {
 
+            \Illuminate\Support\Facades\Storage::makeDirectory(
+                'bajo_peso/socioambientales'
+            );
+
             $informe = $request
-                ->file('informe_socioambiental')
-                ->store('bajo_peso/socioambientales', 'public');
+    ->file('informe_socioambiental')
+    ->store('bajo_peso/socioambientales', 'public');
         }
 
         $persona = Persona::findOrFail(
@@ -285,16 +293,51 @@ class BajoPesoController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'certificado_bajo_peso'  => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
+            'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
+        ]);
+
         $beneficiario = BajoPeso::findOrFail($id);
 
+        // Certificado: subir nuevo si viene, mantener el anterior si no
+        $certificado = $beneficiario->certificado_bajo_peso;
+
+        if ($request->hasFile('certificado_bajo_peso')) {
+
+            \Illuminate\Support\Facades\Storage::makeDirectory(
+                'bajo_peso/certificados'
+            );
+
+            $certificado = $request
+    ->file('certificado_bajo_peso')
+    ->store('bajo_peso/certificados', 'public');
+        }
+
+        // Informe: subir nuevo si viene, mantener el anterior si no
+        $informe = $beneficiario->informe_socioambiental;
+
+        if ($request->hasFile('informe_socioambiental')) {
+
+            \Illuminate\Support\Facades\Storage::makeDirectory(
+                'bajo_peso/socioambientales'
+            );
+
+            $informe = $request
+    ->file('informe_socioambiental')
+    ->store('bajo_peso/socioambientales', 'public');
+        }
+
         $beneficiario->update([
-            'diagnostico' => $request->diagnostico,
-            'tratamiento' => $request->tratamiento,
-            'tutor_nombre' => $request->tutor_nombre,
-            'tutor_dni' => $request->tutor_dni,
-            'tutor_parentezco' => $request->tutor_parentezco,
-            'observaciones' => $request->observaciones,
-            'activo' => $request->activo
+            'diagnostico'            => $request->diagnostico,
+            'tratamiento'            => $request->tratamiento,
+            'tutor_nombre'           => $request->tutor_nombre,
+            'tutor_dni'              => $request->tutor_dni,
+            'tutor_parentezco'       => $request->tutor_parentezco,
+            'observaciones'          => $request->observaciones,
+            'activo'                 => $request->activo,
+            'certificado_bajo_peso'  => $certificado,
+            'informe_socioambiental' => $informe,
         ]);
 
         return redirect()
