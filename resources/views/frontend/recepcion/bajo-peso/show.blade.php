@@ -95,7 +95,7 @@
                         <i class="bi bi-people-fill text-warning me-2 fs-4"></i>
                         <div>
                             <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Parentesco/Responsable</small>
-                            <span class="fw-semibold">{{ $beneficiario->tutor_responsable }}</span>
+                            <span class="fw-semibold">{{ $beneficiario->tutor_parentezco }}</span>
                         </div>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                                 </div>
                             </div>
                             @if($beneficiario->certificado_bajo_peso)
-                                <a href="{{ Storage::url($beneficiario->certificado_bajo_peso) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ \Illuminate\Support\Facades\Storage::url($beneficiario->certificado_bajo_peso) }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-eye"></i>
                                 </a>
                             @else
@@ -135,7 +135,7 @@
                                 </div>
                             </div>
                             @if($beneficiario->informe_socioambiental)
-                                <a href="{{ Storage::url($beneficiario->informe_socioambiental) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ \Illuminate\Support\Facades\Storage::url($beneficiario->informe_socioambiental) }}" target="_blank" class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-eye"></i>
                                 </a>
                             @else
