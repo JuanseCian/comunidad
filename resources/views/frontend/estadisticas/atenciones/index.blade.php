@@ -1,6 +1,6 @@
 @extends('frontend.estadisticas.layouts.app')
 
-@section('titulo', 'Atenciones')
+@section('titulo', 'Intervenciones')
 
 @section('subtitulo', 'Intervenciones y seguimientos')
 
@@ -21,7 +21,7 @@
                 Panel Estadístico de
 
                 <span style="color: var(--sn-blue); font-weight:400;">
-                    Atenciones
+                    Intervenciones
                 </span>
 
             </h4>
@@ -253,7 +253,7 @@
         <div class="col-6 col-xl-4">
 
             @include('frontend.estadisticas.partials.card', [
-                'title' => 'Atenciones del Mes',
+                'title' => 'Intervenciones del Mes',
                 'value' => $atencionesMes,
                 'icon'  => 'bi bi-calendar2-week',
                 'color' => 'success'
@@ -264,7 +264,7 @@
         <div class="col-6 col-xl-4">
 
             @include('frontend.estadisticas.partials.card', [
-                'title' => 'Atenciones Hoy',
+                'title' => 'Intervenciones Hoy',
                 'value' => $atencionesHoy,
                 'icon'  => 'bi bi-clock-history',
                 'color' => 'warning'
@@ -292,7 +292,7 @@
                         </h5>
 
                         <small class="text-muted">
-                            Línea temporal de atenciones registradas
+                            Línea temporal de Intervenciones registradas
                         </small>
                     </div>
 
@@ -323,7 +323,7 @@
                     <div class="p-4 border-bottom">
 
                         <h6 class="fw-bold mb-1">
-                            Tipos de Atención
+                            Tipos de Intervención
                         </h6>
 
                         <small class="text-muted">
@@ -361,7 +361,7 @@
                                 <div>
 
                                     <div class="fw-bold text-dark">
-                                        Operadores con Más Atenciones
+                                        Operadores con Más Intervenciones
                                     </div>
 
                                     <small class="text-muted fw-normal">
@@ -543,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 labels: timelineLabels,
 
                 datasets: [{
-                    label: 'Atenciones',
+                    label: 'Intervenciones',
                     data: timelineData,
                     fill: true,
                     tension: .4

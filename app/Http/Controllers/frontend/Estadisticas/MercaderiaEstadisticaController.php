@@ -7,16 +7,14 @@ use App\Models\Mercaderia;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\MercaderiasExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MercaderiaEstadisticaController extends Controller
 {
     public function index(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | FILTROS
-        |--------------------------------------------------------------------------
-        */
+        
         $fechaDesde = $request->fecha_desde;
         $fechaHasta = $request->fecha_hasta;
 
@@ -56,21 +54,11 @@ class MercaderiaEstadisticaController extends Controller
             ->distinct('nucleo_conviviente_id')
             ->count('nucleo_conviviente_id');
 
-        /*
-        |--------------------------------------------------------------------------
-        | ÚLTIMAS ENTREGAS
-        |--------------------------------------------------------------------------
-        */
         $ultimasMercaderias = (clone $query)
             ->latest('fecha_entrega')
             ->limit(20)
             ->get();
 
-        /*
-        |--------------------------------------------------------------------------
-        | GRÁFICO POR MES
-        |--------------------------------------------------------------------------
-        */
         $mercaderiasPorMes = Mercaderia::selectRaw('
                 MONTH(fecha_entrega) as mes,
                 COUNT(*) as total
@@ -94,18 +82,14 @@ class MercaderiaEstadisticaController extends Controller
                 ?->total ?? 0;
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | GRÁFICO MENSUAL
-    |--------------------------------------------------------------------------
-    */
+
     $mensuales = Mercaderia::selectRaw("
-            DATE_FORMAT(fecha_entrega, '%Y-%m') as periodo,
-            COUNT(*) as total
-        ")
-        ->groupBy('periodo')
-        ->orderBy('periodo')
-        ->get();
+                DATE_FORMAT(fecha_entrega, '%Y-%m') as periodo,
+                COUNT(*) as total
+            ")
+            ->groupBy('periodo')
+            ->orderBy('periodo')
+            ->get();
 
     /*
     |--------------------------------------------------------------------------
@@ -149,6 +133,14 @@ class MercaderiaEstadisticaController extends Controller
                 'mensuales',
                 'usuarios'
             )
+        );
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(
+            new MercaderiasExport(),
+            'estadisticas_mercaderias.xlsx'
         );
     }
 }

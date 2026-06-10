@@ -13,12 +13,27 @@ use Carbon\Carbon;
 
 class AsistenciaController extends Controller
 {
-    /**
-     * Listado del día (o de la fecha seleccionada) con checkboxes.
-     */
+
+    public function seleccionar()
+    {
+        $programas = ProgramasAsistencia::orderBy('nombre')->get();
+
+        $sedes = Sede::where('activa', 1)
+            ->orderBy('nombre')
+            ->get();
+
+        return view(
+            'frontend.asistencia.seleccionar',
+            compact('programas', 'sedes')
+        );
+    }   
+
     public function index(Request $request)
     {
-        // Fecha: hoy por defecto, o la que viene por parámetro
+        if (!$request->filled('programa_id')) {
+            return redirect()->route('asistencia.seleccionar');
+        }
+
         $fecha = $request->input('fecha')
             ? Carbon::parse($request->input('fecha'))->toDateString()
             : Carbon::today()->toDateString();
@@ -27,31 +42,58 @@ class AsistenciaController extends Controller
         $programaId = $request->input('programa_id');
 
         $query = Persona::query()
-            ->where('estado', 'aprobado')
-            ->select('personas.*');
-
-        if ($sedeId) {
-            $query->where('personas.sede_origen_id', $sedeId);
-        }
+            ->with([
+                'programas',
+                'personaPrograma.sede'
+            ])
+            ->where('estado', 'aprobado');
 
         if ($programaId) {
-            $query->whereHas('programas', function ($q) use ($programaId) {
-                $q->where('programa_id', $programaId)->where('activo', 1);
+
+            $query->whereHas('personaPrograma', function ($q) use ($programaId, $sedeId) {
+
+                $q->where('programa_id', $programaId)
+                ->where('activo', 1);
+
+                if ($sedeId) {
+                    $q->where('sede_id', $sedeId);
+                }
             });
         }
 
-        $personas = $query->orderBy('apellido')->orderBy('nombre')->get();
+        $personas = $query
+        ->with([
+            'personaPrograma.sede',
+            'programas'
+        ])
+        ->orderBy('apellido')
+        ->orderBy('nombre')
+        ->get();
+        
 
         $personaIds = $personas->pluck('id');
 
-        // Traemos asistencias de la fecha seleccionada incluyendo observaciones
         $asistenciasDia = Asistencia::whereIn('persona_id', $personaIds)
             ->where('fecha', $fecha)
             ->get()
-            ->keyBy('persona_id'); // [persona_id => Asistencia]
+            ->keyBy('persona_id');
 
-        $sedes     = Sede::where('activa', 1)->orderBy('nombre')->get();
-        $programas = ProgramasAsistencia::orderBy('nombre')->get();
+        $sedes = Sede::whereIn('id', function ($query) use ($programaId) {
+
+        $query->select('sede_id')
+                ->from('persona_programa')
+                ->where('activo', 1);
+
+            if ($programaId) {
+                $query->where('programa_id', $programaId);
+            }
+
+        })
+        ->orderBy('nombre')
+        ->get();
+
+        $programas = ProgramasAsistencia::orderBy('nombre')
+            ->get();
 
         $esHoy = $fecha === Carbon::today()->toDateString();
 
@@ -67,16 +109,13 @@ class AsistenciaController extends Controller
         ));
     }
 
-    /**
-     * Guarda la asistencia completa de una fecha (submit masivo).
-     */
     public function guardar(Request $request)
     {
         $fecha = $request->input('fecha', Carbon::today()->toDateString());
 
         $presentesIds  = $request->input('presentes', []);
         $todosIds      = $request->input('todos_ids', []);
-        $observaciones = $request->input('observaciones', []); // [persona_id => texto]
+        $observaciones = $request->input('observaciones', []); 
 
         if (empty($todosIds)) {
             return back()->with('warning', 'No hay personas para registrar.');
@@ -104,9 +143,6 @@ class AsistenciaController extends Controller
         return back()->with('success', "Asistencia guardada: {$presentes} presentes de {$total} personas.");
     }
 
-    /**
-     * Toggle AJAX — guarda presente + observación de una persona.
-     */
     public function toggle(Request $request)
     {
         $request->validate([
@@ -129,15 +165,11 @@ class AsistenciaController extends Controller
         return response()->json(['ok' => true, 'presente' => $asistencia->presente]);
     }
 
-    /**
-     * Historial de asistencias de una persona.
-     */
     public function historial(Request $request, Persona $persona)
     {
         $mes  = $request->input('mes',  Carbon::today()->month);
         $anio = $request->input('anio', Carbon::today()->year);
 
-        // Rango del mes seleccionado
         $inicio = Carbon::createFromDate($anio, $mes, 1)->startOfMonth();
         $fin    = $inicio->copy()->endOfMonth();
 
@@ -147,7 +179,6 @@ class AsistenciaController extends Controller
             ->get()
             ->keyBy(fn($a) => $a->fecha->toDateString());
 
-        // Días hábiles del mes (lunes a viernes) para el cálculo de %
         $diasDelMes   = [];
         $cursor       = $inicio->copy();
         $hoyStr       = Carbon::today()->toDateString();
@@ -157,13 +188,11 @@ class AsistenciaController extends Controller
             $cursor->addDay();
         }
 
-        // Solo días hasta hoy para el % real
         $diasHastahoy = array_filter($diasDelMes, fn($d) => $d->toDateString() <= $hoyStr);
         $totalDias    = count($diasHastahoy);
         $presentes    = $asistencias->where('presente', true)->count();
         $porcentaje   = $totalDias > 0 ? round(($presentes / $totalDias) * 100) : 0;
 
-        // Meses disponibles para el selector (últimos 12)
         $mesesDisponibles = [];
         for ($i = 0; $i < 12; $i++) {
             $m = Carbon::today()->subMonths($i);

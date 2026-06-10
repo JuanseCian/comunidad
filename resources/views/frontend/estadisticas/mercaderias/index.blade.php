@@ -24,9 +24,29 @@
         </h4>
     </div>
 
-    <div class="badge bg-light text-dark border border-light-subtle px-3 py-2 fw-semibold rounded-3 shadow-xs d-flex align-items-center gap-2">
-        <i class="bi bi-calendar3 text-primary"></i>
-        {{ now()->format('d/m/Y') }}
+    <div class="d-flex gap-2 align-items-center">
+
+        <a
+            href="{{ route('estadisticas.mercaderias.excel') }}"
+            class="btn btn-success rounded-3"
+        >
+            <i class="bi bi-file-earmark-excel"></i>
+            Excel
+        </a>
+        
+        <button
+            onclick="window.print()"
+            class="btn btn-primary rounded-3"
+        >
+            <i class="bi bi-printer"></i>
+            Imprimir
+        </button>
+
+        <div class="badge bg-light text-dark border border-light-subtle px-3 py-2 fw-semibold rounded-3 shadow-xs d-flex align-items-center gap-2">
+            <i class="bi bi-calendar3 text-primary"></i>
+            {{ now()->format('d/m/Y') }}
+        </div>
+
     </div>
 
 </div>
@@ -369,7 +389,36 @@ document.addEventListener('DOMContentLoaded', function () {
     border-color: transparent;
 }
 
+@media print {
+
+    .btn,
+    .accordion-button,
+    .navbar,
+    footer {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    .card {
+        border: 1px solid #dee2e6 !important;
+        box-shadow: none !important;
+    }
+
+    canvas {
+        max-width: 100% !important;
+    }
+
+    .accordion-collapse {
+        display: block !important;
+    }
+
+}
+
 </style>
+
 
 @endpush
 

@@ -124,3 +124,8 @@ Route::middleware(['auth'])
             [MercaderiaEstadisticaController::class, 'index']
         )->name('mercaderias');
     });
+
+    Route::get(
+        '/estadisticas/mercaderias/excel',
+        [MercaderiaEstadisticaController::class, 'exportExcel']
+    )->name('estadisticas.mercaderias.excel');

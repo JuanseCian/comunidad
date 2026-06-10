@@ -340,10 +340,10 @@
                     Sepelios
                 </a>
 
-                <a href="{{ route('personas.index') }}"
-                   class="{{ request()->routeIs('personas.*') ? 'active' : '' }}">
+                <a href="{{ route('bajo-peso.index') }}"
+                   class="{{ request()->routeIs('bajo.*') ? 'active' : '' }}">
                     <i class="bi bi-people-fill"></i>
-                    Personas
+                    Bajo peso
                 </a>
             </div>
         </div>

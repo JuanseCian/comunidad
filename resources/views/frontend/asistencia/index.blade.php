@@ -444,10 +444,19 @@
                                     <td class="asi-muted d-none d-md-table-cell">{{ $persona->dni ?? '—' }}</td>
 
                                     <td class="d-none d-xl-table-cell">
-                                        @if($persona->sedeOrigen)
+                                        @php
+                                            $programaActivo = $persona->personaPrograma
+                                                ->where('activo', 1)
+                                                ->when($programaId, function ($collection) use ($programaId) {
+                                                    return $collection->where('programa_id', $programaId);
+                                                })
+                                                ->first();
+                                        @endphp
+
+                                        @if($programaActivo?->sede)
                                             <span class="asi-chip asi-chip--sky">
-                                                <i class="bi bi-geo-alt-fill" style="pointer-events:none"></i>
-                                                {{ $persona->sedeOrigen->nombre }}
+                                                <i class="bi bi-geo-alt-fill"></i>
+                                                {{ $programaActivo->sede->nombre }}
                                             </span>
                                         @else
                                             <span class="asi-muted">—</span>
