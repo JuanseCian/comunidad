@@ -10,6 +10,7 @@ use App\Http\Controllers\Frontend\Estadisticas\AtencionEstadisticaController;
 use App\Http\Controllers\Frontend\Estadisticas\TerritorialEstadisticaController;
 use App\Http\Controllers\Frontend\Estadisticas\FamiliaEstadisticaController;
 use App\Http\Controllers\Frontend\Estadisticas\MercaderiaEstadisticaController;
+use App\Http\Controllers\Frontend\Estadisticas\SepelioEstadisticaController;
 
 Route::middleware(['auth'])
     ->prefix('estadisticas')
@@ -129,3 +130,14 @@ Route::middleware(['auth'])
         '/estadisticas/mercaderias/excel',
         [MercaderiaEstadisticaController::class, 'exportExcel']
     )->name('estadisticas.mercaderias.excel');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sepelios
+        |--------------------------------------------------------------------------
+        */
+
+    Route::get(
+        '/estadisticas/sepelios',
+        [SepelioEstadisticaController::class, 'index']
+    )->name('estadisticas.sepelios');

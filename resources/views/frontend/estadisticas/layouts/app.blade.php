@@ -28,8 +28,8 @@
             --sidebar-width-collapsed: 78px;
             --sidebar-width: var(--sidebar-width-expanded);
             --bi-blue: #1e70e4;
+            --bi-blue-hover: #1661cd;
             
-            /* Variables dinámicas dependientes del tema */
             --bi-body-bg: #f8fafc;
             --bi-sidebar-bg: #ffffff;
             --bi-sidebar-border: #eaeef3;
@@ -38,7 +38,6 @@
             --bi-icon-hover-bg: #e2e8f0;
         }
 
-        /* Sobreescritura adaptativa cuando Bootstrap pasa a Modo Oscuro */
         [data-bs-theme="dark"] {
             --bi-body-bg: #0b0f19;
             --bi-sidebar-bg: #111827;
@@ -59,7 +58,6 @@
             --sidebar-width: var(--sidebar-width-collapsed);
         }
 
-        /* --- SIDEBAR POWER BI ADAPTATIVO --- */
         .stats-sidebar {
             width: var(--sidebar-width);
             min-height: 100vh;
@@ -69,26 +67,36 @@
             left: 0;
             z-index: 1040;
             border-right: 1px solid var(--bi-sidebar-border);
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease, border-color 0.25s ease;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease, border-color 0.25s ease;
             overflow: hidden;
         }
 
         .stats-sidebar .nav-link {
             color: var(--bi-icon-color);
             padding: 10px 14px;
-            margin: 2px 0 2px 12px;
-            border-radius: 20px 0 0 20px;
+            margin: 4px 0 4px 12px;
+            border-radius: 24px 0 0 24px;
             display: flex;
             align-items: center;
             font-weight: 500;
             font-size: 0.92rem;
-            transition: all 0.2s ease;
-            white-space: nowrap;
             text-decoration: none;
             position: relative;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
         }
 
-        .stats-sidebar .nav-link i {
+        .stats-sidebar .nav-link:not(.active):hover {
+            color: var(--bi-blue);
+            background: rgba(30, 112, 228, 0.04);
+            transform: translateX(2px);
+        }
+
+        [data-bs-theme="dark"] .stats-sidebar .nav-link:not(.active):hover {
+            background: rgba(30, 112, 228, 0.08);
+        }
+
+        .stats-sidebar .nav-link i.bi {
             min-width: 38px;
             height: 38px;
             font-size: 1.15rem;
@@ -98,117 +106,82 @@
             border-radius: 50%;
             background: var(--bi-icon-bg);
             color: var(--bi-icon-color);
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .stats-sidebar .nav-link:hover i {
+        .stats-sidebar .nav-link:hover i.bi {
             background: var(--bi-icon-hover-bg);
-            color: var(--bs-heading-color);
+            color: var(--bi-blue);
+            transform: scale(1.05);
         }
 
-        /* ACTIVO (Mantiene el indicador curvo azul en ambos modos) */
         .stats-sidebar .nav-link.active {
             color: var(--bi-blue) !important;
-            background: transparent;
+            background: rgba(30, 112, 228, 0.06);
             margin-left: 0;
-            padding-left: 12px;
+            padding-left: 16px;
             font-weight: 600;
         }
 
-        .stats-sidebar .nav-link.active i {
+        [data-bs-theme="dark"] .stats-sidebar .nav-link.active {
+            background: rgba(30, 112, 228, 0.12);
+        }
+
+        .stats-sidebar .nav-link.active i.bi {
             background: var(--bi-blue);
             color: #ffffff;
-            box-shadow: 0 4px 10px rgba(30, 112, 228, 0.25);
+            box-shadow: 0 4px 12px rgba(30, 112, 228, 0.3);
+            transform: scale(1);
         }
 
         .stats-sidebar .nav-link.active::before {
             content: "";
             position: absolute;
             left: 0;
-            top: 0;
-            bottom: 0;
-            width: 5px;
+            top: 6px;
+            bottom: 6px;
+            width: 4px;
             background: var(--bi-blue);
             border-radius: 0 4px 4px 0;
+            animation: sidebarIndicatorIn 0.2s ease forwards;
         }
 
-        /* Control de desvanecimiento de textos al colapsar */
+        @keyframes sidebarIndicatorIn {
+            from { transform: scaleY(0); opacity: 0; }
+            to { transform: scaleY(1); opacity: 1; }
+        }
+
         .stats-sidebar .nav-link span,
         .stats-sidebar .sidebar-brand-text,
         .stats-sidebar .sidebar-footer-text {
             opacity: 1;
-            transition: opacity 0.2s ease;
+            visibility: visible;
+            transition: opacity 0.2s ease, visibility 0.2s ease, width 0.3s ease, margin 0.3s ease;
         }
 
         body.sidebar-collapsed .stats-sidebar .nav-link span,
         body.sidebar-collapsed .stats-sidebar .sidebar-brand-text,
         body.sidebar-collapsed .stats-sidebar .sidebar-footer-text {
             opacity: 0;
-            pointer-events: none;
+            visibility: hidden;
             width: 0;
             overflow: hidden;
             margin: 0 !important;
+            pointer-events: none;
         }
 
-        /* --- NUEVOS ESTILOS EXCLUSIVOS PARA ELEMENTOS ACORDEÓN / COLLAPSE --- */
-        .stats-sidebar .nav-link .bi-chevron-down {
-            min-width: auto;
-            height: auto;
-            background: transparent !important;
-            color: var(--bi-icon-color);
-            margin-left: auto;
-            margin-right: 15px;
-            transition: transform 0.3s ease;
-            font-size: 0.8rem;
+        .stats-sidebar .btn-logout-custom {
+            transition: all 0.2s ease;
+        }
+        .stats-sidebar .btn-logout-custom:hover {
+            background: rgba(239, 68, 68, 0.15) !important;
+            transform: translateY(-1px);
         }
 
-        .stats-sidebar .nav-link:hover .bi-chevron-down {
-            color: var(--bs-heading-color);
-        }
-
-        /* Rotar flecha indicadora cuando esté desplegado */
-        .stats-sidebar .nav-link[aria-expanded="true"] .bi-chevron-down {
-            transform: rotate(180deg);
-        }
-
-        /* Estilización interna del menú colapsable */
-        .stats-sidebar .collapse {
-            background: rgba(0, 0, 0, 0.02);
-            margin-left: 12px;
-            border-radius: 12px 0 0 12px;
-        }
-        
-        [data-bs-theme="dark"] .stats-sidebar .collapse {
-            background: rgba(255, 255, 255, 0.01);
-        }
-
-        .stats-sidebar .collapse .nav-link {
-            padding-left: 1rem;
-            font-size: 0.88rem;
-            margin-top: 1px;
-            margin-bottom: 1px;
-        }
-
-        .stats-sidebar .collapse .nav-link i {
-            min-width: 32px;
-            height: 32px;
-            font-size: 1rem;
-            background: transparent !important;
-        }
-
-        /* Evitar saltos visuales o desbordamientos de la flecha al estar colapsado en PC */
-        body.sidebar-collapsed .stats-sidebar .nav-link .bi-chevron-down {
-            opacity: 0 !important;
-            width: 0 !important;
-            margin: 0 !important;
-            display: none !important;
-        }
-
-        /* --- WRAPPER Y NAVBAR SUPERIOR --- */
         .stats-wrapper {
             margin-left: var(--sidebar-width);
             min-height: 100vh;
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
         }
@@ -228,26 +201,6 @@
             flex-grow: 1;
         }
 
-        /* Botón Switch de Modo */
-        .theme-toggle-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--bi-icon-color);
-            background: var(--bi-icon-bg);
-            border: 1px solid var(--bi-sidebar-border);
-            transition: all 0.2s ease;
-        }
-        
-        .theme-toggle-btn:hover {
-            background: var(--bi-icon-hover-bg);
-            color: var(--bs-heading-color);
-        }
-
-        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 991.98px) {
             .stats-sidebar {
                 transform: translateX(-100%);
@@ -269,45 +222,79 @@
 
 <body>
 
-    @include('frontend.estadisticas.partials.sidebar')
-
-    <div class="stats-wrapper">
-        
-        <header class="bi-top-header">
-            <div class="d-flex align-items-center gap-2">
-                <button class="btn btn-sm rounded-3 border-0 text-secondary d-flex align-items-center justify-content-center" 
-                        type="button" onclick="toggleSidebar()" style="width: 36px; height: 36px; background: var(--bi-icon-bg); color: var(--bi-icon-color) !important;">
-                    <i class="bi bi-list fs-5"></i>
-                </button>
-                <span class="text-muted small d-none d-md-inline ms-1">
-                    Módulos Analíticos / <strong class="text-body">Reporte Ejecutivo</strong>
-                </span>
-            </div>
-            
-            <div class="d-flex align-items-center gap-3">
-                <button class="btn theme-toggle-btn" type="button" onclick="toggleTheme()" id="themeToggle" title="Cambiar tema visual">
-                    <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
-                </button>
-
-                <div class="vr opacity-25" style="height: 24px; color: var(--bi-icon-color)"></div>
-
-                <div class="text-end" style="line-height: 1.2;">
-                    <span class="text-muted d-block" style="font-size: 0.72rem; font-weight: 500;">Última actualización</span>
-                    <span class="text-body fw-bold" style="font-size: 0.8rem;">26/5/2026 22:07</span>
+    @auth
+        @if(auth()->user()->rol_id == 4)
+            {{-- PANTALLA EXCLUSIVA DE BLOQUEO PARA ROL INACTIVO (4) --}}
+            <div class="d-flex align-items-center justify-content-center vh-100" style="background: var(--bi-body-bg);">
+                <div class="text-center p-5 border rounded-4 shadow-sm" style="max-width: 440px; background: var(--bi-sidebar-bg); border-color: var(--bi-sidebar-border) !important;">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger mb-4" style="width: 65px; height: 65px;">
+                        <i class="bi bi-shield-slash fs-2"></i>
+                    </div>
+                    <h4 class="fw-bold text-body mb-2">Acceso Denegado</h4>
+                    <p class="text-muted small mb-4">Tu cuenta de usuario se encuentra en estado <strong>Inactivo (Rol 4)</strong>. No poseés los permisos requeridos para auditar los módulos analíticos.</p>
+                    <a href="{{ url('/') }}" class="btn btn-sm px-4 rounded-pill text-white fw-medium shadow-sm" style="background: var(--bi-blue);">
+                        <i class="bi bi-house-door me-1"></i> Volver al Inicio
+                    </a>
                 </div>
             </div>
-        </header>
+        @else
+            {{-- CONTENEDOR GENERAL PARA USUARIOS VÁLIDOS (DIFERENTES DE 4) --}}
+            @include('frontend.estadisticas.partials.sidebar')
 
-        <main class="stats-content">
-            @yield('content')
-        </main>
-        
-    </div>
+            <div class="stats-wrapper">
+                
+                <header class="bi-top-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn btn-sm rounded-3 border-0 text-secondary d-flex align-items-center justify-content-center" 
+                                type="button" onclick="toggleSidebar()" style="width: 36px; height: 36px; background: var(--bi-icon-bg); color: var(--bi-icon-color) !important;">
+                            <i class="bi bi-list fs-5"></i>
+                        </button>
+                        <span class="text-muted small d-none d-md-inline ms-1">
+                            Módulos Analíticos / <strong class="text-body">Panel de Control</strong>
+                        </span>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn theme-toggle-btn" type="button" onclick="toggleTheme()" id="themeToggle" title="Cambiar tema visual">
+                            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+                        </button>
+
+                        <div class="vr opacity-25" style="height: 24px; color: var(--bi-icon-color)"></div>
+
+                        <div class="text-end" style="line-height: 1.2;">
+                            <span class="text-muted d-block" style="font-size: 0.72rem; font-weight: 600;">Usuario Conectado</span>
+                            <span class="text-body fw-bold" style="font-size: 0.82rem;">{{ auth()->user()->name }}</span>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="stats-content">
+                    {{-- Seguridad preventiva secundaria por si se intenta forzar la URL directa --}}
+                    @hasSection('is_ingresos_mercaderia')
+                        @if(auth()->user()->rol_id == 6)
+                            @yield('content')
+                        @else
+                            <div class="alert alert-warning rounded-4 border-0 shadow-sm p-4 text-center mt-3">
+                                <i class="bi bi-exclamation-triangle fs-2 text-warning d-block mb-2"></i>
+                                <h5 class="fw-bold text-dark">Área Restringida</h5>
+                                <p class="text-muted small mb-0">Las métricas de ingresos y mercadería están reservadas exclusivamente para el personal de Recepción autorizado (Rol 6).</p>
+                            </div>
+                        @endif
+                    @else
+                        @yield('content')
+                    @endif
+                </main>
+                
+            </div>
+        @endif
+    @else
+        {{-- REDIRECCIÓN SI INTENTAN VER EL LAYOUT SIN ESTAR LOGUEADOS --}}
+        <script>window.location.href = "{{ route('login') }}";</script>
+    @endauth
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // 1. Manejo del Sidebar
         function toggleSidebar() {
             if (window.innerWidth >= 992) {
                 document.body.classList.toggle('sidebar-collapsed');
@@ -318,7 +305,6 @@
             }
         }
 
-        // 2. Lógica del Switch de Modo Claro / Oscuro
         function toggleTheme() {
             const htmlEl = document.documentElement;
             const currentTheme = htmlEl.getAttribute('data-bs-theme');
@@ -329,7 +315,6 @@
             updateThemeIcon(newTheme);
         }
 
-        // Sincronizar icono del tema
         function updateThemeIcon(theme) {
             const icon = document.getElementById('themeIcon');
             if (theme === 'dark') {
@@ -339,7 +324,6 @@
             }
         }
 
-        // Al cargar la página, sincronizar estados
         document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth >= 992) {
                 if (localStorage.getItem('bi_sidebar_state') === 'collapsed') {
@@ -350,7 +334,6 @@
             updateThemeIcon(activeTheme);
         });
         
-        // Cerrar al clickear fuera (Mobile)
         document.addEventListener('click', function(e) {
             const sidebar = document.getElementById('sidebar');
             const menuBtn = document.querySelector('.bi-top-header button');
