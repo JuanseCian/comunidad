@@ -86,4 +86,63 @@ class PersonaPrograma extends Model
 	{
 		return $this->belongsTo(Sede::class);
 	}
+
+	/**
+	 * Valida si puede asignarse un programa a una persona
+	 * Reglas:
+	 * - No puede tener 2 activos del mismo programa
+	 * - EXCEPCIÓN: Puede tener Envión + Multiespacio juntos
+	 * - Si el anterior está finalizado, SÍ puede asignarse otro del mismo
+	 *
+	 * @param int $personaId
+	 * @param int $programaId
+	 * @return array ['valid' => bool, 'mensaje' => string]
+	 */
+	public static function validarAsignacion($personaId, $programaId)
+	{
+		$programa = ProgramasAsistencia::findOrFail($programaId);
+		$nombrePrograma = $programa->nombre;
+
+		// Obtener todos los programas ACTIVOS de la persona (sin fecha_fin)
+		$programasActivos = PersonaPrograma::where('persona_id', $personaId)
+			->whereNull('fecha_fin')
+			->with('programa')
+			->get();
+
+		// Si no hay programas activos, está permitido
+		if ($programasActivos->isEmpty()) {
+			return ['valid' => true];
+		}
+
+		foreach ($programasActivos as $programaActivo) {
+			$nombreActual = $programaActivo->programa->nombre;
+
+			// Si es el mismo programa, no permitido
+			if ($nombreActual === $nombrePrograma) {
+				return [
+					'valid' => false,
+					'mensaje' => "La persona ya tiene asignado el programa $nombrePrograma activo."
+				];
+			}
+
+			// EXCEPCIÓN: Envión + Multiespacio
+			$esEnvionYMultiespacio = 
+				($nombrePrograma === 'Envion' && $nombreActual === 'Multiespacio') ||
+				($nombrePrograma === 'Multiespacio' && $nombreActual === 'Envion');
+
+			if ($esEnvionYMultiespacio) {
+				// Permitido
+				continue;
+			}
+
+			// Si tiene otro programa activo (no es Envión/Multiespacio), no permitido
+			// porque no pueden tener 2 diferentes activos
+			return [
+				'valid' => false,
+				'mensaje' => "La persona ya tiene asignado el programa $nombreActual activo. Debe finalizarlo antes de asignar otro."
+			];
+		}
+
+		return ['valid' => true];
+	}
 }

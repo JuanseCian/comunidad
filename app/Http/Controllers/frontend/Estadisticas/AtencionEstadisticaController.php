@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Atencion;
 use App\Models\User;
+use App\Exports\AtencionesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 use Carbon\Carbon;
 use DB;
@@ -130,6 +132,18 @@ class AtencionEstadisticaController extends Controller
                 'tipo',
                 'vista'
             )
+        );
+    }
+
+    public function exportExcel(Request $request)
+    {
+        return Excel::download(
+            new AtencionesExport(
+                $request->get('anio'),
+                $request->get('mes'),
+                $request->get('tipo')
+            ),
+            'estadisticas_intervenciones.xlsx'
         );
     }
 }

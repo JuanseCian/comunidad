@@ -124,12 +124,27 @@ Route::middleware(['auth'])
             '/mercaderias',
             [MercaderiaEstadisticaController::class, 'index']
         )->name('mercaderias');
-    });
 
-    Route::get(
-        '/estadisticas/mercaderias/excel',
-        [MercaderiaEstadisticaController::class, 'exportExcel']
-    )->name('estadisticas.mercaderias.excel');
+        Route::get(
+            '/mercaderias/excel',
+            [MercaderiaEstadisticaController::class, 'exportExcel']
+        )->name('mercaderias.excel');
+
+        Route::get(
+            '/beneficios/excel',
+            [BeneficioEstadisticaController::class, 'exportExcel']
+        )->name('beneficios.excel');
+
+        Route::get(
+            '/atenciones/excel',
+            [AtencionEstadisticaController::class, 'exportExcel']
+        )->name('atenciones.excel');
+
+        Route::get(
+            '/destinatarios/{programa}/excel',
+            [DestinatarioEstadisticaController::class, 'exportExcel']
+        )->name('destinatarios.programa.excel');
+    });
 
         /*
         |--------------------------------------------------------------------------

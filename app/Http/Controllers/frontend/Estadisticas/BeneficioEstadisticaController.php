@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\PersonaBeneficio;
 use App\Models\Estadisticas\BeneficioTotal;
 use App\Models\Estadisticas\BeneficioPorBarrio;
+use App\Exports\BeneficiosExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BeneficioEstadisticaController extends Controller
 {
@@ -112,5 +114,17 @@ class BeneficioEstadisticaController extends Controller
             'beneficioMasCobrado',
             'cantidadMasCobrado'
         ));
+    }
+
+    public function exportExcel(Request $request)
+    {
+        return Excel::download(
+            new BeneficiosExport(
+                $request->get('beneficio_id'),
+                $request->get('fecha_desde'),
+                $request->get('fecha_hasta')
+            ),
+            'estadisticas_beneficios.xlsx'
+        );
     }
 }

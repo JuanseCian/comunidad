@@ -54,10 +54,19 @@
             >
 
                 <i class="bi bi-calendar3 text-primary"></i>
-
                 {{ now()->format('d/m/Y') }}
 
             </div>
+
+            <a href="{{ route('estadisticas.atenciones.excel', request()->query()) }}" class="btn btn-success btn-sm rounded-3 d-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-excel"></i>
+                Excel
+            </a>
+
+            <button onclick="window.print()" class="btn btn-primary btn-sm rounded-3 d-flex align-items-center gap-2">
+                <i class="bi bi-printer"></i>
+                Imprimir
+            </button>
 
         </div>
 

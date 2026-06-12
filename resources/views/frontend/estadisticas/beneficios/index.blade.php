@@ -40,6 +40,15 @@
                     <button type="submit" class="btn btn-primary w-100 fw-medium d-flex align-items-center justify-content-center gap-2" style="border-radius: 10px; padding: 9px;">
                         <i class="bi bi-search"></i> Filtrar
                     </button>
+                        <a href="{{ route('estadisticas.beneficios.excel', request()->query()) }}" class="btn btn-success rounded-3">
+                            <i class="bi bi-file-earmark-excel"></i>
+                            Excel
+                        </a>
+
+                        <button onclick="window.print()" class="btn btn-primary rounded-3">
+                            <i class="bi bi-printer"></i>
+                            Imprimir
+                        </button>
                     @if(request()->has('beneficio_id') || request()->has('fecha_desde') || request()->has('fecha_hasta'))
                         <a href="{{ url()->current() }}" class="btn btn-outline-secondary" style="border-radius: 10px;" title="Limpiar Filtros">
                             <i class="bi bi-arrow-counterclockwise"></i>

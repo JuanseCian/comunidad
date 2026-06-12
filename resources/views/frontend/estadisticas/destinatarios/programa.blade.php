@@ -51,6 +51,15 @@
                             >
                                 {{ $i }}
                             </option>
+                    <a href="{{ route('estadisticas.destinatarios.programa.excel', array_merge(['programa' => strtolower($programa)], request()->query())) }}" class="btn btn-success w-100 mt-2 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-file-earmark-excel"></i>
+                        Excel
+                    </a>
+
+                    <button onclick="window.print()" class="btn btn-primary w-100 mt-2 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-printer"></i>
+                        Imprimir
+                    </button>
                         @endfor
 
                     </select>

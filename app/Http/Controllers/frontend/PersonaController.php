@@ -260,6 +260,16 @@ class PersonaController extends Controller
             break;
         }
 
+        // Validar que la persona no tenga otro programa activo del mismo tipo
+        $validacion = \App\Models\PersonaPrograma::validarAsignacion(
+            $personaId,
+            $request->programa_id
+        );
+
+        if (!$validacion['valid']) {
+            return back()->withErrors($validacion['mensaje']);
+        }
+
         // Guardar
         $persona->programas()->attach($programa->id, [
             'rol' => $rol,
@@ -300,9 +310,19 @@ class PersonaController extends Controller
         // Se evalúa la edad una sola vez antes de mostrar
         $this->evaluarProgramasPorEdad($persona);
 
+        // Obtener programas activos (sin fecha_fin)
+        $programasActivos = $persona->personaPrograma()
+            ->whereNull('fecha_fin')
+            ->with('programa')
+            ->get()
+            ->pluck('programa.nombre')
+            ->filter()
+            ->toArray();
+
         return view('frontend.persona.show', [
             'persona'          => $persona,
             'programas'        => ProgramasAsistencia::orderBy('nombre')->get(),
+            'programasActivos' => $programasActivos,
             'niveles'          => NivelesEstudio::orderBy('nombre')->get(),
             'provincias'       => Provincia::orderBy('nombre')->get(),
             'localidades'      => Localidad::orderBy('nombre')->get(),

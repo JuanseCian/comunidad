@@ -38,6 +38,18 @@ class PersonaProgramaController extends Controller
             ]);
         }
 
+        // Validar que la persona no tenga otro programa activo del mismo tipo
+        $validacion = PersonaPrograma::validarAsignacion(
+            $request->persona_id,
+            $request->programa_id
+        );
+
+        if (!$validacion['valid']) {
+            return back()->withErrors([
+                'programa_id' => $validacion['mensaje']
+            ]);
+        }
+
         PersonaPrograma::create([
             'persona_id'   => $request->persona_id,
             'programa_id'  => $request->programa_id,
@@ -98,6 +110,18 @@ class PersonaProgramaController extends Controller
             'fecha_limite_adaptacion' => 'required_if:en_adaptacion,1|nullable|date',            
             'observaciones' => 'nullable|string',
         ]);
+
+        // Validar que la persona no tenga otro programa activo del mismo tipo
+        $validacion = PersonaPrograma::validarAsignacion(
+            $data['persona_id'],
+            $data['programa_id']
+        );
+
+        if (!$validacion['valid']) {
+            return redirect()->back()->withErrors([
+                'programa_id' => $validacion['mensaje']
+            ]);
+        }
 
         PersonaPrograma::create([
             'persona_id' => $data['persona_id'],

@@ -8,6 +8,8 @@ use App\Models\PersonaBeneficio;
 use Illuminate\Http\Request;
 use App\Models\Sede;
 use Illuminate\Support\Facades\DB;
+use App\Exports\DestinatariosExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DestinatarioEstadisticaController extends Controller
 {
@@ -312,6 +314,19 @@ class DestinatarioEstadisticaController extends Controller
                 'ingresosMensuales' => $ingresosMensuales,
                 'listaSedes' => Sede::orderBy('nombre')->get(),
             ]
+        );
+    }
+
+    public function exportExcel($programa, Request $request)
+    {
+        return Excel::download(
+            new DestinatariosExport(
+                $programa,
+                $request->get('sede_id'),
+                $request->get('anio'),
+                $request->get('mes')
+            ),
+            'estadisticas_destinatarios_' . strtolower($programa) . '.xlsx'
         );
     }
 }

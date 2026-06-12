@@ -58,6 +58,26 @@
     .sp-anim-5 { animation-delay: .20s; }
     .sp-anim-6 { animation-delay: .25s; }
 
+    .alerta-entrada {
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity .24s ease, transform .24s ease;
+    }
+    .alerta-entrada.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .panel-alerta-entrada {
+        opacity: 0;
+        transform: translateX(12px);
+        transition: opacity .24s ease, transform .24s ease;
+    }
+    .panel-alerta-entrada.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
     /* ── Breadcrumb ───────────────────────── */
     .sp-breadcrumb {
         display: flex; align-items: center; gap: 6px;
@@ -1970,7 +1990,7 @@
 {{-- Modal: Asignar programa --}}
 <div id="modalPrograma"
      style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.45); z-index:1050; align-items:center; justify-content:center; backdrop-filter:blur(3px);">
-    <div style="background:white; border-radius:20px; width:90%; max-width:460px; box-shadow:0 20px 60px rgba(0,0,0,0.18); overflow:hidden; animation:fadeUp .28s ease;">
+    <div style="background:white; border-radius:20px; width:90%; max-width:460px; box-shadow:0 20px 60px rgba(0,0,0,0.18); overflow:visible; animation:fadeUp .28s ease;">
 
         <div style="padding:18px 24px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg, var(--blue-lt) 0%, var(--teal-lt) 100%);">
             <div style="display:flex; align-items:center; gap:10px;">
@@ -1985,7 +2005,22 @@
                     onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='white'">&times;</button>
         </div>
 
-        <div style="padding:24px;">
+        <div style="padding:24px; position:relative;">
+            <div id="panel_alerta_lateral" class="panel-alerta-entrada" style="display:none; position:absolute; right:-320px; top:24px; width:280px; background:#fee2e2; border:1px solid #fecaca; border-radius:18px; padding:18px; box-shadow:0 18px 40px rgba(252,165,165,0.18); z-index:1060;">
+                <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;">
+                    <div style="width:38px; height:38px; border-radius:12px; background:#dc2626; display:flex; align-items:center; justify-content:center; color:white; font-size:18px;">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <div>
+                        <p style="margin:0; font-size:12px; color:#7f1d1d; font-weight:800; letter-spacing:.05em; text-transform:uppercase;">Programa duplicado</p>
+                        <p id="mensaje_alerta_lateral" style="margin:6px 0 0 0; font-size:13px; color:#7f1d1d; line-height:1.5;"></p>
+                    </div>
+                </div>
+                <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:12px; font-size:12px; color:#7f1d1d; line-height:1.5;">
+                    No podrás asignar el mismo programa mientras ya esté activo en esta persona.
+                </div>
+            </div>
+
             <form action="{{ route('persona-programa.store') }}" method="POST">
                 @csrf
 
@@ -2006,10 +2041,11 @@
                                 ($p->nombre == 'UDI'          && $edad >= 6  && $edad <= 11) ||
                                 ($p->nombre == 'Envion'       && $edad >= 12) ||
                                 ($p->nombre == 'Multiespacio' && $edad >= 12))
-                                <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                                <option value="{{ $p->id }}" data-programa="{{ $p->nombre }}">{{ $p->nombre }}</option>
                             @endif
                         @endforeach
                     </select>
+                    <div id="mensaje_programa_duplicado" class="alerta-entrada" style="display:none; margin-top:10px; font-size:13px; color:#b91c1c; line-height:1.5;"></div>
                 </div>
 
                 {{-- Sede --}}
@@ -2069,7 +2105,7 @@
 
                 <div style="display:flex; justify-content:flex-end; gap:10px;">
                     <button type="button" onclick="document.getElementById('modalPrograma').style.display='none'" class="sp-btn-ghost">Cancelar</button>
-                    <button type="submit" class="sp-btn-primary"><i class="bi bi-check-lg"></i> Asignar programa</button>
+                    <button type="submit" id="btn_asignar_programa" class="sp-btn-primary" style="transition:opacity .2s;"><i class="bi bi-check-lg"></i> Asignar programa</button>
                 </div>
             </form>
         </div>
@@ -2217,6 +2253,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const programaSelectModal = document.getElementById('programa_select');
     const sedeWrapper         = document.getElementById('wrapper_sede');
     const sedeSelect          = document.getElementById('select_sede');
+    const alertaPanel         = document.getElementById('panel_alerta_lateral');
+    const mensajeAlerta       = document.getElementById('mensaje_alerta_lateral');
+    const mensajeInline       = document.getElementById('mensaje_programa_duplicado');
+    const btnAsignarPrograma  = document.getElementById('btn_asignar_programa');
+    const programasActivos    = @json($programasActivos);
 
     function toggleSede() {
         const texto = programaSelectModal?.options[programaSelectModal.selectedIndex]?.text?.trim();
@@ -2228,9 +2269,41 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function validarProgramaSeleccionado() {
+        if (!programaSelectModal || !alertaPanel || !btnAsignarPrograma) return;
+
+        const opcionSeleccionada = programaSelectModal.options[programaSelectModal.selectedIndex];
+        const nombrePrograma     = opcionSeleccionada?.dataset?.programa?.trim() || '';
+
+        if (nombrePrograma && programasActivos.includes(nombrePrograma)) {
+            alertaPanel.style.display = 'block';
+            mensajeAlerta.textContent = `El programa "${nombrePrograma}" ya está activo para esta persona.`;
+            mensajeInline.style.display = 'block';
+            requestAnimationFrame(() => alertaPanel.classList.add('show'));
+            requestAnimationFrame(() => mensajeInline.classList.add('show'));
+            btnAsignarPrograma.disabled = true;
+            btnAsignarPrograma.style.opacity = '0.9';
+            btnAsignarPrograma.style.cursor = 'not-allowed';
+        } else {
+            alertaPanel.classList.remove('show');
+            mensajeInline.classList.remove('show');
+            alertaPanel.style.display = 'none';
+            mensajeAlerta.textContent = '';
+            mensajeInline.style.display = 'none';
+            mensajeInline.textContent = '';
+            btnAsignarPrograma.disabled = false;
+            btnAsignarPrograma.style.opacity = '1';
+            btnAsignarPrograma.style.cursor = '';
+        }
+    }
+
     if (programaSelectModal) {
-        programaSelectModal.addEventListener('change', toggleSede);
+        programaSelectModal.addEventListener('change', function () {
+            toggleSede();
+            validarProgramaSeleccionado();
+        });
         toggleSede();
+        validarProgramaSeleccionado();
     }
 
     const checkAdaptacion = document.getElementById('check_adaptacion');
