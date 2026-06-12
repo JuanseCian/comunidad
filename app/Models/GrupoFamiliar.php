@@ -93,6 +93,7 @@ class GrupoFamiliar extends Model
 		'persona_id',
 		'familia_id',
 		'nombre',
+		'direccion',
 		'documento_id',
 		'numero_documento',
 		'sexo_id',

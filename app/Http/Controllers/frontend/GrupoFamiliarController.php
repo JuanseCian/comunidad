@@ -110,7 +110,7 @@ class GrupoFamiliarController extends Controller
                     'domicilio_id' => $persona->domicilio_id,
                 ],
                 [
-                    'descripcion' => 'Núcleo principal',
+                    'descripcion' => $request->filled('direccion') ? $request->direccion : 'Núcleo principal',
                     'created_by'  => auth()->id(),
                 ]
             );

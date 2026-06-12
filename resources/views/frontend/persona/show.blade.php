@@ -781,10 +781,14 @@
                                     </div>
 
                                     @if($pp->fecha_inicio && !$pp->fecha_fin)
-                                        <span class="sp-tag-green" style="font-size:11px; padding:2px 8px;">Activo</span>
-                                    @elseif($pp->fecha_fin)
-                                        <span style="background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700;">Finalizado</span>
-                                    @endif
+    <span class="sp-tag-green" style="font-size:11px; padding:2px 8px;">Activo</span>
+@elseif($pp->fecha_fin)
+    @if(\Carbon\Carbon::parse($pp->fecha_fin)->isPast())
+        <span style="background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700;">Finalizado</span>
+    @else
+        <span style="background:#fffbeb; color:#b45309; border:1px solid #fcd34d; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:700;">Finaliza {{ \Carbon\Carbon::parse($pp->fecha_fin)->locale('es')->isoFormat('D MMM YYYY') }}</span>
+    @endif
+@endif
 
                                     <i class="bi bi-chevron-down" id="icon-{{ $pp->id }}"></i>
                                 </div>

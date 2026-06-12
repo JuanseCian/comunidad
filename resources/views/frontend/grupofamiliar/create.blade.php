@@ -156,6 +156,22 @@
                             </span>
                         </label>
                     </div>
+
+                    {{-- Dirección: aparece al activar conviviente --}}
+                    <div id="blk-direccion" style="display:{{ old('es_conviviente') ? 'block' : 'none' }}; margin-top:10px;">
+                        <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">
+                            Dirección del domicilio compartido
+                        </label>
+                        <input type="text" name="direccion"
+                               value="{{ old('direccion', trim(($persona->domicilio?->calle ?? '') . ' ' . ($persona->domicilio?->numero ?? ''))) }}"
+                               placeholder="Ej: San Martín 450"
+                               style="width:100%; height:40px; padding:0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a;"
+                               onfocus="this.style.borderColor='#0d92c2'; this.style.boxShadow='0 0 0 3px rgba(13,146,194,.1)'"
+                               onblur="this.style.borderColor='#c8c4bb'; this.style.boxShadow='none'">
+                        <span style="font-size:11.5px; color:#94a3b4; display:block; margin-top:4px;">
+                            Se completa automáticamente con el domicilio del titular, podés modificarlo.
+                        </span>
+                    </div>
                 </div>
 
             </div>
@@ -477,12 +493,14 @@ document.querySelector('form').addEventListener('submit', function(e) {
 // Toggle conviviente
 (function() {
   const chk = document.getElementById('chk-conviviente');
+  const blk = document.getElementById('blk-direccion');
   if (!chk) return;
   chk.addEventListener('change', function() {
     const track = chk.closest('label').querySelector('.toggle-slider');
     const thumb = track.querySelector('span');
     track.style.background = chk.checked ? '#0d92c2' : '#c8c4bb';
     thumb.style.transform   = chk.checked ? 'translateX(18px)' : 'translateX(0)';
+    if (blk) blk.style.display = chk.checked ? 'block' : 'none';
   });
 })();
 </script>

@@ -288,7 +288,7 @@ class Persona extends Model
 
             if (!$cumple) continue;
 
-            if ($edad >= $cumple->age) {
+            if (\Carbon\Carbon::today()->gte($cumple)) {
                 $pp->update(['fecha_fin' => $cumple]);
             }
         }
