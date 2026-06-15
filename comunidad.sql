@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 12-06-2026 a las 22:41:20
+-- Tiempo de generación: 15-06-2026 a las 07:59:20
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -143,18 +143,6 @@ CREATE TABLE `bajo_pesos` (
   `tutor_dni` varchar(20) DEFAULT NULL,
   `tutor_parentesco` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `bajo_pesos`
---
-
-INSERT INTO `bajo_pesos` (`id`, `familia_id`, `persona_id`, `diagnostico`, `tratamiento`, `certificado_bajo_peso`, `informe_socioambiental`, `observaciones`, `activo`, `created_at`, `updated_at`, `tutor_nombre`, `tutor_dni`, `tutor_parentesco`) VALUES
-(1, 56, NULL, 'Desnutricion', 'comida', 'bajo_peso/certificados/q1zcDXTPCOSogOc4v4qkAn46swkMBXne3TY62Mlp.png', 'bajo_peso/socioambientales/6LgfmvQJeOAQqZYSeonfDlWWiG1isrpYh3DQ3LdI.png', 'A', 1, '2026-06-05 18:41:24', '2026-06-05 18:41:24', NULL, NULL, NULL),
-(2, 56, NULL, 'Desnutricion', 'comida', 'bajo_peso/certificados/Lxmhrr1q2ebXqn5rc430YiTrihK6zVMtmbq4E2fZ.png', 'bajo_peso/socioambientales/4HkDBNhUZH3aDQ1tO6PULwUmN3KZ1YedrjtUizvr.png', 'A', 1, '2026-06-05 18:44:08', '2026-06-05 18:44:08', NULL, NULL, NULL),
-(3, 56, NULL, 'Desnutricion', 'comida', 'bajo_peso/certificados/f6A3TVwyYlUMl8Ib4xQjPFuAL036U1sxtANkb76Q.png', 'bajo_peso/socioambientales/eyMPXi8BIxfOosUNNhb6gANqTMFjurKqjSX9iBNB.png', 'A', 1, '2026-06-05 18:44:32', '2026-06-05 18:44:32', NULL, NULL, NULL),
-(4, 56, NULL, 'Desnutricion', 'comida', 'bajo_peso/certificados/5CS8xuW44D45iooQNz7AltfJc9tRi0oytGgB3bK5.png', 'bajo_peso/socioambientales/V7cBSL9Dcp84TM7wnIVbXjXEeIHJNaTNmfZ6NmYu.png', 'A', 1, '2026-06-05 18:46:51', '2026-06-05 18:46:51', NULL, NULL, NULL),
-(5, 56, NULL, NULL, NULL, NULL, NULL, NULL, 1, '2026-06-05 18:48:41', '2026-06-05 18:48:41', NULL, NULL, NULL),
-(6, 56, NULL, 'a', 'a', 'bajo_peso/certificados/YKnV0jr03i3rHrC5q781OiqpSc3Mx7JJPhE9J0ha.png', 'bajo_peso/socioambientales/QaBurrAZwZzVu7ZO8aggf1g7SRXbSeyHI73ptQkS.png', 'a', NULL, '2026-06-05 19:04:55', '2026-06-09 19:34:59', 'Juan', '347892', NULL);
 
 -- --------------------------------------------------------
 
@@ -583,17 +571,6 @@ CREATE TABLE `familias` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Volcado de datos para la tabla `familias`
---
-
-INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
-(49, '6XL344I5T', '2026-05-20 14:58:42', '2026-05-20 14:58:42'),
-(53, 'ERY2749IW', '2026-05-29 16:00:22', '2026-05-29 16:00:22'),
-(55, 'SFA754ZLY', '2026-06-02 16:45:48', '2026-06-02 16:45:48'),
-(56, 'DSU613DZZ', '2026-06-05 18:31:47', '2026-06-05 18:31:47'),
-(57, 'DXJ5919C0', '2026-06-10 00:28:34', '2026-06-10 00:28:34');
-
 -- --------------------------------------------------------
 
 --
@@ -659,14 +636,6 @@ CREATE TABLE `grupo_familiar` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `deleted_by` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `grupo_familiar`
---
-
-INSERT INTO `grupo_familiar` (`id`, `persona_id`, `familia_id`, `nombre`, `direccion`, `documento_id`, `numero_documento`, `sexo_id`, `fecha_nacimiento`, `relacion_titular`, `estado_civil_id`, `discapacidad_permanente`, `discapacidad_id`, `discapacidad_tratamiento`, `caratula`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `esquema_vacunacion`, `cobertura_id`, `situacion_ocupacional_id`, `condicion_inactividad_id`, `categoria_ocupacional_id`, `ingresos`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
-(13, 76, 57, 'Silvana Gladys Alegre', 'Nobel 340', 1, '29460182', 2, '1982-04-05', 'Padre/Madre', 3, 0, NULL, 0, NULL, NULL, 0, 0, 0, 0, 5, 2, 2, 2, 200000.00, '2026-06-10 00:32:37', '2026-06-13 00:34:40', 1, 1, NULL, NULL),
-(14, 76, 57, 'hernan', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, '2026-06-13 00:30:52', '2026-06-13 00:30:52', 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -953,11 +922,11 @@ CREATE TABLE `mercaderias` (
 
 INSERT INTO `mercaderias` (`id`, `persona_id`, `familia_id`, `nucleo_conviviente_id`, `user_id`, `dni`, `apellido`, `nombre`, `fecha_entrega`, `observaciones`, `created_at`, `updated_at`) VALUES
 (6, NULL, NULL, NULL, 13, '41899221', 'Abal', 'Daniela', '2026-05-19', 'a', '2026-05-19 17:10:35', '2026-05-19 17:10:35'),
-(7, NULL, 49, NULL, 13, '45032239', 'cian', 'Juan Segundo', '2026-05-26', NULL, '2026-05-26 18:53:54', '2026-05-26 18:53:54'),
+(7, NULL, NULL, NULL, 13, '45032239', 'cian', 'Juan Segundo', '2026-05-26', NULL, '2026-05-26 18:53:54', '2026-05-26 18:53:54'),
 (8, NULL, NULL, NULL, 13, '74792', 'pipi', 'pipu', '2026-05-29', NULL, '2026-05-29 18:35:42', '2026-05-29 18:35:42'),
-(9, NULL, 49, NULL, 13, '43056618', 'mosquera', 'Alejo', '2026-07-15', NULL, '2026-06-02 16:30:33', '2026-06-02 16:30:33'),
+(9, NULL, NULL, NULL, 13, '43056618', 'mosquera', 'Alejo', '2026-07-15', NULL, '2026-06-02 16:30:33', '2026-06-02 16:30:33'),
 (10, NULL, NULL, NULL, 13, NULL, 'SDEWDAA', 'A DADA', '2026-07-09', NULL, '2026-06-02 16:30:57', '2026-06-02 16:30:57'),
-(11, NULL, 55, NULL, 13, '2173980`', 'Vilchez', 'Hernan', '2026-06-02', NULL, '2026-06-02 16:51:36', '2026-06-02 16:51:36');
+(11, NULL, NULL, NULL, 13, '2173980`', 'Vilchez', 'Hernan', '2026-06-02', NULL, '2026-06-02 16:51:36', '2026-06-02 16:51:36');
 
 -- --------------------------------------------------------
 
@@ -1021,14 +990,6 @@ CREATE TABLE `nucleos_convivientes` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `nucleos_convivientes`
---
-
-INSERT INTO `nucleos_convivientes` (`id`, `familia_id`, `domicilio_id`, `descripcion`, `activo`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(1, 55, 18, 'Núcleo principal', 1, 1, NULL, '2026-06-02 16:47:47', '2026-06-02 16:47:47'),
-(2, 57, 19, 'Núcleo principal', 1, 1, NULL, '2026-06-10 00:32:37', '2026-06-10 00:32:37');
 
 -- --------------------------------------------------------
 
@@ -1148,13 +1109,6 @@ CREATE TABLE `personas` (
   `creado_por_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Volcado de datos para la tabla `personas`
---
-
-INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `cud_numero`, `cud_vencimiento`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`, `estado`, `creado_por_id`) VALUES
-(76, 57, 'Gabriel Alejandro', 'Alderete', 'galderete579@gmail.com', '2001-03-22', 1, '43313445', '20433134452', 1, NULL, 19, 1, 5, NULL, '3364328904', 2, 1, 'O+', '2026-06-10 00:28:34', '2026-06-10 00:34:40', NULL, 3, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 5, 'aprobado', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -1189,15 +1143,6 @@ CREATE TABLE `persona_nucleo` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Volcado de datos para la tabla `persona_nucleo`
---
-
-INSERT INTO `persona_nucleo` (`id`, `nucleo_id`, `persona_id`, `grupo_familiar_id`, `created_at`) VALUES
-(3, 2, NULL, 13, '2026-06-10 00:32:37'),
-(4, 2, 76, NULL, '2026-06-10 00:32:37'),
-(5, 2, NULL, 14, '2026-06-13 00:30:52');
-
 -- --------------------------------------------------------
 
 --
@@ -1220,14 +1165,6 @@ CREATE TABLE `persona_programa` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `persona_programa`
---
-
-INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `sede_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `en_adaptacion`, `fecha_limite_adaptacion`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
-(72, 76, 1, 1, '2026-06-09', '2026-08-27', 1, 'destinatario', 0, NULL, NULL, NULL, '2026-06-10 00:30:13', '2026-06-13 00:17:18'),
-(73, 76, 3, NULL, '2026-06-12', '2026-06-26', 1, 'destinatario', 0, NULL, NULL, NULL, '2026-06-13 00:23:27', '2026-06-13 00:23:27');
 
 -- --------------------------------------------------------
 
@@ -1252,13 +1189,6 @@ CREATE TABLE `persona_trabajo` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `persona_trabajo`
---
-
-INSERT INTO `persona_trabajo` (`id`, `persona_id`, `situacion_ocupacional_id`, `categoria_ocupacional_id`, `descripcion`, `empleador`, `cargo`, `ingresos`, `fecha_inicio`, `fecha_fin`, `observaciones`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
-(6, 76, 2, 6, 'Barbero', 'Gabriel Alderete', 'Jefe', 600000.00, '2026-06-09', NULL, NULL, 1, NULL, '2026-06-10 00:34:40', '2026-06-10 00:34:40');
 
 -- --------------------------------------------------------
 
@@ -1531,13 +1461,13 @@ CREATE TABLE `sepelios` (
 --
 
 INSERT INTO `sepelios` (`id`, `persona_id`, `familia_id`, `user_id`, `dni`, `apellido`, `nombre`, `telefono_responsable`, `fallecido_nombre`, `fallecido_dni`, `fecha_fallecimiento`, `solicitante`, `domicilio`, `barrio`, `caracter`, `tipo_sepelio`, `categoria_servicio`, `mantenimiento`, `fecha_solicitud`, `costo`, `observaciones`, `created_at`, `updated_at`) VALUES
-(1, NULL, 49, 13, '45032239', 'cian', 'Juan Segundo', NULL, 'ASAS', NULL, NULL, NULL, NULL, NULL, NULL, 'municipal', NULL, 0, NULL, NULL, NULL, '2026-06-02 19:12:31', '2026-06-02 19:12:31'),
-(2, NULL, 49, 13, '45032239', 'cian', 'Juan Segundo', NULL, 'Pepe', '34331', '2025-10-30', NULL, NULL, NULL, 'Responsable', NULL, 'angelito', 1, '2026-06-03', 1000000.00, 'a', '2026-06-03 15:31:10', '2026-06-03 15:31:10'),
-(3, NULL, 49, 13, '45032239', 'cian', 'Juan Segundo', NULL, 'Pepe', '34331', '2025-10-30', NULL, NULL, NULL, 'Responsable', NULL, 'angelito', 1, '2026-06-03', 1000000.00, 'a', '2026-06-03 15:31:12', '2026-06-03 15:31:12'),
-(4, NULL, 49, 13, '43056618', 'mosquera', 'Alejo', NULL, 'jij', 'jij', '2026-06-01', NULL, NULL, NULL, 'Responsable', NULL, 'angelito', 1, '2026-06-03', 80000.00, NULL, '2026-06-03 15:47:58', '2026-06-03 15:47:58'),
+(1, NULL, NULL, 13, '45032239', 'cian', 'Juan Segundo', NULL, 'ASAS', NULL, NULL, NULL, NULL, NULL, NULL, 'municipal', NULL, 0, NULL, NULL, NULL, '2026-06-02 19:12:31', '2026-06-02 19:12:31'),
+(2, NULL, NULL, 13, '45032239', 'cian', 'Juan Segundo', NULL, 'Pepe', '34331', '2025-10-30', NULL, NULL, NULL, 'Responsable', NULL, 'angelito', 1, '2026-06-03', 1000000.00, 'a', '2026-06-03 15:31:10', '2026-06-03 15:31:10'),
+(3, NULL, NULL, 13, '45032239', 'cian', 'Juan Segundo', NULL, 'Pepe', '34331', '2025-10-30', NULL, NULL, NULL, 'Responsable', NULL, 'angelito', 1, '2026-06-03', 1000000.00, 'a', '2026-06-03 15:31:12', '2026-06-03 15:31:12'),
+(4, NULL, NULL, 13, '43056618', 'mosquera', 'Alejo', NULL, 'jij', 'jij', '2026-06-01', NULL, NULL, NULL, 'Responsable', NULL, 'angelito', 1, '2026-06-03', 80000.00, NULL, '2026-06-03 15:47:58', '2026-06-03 15:47:58'),
 (5, NULL, NULL, 13, NULL, 'Murisengo', 'Gustavo', NULL, 'Violeti Alicia', '322', '2026-06-01', NULL, NULL, NULL, 'Responsable', 'particular', 'cremacion', 0, '2026-06-03', 123324.00, NULL, '2026-06-03 15:56:16', '2026-06-03 15:56:16'),
-(6, NULL, 49, 13, '45032239', 'cian', 'Juan Segundo', NULL, 'haha', '3231', '2026-06-02', NULL, NULL, NULL, 'Familiar', 'particular', 'vaca', 1, '2026-06-03', 10000.00, 'a', '2026-06-03 16:07:30', '2026-06-03 16:07:30'),
-(7, NULL, 49, 13, '43056618', 'mosquera', 'Alejo', NULL, 'Massocco Bruno', '23241', '2026-06-01', NULL, NULL, NULL, 'Familiar', 'particular', 'vaca', 1, '2026-06-03', NULL, NULL, '2026-06-03 18:20:30', '2026-06-03 18:20:30');
+(6, NULL, NULL, 13, '45032239', 'cian', 'Juan Segundo', NULL, 'haha', '3231', '2026-06-02', NULL, NULL, NULL, 'Familiar', 'particular', 'vaca', 1, '2026-06-03', 10000.00, 'a', '2026-06-03 16:07:30', '2026-06-03 16:07:30'),
+(7, NULL, NULL, 13, '43056618', 'mosquera', 'Alejo', NULL, 'Massocco Bruno', '23241', '2026-06-01', NULL, NULL, NULL, 'Familiar', 'particular', 'vaca', 1, '2026-06-03', NULL, NULL, '2026-06-03 18:20:30', '2026-06-03 18:20:30');
 
 -- --------------------------------------------------------
 
