@@ -31,6 +31,7 @@ class BajoPesoController extends Controller
     public function create()
     {
         $personas = Persona::whereNotNull('fecha_nacimiento')
+            ->whereNull('deleted_at')
             ->get()
             ->filter(function ($persona) {
                 return $persona->edad <= 6;
@@ -237,6 +238,7 @@ class BajoPesoController extends Controller
                     ->orWhere('apellido', 'LIKE', "%{$term}%")
                     ->orWhere('nombre', 'LIKE', "%{$term}%");
             })
+            ->whereNull('deleted_at')
             ->orderBy('apellido')
             ->orderBy('nombre')
             ->limit(20)

@@ -115,16 +115,18 @@ class AsistenciaController extends Controller
 
         $presentesIds  = $request->input('presentes', []);
         $todosIds      = $request->input('todos_ids', []);
-        $observaciones = $request->input('observaciones', []); 
+        $observaciones = $request->input('observaciones', []);
+        $sedeId        = $request->input('sede_id');
+        $programaId    = $request->input('programa_id');
 
         if (empty($todosIds)) {
             return back()->with('warning', 'No hay personas para registrar.');
         }
 
-        DB::transaction(function () use ($todosIds, $presentesIds, $observaciones, $fecha) {
+        DB::transaction(function () use ($todosIds, $presentesIds, $observaciones, $fecha, $sedeId, $programaId) {
             foreach ($todosIds as $personaId) {
-                $presente      = in_array($personaId, $presentesIds);
-                $obs           = $observaciones[$personaId] ?? null;
+                $presente = in_array($personaId, $presentesIds);
+                $obs      = $observaciones[$personaId] ?? null;
 
                 Asistencia::updateOrCreate(
                     ['persona_id' => $personaId, 'fecha' => $fecha],
@@ -132,6 +134,8 @@ class AsistenciaController extends Controller
                         'presente'       => $presente,
                         'observaciones'  => $presente ? $obs : null,
                         'registrado_por' => auth()->id(),
+                        'sede_id'        => $sedeId,
+                        'programa_id'    => $programaId,
                     ]
                 );
             }
@@ -149,6 +153,8 @@ class AsistenciaController extends Controller
             'persona_id'    => 'required|exists:personas,id',
             'presente'      => 'required|boolean',
             'observaciones' => 'nullable|string|max:255',
+            'sede_id'       => 'nullable|exists:sedes,id',
+            'programa_id'   => 'nullable|exists:programas_asistencia,id',
         ]);
 
         $hoy = Carbon::today()->toDateString();
@@ -159,6 +165,8 @@ class AsistenciaController extends Controller
                 'presente'       => $request->presente,
                 'observaciones'  => $request->presente ? $request->observaciones : null,
                 'registrado_por' => auth()->id(),
+                'sede_id'        => $request->sede_id,
+                'programa_id'    => $request->programa_id,
             ]
         );
 

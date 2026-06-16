@@ -96,9 +96,12 @@ class SepelioController extends Controller
         }
 
         $personas = Persona::query()
-            ->where('dni', 'like', "%{$term}%")
-            ->orWhere('apellido', 'like', "%{$term}%")
-            ->orWhere('nombre', 'like', "%{$term}%")
+            ->where(function ($q) use ($term) {
+                $q->where('dni', 'like', "%{$term}%")
+                  ->orWhere('apellido', 'like', "%{$term}%")
+                  ->orWhere('nombre', 'like', "%{$term}%");
+            })
+            ->whereNull('deleted_at')
             ->select(['id', 'nombre', 'apellido', 'dni', 'telefono', 'familia_id'])
             ->limit(8)
             ->get();

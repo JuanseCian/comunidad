@@ -92,6 +92,7 @@ class IngresoController extends Controller
                       ->orWhere('apellido', 'LIKE', "%{$term}%")
                       ->orWhere('nombre',   'LIKE', "%{$term}%");
             })
+            ->whereNull('deleted_at')
             ->select(['id', 'nombre', 'apellido', 'dni'])
             ->limit(8)
             ->get();
