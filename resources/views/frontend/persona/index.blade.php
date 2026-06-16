@@ -10,7 +10,7 @@
         <div class="row align-items-center g-3">
             <div class="col">
                 <p class="text-uppercase fw-bold text-primary small tracking-wide mb-1">
-                    <a href="{{ route('dashboard') }}" class="text-decoration-none">Inicio</a>
+                    <a href="{{ route('home') }}" class="text-decoration-none">Inicio</a>
                     <span class="text-muted mx-1">/</span>
                     Personas
                 </p>

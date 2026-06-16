@@ -76,7 +76,7 @@
             <div class="col-lg-8">
                 <p style="display:inline-flex; align-items:center; gap:6px; background:white; border:1px solid #b3e0f5; border-radius:40px; padding:5px 14px; font-size:12px; font-weight:700; color:#0879a8; margin-bottom:1rem; box-shadow: 0 4px 10px rgba(8,121,168,0.05);">
                     <span style="width:7px; height:7px; border-radius:50%; background:#17a385; display:inline-block; flex-shrink:0;"></span>
-                    Sistema activo · {{ now()->locale('es')->isoFormat('dddd D [de] MMMM, YYYY') }}
+                    {{ now()->locale('es')->isoFormat('dddd D [de] MMMM, YYYY') }}
                 </p>
                 <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:clamp(1.6rem,4vw,2.3rem); color:#0f172a; margin-bottom:0.5rem; line-height:1.2;">
                     Bienvenido,
