@@ -345,8 +345,16 @@
                     <i class="bi bi-people-fill"></i>
                     Bajo peso
                 </a>
+
+                <a href="{{ route('estadisticas.dashboard') }}"
+                class="{{ request()->routeIs('frontend.estadisticas.*') ? 'active' : '' }}">
+                    <i class="bi bi-bar-chart-line-fill"></i>
+                    Estadísticas
+                </a>
             </div>
         </div>
+
+        
 
         {{-- LOGOUT --}}
         <form action="{{ route('logout') }}" method="POST" class="logout-form">

@@ -10,12 +10,71 @@
     </div>
 @endif
 
+{{-- ESTILOS PARA FIGURAS FLOTANTES Y DELICADAS --}}
+<style>
+    .floating-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0; /* Queda por detrás del texto */
+        pointer-events: none; /* Para que no interfiera con los clics */
+    }
+
+    .floating-shape {
+        position: absolute;
+        bottom: -50px;
+        color: #0d92c2; /* Color base, luego lo variamos */
+        opacity: 0;
+        animation: floatUp 8s ease-in-out infinite;
+    }
+
+    /* Animación: sube, aparece y luego se desvanece */
+    @keyframes floatUp {
+        0% {
+            transform: translateY(0) rotate(0deg) scale(0.8);
+            opacity: 0;
+        }
+        20% {
+            opacity: 0.15; /* Muy transparente y delicado */
+        }
+        80% {
+            opacity: 0.15;
+        }
+        100% {
+            transform: translateY(-250px) rotate(45deg) scale(1.2);
+            opacity: 0;
+        }
+    }
+
+    /* Posiciones, tamaños, colores y tiempos diferentes para que parezca natural */
+    .shape-1 { left: 10%; font-size: 2rem; animation-delay: 0s; color: #17a385; }      /* Mercadería */
+    .shape-2 { left: 85%; font-size: 3rem; animation-delay: 1.5s; color: #0d92c2; }    /* Cuidado/Niños */
+    .shape-3 { left: 45%; font-size: 1.5rem; animation-delay: 3s; color: #d97706; }    /* Estrellas */
+    .shape-4 { left: 70%; font-size: 2.5rem; animation-delay: 0.5s; color: #7c3aed; }  /* Familia */
+    .shape-5 { left: 25%; font-size: 2rem; animation-delay: 4.5s; color: #0879a8; }    /* Mercadería 2 */
+</style>
+
 {{-- HERO --}}
-<section style="background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2.5rem 0 2rem;">
-    <div class="container">
+{{-- Le agregamos position: relative y overflow: hidden al section para contener las figuras --}}
+<section style="position: relative; overflow: hidden; background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2.5rem 0 2rem;">
+    
+    {{-- CONTENEDOR DE FIGURAS ANIMADAS --}}
+    <div class="floating-container">
+        <i class="bi bi-box-seam floating-shape shape-1"></i>
+        <i class="bi bi-balloon-heart floating-shape shape-2"></i>
+        <i class="bi bi-stars floating-shape shape-3"></i>
+        <i class="bi bi-house-heart floating-shape shape-4"></i>
+        <i class="bi bi-bag-heart floating-shape shape-5"></i>
+    </div>
+
+    {{-- El div container ahora necesita position: relative y z-index para estar por encima de las figuras --}}
+    <div class="container" style="position: relative; z-index: 1;">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <p style="display:inline-flex; align-items:center; gap:6px; background:white; border:1px solid #b3e0f5; border-radius:40px; padding:5px 14px; font-size:12px; font-weight:700; color:#0879a8; margin-bottom:1rem;">
+                <p style="display:inline-flex; align-items:center; gap:6px; background:white; border:1px solid #b3e0f5; border-radius:40px; padding:5px 14px; font-size:12px; font-weight:700; color:#0879a8; margin-bottom:1rem; box-shadow: 0 4px 10px rgba(8,121,168,0.05);">
                     <span style="width:7px; height:7px; border-radius:50%; background:#17a385; display:inline-block; flex-shrink:0;"></span>
                     Sistema activo · {{ now()->locale('es')->isoFormat('dddd D [de] MMMM, YYYY') }}
                 </p>

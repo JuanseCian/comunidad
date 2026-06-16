@@ -7,56 +7,90 @@
 
 <div class="container-fluid px-0">
 
-    <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px; background: rgba(var(--bs-body-bg-rgb), 0.7); backdrop-filter: blur(10px);">
-        <div class="card-body p-4">
-            <form method="GET" action="{{ url()->current() }}" class="row g-3 align-items-end">
-                
-                <div class="col-12 col-md-4">
-                    <label for="beneficio_id" class="form-label small text-muted fw-bold text-uppercase tracking-wider">Filtrar por Beneficio</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0 text-muted" style="border-radius: 10px 0 0 10px;"><i class="bi bi-funnel"></i></span>
-                        <select name="beneficio_id" id="beneficio_id" class="form-select bg-light border-start-0" style="border-radius: 0 10px 10px 0; font-size: 0.9rem;">
-                            <option value="">Todos los programas sociales...</option>
-                            @foreach($listaBeneficios as $lb)
-                                <option value="{{ $lb->id }}" {{ request('beneficio_id') == $lb->id ? 'selected' : '' }}>
-                                    {{ $lb->nombre }}
-                                </option>
-                            @endforeach
-                        </select>
+    {{-- ==========================================
+        CABECERA Y ACCIONES PRINCIPALES
+    ========================================== --}}
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <div class="stats-meta mb-1 text-muted small text-uppercase tracking-wider fw-bold">
+                Seguimiento de programas y métricas operativas
+            </div>
+            <h4 class="fw-bold tracking-tight text-dark m-0" style="font-size:1.75rem;">
+                Panel Estadístico de 
+                <span style="color: var(--sn-blue); font-weight:400;">Beneficios</span>
+            </h4>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            {{-- BOTÓN FILTROS --}}
+            <button
+                class="btn btn-white border border-light-subtle btn-sm d-flex align-items-center gap-2 px-3 py-2 shadow-xs rounded-3 transition-all"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseFilters"
+                aria-expanded="false"
+                aria-controls="collapseFilters"
+            >
+                <i class="bi bi-sliders2 text-secondary"></i>
+                <span class="fw-medium text-secondary small">Filtrar Datos</span>
+                <i class="bi bi-chevron-down small text-muted toggle-icon"></i>
+            </button>
+
+            {{-- FECHA ACTUAL --}}
+            <div class="badge bg-light text-dark border border-light-subtle px-3 py-2 fw-semibold rounded-3 shadow-xs d-flex align-items-center gap-2" style="min-height:38px; font-size:.85rem;">
+                <i class="bi bi-calendar3 text-primary"></i>
+                {{ now()->format('d/m/Y') }}
+            </div>
+
+            {{-- ACCIONES DE EXPORTACIÓN --}}
+            <a href="{{ url()->current() }}" class="btn btn-success btn-sm rounded-3 d-flex align-items-center gap-2 px-3 py-2 shadow-xs fw-medium small">
+                <i class="bi bi-file-earmark-excel"></i> Excel
+            </a>
+
+            <button onclick="window.print()" class="btn btn-primary btn-sm rounded-3 d-flex align-items-center gap-2 px-3 py-2 shadow-xs fw-medium small">
+                <i class="bi bi-printer"></i> Imprimir
+            </button>
+        </div>
+    </div>
+
+    {{-- ==========================================
+        BLOQUE DE FILTROS AVANZADOS (COLLAPSE)
+    ========================================== --}}
+    <div class="collapse mb-4" id="collapseFilters">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden" style="background: rgba(var(--bs-body-bg-rgb), 0.7); backdrop-filter: blur(10px);">
+            <div class="card-body p-4">
+                <form method="GET" class="row g-3 align-items-end">
+                    
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold text-muted text-uppercase tracking-wider">Filtro Principal</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted" style="border-radius: 10px 0 0 10px;"><i class="bi bi-funnel"></i></span>
+                            <select name="filtro_id" class="form-select bg-light border-start-0 small" style="border-radius: 0 10px 10px 0;">
+                                <option value="">Seleccione una opción...</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-6 col-md-3">
-                    <label for="fecha_desde" class="form-label small text-muted fw-bold text-uppercase tracking-wider">Fecha Desde</label>
-                    <input type="date" name="fecha_desde" id="fecha_desde" value="{{ request('fecha_desde') }}" class="form-control bg-light" style="border-radius: 10px; font-size: 0.9rem;">
-                </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label small fw-semibold text-muted text-uppercase tracking-wider">Fecha Desde</label>
+                        <input type="date" name="fecha_desde" class="form-control bg-light small" style="border-radius: 10px;">
+                    </div>
 
-                <div class="col-6 col-md-3">
-                    <label for="fecha_hasta" class="form-label small text-muted fw-bold text-uppercase tracking-wider">Fecha Hasta</label>
-                    <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ request('fecha_hasta') }}" class="form-control bg-light" style="border-radius: 10px; font-size: 0.9rem;">
-                </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label small fw-semibold text-muted text-uppercase tracking-wider">Fecha Hasta</label>
+                        <input type="date" name="fecha_hasta" class="form-control bg-light small" style="border-radius: 10px;">
+                    </div>
 
-                <div class="col-12 col-md-2 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary w-100 fw-medium d-flex align-items-center justify-content-center gap-2" style="border-radius: 10px; padding: 9px;">
-                        <i class="bi bi-search"></i> Filtrar
-                    </button>
-                        <a href="{{ route('estadisticas.beneficios.excel', request()->query()) }}" class="btn btn-success rounded-3">
-                            <i class="bi bi-file-earmark-excel"></i>
-                            Excel
-                        </a>
-
-                        <button onclick="window.print()" class="btn btn-primary rounded-3">
-                            <i class="bi bi-printer"></i>
-                            Imprimir
+                    <div class="col-12 col-md-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary w-100 fw-medium d-flex align-items-center justify-content-center gap-2 shadow-xs" style="border-radius: 10px; padding: 8px;">
+                            <i class="bi bi-search"></i> Filtrar
                         </button>
-                    @if(request()->has('beneficio_id') || request()->has('fecha_desde') || request()->has('fecha_hasta'))
-                        <a href="{{ url()->current() }}" class="btn btn-outline-secondary" style="border-radius: 10px;" title="Limpiar Filtros">
+                        <a href="{{ url()->current() }}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" style="border-radius: 10px;" title="Limpiar Filtros">
                             <i class="bi bi-arrow-counterclockwise"></i>
                         </a>
-                    @endif
-                </div>
-
-            </form>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

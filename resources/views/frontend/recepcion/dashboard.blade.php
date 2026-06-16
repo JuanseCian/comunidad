@@ -200,7 +200,7 @@
         <div class="section-card theme-sky">
             <div class="section-title">
                 <i class="bi bi-person-bounding-box"></i>
-                <h4>Atención Social e Ingresos</h4>
+                <h4>Atención e Ingresos</h4>
             </div>
             
             <div class="action-row">

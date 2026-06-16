@@ -21,7 +21,8 @@
                 ['route' => 'estadisticas.destinatarios', 'icon' => 'bi-people', 'label' => 'Destinatarios'],
                 ['route' => 'estadisticas.beneficios', 'icon' => 'bi-award', 'label' => 'Beneficios'],
                 ['route' => 'estadisticas.atenciones', 'icon' => 'bi-heart-pulse', 'label' => 'Intervenciones'],
-                ['route' => 'estadisticas.familias', 'icon' => 'bi-houses', 'label' => 'Familias'],
+                //Ruta de Familias oculta
+                //['route' => 'estadisticas.familias', 'icon' => 'bi-houses', 'label' => 'Familias'],
                 ['route' => 'estadisticas.territorial', 'icon' => 'bi-geo-alt', 'label' => 'Territorial'],
 
                 // SOLO RECEPCIÓN
