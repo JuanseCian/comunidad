@@ -201,6 +201,7 @@ class MercaderiaController extends Controller
                       ->orWhere('apellido', 'LIKE', "%{$term}%")
                       ->orWhere('nombre', 'LIKE', "%{$term}%");
             })
+            ->whereNull('deleted_at')
             ->select(['id', 'nombre', 'apellido', 'dni', 'familia_id'])
             ->limit(8)
             ->get()

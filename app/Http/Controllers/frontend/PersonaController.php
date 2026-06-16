@@ -495,7 +495,7 @@ class PersonaController extends Controller
 
         $familiaAnteriorId = $persona->familia_id;
 
-        $persona->familia_id = $familia->id;
+        $persona->familia_id = $nuevaFamilia->id;
         $persona->save();
 
         Familia::eliminarSiVacia($familiaAnteriorId);

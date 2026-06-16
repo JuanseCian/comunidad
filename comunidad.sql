@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 15-06-2026 a las 07:59:20
+-- Tiempo de generación: 16-06-2026 a las 14:50:51
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -570,6 +570,13 @@ CREATE TABLE `familias` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `familias`
+--
+
+INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
+(58, 'JKW847IRU', '2026-06-16 17:49:11', '2026-06-16 17:49:11');
 
 -- --------------------------------------------------------
 
@@ -2519,7 +2526,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT de la tabla `familias`
 --
 ALTER TABLE `familias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de la tabla `genero_percibido`
@@ -2585,7 +2592,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_beneficio`
@@ -2609,7 +2616,7 @@ ALTER TABLE `persona_programa`
 -- AUTO_INCREMENT de la tabla `persona_trabajo`
 --
 ALTER TABLE `persona_trabajo`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `plan_mas_vida_fichas`

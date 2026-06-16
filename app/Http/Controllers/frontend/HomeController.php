@@ -29,8 +29,7 @@ class HomeController extends Controller
         $alertas = [];
 
         foreach ($personas as $persona) {
-            $personaController = new PersonaController();
-            $personaController->evaluarProgramasPorEdad($persona);
+            $this->evaluarProgramasPorEdad($persona);
 
             $alerta = $persona->alertaPrograma();
 
@@ -48,5 +47,28 @@ class HomeController extends Controller
             'solicitudesPendientes',
             'programas'
         ));
+    }
+
+    private function evaluarProgramasPorEdad(Persona $persona): void
+    {
+        if (!$persona->fecha_nacimiento) return;
+
+        $edad = $persona->edad;
+
+        foreach ($persona->personaPrograma as $pp) {
+            if (!$pp->programa || $pp->fecha_fin) continue;
+
+            $nombre = strtolower($pp->programa->nombre);
+            $rol    = $pp->rol;
+
+            if (str_contains($nombre, 'guarderia') && $edad >= 6) {
+                $pp->update(['fecha_fin' => now()]);
+            } elseif (str_contains($nombre, 'udi') && $edad >= 12) {
+                $pp->update(['fecha_fin' => now()]);
+            } elseif (str_contains($nombre, 'envion')) {
+                if ($rol == 'destinatario' && $edad >= 21) $pp->update(['fecha_fin' => now()]);
+                if ($rol == 'tutor' && $edad >= 25) $pp->update(['fecha_fin' => now()]);
+            }
+        }
     }
 }
