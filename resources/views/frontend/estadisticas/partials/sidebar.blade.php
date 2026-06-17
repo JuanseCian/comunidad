@@ -23,7 +23,8 @@
                 ['route' => 'estadisticas.atenciones', 'icon' => 'bi-heart-pulse', 'label' => 'Intervenciones'],
                 //Ruta de Familias oculta
                 //['route' => 'estadisticas.familias', 'icon' => 'bi-houses', 'label' => 'Familias'],
-                ['route' => 'estadisticas.territorial', 'icon' => 'bi-geo-alt', 'label' => 'Territorial'],
+                //Ruta de Barrios oculta
+                //['route' => 'estadisticas.territorial', 'icon' => 'bi-geo-alt', 'label' => 'Territorial'],
 
                 // SOLO RECEPCIÓN
                 ['route' => 'estadisticas.ingresos', 'icon' => 'bi-box-arrow-in-right', 'label' => 'Ingresos'],

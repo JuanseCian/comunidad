@@ -28,6 +28,11 @@ Route::middleware(['auth'])
             [DashboardController::class, 'index']
         )->name('dashboard');
 
+        Route::get(
+            '/excel',
+            [DashboardController::class, 'exportExcel']
+        )->name('dashboard.excel');
+
         /*
         |--------------------------------------------------------------------------
         | Programas / Destinatarios

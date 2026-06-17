@@ -209,11 +209,17 @@ class PersonaController extends Controller
         // 2. Redirección lógica
         if (!$esAdministrador) {
             return redirect()->route('personas.index')
-                ->with('success', 'La solicitud ha sido enviada al Administrador para su revisión.');
+                ->with(
+                'warning',
+                'La solicitud fue enviada para aprobación administrativa.'
+            );
         }
 
         return redirect()->route('personas.show', $persona->id)
-            ->with('success', 'Persona registrada y aprobada con éxito.')
+            ->with(
+                'success',
+                "Se registró correctamente a {$persona->apellido}, {$persona->nombre}."
+            )
             ->with('abrirProgramaModal', true);
     }
 
@@ -589,7 +595,11 @@ class PersonaController extends Controller
                 ]
             );
         }
-        return back()->with('success', 'Datos personales actualizados correctamente');
+
+        return back()->with(
+            'success',
+            "Datos personales de {$persona->nombre} actualizados correctamente."
+        );
     }
 
     public function updateDomicilio(Request $request, $id)
@@ -634,7 +644,10 @@ class PersonaController extends Controller
             'localidad_id' => $request->localidad_id,
         ]);
 
-        return back()->with('success', 'Domicilio actualizado correctamente');
+        return back()->with(
+            'success',
+            'El domicilio fue actualizado correctamente.'
+        );
     }
 
     public function solicitudesPendientes()
@@ -656,7 +669,10 @@ class PersonaController extends Controller
         $persona = Persona::findOrFail($id);
         $persona->update(['estado' => 'aprobado']);
 
-        return redirect()->back()->with('success', "La persona {$persona->nombre} {$persona->apellido} ha sido aprobada correctamente.");
+        return back()->with(
+            'success',
+            "{$persona->apellido}, {$persona->nombre} fue aprobado correctamente."
+        );
     }
 
     public function rechazarPersona($id)
@@ -669,7 +685,10 @@ class PersonaController extends Controller
 
         Familia::eliminarSiVacia($familia?->id);
 
-        return redirect()->back()->with('warning', "La solicitud de alta ha sido rechazada y eliminada.");
+        return back()->with(
+            'warning',
+            "La solicitud de {$persona->apellido}, {$persona->nombre} fue rechazada."
+        );
     }
 
     public function destroy($id)

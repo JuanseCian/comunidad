@@ -142,11 +142,15 @@
         .drawer-head { background: var(--grad-nav); padding: 24px 20px; position: relative; }
         .drawer-close {
             position: absolute; top: 16px; right: 16px;
-            background: rgba(255,255,255,.2); border: none; border-radius: 50%;
-            width: 32px; height: 32px; color: white; font-size: 18px; cursor: pointer;
-            transition: background 0.2s; display: flex; align-items: center; justify-content: center;
+            background: transparent; border: none; 
+            width: 32px; height: 32px; color: white; font-size: 20px; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+            border-radius: 0;
         }
-        .drawer-close:hover { background: rgba(255,255,255,.35); }
+        .drawer-close:hover { 
+            background: transparent;
+            opacity: 0.8;
+        }
 
         .drawer-avatar-big {
             width: 64px; height: 64px; border-radius: 50%; background: white; color: var(--teal-600);
@@ -177,6 +181,7 @@
         .icon-teal { background: var(--teal-50); color: var(--teal-600); }
         .icon-sky { background: var(--sky-50); color: var(--sky-600); }
         .icon-purple { background: #f3f0ff; color: #7c3aed; }
+        .icon-info { background: #dbeafe; color: #0369a1; }
         .drawer-divider { height: 1px; background: var(--neutral-200); margin: 12px 0; }
 
         .drawer-foot { padding: 16px; border-top: 1px solid var(--neutral-100); }
@@ -195,6 +200,89 @@
         footer { background: white; border-top: 1px solid var(--neutral-200); padding: 24px 0; text-align: center; }
         .footer-brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 15px; margin-bottom: 4px; }
         footer p { color: var(--neutral-400); font-size: 13px; margin: 0; }
+
+        /* ==========================================
+           5. MODAL INFORMACIÓN DEL SISTEMA
+        ========================================== */
+        .modal-header {
+            background: var(--grad-nav);
+            border: none;
+            padding: 24px 24px;
+        }
+        .modal-header .btn-close {
+            filter: invert(1) brightness(200%);
+        }
+        .modal-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal-body {
+            padding: 28px 24px;
+        }
+        .info-section {
+            margin-bottom: 28px;
+        }
+        .info-section:last-child {
+            margin-bottom: 0;
+        }
+        .info-section-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            color: var(--teal-600);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--neutral-600);
+        }
+        .info-item-label {
+            font-weight: 600;
+            color: var(--neutral-800);
+            min-width: 140px;
+        }
+        .info-item-value {
+            flex: 1;
+            color: var(--neutral-600);
+        }
+        .dev-card {
+            background: var(--neutral-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+        .dev-card:hover {
+            background: var(--sky-50);
+            border-color: var(--sky-300);
+        }
+        .dev-name {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            color: var(--teal-600);
+            font-size: 14px;
+        }
+        .dev-role {
+            font-size: 12px;
+            color: var(--neutral-400);
+            margin-top: 2px;
+        }
 
         /* Móviles y Tablets: El Navbar superior desaparece y todo va al Drawer */
         @media (max-width: 991px) {
@@ -216,7 +304,7 @@
     <aside class="drawer" id="sideDrawer" role="dialog" aria-modal="true">
         @auth
             <div class="drawer-head">
-                <button class="drawer-close" id="drawerClose"><i class="bi bi-x-lg"></i></button>
+                <button class="drawer-close" id="drawerClose"><i class="bi bi-list"></i></button>
                 <div class="drawer-avatar-big">
                     {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                 </div>
@@ -265,6 +353,11 @@
                         <span class="drawer-item-icon icon-purple"><i class="bi bi-gear-fill"></i></span> Panel de Administración
                     </a>
                 @endif
+
+                <div class="drawer-divider"></div>
+                <button class="drawer-item" id="btnSysInfo" style="cursor: pointer;">
+                    <span class="drawer-item-icon icon-info"><i class="bi bi-info-circle-fill"></i></span> Información del Sistema
+                </button>
             </div>
 
             <div class="drawer-foot">
@@ -333,6 +426,125 @@
         </div>
     </footer>
 
+    <!-- Modal Información del Sistema -->
+    <div class="modal fade" id="sysInfoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-info-circle-fill"></i> Información del Sistema
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Versión y Detalles del Sistema -->
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="bi bi-cpu"></i> Sistema
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Nombre:</span>
+                            <span class="info-item-value">Comunidad - Gestión Social</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Versión:</span>
+                            <span class="info-item-value">2.1.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Última actualización:</span>
+                            <span class="info-item-value">Junio 2024</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Institución:</span>
+                            <span class="info-item-value">Secretaría de Desarrollo Humano<br>Municipalidad de San Nicolás de los Arroyos</span>
+                        </div>
+                    </div>
+
+                    <!-- Descripción del Proyecto -->
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="bi bi-bookmark"></i> Descripción
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-value">
+                                Plataforma integral de gestión social diseñada para fortalecer el seguimiento y la coordinación de programas y beneficiarios del Desarrollo Humano en San Nicolás de los Arroyos. Facilita la administración de asistencia, estadísticas y grupos familiares con un enfoque colaborativo e innovador.
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Dirigido a -->
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="bi bi-people"></i> Dirigido a
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-value">
+                                Gestores y coordinadores de programas sociales, personal administrativo de la Secretaría de Desarrollo Humano, y profesionales del área de intervención social.
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Tecnología -->
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="bi bi-code-square"></i> Stack Tecnológico
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Backend:</span>
+                            <span class="info-item-value">Laravel 11, PHP 8.2+</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Frontend:</span>
+                            <span class="info-item-value">Bootstrap 5.3, Tailwind CSS</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Base de datos:</span>
+                            <span class="info-item-value">MySQL / PostgreSQL</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Interactividad:</span>
+                            <span class="info-item-value">Alpine.js</span>
+                        </div>
+                    </div>
+
+                    <!-- Desarrolladores -->
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="bi bi-building"></i> Desarrollado por
+                        </div>
+                        <div class="dev-card">
+                            <div class="dev-name">Cian & Vílchez - Studio de Desarrollo</div>
+                            <div class="dev-role">Análisis, diseño e implementación integral</div>
+                        </div>
+                        <div class="dev-card">
+                            <div class="dev-name">Juan Segundo Cian</div>
+                            <div class="dev-role">Full-Stack Developer · juansegundocian@gmail.com</div>
+                        </div>
+                        <div class="dev-card">
+                            <div class="dev-name">Hernán Vílchez</div>
+                            <div class="dev-role">Full-Stack Developer</div>
+                        </div>
+                    </div>
+
+                    <!-- Soporte y Contacto -->
+                    <div class="info-section">
+                        <div class="info-section-title">
+                            <i class="bi bi-chat-dots"></i> Soporte y Contacto
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Email:</span>
+                            <span class="info-item-value">juansegundocian@gmail.com</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item-label">Institución:</span>
+                            <span class="info-item-value">Secretaría de Desarrollo Humano<br>San Nicolás de los Arroyos, Argentina</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -341,6 +553,8 @@
             const openBtn = document.getElementById('openDrawer'); // Avatar Desktop
             const navToggler = document.getElementById('navToggler'); // Hamburguesa Móvil
             const closeBtn = document.getElementById('drawerClose');
+            const btnSysInfo = document.getElementById('btnSysInfo');
+            const sysInfoModal = new bootstrap.Modal(document.getElementById('sysInfoModal'));
 
             // Función unificada para abrir/cerrar el Drawer
             const toggleDrawer = (forceState) => {
@@ -355,11 +569,61 @@
             if (closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
             if (overlay) overlay.addEventListener('click', () => toggleDrawer(false));
 
+            // Botón Información del Sistema
+            if (btnSysInfo) {
+                btnSysInfo.addEventListener('click', () => {
+                    sysInfoModal.show();
+                });
+            }
+
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && drawer && drawer.classList.contains('open')) toggleDrawer(false);
             });
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('success'))
+    <script>
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: @json(session('success')),
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true
+    });
+    </script>
+    @endif
+
+    @if(session('warning'))
+    <script>
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'warning',
+        title: @json(session('warning')),
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true
+    });
+    </script>
+    @endif
+
+    @if(session('error'))
+    <script>
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: @json(session('error')),
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true
+    });
+    </script>
+    @endif
     @stack('scripts')
 </body>
 </html>
