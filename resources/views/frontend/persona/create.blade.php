@@ -303,9 +303,10 @@
 
                 <div class="col-12">
                     <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Localidad</label>
-                    <select name="localidad_id"
+                    <select name="localidad_id" id="select-localidad"
                             style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
-                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
+                            onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'"
+                            onchange="filtrarBarrios(this.value)">
                         <option value="">— Seleccionar —</option>
                         @foreach($localidades as $item)
                             <option value="{{ $item->id }}" {{ old('localidad_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
@@ -315,12 +316,12 @@
 
                 <div class="col-12">
                     <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Barrio</label>
-                    <select name="barrio_id"
+                    <select name="barrio_id" id="select-barrio"
                             style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
                             onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
                         <option value="">— Seleccionar —</option>
                         @foreach($barrios as $item)
-                            <option value="{{ $item->id }}" {{ old('barrio_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
+                            <option value="{{ $item->id }}" data-localidad="{{ $item->localidad_id }}" {{ old('barrio_id') == $item->id ? 'selected' : '' }}>{{ $item->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -605,9 +606,26 @@
         if (block) block.style.display = chk.checked ? 'block' : 'none';
     }
 
+    function filtrarBarrios(localidadId) {
+        const barrioSel = document.getElementById('select-barrio');
+        const opciones  = barrioSel.querySelectorAll('option[data-localidad]');
+        const valorActual = barrioSel.value;
+
+        opciones.forEach(function(opt) {
+            const visible = !localidadId || opt.dataset.localidad === localidadId;
+            opt.style.display = visible ? '' : 'none';
+            if (!visible && opt.selected) {
+                barrioSel.value = '';
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
 
-        document.querySelectorAll('input[type="checkbox"].toggle-init, input[type="checkbox"][onchange]').forEach(function(chk) {
+        // Inicializar filtro de barrios según localidad ya seleccionada (old())
+        const localidadInicial = document.getElementById('select-localidad').value;
+        if (localidadInicial) filtrarBarrios(localidadInicial);
+('input[type="checkbox"].toggle-init, input[type="checkbox"][onchange]').forEach(function(chk) {
             toggleSlider(chk);
         });
 
