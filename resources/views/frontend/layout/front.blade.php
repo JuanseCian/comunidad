@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Comunidad | @yield('title')</title>
 
+    <link rel="icon" href="{{ asset('assets/img/sn.png') }}" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -14,7 +15,7 @@
            1. VARIABLES GLOBALES Y COLORES
         ========================================== */
         :root {
-            --teal-50:  #e8f9f5; --teal-100: #c2eee3; --teal-300: #5dc9a8;
+            --teal-50:   #e8f9f5; --teal-100: #c2eee3; --teal-300: #5dc9a8;
             --teal-400: #2db896; --teal-500: #17a385; --teal-600: #0e8a70; --teal-700: #086f59;
             --sky-50:   #e6f5fb; --sky-100:  #b3e0f5; --sky-300:  #4dbde8;
             --sky-400:  #1aaad8; --sky-500:  #0d92c2; --sky-600:  #0879a8; --sky-700:  #045f87;
@@ -43,14 +44,14 @@
 
         .topbar {
             background: var(--grad-nav);
-            height: 76px; /* Header más gordito */
+            height: 76px;
             position: sticky;
             top: 0;
             z-index: 1040;
             box-shadow: var(--shadow-md);
             padding: 0 1.5rem;
             display: grid;
-            grid-template-columns: 1fr auto 1fr; /* Clave para un centrado perfecto */
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             transition: all 0.3s ease;
         }
@@ -91,7 +92,6 @@
             color: white; background: rgba(255,255,255,.15);
         }
 
-        /* Estilo especial sutil para el botón Estadísticas en el centro */
         .nav-links .btn-estadisticas-mid {
             background: rgba(255,255,255,.08);
             border: 1px solid rgba(255,255,255,.2);
@@ -100,7 +100,6 @@
             background: white; color: var(--teal-700); border-color: white;
         }
 
-        /* Acciones (Derecha) */
         .nav-actions { justify-self: end; display: flex; align-items: center; gap: 12px; }
         
         .btn-perfil {
@@ -194,12 +193,77 @@
         .btn-logout-drawer:hover { background: #fee2e2; }
 
         /* ==========================================
-           4. RESPONSIVE Y CONTENIDO
+           4. RESPONSIVE Y CONTENIDO (MAIN)
         ========================================== */
         main { flex: 1; padding: 0; }
-        footer { background: white; border-top: 1px solid var(--neutral-200); padding: 24px 0; text-align: center; }
-        .footer-brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 15px; margin-bottom: 4px; }
-        footer p { color: var(--neutral-400); font-size: 13px; margin: 0; }
+
+        /* ==========================================
+           MEJORAS EXCLUSIVAS DEL FOOTER
+        ========================================== */
+        footer { 
+            background: white; 
+            border-top: 1px solid var(--neutral-200); 
+            padding: 35px 0 20px 0; 
+        }
+        .footer-brand { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            font-weight: 800; 
+            background: var(--grad-main); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            font-size: 18px; 
+            margin-bottom: 4px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .footer-brand i {
+            background: var(--grad-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .footer-subtitle {
+            font-size: 12.5px;
+            color: var(--neutral-600);
+            font-weight: 600;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .footer-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--neutral-600);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .footer-info-item:last-child {
+            margin-bottom: 0;
+        }
+        .footer-info-item i {
+            color: var(--sky-500);
+            font-size: 14px;
+        }
+        .footer-info-item a {
+            color: var(--neutral-600);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer-info-item a:hover {
+            color: var(--teal-500);
+        }
+        .footer-divider {
+            height: 1px;
+            background: var(--neutral-200);
+            margin: 20px 0 15px 0;
+            opacity: 0.6;
+        }
+        .footer-copyright { 
+            color: var(--neutral-400); 
+            font-size: 12px; 
+            margin: 0; 
+            font-weight: 500;
+        }
 
         /* ==========================================
            5. MODAL INFORMACIÓN DEL SISTEMA
@@ -284,12 +348,12 @@
             margin-top: 2px;
         }
 
-        /* Móviles y Tablets: El Navbar superior desaparece y todo va al Drawer */
+        /* Móviles y Tablets */
         @media (max-width: 991px) {
             .topbar { grid-template-columns: 1fr auto; height: 70px; padding: 0 1rem; }
-            .nav-links { display: none; } /* Ocultamos los links centrales */
-            .btn-perfil { display: none; } /* Ocultamos el avatar (ya está en el drawer) */
-            .nav-toggler { display: block; } /* Mostramos el botón hamburguesa unificado */
+            .nav-links { display: none; }
+            .btn-perfil { display: none; }
+            .nav-toggler { display: block; }
             .desktop-only { display: none !important; }
         }
         @media (min-width: 992px) {
@@ -419,14 +483,43 @@
         @yield('content')
     </main>
 
+    {{-- FOOTER RESTRUCTURADO Y MEJORADO --}}
     <footer>
         <div class="container">
-            <div class="footer-brand"><i class="bi bi-heart-pulse-fill me-1"></i> Comunidad</div>
-            <p>&copy; {{ date('Y') }} Secretaría de Desarrollo Humano. Innovación Social.</p>
+            <div class="row align-items-center row-gap-3">
+                <div class="col-12 col-md-7 text-center text-md-start">
+                    <div class="footer-brand">
+                        <i class="bi bi-heart-pulse-fill me-2"></i>Comunidad
+                    </div>
+                    <p class="footer-subtitle">
+                        Secretaría de Desarrollo Humano &bull; Secretaría de Innovación y Ciudad Inteligente
+                    </p>
+                </div>
+                
+                <div class="col-12 col-md-5 d-flex flex-column align-items-center align-items-md-end text-center text-md-end">
+                    <div class="footer-info-item">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span>Lazarte y Brown, San Nicolás de los Arroyos</span>
+                    </div>
+                    <div class="footer-info-item">
+                        <i class="bi bi-envelope-fill"></i>
+                        <a href="mailto:sndesarrollohumano@gmail.com">sndesarrollohumano@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="footer-copyright">
+                        &copy; {{ date('Y') }} Municipalidad de San Nicolás de los Arroyos. Todos los derechos reservados.
+                    </p>
+                </div>
+            </div>
         </div>
     </footer>
 
-    <!-- Modal Información del Sistema -->
     <div class="modal fade" id="sysInfoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -437,7 +530,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Versión y Detalles del Sistema -->
                     <div class="info-section">
                         <div class="info-section-title">
                             <i class="bi bi-cpu"></i> Sistema
@@ -460,7 +552,6 @@
                         </div>
                     </div>
 
-                    <!-- Descripción del Proyecto -->
                     <div class="info-section">
                         <div class="info-section-title">
                             <i class="bi bi-bookmark"></i> Descripción
@@ -472,19 +563,17 @@
                         </div>
                     </div>
 
-                    <!-- Dirigido a -->
                     <div class="info-section">
                         <div class="info-section-title">
                             <i class="bi bi-people"></i> Dirigido a
                         </div>
                         <div class="info-item">
                             <span class="info-item-value">
-                                Gestores y coordinadores de programas sociales, personal administrativo de la Secretaría de Desarrollo Humano, y profesionales del área de intervención social.
+                                Gestores y coordinadores de programas sociales, personal administrativo de la Secretaría de Desarrollo Humano, y professionals del área de intervención social.
                             </span>
                         </div>
                     </div>
 
-                    <!-- Tecnología -->
                     <div class="info-section">
                         <div class="info-section-title">
                             <i class="bi bi-code-square"></i> Stack Tecnológico
@@ -507,7 +596,6 @@
                         </div>
                     </div>
 
-                    <!-- Desarrolladores -->
                     <div class="info-section">
                         <div class="info-section-title">
                             <i class="bi bi-building"></i> Desarrollado por
@@ -526,7 +614,6 @@
                         </div>
                     </div>
 
-                    <!-- Soporte y Contacto -->
                     <div class="info-section">
                         <div class="info-section-title">
                             <i class="bi bi-chat-dots"></i> Soporte y Contacto
@@ -550,13 +637,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             const drawer = document.getElementById('sideDrawer');
             const overlay = document.getElementById('drawerOverlay');
-            const openBtn = document.getElementById('openDrawer'); // Avatar Desktop
-            const navToggler = document.getElementById('navToggler'); // Hamburguesa Móvil
+            const openBtn = document.getElementById('openDrawer');
+            const navToggler = document.getElementById('navToggler');
             const closeBtn = document.getElementById('drawerClose');
             const btnSysInfo = document.getElementById('btnSysInfo');
             const sysInfoModal = new bootstrap.Modal(document.getElementById('sysInfoModal'));
 
-            // Función unificada para abrir/cerrar el Drawer
             const toggleDrawer = (forceState) => {
                 const isOpen = forceState !== undefined ? forceState : !drawer.classList.contains('open');
                 drawer.classList.toggle('open', isOpen);
@@ -569,7 +655,6 @@
             if (closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
             if (overlay) overlay.addEventListener('click', () => toggleDrawer(false));
 
-            // Botón Información del Sistema
             if (btnSysInfo) {
                 btnSysInfo.addEventListener('click', () => {
                     sysInfoModal.show();
