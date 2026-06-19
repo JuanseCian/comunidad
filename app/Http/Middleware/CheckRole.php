@@ -8,11 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle($request, Closure $next, ...$roles)
     {
         if (!auth()->check()) {
@@ -21,15 +16,21 @@ class CheckRole
 
         $user = auth()->user();
 
-        // Bloquear inactivos directamente
+        // Bloquear usuarios inactivos
         if ($user->rol_id == 4) {
             auth()->logout();
-            return redirect()->route('login')
+
+            return redirect()
+                ->route('login')
                 ->withErrors('Tu cuenta está inactiva. Esperá aprobación.');
         }
 
+        // Validar roles permitidos
         if (!in_array($user->rol_id, $roles)) {
-            abort(403);
+
+            return redirect()
+                ->route('home')
+                ->with('error', 'No posee permisos para ingresar a esta sección.');
         }
 
         return $next($request);

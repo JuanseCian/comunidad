@@ -298,6 +298,16 @@
 </head>
 
 <body>
+    @if(session('error'))
+    <script>
+    Swal.fire({
+        icon: 'warning',
+        title: 'Acceso restringido',
+        text: '{{ session('error') }}',
+        confirmButtonText: 'Aceptar'
+    });
+    </script>
+    @endif
 
     {{-- SIDEBAR --}}
     <aside class="sidebar">

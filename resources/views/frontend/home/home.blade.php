@@ -246,7 +246,7 @@
                     'color'   => '#17a385',
                     'colorBg' => '#e8f9f5',
                     'colorBo' => '#9fe1cb',
-                    'route'   => '#'
+                    'route'   => route('recepcion.sepelios.index')
                 ],
             ];
             @endphp
