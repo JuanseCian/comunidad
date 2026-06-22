@@ -31,7 +31,11 @@ class BajoPesoController extends Controller
     public function create()
     {
         $personas = Persona::whereNotNull('fecha_nacimiento')
-            ->whereNull('deleted_at')
+            ->whereNotIn('id', function ($query) {
+                $query->select('persona_id')
+                    ->from('bajo_pesos')
+                    ->where('activo', 1);
+            })
             ->get()
             ->filter(function ($persona) {
                 return $persona->edad <= 6;
@@ -238,16 +242,23 @@ class BajoPesoController extends Controller
                     ->orWhere('apellido', 'LIKE', "%{$term}%")
                     ->orWhere('nombre', 'LIKE', "%{$term}%");
             })
-            ->whereNull('deleted_at')
+
+            ->whereNotIn('id', function ($query) {
+                $query->select('persona_id')
+                    ->from('bajo_pesos')
+                    ->where('activo', 1);
+            })
+
             ->orderBy('apellido')
             ->orderBy('nombre')
             ->limit(20)
             ->get()
-            ->filter(function ($persona) {
 
+            ->filter(function ($persona) {
                 return $persona->fecha_nacimiento
                     && $persona->edad <= 6;
             })
+
             ->map(function ($persona) {
 
                 return [
@@ -263,6 +274,7 @@ class BajoPesoController extends Controller
                     'familia_codigo' => optional($persona->familia)->codigo,
                 ];
             })
+
             ->take(8)
             ->values();
 

@@ -21,15 +21,6 @@
         </a>
     </div>
 
-    {{-- Alertas --}}
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert">
-            <i class="bi bi-check-circle-fill me-2 fs-5"></i>
-            <div>{{ session('success') }}</div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
-
     {{-- Tabla --}}
     <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
@@ -44,7 +35,6 @@
                             <th width="130">Fecha</th>
                             <th width="100">Hora</th>
                             <th>Registrado por</th>
-                            <th width="90" class="text-end pe-4">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -138,12 +128,7 @@
                                     </span>
                                 </td>
 
-                                {{-- ACCIONES --}}
-                                <td class="text-end pe-4">
-                                    <a href="#" class="btn btn-sm btn-light border shadow-sm px-2" title="Ver detalles">
-                                        <i class="bi bi-eye text-secondary"></i>
-                                    </a>
-                                </td>
+                                
                             </tr>
                         @empty
                             <tr>

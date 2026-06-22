@@ -24,7 +24,7 @@
             <input
                 id="name" name="name" type="text"
                 class="sp-input @error('name') sp-input-error @enderror"
-                value="{{ old('name', $user->name) }}"
+                value="{{ old('name', $user->nombre) }}"
                 required autofocus autocomplete="name"
                 placeholder="Tu nombre completo"
             />
