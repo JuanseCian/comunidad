@@ -304,6 +304,11 @@ class Persona extends Model
         return $this->hasMany(Asistencia::class);
     }
 
+    public function bajoPeso()
+    {
+        return $this->hasMany(BajoPeso::class, 'persona_id');
+    }
+
     public function bajoPesoActivo()
     {
         return $this->hasOne(BajoPeso::class);

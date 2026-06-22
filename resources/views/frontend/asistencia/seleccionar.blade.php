@@ -3,40 +3,72 @@
 @section('title', 'Seleccionar Asistencia')
 
 @section('content')
+    <style>
+    .card {
+        backdrop-filter: blur(10px);
+    }
+
+    .form-select {
+        border: 1px solid #e5e7eb;
+        min-height: 54px;
+    }
+
+    .form-select:focus {
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 .15rem rgba(var(--bs-primary-rgb), .15);
+    }
+
+    .btn-primary {
+        transition: .2s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+    }
+</style>
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-md-7 col-lg-5">
 
-            <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-body p-4 p-md-5">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                {{-- Línea superior --}}
+                <div style="height: 4px; background: var(--bs-primary);"></div>
+
+                <div class="card-body p-5">
 
                     {{-- Encabezado --}}
-                    <div class="text-center mb-4">
-                        <div class="d-inline-flex align-items-center justify-content-center bg-light text-primary rounded-circle p-3 mb-3" style="width: 80px; height: 80px;">
-                            <i class="bi bi-calendar-check-fill" style="font-size: 35px;"></i>
-                        </div>
-                        <h2 class="h3 fw-bold text-dark mb-1">Registrar Asistencia</h2>
-                        <p class="text-muted small">
-                            Complete los campos para acceder al listado de asistencia.
+                    <div class="text-center mb-5">
+                        <i class="bi bi-calendar-check text-primary fs-1"></i>
+
+                        <h2 class="fw-semibold mt-3 mb-2">
+                            Registrar asistencia
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Seleccione el programa para continuar.
                         </p>
                     </div>
 
-                    {{-- Formulario --}}
-                    <form method="GET" action="{{ route('asistencia.index') }}" id="asistenciaForm">
-                        
+                    <form method="GET"
+                          action="{{ route('asistencia.index') }}"
+                          id="asistenciaForm">
+
                         {{-- Programa --}}
                         <div class="mb-4">
-                            <label for="programaSelect" class="form-label fw-semibold text-secondary">
-                                <i class="bi bi-journal-bookmark-fill me-1 text-primary"></i> Programa
+                            <label for="programaSelect"
+                                   class="form-label small text-muted mb-2">
+                                Programa
                             </label>
+
                             <select
-                                class="form-select form-select-lg border-2 shadow-sm focus-ring"
+                                class="form-select form-select-lg rounded-3"
                                 name="programa_id"
                                 id="programaSelect"
                                 required>
 
-                                <option value="" disabled selected hidden>
-                                    Seleccione un programa...
+                                <option value="" selected disabled>
+                                    Seleccionar programa
                                 </option>
 
                                 @foreach($programas as $programa)
@@ -49,35 +81,53 @@
                             </select>
                         </div>
 
-                        {{-- Sede (Contenedor con animación) --}}
-                        <div id="sedeWrapper" class="fade" style="max-height: 0; overflow: hidden; transition: all 0.4s ease-in-out; opacity: 0;">
+                        {{-- Sede --}}
+                        <div id="sedeWrapper"
+                             style="max-height:0;overflow:hidden;opacity:0;transition:.35s ease;">
+
                             <div class="mb-4">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <label for="sedeSelect" class="form-label fw-semibold text-secondary mb-0">
-                                        <i class="bi bi-geo-alt-fill me-1 text-primary"></i> Sede
-                                    </label>
-                                    <span id="sedeBadge" class="badge rounded-pill bg-danger-subtle text-danger small">Obligatorio</span>
-                                </div>
-                                <select 
-                                    class="form-select form-select-lg border-2 shadow-sm" 
-                                    name="sede_id" 
+                                <label for="sedeSelect"
+                                       class="form-label small text-muted mb-2">
+                                    Sede
+                                </label>
+
+                                <select
+                                    class="form-select form-select-lg rounded-3"
+                                    name="sede_id"
                                     id="sedeSelect">
-                                    <option value="" disabled selected hidden>Seleccione una sede...</option>
+
+                                    <option value="" selected disabled>
+                                        Seleccionar sede
+                                    </option>
+
                                     @foreach($sedes as $sede)
-                                        <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
+                                        <option value="{{ $sede->id }}">
+                                            {{ $sede->nombre }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                <div class="form-text text-muted mt-2 ps-1">
-                                    <i class="bi bi-info-circle-fill me-1"></i> Requerido para programas Envión y UDI.
-                                </div>
+
+                                <small class="text-muted d-block mt-2">
+                                    Solo requerido para Envión y UDI.
+                                </small>
                             </div>
+
                         </div>
 
-                        {{-- Botón de Acción --}}
-                        <button type="submit" id="btnSubmit" class="btn btn-primary btn-lg w-100 fw-bold py-3 mt-2 shadow-sm rounded-3 d-flex align-items-center justify-content-center gap-2">
-                            <span id="btnText">Continuar</span>
-                            <i id="btnIcon" class="bi bi-arrow-right-circle fs-5"></i>
-                            <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                        {{-- Botón --}}
+                        <button
+                            type="submit"
+                            id="btnSubmit"
+                            class="btn btn-primary w-100 py-3 rounded-3 fw-medium">
+
+                            <span id="btnText">
+                                Continuar
+                            </span>
+
+                            <span id="btnSpinner"
+                                  class="spinner-border spinner-border-sm ms-2 d-none">
+                            </span>
+
                         </button>
 
                     </form>

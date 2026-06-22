@@ -85,7 +85,7 @@
                     </span>
                 </h1>
                 <p style="color:#536070; font-size:1rem; font-weight:500; margin:0; max-width:520px;">
-                    Gestión integrada de programas sociales y atención ciudadana territorial.
+                    Gestión integral de programas sociales, destinatarios y asistencia. Accedé a estadísticas, registros y coordinación de servicios.
                 </p>
             </div>
 

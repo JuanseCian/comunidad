@@ -266,86 +266,173 @@
         }
 
         /* ==========================================
-           5. MODAL INFORMACIÓN DEL SISTEMA
+           5. MODAL INFORMACIÓN DEL SISTEMA (REDiseñado)
         ========================================== */
-        .modal-header {
+        #sysInfoModal .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            background: #ffffff;
+        }
+        #sysInfoModal .modal-header {
             background: var(--grad-nav);
             border: none;
-            padding: 24px 24px;
+            padding: 24px 28px;
+            position: relative;
         }
-        .modal-header .btn-close {
-            filter: invert(1) brightness(200%);
-        }
-        .modal-title {
+        #sysInfoModal .modal-title {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 700;
+            font-weight: 800;
             color: white;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 20px;
+            letter-spacing: -0.3px;
         }
-        .modal-body {
-            padding: 28px 24px;
+        #sysInfoModal .modal-header .btn-close {
+            filter: invert(1) brightness(200%);
+            opacity: 0.8;
+            transition: all 0.2s;
+        }
+        #sysInfoModal .modal-header .btn-close:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        #sysInfoModal .modal-body {
+            padding: 32px 28px;
+            background: #fdfefe;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        @media (min-width: 768px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .info-section.full-width {
+                grid-column: span 2;
+            }
         }
         .info-section {
-            margin-bottom: 28px;
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .info-section:last-child {
-            margin-bottom: 0;
+        .info-section:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,.03);
         }
         .info-section-title {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--teal-600);
-            font-size: 14px;
+            font-size: 13.5px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            letter-spacing: 0.8px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            border-bottom: 2px solid var(--teal-50);
+            padding-bottom: 8px;
+        }
+        .info-section-title i {
+            font-size: 16px;
         }
         .info-item {
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 10px 0;
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--neutral-600);
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px 0;
+            font-size: 14.5px;
+            border-bottom: 1px dashed var(--neutral-100);
+        }
+        .info-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        @media (min-width: 480px) {
+            .info-item {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .info-item-label {
+                min-width: 130px;
+                max-width: 130px;
+                margin-bottom: 0;
+            }
         }
         .info-item-label {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--neutral-800);
-            min-width: 140px;
         }
         .info-item-value {
             flex: 1;
             color: var(--neutral-600);
+            line-height: 1.5;
+        }
+        .info-text-block {
+            color: var(--neutral-600);
+            font-size: 14.5px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .dev-cards-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        @media (min-width: 576px) {
+            .dev-cards-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dev-card.studio-card {
+                grid-column: span 2;
+            }
         }
         .dev-card {
             background: var(--neutral-50);
             border: 1px solid var(--neutral-200);
             border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 10px;
-            transition: all 0.2s;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.25s ease;
         }
         .dev-card:hover {
             background: var(--sky-50);
             border-color: var(--sky-300);
+            transform: translateY(-2px);
+        }
+        .dev-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .dev-info {
+            flex: 1;
         }
         .dev-name {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 700;
-            color: var(--teal-600);
-            font-size: 14px;
+            color: var(--neutral-800);
+            font-size: 14.5px;
+            line-height: 1.2;
         }
         .dev-role {
-            font-size: 12px;
-            color: var(--neutral-400);
-            margin-top: 2px;
+            font-size: 12.5px;
+            color: var(--neutral-600);
+            margin-top: 4px;
+            font-weight: 500;
         }
 
         /* Móviles y Tablets */
@@ -521,111 +608,112 @@
     </footer>
 
     <div class="modal fade" id="sysInfoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="bi bi-info-circle-fill"></i> Información del Sistema
+                        <i class="bi bi-info-circle-fill me-2"></i>Información del Sistema
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="info-section">
-                        <div class="info-section-title">
-                            <i class="bi bi-cpu"></i> Sistema
+                    <div class="info-grid">
+                        
+                        <div class="info-section">
+                            <div class="info-section-title">
+                                <i class="bi bi-cpu"></i>Especificaciones
+                            </div>
+                            <div class="info-item">
+                                <span class="info-item-label">Nombre:</span>
+                                <span class="info-item-value">Comunidad</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-item-label">Versión:</span>
+                                <span class="info-item-value">1.0.0</span>
+                            </div>
+                            
+                            <div class="info-item">
+                                <span class="info-item-label">Institución:</span>
+                                <span class="info-item-value">Secretaría de Desarrollo Humano / Municipalidad de San Nicolás</span>
+                            </div>
                         </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Nombre:</span>
-                            <span class="info-item-value">Comunidad - Gestión Social</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Versión:</span>
-                            <span class="info-item-value">2.1.0</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Última actualización:</span>
-                            <span class="info-item-value">Junio 2024</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Institución:</span>
-                            <span class="info-item-value">Secretaría de Desarrollo Humano<br>Municipalidad de San Nicolás de los Arroyos</span>
-                        </div>
-                    </div>
 
-                    <div class="info-section">
-                        <div class="info-section-title">
-                            <i class="bi bi-bookmark"></i> Descripción
+                        <div class="info-section">
+                            <div class="info-section-title">
+                                <i class="bi bi-code-square"></i>Stack Tecnológico
+                            </div>
+                            <div class="info-item">
+                                <span class="info-item-label">Backend:</span>
+                                <span class="info-item-value">Laravel 11, PHP 8.2+</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-item-label">Frontend:</span>
+                                <span class="info-item-value">Bootstrap 5.3, Tailwind CSS</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-item-label">Base de Datos:</span>
+                                <span class="info-item-value">MySQL / PostgreSQL</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-item-label">Interactividad:</span>
+                                <span class="info-item-value">Alpine.js</span>
+                            </div>
                         </div>
-                        <div class="info-item">
-                            <span class="info-item-value">
-                                Plataforma integral de gestión social diseñada para fortalecer el seguimiento y la coordinación de programas y beneficiarios del Desarrollo Humano en San Nicolás de los Arroyos. Facilita la administración de asistencia, estadísticas y grupos familiares con un enfoque colaborativo e innovador.
-                            </span>
-                        </div>
-                    </div>
 
-                    <div class="info-section">
-                        <div class="info-section-title">
-                            <i class="bi bi-people"></i> Dirigido a
+                        <div class="info-section full-width">
+                            <div class="info-section-title">
+                                <i class="bi bi-bookmark"></i>Propósito de la Plataforma
+                            </div>
+                            <p class="info-text-block">
+                                Plataforma de gestión social diseñada para fortalecer el seguimiento y la coordinación de programas y beneficiarios del área de <strong>Comunidad</strong>, a cargo de la Directora de Comunidad (Cordisco, María Laura) bajo la gestion de la <strong>Secretaría de Desarrollo Humano</strong> a cargo de la Sec. Mendez, María en San Nicolás de los Arroyos. Facilita la administración de asistencia, estadísticas y grupos familiares con un enfoque colaborativo e innovador, dirigido a gestores, coordinadores y profesionales del área de intervención social.
+                            </p>
                         </div>
-                        <div class="info-item">
-                            <span class="info-item-value">
-                                Gestores y coordinadores de programas sociales, personal administrativo de la Secretaría de Desarrollo Humano, y professionals del área de intervención social.
-                            </span>
-                        </div>
-                    </div>
 
-                    <div class="info-section">
-                        <div class="info-section-title">
-                            <i class="bi bi-code-square"></i> Stack Tecnológico
+                        <div class="info-section full-width">
+                            <div class="info-section-title">
+                                <i class="bi bi-building"></i>Equipo de Desarrollo 
+                            </div>
+                            <div class="dev-cards-container">
+                                <div class="dev-card studio-card">
+                                    <div class="dev-icon-box icon-purple"><i class="bi bi-rocket-takeoff-fill"></i></div>
+                                    <div class="dev-info">
+                                        <div class="dev-name">Cian & Vílchez - Studio de Desarrollo</div>
+                                        <div class="dev-role">Análisis, diseño e implementación integral</div>
+                                    </div>
+                                </div>
+                                <div class="dev-card">
+                                    <div class="dev-icon-box icon-teal"><i class="bi bi-person-badge-fill"></i></div>
+                                    <div class="dev-info">
+                                        <div class="dev-name">Juan Segundo Cian</div>
+                                        <div class="dev-role">Analista en Sistemas · Full-Stack Developer</div>
+                                    </div>
+                                </div>
+                                <div class="dev-card">
+                                    <div class="dev-icon-box icon-sky"><i class="bi bi-person-badge-fill"></i></div>
+                                    <div class="dev-info">
+                                        <div class="dev-name">Hernán Vílchez</div>
+                                        <div class="dev-role">Analista en Sistemas · Full-Stack Developer</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Backend:</span>
-                            <span class="info-item-value">Laravel 11, PHP 8.2+</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Frontend:</span>
-                            <span class="info-item-value">Bootstrap 5.3, Tailwind CSS</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Base de datos:</span>
-                            <span class="info-item-value">MySQL / PostgreSQL</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Interactividad:</span>
-                            <span class="info-item-value">Alpine.js</span>
-                        </div>
-                    </div>
 
-                    <div class="info-section">
-                        <div class="info-section-title">
-                            <i class="bi bi-building"></i> Desarrollado por
+                        <div class="info-section full-width">
+                            <div class="info-section-title">
+                                <i class="bi bi-chat-dots"></i>Soporte Técnico y Contacto
+                            </div>
+                            <div class="info-item">
+                                <span class="info-item-label">Email Oficial:</span>
+                                <span class="info-item-value">
+                                    <a href="mailto:sndesarrollohumano@gmail.com" class="text-decoration-none fw-bold text-teal-600" style="color: var(--teal-600);">sndesarrollohumano@gmail.com</a>
+                                </span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-item-label">Ubicación:</span>
+                                <span class="info-item-value">Secretaría de Desarrollo Humano &bull; San Nicolás de los Arroyos, Argentina</span>
+                            </div>
                         </div>
-                        <div class="dev-card">
-                            <div class="dev-name">Cian & Vílchez - Studio de Desarrollo</div>
-                            <div class="dev-role">Análisis, diseño e implementación integral</div>
-                        </div>
-                        <div class="dev-card">
-                            <div class="dev-name">Juan Segundo Cian</div>
-                            <div class="dev-role">Full-Stack Developer · juansegundocian@gmail.com</div>
-                        </div>
-                        <div class="dev-card">
-                            <div class="dev-name">Hernán Vílchez</div>
-                            <div class="dev-role">Full-Stack Developer</div>
-                        </div>
-                    </div>
 
-                    <div class="info-section">
-                        <div class="info-section-title">
-                            <i class="bi bi-chat-dots"></i> Soporte y Contacto
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Email:</span>
-                            <span class="info-item-value">juansegundocian@gmail.com</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item-label">Institución:</span>
-                            <span class="info-item-value">Secretaría de Desarrollo Humano<br>San Nicolás de los Arroyos, Argentina</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -657,7 +745,10 @@
 
             if (btnSysInfo) {
                 btnSysInfo.addEventListener('click', () => {
-                    sysInfoModal.show();
+                    toggleDrawer(false); // Cierra el drawer automáticamente al abrir el modal para UX limpia
+                    setTimeout(() => {
+                        sysInfoModal.show();
+                    }, 350);
                 });
             }
 
