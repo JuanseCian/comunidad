@@ -366,12 +366,14 @@
                             onfocus="this.style.borderColor='#0d92c2'" onblur="this.style.borderColor='#c8c4bb'">
                         <option value="">— Seleccionar —</option>
                         @foreach($catalogos['situaciones_ocupacional'] as $so)
-                            <option value="{{ $so->id }}" {{ old('situacion_ocupacional_id') == $so->id ? 'selected' : '' }}>{{ $so->nombre }}</option>
+                            <option value="{{ $so->id }}"
+                                data-inactivo="{{ preg_match('/inactiv|desocup|sin\s*trabajo/i', $so->nombre) ? '1' : '0' }}"
+                                {{ old('situacion_ocupacional_id') == $so->id ? 'selected' : '' }}>{{ $so->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <div class="col-md-6" id="blk-inactividad" style="{{ old('condicion_inactividad_id') ? '' : 'display:none' }}">
+                <div class="col-md-6" id="blk-inactividad" style="display:none">
                     <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">Condición de inactividad</label>
                     <select name="condicion_inactividad_id"
                             style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") no-repeat right 10px center; -webkit-appearance:none;"
@@ -473,12 +475,24 @@ document.querySelectorAll('input[type="checkbox"]').forEach(function(chk) {
 
 
 document.getElementById('sel-situacion').addEventListener('change', function() {
+  const opt = this.options[this.selectedIndex];
+  const inactivo = opt?.dataset?.inactivo === '1';
   const blk = document.getElementById('blk-inactividad');
-  blk.style.display = this.value ? '' : 'none';
-  if (!this.value) {
+  blk.style.display = inactivo ? '' : 'none';
+  if (!inactivo) {
     blk.querySelector('select').value = '';
   }
 });
+
+// Inicializar al cargar (restaurar estado con old())
+(function() {
+  const sel = document.getElementById('sel-situacion');
+  if (!sel) return;
+  const opt = sel.options[sel.selectedIndex];
+  const inactivo = opt?.dataset?.inactivo === '1';
+  const blk = document.getElementById('blk-inactividad');
+  if (blk) blk.style.display = inactivo ? '' : 'none';
+})();
 
 
 document.querySelector('form').addEventListener('submit', function(e) {

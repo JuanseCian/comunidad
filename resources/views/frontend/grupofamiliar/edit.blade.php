@@ -2,8 +2,7 @@
 
 @section('title', 'Editar integrante — ' . $integrante->nombre)
 
-@section('content')
-
+@push('styles')
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -163,7 +162,9 @@
     .sp-conditional { display: none; }
     .sp-conditional.visible { display: contents; }
 </style>
+@endpush
 
+@section('content')
 <div class="sp-page">
 
     {{-- Hero --}}
@@ -342,7 +343,9 @@
                                             onchange="toggleCondicionInactividad()">
                                         <option value="">— Seleccionar —</option>
                                         @foreach($catalogos['situaciones_ocupacional'] as $s)
-                                            <option value="{{ $s->id }}" {{ old('situacion_ocupacional_id', $integrante->situacion_ocupacional_id) == $s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
+                                            <option value="{{ $s->id }}"
+                                                data-inactivo="{{ preg_match('/inactiv|desocup|sin\s*trabajo/i', $s->nombre) ? '1' : '0' }}"
+                                                {{ old('situacion_ocupacional_id', $integrante->situacion_ocupacional_id) == $s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -411,7 +414,7 @@
                                 </label>
                             </div>
 
-                            <div class="col-md-6" id="wrap_discapacidad_tratamiento">
+                            <div class="col-md-6" id="wrap_discapacidad_tratamiento" style="display:none;">
                                 <label class="sp-toggle-row" for="check_disc_trat">
                                     <div>
                                         <div class="sp-toggle-label">En tratamiento</div>
@@ -422,7 +425,7 @@
                                 </label>
                             </div>
 
-                            <div class="col-md-6" id="wrap_discapacidad_tipo">
+                            <div class="col-md-6" id="wrap_discapacidad_tipo" style="display:none;">
                                 <div class="sp-field-group">
                                     <label class="sp-label">Tipo de discapacidad</label>
                                     <select name="discapacidad_id" class="sp-select">
@@ -434,7 +437,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" id="wrap_caratula">
+                            <div class="col-md-6" id="wrap_caratula" style="display:none;">
                                 <div class="sp-field-group">
                                     <label class="sp-label">Carátula / N° de expediente</label>
                                     <input type="text" name="caratula" class="sp-input"
@@ -538,10 +541,14 @@ function toggleDiscapacidad() {
 
 function toggleCondicionInactividad() {
     const sel = document.getElementById('sel_situacion');
-    const texto = sel.options[sel.selectedIndex]?.text?.toLowerCase() ?? '';
-    const inactivo = texto.includes('inactiv') || texto.includes('desocup') || texto.includes('sin trabajo');
+    const opt = sel.options[sel.selectedIndex];
+    const inactivo = opt?.dataset?.inactivo === '1';
     const wrap = document.getElementById('wrap_condicion_inactividad');
     if (wrap) wrap.style.display = inactivo ? '' : 'none';
+    if (!inactivo && wrap) {
+        const s = wrap.querySelector('select');
+        if (s) s.value = '';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {

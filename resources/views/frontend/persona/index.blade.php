@@ -2,41 +2,6 @@
 
 @section('title', 'Personas')
 
-@push('styles')
-<style>
-    .page-header-gradient { background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); }
-    .btn-gradient-primary { background: linear-gradient(135deg, #0d92c2, #17a385); color: white; border: none; transition: all 0.2s; }
-    .btn-gradient-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(13,146,194,0.3); color: white; }
-    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .cursor-pointer { cursor: pointer; }
-
-    .list-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap: 10px; }
-    @media (max-width: 768px) {
-        .list-grid { grid-template-columns: 1fr 80px; }
-        .list-grid > *:not(:first-child):not(:last-child) { display: none; }
-    }
-    .row-grid { transition: background 0.15s ease; background-color: white; }
-    .row-grid:hover { background-color: #f8fafc; }
-
-    .avatar-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .icon-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-
-    .btn-action { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.15s; }
-
-    .bg-purple-subtle { background-color: #f3e8ff; }
-    .text-purple { color: #6b21a8; }
-    .border-purple-subtle { border-color: #d8b4fe !important; }
-
-    .pagination-custom .page-box { width: 34px; height: 34px; border-radius: 8px; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; text-decoration: none; color: #64748b; background: white; transition: all 0.2s; }
-    .pagination-custom a.page-box:hover { background: #e6f5fb; border-color: #b3e0f5; color: #0879a8; }
-    .pagination-custom .page-box.active { background: linear-gradient(135deg, #0d92c2, #1aaad8); color: white; border-color: #0d92c2; font-weight: bold; }
-    .pagination-custom .page-box.disabled { color: #cbd5e1; background: #f8fafc; cursor: not-allowed; }
-
-    [data-bs-toggle="collapse"][aria-expanded="true"] .bi-chevron-down { transform: rotate(180deg); }
-    .transition-transform { transition: transform 0.3s ease; }
-</style>
-@endpush
-
 @section('content')
 
 {{-- HEADER DE LA SECCIÓN --}}
@@ -295,24 +260,27 @@
                         Mostrando {{ $personas->firstItem() }}–{{ $personas->lastItem() }} de {{ $personas->total() }}
                     </span>
                     
-                    @php $queryParams = request()->except('page'); @endphp
+                    {{-- Si preferís usar la paginación de Laravel nativa con Bootstrap, simplemente usá: --}}
+                    {{-- {{ $personas->appends(request()->query())->links() }} --}}
+                    
+                    {{-- Si querés mantener tu diseño de cuadrados, acá está optimizado: --}}
                     <div class="d-flex gap-1 align-items-center pagination-custom">
                         @if($personas->onFirstPage())
                             <span class="page-box disabled"><i class="bi bi-chevron-left"></i></span>
                         @else
-                            <a href="{{ $personas->previousPageUrl() }}&{{ http_build_query($queryParams) }}" class="page-box"><i class="bi bi-chevron-left"></i></a>
+                            <a href="{{ $personas->previousPageUrl() }}" class="page-box"><i class="bi bi-chevron-left"></i></a>
                         @endif
 
                         @foreach($personas->getUrlRange(max(1, $personas->currentPage()-2), min($personas->lastPage(), $personas->currentPage()+2)) as $page => $url)
                             @if($page == $personas->currentPage())
                                 <span class="page-box active">{{ $page }}</span>
                             @else
-                                <a href="{{ $url }}&{{ http_build_query($queryParams) }}" class="page-box">{{ $page }}</a>
+                                <a href="{{ $url }}" class="page-box">{{ $page }}</a>
                             @endif
                         @endforeach
 
                         @if($personas->hasMorePages())
-                            <a href="{{ $personas->nextPageUrl() }}&{{ http_build_query($queryParams) }}" class="page-box"><i class="bi bi-chevron-right"></i></a>
+                            <a href="{{ $personas->nextPageUrl() }}" class="page-box"><i class="bi bi-chevron-right"></i></a>
                         @else
                             <span class="page-box disabled"><i class="bi bi-chevron-right"></i></span>
                         @endif
@@ -323,5 +291,35 @@
         @endif
     </div>
 </div>
+
+{{-- ESTILOS CSS EXTRAÍDOS (Podés moverlos a tu app.css) --}}
+<style>
+    .page-header-gradient { background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); }
+    .btn-gradient-primary { background: linear-gradient(135deg, #0d92c2, #17a385); color: white; border: none; transition: all 0.2s; }
+    .btn-gradient-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(13,146,194,0.3); color: white; }
+    .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .cursor-pointer { cursor: pointer; }
+    
+    .list-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap: 10px; }
+    .row-grid { transition: background 0.15s ease; background-color: white; }
+    .row-grid:hover { background-color: #f8fafc; }
+    
+    .avatar-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .icon-circle { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    
+    .btn-action { width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; transition: all 0.15s; }
+    
+    .bg-purple-subtle { background-color: #f3e8ff; }
+    .text-purple { color: #6b21a8; }
+    .border-purple-subtle { border-color: #d8b4fe !important; }
+
+    .pagination-custom .page-box { width: 34px; height: 34px; border-radius: 8px; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; text-decoration: none; color: #64748b; background: white; transition: all 0.2s; }
+    .pagination-custom a.page-box:hover { background: #e6f5fb; border-color: #b3e0f5; color: #0879a8; }
+    .pagination-custom .page-box.active { background: linear-gradient(135deg, #0d92c2, #1aaad8); color: white; border-color: #0d92c2; font-weight: bold; }
+    .pagination-custom .page-box.disabled { color: #cbd5e1; background: #f8fafc; cursor: not-allowed; }
+
+    [data-bs-toggle="collapse"][aria-expanded="true"] .bi-chevron-down { transform: rotate(180deg); }
+    .transition-transform { transition: transform 0.3s ease; }
+</style>
 
 @endsection
