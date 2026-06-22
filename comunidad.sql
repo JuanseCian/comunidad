@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 16-06-2026 a las 14:50:51
+-- Tiempo de generación: 22-06-2026 a las 15:45:02
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -576,7 +576,8 @@ CREATE TABLE `familias` (
 --
 
 INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
-(58, 'JKW847IRU', '2026-06-16 17:49:11', '2026-06-16 17:49:11');
+(58, 'JKW847IRU', '2026-06-16 17:49:11', '2026-06-16 17:49:11'),
+(59, 'TND173RRW', '2026-06-17 16:15:53', '2026-06-17 16:15:53');
 
 -- --------------------------------------------------------
 
@@ -1116,6 +1117,13 @@ CREATE TABLE `personas` (
   `creado_por_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Volcado de datos para la tabla `personas`
+--
+
+INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `cud_numero`, `cud_vencimiento`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`, `estado`, `creado_por_id`) VALUES
+(78, 59, 'hernan', 'vilchez', NULL, NULL, 1, '41145735', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-06-17 16:15:53', '2026-06-17 16:15:53', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -1172,6 +1180,13 @@ CREATE TABLE `persona_programa` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `persona_programa`
+--
+
+INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `sede_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `en_adaptacion`, `fecha_limite_adaptacion`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
+(74, 78, 4, 1, '2026-06-17', NULL, 1, 'destinatario', 0, NULL, NULL, NULL, '2026-06-17 16:16:01', '2026-06-17 16:16:01');
 
 -- --------------------------------------------------------
 
@@ -2526,7 +2541,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT de la tabla `familias`
 --
 ALTER TABLE `familias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT de la tabla `genero_percibido`
@@ -2592,7 +2607,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_beneficio`
@@ -2610,7 +2625,7 @@ ALTER TABLE `persona_nucleo`
 -- AUTO_INCREMENT de la tabla `persona_programa`
 --
 ALTER TABLE `persona_programa`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_trabajo`

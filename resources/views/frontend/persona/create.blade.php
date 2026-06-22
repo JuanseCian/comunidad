@@ -625,10 +625,6 @@
         // Inicializar filtro de barrios según localidad ya seleccionada (old())
         const localidadInicial = document.getElementById('select-localidad').value;
         if (localidadInicial) filtrarBarrios(localidadInicial);
-('input[type="checkbox"].toggle-init, input[type="checkbox"][onchange]').forEach(function(chk) {
-            toggleSlider(chk);
-        });
-
 
         document.querySelectorAll('input[type="checkbox"]').forEach(function(chk) {
             const track = chk.nextElementSibling;

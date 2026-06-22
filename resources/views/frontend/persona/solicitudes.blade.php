@@ -23,13 +23,14 @@
                             <td>{{ $p->created_at->format('d/m/Y H:i') }}</td>
                             <td><strong>{{ $p->apellido }}, {{ $p->nombre }}</strong></td>
                             <td>{{ $p->dni }}</td>
-                            <td>{{ $p->sedeOrigen->nombre ?? 'No asignada' }}</td>
+                            <td>{{ $p->sedeOrigen?->nombre ?? 'No asignada' }}</td>
                             <td class="text-end">
                                 <!-- Botón Aprobar (Verde) -->
                                 <form action="{{ route('personas.aprobar', $p->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="btn btn-sm btn-success" title="Aprobar Alta">
+                                    <button type="submit" class="btn btn-sm btn-success" title="Aprobar Alta"
+                                            onclick="return confirm('¿Aprobar el alta de {{ $p->apellido }}, {{ $p->nombre }}?')">
                                         <i class="bi bi-check-lg"></i>
                                     </button>
                                 </form>

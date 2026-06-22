@@ -2,18 +2,7 @@
 
 @section('title', $persona->apellido . ', ' . $persona->nombre . ' — Perfil')
 
-@section('content')
-
-@php
-    $alerta          = $persona->alertaPrograma();
-    $edad            = \Carbon\Carbon::parse($persona->fecha_nacimiento)->age;
-    $trabajoActual   = $persona->trabajos->firstWhere('fecha_fin', null);
-    $historialLaboral = $persona->trabajos->filter(fn($t) => !is_null($t->fecha_fin));
-@endphp
-
-{{-- ══════════════════════════════════════════
-     ESTILOS
-══════════════════════════════════════════ --}}
+@push('styles')
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
@@ -273,6 +262,16 @@
         flex: 1;
     }
 </style>
+@endpush
+
+@section('content')
+
+@php
+    $alerta           = $persona->alertaPrograma();
+    $edad             = $persona->fecha_nacimiento ? \Carbon\Carbon::parse($persona->fecha_nacimiento)->age : null;
+    $trabajoActual    = $persona->trabajos->firstWhere('fecha_fin', null);
+    $historialLaboral = $persona->trabajos->filter(fn($t) => !is_null($t->fecha_fin));
+@endphp
 
 {{-- ══════════════════════════════════════════
      MODAL: Sugerencia de cambio de programa
@@ -2041,10 +2040,11 @@
                             onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'">
                         <option value="" disabled selected>Seleccionar programa...</option>
                         @foreach($programas as $p)
-                            @if(($p->nombre == 'Guarderia'    && $edad <= 5)  ||
+                            @if(!is_null($edad) && (
+                                ($p->nombre == 'Guarderia'    && $edad <= 5)  ||
                                 ($p->nombre == 'UDI'          && $edad >= 6  && $edad <= 11) ||
                                 ($p->nombre == 'Envion'       && $edad >= 12) ||
-                                ($p->nombre == 'Multiespacio' && $edad >= 12))
+                                ($p->nombre == 'Multiespacio' && $edad >= 12)))
                                 <option value="{{ $p->id }}" data-programa="{{ $p->nombre }}">{{ $p->nombre }}</option>
                             @endif
                         @endforeach
@@ -2070,7 +2070,7 @@
                     <select name="rol" required
                             style="width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border);">
                         <option value="destinatario">Destinatario</option>
-                        @if($edad >= 18 && $edad <= 25)
+                        @if(!is_null($edad) && $edad >= 18 && $edad <= 25)
                             <option value="tutor">Tutor</option>
                         @endif
                     </select>
