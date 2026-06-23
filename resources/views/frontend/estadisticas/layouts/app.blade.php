@@ -217,10 +217,91 @@
                 margin-left: 0;
             }
         }
+
+        /* ==========================================
+           7. PRELOADER OPTIMIZADO (MÓDULO ESTADÍSTICAS)
+        ========================================== */
+        .page-preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--bi-sidebar-bg); /* Cambia dinámicamente según Light/Dark Mode */
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .page-preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .balls-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .balls-container .ball {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            animation: ball-bounce 1.4s infinite ease-in-out both;
+        }
+
+        /* Tonos coordinados con la identidad visual del panel analítico */
+        .balls-container .ball:nth-child(1) {
+            background: var(--bi-blue);
+            animation-delay: -0.32s;
+        }
+        .balls-container .ball:nth-child(2) {
+            background: #60a5fa; /* Azul complementario brillante */
+            animation-delay: -0.16s;
+        }
+        .balls-container .ball:nth-child(3) {
+            background: var(--bi-icon-color);
+            animation-delay: 0s;
+        }
+
+        @keyframes ball-bounce {
+            0%, 80%, 100% { 
+                transform: scale(0);
+                opacity: 0.3;
+            } 
+            40% { 
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .preloader-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--bi-icon-color);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 
 <body>
+
+    <div class="page-preloader" id="pagePreloader">
+        <div class="balls-container">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+        </div>
+        <div class="preloader-text">Procesando Métricas...</div>
+    </div>
 
     @auth
         @if(auth()->user()->rol_id == 4)
@@ -295,6 +376,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // ==========================================
+        // CAPA ULTRA-SEGURA ANTI-TRABA PRELOADER
+        // ==========================================
+        const hidePreloader = () => {
+            const preloader = document.getElementById('pagePreloader');
+            if (preloader && !preloader.classList.contains('hidden')) {
+                preloader.classList.add('hidden');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 250);
+            }
+        };
+
+        // 1. SEGURO ANTI-CONGELAMIENTO EN LOCAL: Máximo 700ms de espera e interrumpe de raíz
+        setTimeout(hidePreloader, 700);
+
+        // 2. Apagado inmediato si el HTML ya se procesó
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            hidePreloader();
+        } else {
+            document.addEventListener('DOMContentLoaded', hidePreloader);
+        }
+
+        // 3. Respaldo clásico de carga de recursos
+        window.addEventListener('load', hidePreloader);
+
+
+        // ==========================================
+        // LÓGICA ORIGINAL DE COMPONENTE PANEL
+        // ==========================================
         function toggleSidebar() {
             if (window.innerWidth >= 992) {
                 document.body.classList.toggle('sidebar-collapsed');
