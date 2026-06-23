@@ -10,456 +10,28 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        /* ==========================================
-           1. VARIABLES GLOBALES Y COLORES
-        ========================================== */
-        :root {
-            --teal-50:   #e8f9f5; --teal-100: #c2eee3; --teal-300: #5dc9a8;
-            --teal-400: #2db896; --teal-500: #17a385; --teal-600: #0e8a70; --teal-700: #086f59;
-            --sky-50:   #e6f5fb; --sky-100:  #b3e0f5; --sky-300:  #4dbde8;
-            --sky-400:  #1aaad8; --sky-500:  #0d92c2; --sky-600:  #0879a8; --sky-700:  #045f87;
-            --neutral-50:  #f8fafb; --neutral-100: #eef2f5; --neutral-200: #dde3ea;
-            --neutral-400: #94a3b4; --neutral-600: #536070; --neutral-800: #1e293b;
-
-            --grad-main: linear-gradient(135deg, #0d92c2 0%, #17a385 100%);
-            --grad-nav:  linear-gradient(90deg, #0879a8 0%, #0e8a70 100%);
-            --shadow-sm: 0 2px 4px rgba(0,0,0,.04);
-            --shadow-md: 0 4px 12px rgba(13,146,194,.08);
-            --shadow-lg: 0 10px 32px rgba(0,0,0,.12);
-        }
-
-        *, *::before, *::after { box-sizing: border-box; }
-        
-        body {
-            background: var(--neutral-50);
-            font-family: 'Nunito', sans-serif;
-            color: var(--neutral-800);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        .topbar {
-            background: var(--grad-nav);
-            height: 76px;
-            position: sticky;
-            top: 0;
-            z-index: 1040;
-            box-shadow: var(--shadow-md);
-            padding: 0 1.5rem;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .nav-brand-wrapper { justify-self: start; }
-        .nav-brand {
-            display: flex; align-items: center; gap: 12px; text-decoration: none;
-        }
-        .nav-brand-icon {
-            width: 42px; height: 42px; 
-            background: rgba(255,255,255,.15);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: white;
-        }
-        .nav-brand-text { display: flex; flex-direction: column; }
-        .nav-brand-text span:first-child {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 800; font-size: 16px; color: white; line-height: 1.1;
-        }
-        .nav-brand-text span:last-child {
-            font-size: 11px; color: rgba(255,255,255,.7);
-            font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-        }
-
-        .nav-links {
-            justify-self: center;
-            display: flex; align-items: center; gap: 12px;
-            list-style: none; margin: 0; padding: 0;
-        }
-        .nav-links > li > a {
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 16px; border-radius: 10px;
-            color: rgba(255,255,255,.8); font-weight: 700; font-size: 14.5px;
-            text-decoration: none; transition: all 0.2s ease;
-        }
-        .nav-links > li > a:hover, .nav-links > li > a.active {
-            color: white; background: rgba(255,255,255,.15);
-        }
-
-        .nav-links .btn-estadisticas-mid {
-            background: rgba(255,255,255,.08);
-            border: 1px solid rgba(255,255,255,.2);
-        }
-        .nav-links .btn-estadisticas-mid:hover {
-            background: white; color: var(--teal-700); border-color: white;
-        }
-
-        .nav-actions { justify-self: end; display: flex; align-items: center; gap: 12px; }
-        
-        .btn-perfil {
-            width: 44px; height: 44px;
-            border-radius: 50%; border: 2px solid rgba(255,255,255,.4);
-            background: white; color: var(--teal-600);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 800; font-size: 15px;
-            cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: var(--shadow-sm);
-        }
-        .btn-perfil:hover { transform: scale(1.05); border-color: white; box-shadow: var(--shadow-md); }
-
-        .nav-toggler {
-            display: none; background: rgba(255,255,255,.15);
-            border: 1px solid rgba(255,255,255,.2); border-radius: 10px; 
-            color: white; padding: 8px 14px; font-size: 22px; cursor: pointer;
-        }
-
-        /* ==========================================
-           3. DRAWER UNIFICADO (Panel Móvil y Perfil)
-        ========================================== */
-        .drawer-overlay {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(4px); z-index: 1050; opacity: 0; pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        .drawer-overlay.open { opacity: 1; pointer-events: all; }
-
-        .drawer {
-            position: fixed; top: 0; right: 0; bottom: 0;
-            width: 340px; max-width: 85vw; background: white; z-index: 1060;
-            transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column; box-shadow: -8px 0 30px rgba(0,0,0,.1);
-        }
-        .drawer.open { transform: translateX(0); }
-
-        .drawer-head { background: var(--grad-nav); padding: 24px 20px; position: relative; }
-        .drawer-close {
-            position: absolute; top: 16px; right: 16px;
-            background: transparent; border: none; 
-            width: 32px; height: 32px; color: white; font-size: 20px; cursor: pointer;
-            transition: all 0.2s; display: flex; align-items: center; justify-content: center;
-            border-radius: 0;
-        }
-        .drawer-close:hover { 
-            background: transparent;
-            opacity: 0.8;
-        }
-
-        .drawer-avatar-big {
-            width: 64px; height: 64px; border-radius: 50%; background: white; color: var(--teal-600);
-            font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 22px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 12px; border: 3px solid rgba(255,255,255,.5);
-        }
-        .drawer-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 18px; color: white; }
-        .drawer-role { font-size: 13px; color: rgba(255,255,255,.8); }
-
-        .drawer-body { flex: 1; overflow-y: auto; padding: 16px; }
-        .drawer-section-label {
-            font-size: 11px; font-weight: 800; letter-spacing: 1px;
-            text-transform: uppercase; color: var(--neutral-400); margin: 16px 0 8px 8px;
-        }
-        
-        .drawer-item {
-            display: flex; align-items: center; gap: 12px; padding: 10px 12px;
-            border-radius: 10px; color: var(--neutral-800); font-size: 14.5px; font-weight: 600;
-            text-decoration: none; transition: background 0.2s; border: none; width: 100%; text-align: left; background: transparent;
-        }
-        .drawer-item:hover { background: var(--neutral-100); color: var(--teal-700); }
-        .drawer-item-icon {
-            width: 34px; height: 34px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; font-size: 16px;
-        }
-        
-        .icon-teal { background: var(--teal-50); color: var(--teal-600); }
-        .icon-sky { background: var(--sky-50); color: var(--sky-600); }
-        .icon-purple { background: #f3f0ff; color: #7c3aed; }
-        .icon-info { background: #dbeafe; color: #0369a1; }
-        .drawer-divider { height: 1px; background: var(--neutral-200); margin: 12px 0; }
-
-        .drawer-foot { padding: 16px; border-top: 1px solid var(--neutral-100); }
-        .btn-logout-drawer {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            width: 100%; padding: 12px; border-radius: 10px;
-            background: #fef2f2; border: 1px solid #fecaca; color: #ef4444; font-size: 14px; font-weight: 700;
-            cursor: pointer; transition: background 0.2s;
-        }
-        .btn-logout-drawer:hover { background: #fee2e2; }
-
-        /* ==========================================
-           4. RESPONSIVE Y CONTENIDO (MAIN)
-        ========================================== */
-        main { flex: 1; padding: 0; }
-
-        /* ==========================================
-           MEJORAS EXCLUSIVAS DEL FOOTER
-        ========================================== */
-        footer { 
-            background: white; 
-            border-top: 1px solid var(--neutral-200); 
-            padding: 35px 0 20px 0; 
-        }
-        .footer-brand { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            font-weight: 800; 
-            background: var(--grad-main); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            font-size: 18px; 
-            margin-bottom: 4px;
-            display: inline-flex;
-            align-items: center;
-        }
-        .footer-brand i {
-            background: var(--grad-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .footer-subtitle {
-            font-size: 12.5px;
-            color: var(--neutral-600);
-            font-weight: 600;
-            line-height: 1.5;
-            margin: 0;
-        }
-        .footer-info-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--neutral-600);
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-        .footer-info-item:last-child {
-            margin-bottom: 0;
-        }
-        .footer-info-item i {
-            color: var(--sky-500);
-            font-size: 14px;
-        }
-        .footer-info-item a {
-            color: var(--neutral-600);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-        .footer-info-item a:hover {
-            color: var(--teal-500);
-        }
-        .footer-divider {
-            height: 1px;
-            background: var(--neutral-200);
-            margin: 20px 0 15px 0;
-            opacity: 0.6;
-        }
-        .footer-copyright { 
-            color: var(--neutral-400); 
-            font-size: 12px; 
-            margin: 0; 
-            font-weight: 500;
-        }
-
-        /* ==========================================
-           5. MODAL INFORMACIÓN DEL SISTEMA (REDiseñado)
-        ========================================== */
-        #sysInfoModal .modal-content {
-            border-radius: 20px;
-            border: none;
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-            background: #ffffff;
-        }
-        #sysInfoModal .modal-header {
-            background: var(--grad-nav);
-            border: none;
-            padding: 24px 28px;
-            position: relative;
-        }
-        #sysInfoModal .modal-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 800;
-            color: white;
-            font-size: 20px;
-            letter-spacing: -0.3px;
-        }
-        #sysInfoModal .modal-header .btn-close {
-            filter: invert(1) brightness(200%);
-            opacity: 0.8;
-            transition: all 0.2s;
-        }
-        #sysInfoModal .modal-header .btn-close:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-        #sysInfoModal .modal-body {
-            padding: 32px 28px;
-            background: #fdfefe;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-        @media (min-width: 768px) {
-            .info-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .info-section.full-width {
-                grid-column: span 2;
-            }
-        }
-        .info-section {
-            background: white;
-            border: 1px solid var(--neutral-200);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .info-section:hover {
-            box-shadow: 0 6px 16px rgba(0,0,0,.03);
-        }
-        .info-section-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 800;
-            color: var(--teal-600);
-            font-size: 13.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid var(--teal-50);
-            padding-bottom: 8px;
-        }
-        .info-section-title i {
-            font-size: 16px;
-        }
-        .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 8px 0;
-            font-size: 14.5px;
-            border-bottom: 1px dashed var(--neutral-100);
-        }
-        .info-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-        @media (min-width: 480px) {
-            .info-item {
-                flex-direction: row;
-                align-items: flex-start;
-                gap: 12px;
-            }
-            .info-item-label {
-                min-width: 130px;
-                max-width: 130px;
-                margin-bottom: 0;
-            }
-        }
-        .info-item-label {
-            font-weight: 700;
-            color: var(--neutral-800);
-        }
-        .info-item-value {
-            flex: 1;
-            color: var(--neutral-600);
-            line-height: 1.5;
-        }
-        .info-text-block {
-            color: var(--neutral-600);
-            font-size: 14.5px;
-            line-height: 1.6;
-            margin: 0;
-        }
-        .dev-cards-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-        @media (min-width: 576px) {
-            .dev-cards-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .dev-card.studio-card {
-                grid-column: span 2;
-            }
-        }
-        .dev-card {
-            background: var(--neutral-50);
-            border: 1px solid var(--neutral-200);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            transition: all 0.25s ease;
-        }
-        .dev-card:hover {
-            background: var(--sky-50);
-            border-color: var(--sky-300);
-            transform: translateY(-2px);
-        }
-        .dev-icon-box {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        .dev-info {
-            flex: 1;
-        }
-        .dev-name {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 700;
-            color: var(--neutral-800);
-            font-size: 14.5px;
-            line-height: 1.2;
-        }
-        .dev-role {
-            font-size: 12.5px;
-            color: var(--neutral-600);
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        /* Móviles y Tablets */
-        @media (max-width: 991px) {
-            .topbar { grid-template-columns: 1fr auto; height: 70px; padding: 0 1rem; }
-            .nav-links { display: none; }
-            .btn-perfil { display: none; }
-            .nav-toggler { display: block; }
-            .desktop-only { display: none !important; }
-        }
-        @media (min-width: 992px) {
-            .mobile-only { display: none !important; }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}?v=2">
 </head>
 <body>
+    <div class="page-preloader" id="pagePreloader">
+        <div class="balls-container">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+        </div>
+        <div class="preloader-text">Cargando...</div>
+    </div>
 
     <div class="drawer-overlay" id="drawerOverlay"></div>
 
     <aside class="drawer" id="sideDrawer" role="dialog" aria-modal="true">
         @auth
             <div class="drawer-head">
-                <button class="drawer-close" id="drawerClose"><i class="bi bi-list"></i></button>
+                <button class="drawer-close" id="drawerClose"><i class="bi bi-x-lg"></i></button>
                 <div class="drawer-avatar-big">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                    {{ strtoupper(substr(auth()->user()->nombre, 0, 2)) }}
                 </div>
-                <div class="drawer-name">{{ auth()->user()->name }}</div>
+                <div class="drawer-name">{{ auth()->user()->nombre }}</div>
                 <div class="drawer-role">
                     {{ auth()->user()->rol_id == 3 ? 'Administrador' : 'Usuario' }}
                 </div>
@@ -554,7 +126,7 @@
         <div class="nav-actions">
             @auth 
                 <button class="btn-perfil desktop-only" id="openDrawer" title="{{ auth()->user()->name }}">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                    <i class="bi bi-layout-sidebar"></i>
                 </button>
             @else
                 <a href="{{ route('login') }}" class="btn-nav-login" style="background:white; color:var(--teal-600); padding:8px 18px; border-radius:10px; text-decoration:none; font-weight:700;">
@@ -562,7 +134,7 @@
                 </a>
             @endauth
             
-            <button class="nav-toggler" id="navToggler"><i class="bi bi-list"></i></button>
+            <button class="nav-toggler" id="navToggler"><i class="bi bi-layout-sidebar"></i></button>
         </div>
     </nav>
 
@@ -570,7 +142,6 @@
         @yield('content')
     </main>
 
-    {{-- FOOTER RESTRUCTURADO Y MEJORADO --}}
     <footer>
         <div class="container">
             <div class="row align-items-center row-gap-3">
@@ -722,6 +293,25 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const hidePreloader = () => {
+            const preloader = document.getElementById('pagePreloader');
+            if (preloader && !preloader.classList.contains('hidden')) {
+                preloader.classList.add('hidden');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 300);
+            }
+        };
+
+        setTimeout(hidePreloader, 700);
+
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            hidePreloader();
+        } else {
+            document.addEventListener('DOMContentLoaded', hidePreloader);
+        }
+
+        window.addEventListener('load', hidePreloader);
         document.addEventListener('DOMContentLoaded', () => {
             const drawer = document.getElementById('sideDrawer');
             const overlay = document.getElementById('drawerOverlay');
@@ -745,7 +335,7 @@
 
             if (btnSysInfo) {
                 btnSysInfo.addEventListener('click', () => {
-                    toggleDrawer(false); // Cierra el drawer automáticamente al abrir el modal para UX limpia
+                    toggleDrawer(false); 
                     setTimeout(() => {
                         sysInfoModal.show();
                     }, 350);
@@ -798,7 +388,11 @@
         timer: 4000,
         timerProgressBar: true
     });
+
+    
     </script>
+
+    
     @endif
     @stack('scripts')
 </body>

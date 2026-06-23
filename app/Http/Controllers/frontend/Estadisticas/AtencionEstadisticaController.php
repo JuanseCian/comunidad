@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Frontend\Estadisticas;
+namespace App\Http\Controllers\frontend\Estadisticas;
 
 use App\Http\Controllers\Controller;
 

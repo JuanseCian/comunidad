@@ -2,15 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Frontend\Estadisticas\DashboardController;
-use App\Http\Controllers\Frontend\Estadisticas\IngresoEstadisticaController;
-use App\Http\Controllers\Frontend\Estadisticas\DestinatarioEstadisticaController;
-use App\Http\Controllers\Frontend\Estadisticas\BeneficioEstadisticaController;
-use App\Http\Controllers\Frontend\Estadisticas\AtencionEstadisticaController;
-use App\Http\Controllers\Frontend\Estadisticas\TerritorialEstadisticaController;
-use App\Http\Controllers\Frontend\Estadisticas\FamiliaEstadisticaController;
-use App\Http\Controllers\Frontend\Estadisticas\MercaderiaEstadisticaController;
-use App\Http\Controllers\Frontend\Estadisticas\SepelioEstadisticaController;
+use App\Http\Controllers\frontend\Estadisticas\DashboardController;
+use App\Http\Controllers\frontend\Estadisticas\IngresoEstadisticaController;
+use App\Http\Controllers\frontend\Estadisticas\DestinatarioEstadisticaController;
+use App\Http\Controllers\frontend\Estadisticas\BeneficioEstadisticaController;
+use App\Http\Controllers\frontend\Estadisticas\AtencionEstadisticaController;
+use App\Http\Controllers\frontend\Estadisticas\TerritorialEstadisticaController;
+use App\Http\Controllers\frontend\Estadisticas\FamiliaEstadisticaController;
+use App\Http\Controllers\frontend\Estadisticas\MercaderiaEstadisticaController;
+use App\Http\Controllers\frontend\Estadisticas\SepelioEstadisticaController;
 
 Route::middleware(['auth'])
     ->prefix('estadisticas')

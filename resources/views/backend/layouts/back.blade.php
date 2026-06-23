@@ -136,6 +136,28 @@
             background: rgba(148, 163, 184, 0.2);
             border-radius: 2px;
         }
+
+        /* --- ANIMACIONES ADICIONALES PARA TOASTS --- */
+        @keyframes toastBounceIn {
+            0% { transform: translateX(120%) scale(0.9); opacity: 0; }
+            65% { transform: translateX(-10px) scale(1.02); opacity: 1; }
+            85% { transform: translateX(4px) scale(0.99); }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 var(--pulse-color); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        .premium-toast {
+            animation: toastBounceIn 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .toast-icon-pulse {
+            animation: pulseGlow 2.5s infinite ease-in-out;
+        }
     </style>
 </head>
 <body class="text-slate-900 antialiased">
@@ -315,18 +337,6 @@
                         </span>
                     </nav>
                 </div>
-
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-3 pl-4 border-l border-slate-100">
-                        <div class="text-right hidden sm:block">
-                            <p class="text-xs font-bold text-slate-900">Admin Sistema</p>
-                            <p class="text-[10px] text-slate-400 font-medium">admin@sistema.com</p>
-                        </div>
-                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-sky-400 to-teal-400 flex items-center justify-center text-white font-semibold text-xs shadow-sm">
-                            AD
-                        </div>
-                    </div>
-                </div>
             </header>
 
             {{-- ÁREA DE CONTENIDO --}}
@@ -338,78 +348,115 @@
         </div>
     </div>
 
-    {{-- TOAST NOTIFICATIONS --}}
-    <div class="fixed top-5 right-5 z-[9999] space-y-3">
+    {{-- INTERFAZ PREMIUM DE NOTIFICACIONES GLOW --}}
+    <div class="fixed top-6 right-6 z-[9999] space-y-4 pointer-events-none">
 
+        {{-- SUCCESS TOAST --}}
         @if(session('success'))
             <div
                 x-data="{ show: true }"
                 x-show="show"
-                x-init="setTimeout(() => show = false, 4000)"
-                x-transition
-                class="flex items-center gap-3 bg-emerald-500 text-white px-5 py-4 rounded-xl shadow-2xl min-w-[320px]"
+                x-init="setTimeout(() => show = false, 5000)"
+                x-transition:leave="transition ease-in duration-300 transform opacity-0 translate-x-20"
+                class="premium-toast pointer-events-auto relative overflow-hidden bg-white/90 backdrop-blur-xl rounded-2xl w-[370px] border border-emerald-500/30 p-4 flex items-center gap-4"
+                style="box-shadow: 0 15px 35px -5px rgba(16, 185, 129, 0.2), 0 5px 15px -3px rgba(16, 185, 129, 0.08);"
             >
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-                <span>{{ session('success') }}</span>
+                <div class="absolute -top-12 -left-12 w-32 h-32 bg-emerald-500/10 blur-2xl rounded-full pointer-events-none"></div>
+                <div class="absolute top-0 left-0 bottom-0 w-1.5 bg-emerald-500"></div>
 
-                <button @click="show = false" class="ml-auto">
+                <div class="toast-icon-pulse flex-shrink-0 w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center" style="--pulse-color: rgba(16, 185, 129, 0.35);">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h6 class="text-slate-900 font-extrabold text-sm tracking-tight">¡Operación Exitosa!</h6>
+                    <p class="text-slate-600 text-xs font-medium leading-relaxed mt-0.5">{{ session('success') }}</p>
+                </div>
+                <button @click="show = false" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition self-start -mt-1 -mr-1">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
         @endif
 
+        {{-- ERROR TOAST --}}
         @if(session('error'))
             <div
                 x-data="{ show: true }"
                 x-show="show"
-                x-init="setTimeout(() => show = false, 5000)"
-                x-transition
-                class="flex items-center gap-3 bg-red-500 text-white px-5 py-4 rounded-xl shadow-2xl min-w-[320px]"
+                x-init="setTimeout(() => show = false, 6000)"
+                x-transition:leave="transition ease-in duration-300 transform opacity-0 translate-x-20"
+                class="premium-toast pointer-events-auto relative overflow-hidden bg-white/90 backdrop-blur-xl rounded-2xl w-[370px] border border-red-500/30 p-4 flex items-center gap-4"
+                style="box-shadow: 0 15px 35px -5px rgba(239, 68, 68, 0.2), 0 5px 15px -3px rgba(239, 68, 68, 0.08);"
             >
-                <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                <span>{{ session('error') }}</span>
+                <div class="absolute -top-12 -left-12 w-32 h-32 bg-red-500/10 blur-2xl rounded-full pointer-events-none"></div>
+                <div class="absolute top-0 left-0 bottom-0 w-1.5 bg-red-500"></div>
 
-                <button @click="show = false" class="ml-auto">
+                <div class="toast-icon-pulse flex-shrink-0 w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center" style="--pulse-color: rgba(239, 68, 68, 0.35);">
+                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h6 class="text-slate-900 font-extrabold text-sm tracking-tight">Ha ocurrido un error</h6>
+                    <p class="text-slate-600 text-xs font-medium leading-relaxed mt-0.5">{{ session('error') }}</p>
+                </div>
+                <button @click="show = false" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition self-start -mt-1 -mr-1">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
         @endif
 
+        {{-- WARNING TOAST --}}
         @if(session('warning'))
             <div
                 x-data="{ show: true }"
                 x-show="show"
-                x-init="setTimeout(() => show = false, 5000)"
-                x-transition
-                class="flex items-center gap-3 bg-amber-500 text-white px-5 py-4 rounded-xl shadow-2xl min-w-[320px]"
+                x-init="setTimeout(() => show = false, 6000)"
+                x-transition:leave="transition ease-in duration-300 transform opacity-0 translate-x-20"
+                class="premium-toast pointer-events-auto relative overflow-hidden bg-white/90 backdrop-blur-xl rounded-2xl w-[370px] border border-amber-500/30 p-4 flex items-center gap-4"
+                style="box-shadow: 0 15px 35px -5px rgba(245, 158, 11, 0.2), 0 5px 15px -3px rgba(245, 158, 11, 0.08);"
             >
-                <i data-lucide="triangle-alert" class="w-5 h-5"></i>
-                <span>{{ session('warning') }}</span>
+                <div class="absolute -top-12 -left-12 w-32 h-32 bg-amber-500/10 blur-2xl rounded-full pointer-events-none"></div>
+                <div class="absolute top-0 left-0 bottom-0 w-1.5 bg-amber-500"></div>
 
-                <button @click="show = false" class="ml-auto">
+                <div class="toast-icon-pulse flex-shrink-0 w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center" style="--pulse-color: rgba(245, 158, 11, 0.35);">
+                    <i data-lucide="triangle-alert" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h6 class="text-slate-900 font-extrabold text-sm tracking-tight">Atención Requerida</h6>
+                    <p class="text-slate-600 text-xs font-medium leading-relaxed mt-0.5">{{ session('warning') }}</p>
+                </div>
+                <button @click="show = false" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition self-start -mt-1 -mr-1">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
         @endif
 
+        {{-- INFO TOAST --}}
         @if(session('info'))
             <div
                 x-data="{ show: true }"
                 x-show="show"
                 x-init="setTimeout(() => show = false, 5000)"
-                x-transition
-                class="flex items-center gap-3 bg-sky-500 text-white px-5 py-4 rounded-xl shadow-2xl min-w-[320px]"
+                x-transition:leave="transition ease-in duration-300 transform opacity-0 translate-x-20"
+                class="premium-toast pointer-events-auto relative overflow-hidden bg-white/90 backdrop-blur-xl rounded-2xl w-[370px] border border-sky-500/30 p-4 flex items-center gap-4"
+                style="box-shadow: 0 15px 35px -5px rgba(14, 165, 233, 0.2), 0 5px 15px -3px rgba(14, 165, 233, 0.08);"
             >
-                <i data-lucide="info" class="w-5 h-5"></i>
-                <span>{{ session('info') }}</span>
+                <div class="absolute -top-12 -left-12 w-32 h-32 bg-sky-500/10 blur-2xl rounded-full pointer-events-none"></div>
+                <div class="absolute top-0 left-0 bottom-0 w-1.5 bg-sky-500"></div>
 
-                <button @click="show = false" class="ml-auto">
+                <div class="toast-icon-pulse flex-shrink-0 w-11 h-11 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center" style="--pulse-color: rgba(14, 165, 233, 0.35);">
+                    <i data-lucide="info" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h6 class="text-slate-900 font-extrabold text-sm tracking-tight">Información del Sistema</h6>
+                    <p class="text-slate-600 text-xs font-medium leading-relaxed mt-0.5">{{ session('info') }}</p>
+                </div>
+                <button @click="show = false" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition self-start -mt-1 -mr-1">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
         @endif
 
     </div>
+
     <script>
         lucide.createIcons();
     </script>
