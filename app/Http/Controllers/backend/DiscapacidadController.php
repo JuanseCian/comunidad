@@ -23,7 +23,9 @@ class DiscapacidadController extends Controller
     {
         $request->validate(['nombre' => 'required|string|max:100']);
         Discapacidad::create($request->all());
-        return redirect()->route('discapacidades.index');
+        return redirect()
+        ->route('discapacidades.index')
+        ->with('success', 'Discapacidad creada exitosamente.');
     }
 
     public function edit(Discapacidad $discapacidad)
@@ -35,12 +37,16 @@ class DiscapacidadController extends Controller
     {
         $request->validate(['nombre' => 'required|string|max:100']);
         $discapacidad->update($request->all());
-        return redirect()->route('discapacidades.index');
+        return redirect()
+        ->route('discapacidades.index')
+        ->with('success', 'Discapacidad actualizada exitosamente.');
     }
 
     public function destroy(Discapacidad $discapacidad)
     {
         $discapacidad->delete();
-        return redirect()->route('discapacidades.index');
+        return redirect()
+        ->route('discapacidades.index')
+        ->with('success', 'Discapacidad eliminada exitosamente.');
     }
 }

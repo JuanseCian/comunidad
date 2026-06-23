@@ -39,7 +39,8 @@
                                 </a>
                                 <form action="{{ route('categorias.destroy', $cat->id) }}" method="POST" class="inline">
                                     @csrf @method('DELETE')
-                                    <button type="submit" onclick="return confirm('¿Eliminar categoría?')"
+                                    <button type="button" 
+                                    onclick="confirmDelete(this.form, 'categoría', '{{ $cat->nombre }}')"
                                             class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
@@ -53,4 +54,5 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

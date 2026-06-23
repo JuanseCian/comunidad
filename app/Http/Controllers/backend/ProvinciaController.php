@@ -22,7 +22,9 @@ class ProvinciaController extends Controller
     public function store(Request $request)
     {
         Provincia::create($request->all());
-        return redirect()->route('provincias.index');
+        return redirect()
+        ->route('provincias.index')
+        ->with('success', 'Provincia creada exitosamente.');
     }
 
     public function edit($id)
@@ -35,12 +37,16 @@ class ProvinciaController extends Controller
     {
         $provincia = Provincia::findOrFail($id);
         $provincia->update($request->all());
-        return redirect()->route('provincias.index');
+        return redirect()
+        ->route('provincias.index')
+        ->with('success', 'Provincia actualizada exitosamente.');
     }
 
     public function destroy($id)
     {
         Provincia::destroy($id);
-        return redirect()->route('provincias.index');
+        return redirect()
+        ->route('provincias.index')
+        ->with('success', 'Provincia eliminada exitosamente.');
     }
 }

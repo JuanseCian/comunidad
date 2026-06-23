@@ -24,7 +24,9 @@ class LocalidadController extends Controller
     public function store(Request $request)
     {
         Localidad::create($request->all());
-        return redirect()->route('localidades.index');
+        return redirect()
+        ->route('localidades.index')
+        ->with('success', 'Localidad creada exitosamente.');
     }
 
     public function edit($id)
@@ -38,12 +40,16 @@ class LocalidadController extends Controller
     {
         $localidad = Localidad::findOrFail($id);
         $localidad->update($request->all());
-        return redirect()->route('localidades.index');
+        return redirect()
+        ->route('localidades.index')
+        ->with('success', 'Localidad actualizada exitosamente.');
     }
 
     public function destroy($id)
     {
         Localidad::destroy($id);
-        return redirect()->route('localidades.index');
+        return redirect()
+        ->route('localidades.index')
+        ->with('success', 'Localidad eliminada exitosamente.');
     }
 }

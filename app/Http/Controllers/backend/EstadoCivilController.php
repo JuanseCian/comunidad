@@ -29,7 +29,9 @@ class EstadoCivilController extends Controller
             'nombre' => $request->nombre
         ]);
 
-        return redirect()->route('estados-civiles.index');
+        return redirect()
+        ->route('estados-civiles.index')
+        ->with('success', 'Estado civil creado exitosamente.');
     }
 
     public function edit($id)
@@ -49,12 +51,16 @@ class EstadoCivilController extends Controller
             'nombre' => $request->nombre
         ]);
 
-        return redirect()->route('estados-civiles.index');
+        return redirect()
+        ->route('estados-civiles.index')
+        ->with('success', 'Estado civil actualizado exitosamente.');
     }
 
     public function destroy($id)
     {
         EstadoCivil::destroy($id);
-        return redirect()->route('estados-civiles.index');
+        return redirect()
+        ->route('estados-civiles.index')
+        ->with('success', 'Estado civil eliminado exitosamente.');
     }
 }

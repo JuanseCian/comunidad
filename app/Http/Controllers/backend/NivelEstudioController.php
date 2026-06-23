@@ -29,7 +29,9 @@ class NivelEstudioController extends Controller
             'nombre' => $request->nombre
         ]);
 
-        return redirect()->route('niveles-estudio.index');
+        return redirect()
+        ->route('niveles-estudio.index')
+        ->with('success', 'Nivel de estudio creado exitosamente.');
     }
 
     public function edit($id)
@@ -49,12 +51,16 @@ class NivelEstudioController extends Controller
             'nombre' => $request->nombre
         ]);
 
-        return redirect()->route('niveles-estudio.index');
+        return redirect()
+        ->route('niveles-estudio.index')
+        ->with('success', 'Nivel de estudio actualizado exitosamente.');
     }
 
     public function destroy($id)
     {
         NivelesEstudio::destroy($id);
-        return redirect()->route('niveles-estudio.index');
+        return redirect()
+        ->route('niveles-estudio.index')
+        ->with('success', 'Nivel de estudio eliminado exitosamente.');
     }
 }

@@ -23,7 +23,9 @@ class CondicionInactividadController extends Controller
     {
         $request->validate(['nombre' => 'required|string|max:100']);
         CondicionInactividad::create($request->all());
-        return redirect()->route('condiciones-inactividad.index');
+        return redirect()
+        ->route('condiciones-inactividad.index')
+        ->with('success', 'Condición de inactividad creada exitosamente.');
     }
 
     public function edit(CondicionInactividad $condicion_inactividad)
@@ -35,12 +37,16 @@ class CondicionInactividadController extends Controller
     {
         $request->validate(['nombre' => 'required|string|max:100']);
         $condicion_inactividad->update($request->all());
-        return redirect()->route('condiciones-inactividad.index');
+        return redirect()
+        ->route('condiciones-inactividad.index')
+        ->with('success', 'Condición de inactividad actualizada exitosamente.');
     }
 
     public function destroy(CondicionInactividad $condicion_inactividad)
     {
         $condicion_inactividad->delete();
-        return redirect()->route('condiciones-inactividad.index');
+        return redirect()
+        ->route('condiciones-inactividad.index')
+        ->with('success', 'Condición de inactividad eliminada exitosamente.');
     }
 }

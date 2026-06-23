@@ -1,2 +1,2 @@
 <?php
-@1include('coberturas.create')
+@include('coberturas.create')

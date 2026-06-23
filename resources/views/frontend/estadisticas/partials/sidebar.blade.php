@@ -78,7 +78,7 @@
            style="background: rgba(239, 68, 68, 0.08); color: #f43f5e;"
            title="Volver al Home">
             <i class="bi bi-box-arrow-left m-0 d-flex align-items-center justify-content-center" style="background: transparent; width:24px; height:24px; font-size:1rem;"></i>
-            <span class="ms-2 small fw-semibold">Volver al Home</span>
+            <span class="ms-2 small fw-semibold">Volver al Inicio</span>
         </a>
         <div class="sidebar-footer-text mt-2 ps-1">
             <span class="text-secondary fw-medium" style="font-size: 0.7rem; letter-spacing: 0.02em;">Desarrollo Humano</span>

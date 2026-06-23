@@ -29,7 +29,9 @@ class ProgramaAsistenciaController extends Controller
             'nombre' => $request->nombre
         ]);
 
-        return redirect()->route('programas-asistencia.index');
+        return redirect()
+        ->route('programas-asistencia.index')
+        ->with('success', 'Programa de asistencia creado exitosamente.');
     }
 
     public function edit($id)
@@ -49,12 +51,16 @@ class ProgramaAsistenciaController extends Controller
             'nombre' => $request->nombre
         ]);
 
-        return redirect()->route('programas-asistencia.index');
+        return redirect()
+        ->route('programas-asistencia.index')
+        ->with('success', 'Programa de asistencia actualizado exitosamente.');
     }
 
     public function destroy($id)
     {
         ProgramasAsistencia::destroy($id);
-        return redirect()->route('programas-asistencia.index');
+        return redirect()
+        ->route('programas-asistencia.index')
+        ->with('success', 'Programa de asistencia eliminado exitosamente.');
     }
 }

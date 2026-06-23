@@ -29,7 +29,9 @@ class BeneficioController extends Controller
             'nombre' => $request->nombre
         ]);
 
-        return redirect()->route('beneficios.index');
+        return redirect()
+        ->route('beneficios.index')
+        ->with('success', 'Beneficio creado exitosamente.');
     }
 
     public function edit($id)
@@ -49,12 +51,16 @@ class BeneficioController extends Controller
             'nombre' => $request->nombre
         ]);
 
-        return redirect()->route('beneficios.index');
+        return redirect()
+        ->route('beneficios.index')
+        ->with('success', 'Beneficio actualizado exitosamente.');
     }
 
     public function destroy($id)
     {
         Beneficio::destroy($id);
-        return redirect()->route('beneficios.index');
+        return redirect()
+        ->route('beneficios.index')
+        ->with('success', 'Beneficio eliminado exitosamente.');
     }
 }
