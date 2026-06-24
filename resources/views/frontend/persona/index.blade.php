@@ -160,7 +160,6 @@
         </div>
     </form>
 
-    {{-- LISTADO DE PERSONAS --}}
     <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
         @if($personas->isEmpty())
             <div class="text-center py-5">

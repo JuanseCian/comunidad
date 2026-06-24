@@ -44,7 +44,7 @@ class RegisteredUserController extends Controller
             'apellido' => $request->apellido,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'rol_id' => 4,
+            'rol_id' => null,
         ]);
 
 
