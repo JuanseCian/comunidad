@@ -62,8 +62,32 @@
                 <div class="drawer-section-label">Programas Sociales</div>
                 @if(isset($programas) && $programas->count() > 0)
                     @foreach($programas as $p)
+                        @php
+                            // Forzamos minúsculas y limpiamos espacios para evitar fallos de coincidencia
+                            $nombreLower = trim(mb_strtolower($p->nombre));
+                            
+                            // Asignación de íconos específicos según palabras clave
+                            if (str_contains($nombreLower, 'envion') || str_contains($nombreLower, 'envión')) {
+                                $iconClass = 'bi-people-fill'; 
+                                $colorClass = 'icon-sky';
+                            } elseif (str_contains($nombreLower, 'udi')) {
+                                $iconClass = 'bi-backpack-fill'; 
+                                $colorClass = 'icon-teal';
+                            } elseif (str_contains($nombreLower, 'guarderia') || str_contains($nombreLower, 'guardería') || str_contains($nombreLower, 'infantil') || str_contains($nombreLower, 'niñ')) {
+                                $iconClass = 'bi-sun-fill';       // Un sol (Básico, súper representativo de jardín/maternal y 100% compatible)
+                                $colorClass = 'icon-teal';
+                            } elseif (str_contains($nombreLower, 'multiespacio') || str_contains($nombreLower, 'discapacidad')) {
+                                $iconClass = 'bi-heart-pulse-fill';
+                                $colorClass = 'icon-purple';
+                            } else {
+                                $iconClass = 'bi-folder2-open'; 
+                                $colorClass = 'icon-teal';
+                            }
+                        @endphp
+
                         <a class="drawer-item" href="{{ route('frontend.programas.show', $p->id) }}">
-                            <span class="drawer-item-icon icon-teal"><i class="bi bi-folder2-open"></i></span> {{ $p->nombre }}
+                            <span class="drawer-item-icon {{ $colorClass }}"><i class="bi {{ $iconClass }}"></i></span> 
+                            {{ $p->nombre }}
                         </a>
                     @endforeach
                 @else

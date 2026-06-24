@@ -10,8 +10,9 @@
     </div>
 @endif
 
-{{-- ESTILOS PARA FIGURAS FLOTANTES Y DELICADAS --}}
+{{-- ESTILOS PARA FIGURAS FLOTANTES Y ANIMACIONES DE BLOQUES --}}
 <style>
+    /* Hero Animations */
     .floating-container {
         position: absolute;
         top: 0;
@@ -19,26 +20,25 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        z-index: 0; /* Queda por detrás del texto */
-        pointer-events: none; /* Para que no interfiera con los clics */
+        z-index: 0;
+        pointer-events: none;
     }
 
     .floating-shape {
         position: absolute;
         bottom: -50px;
-        color: #0d92c2; /* Color base, luego lo variamos */
+        color: #0d92c2;
         opacity: 0;
         animation: floatUp 8s ease-in-out infinite;
     }
 
-    /* Animación: sube, aparece y luego se desvanece */
     @keyframes floatUp {
         0% {
             transform: translateY(0) rotate(0deg) scale(0.8);
             opacity: 0;
         }
         20% {
-            opacity: 0.15; /* Muy transparente y delicado */
+            opacity: 0.15;
         }
         80% {
             opacity: 0.15;
@@ -49,19 +49,37 @@
         }
     }
 
-    /* Posiciones, tamaños, colores y tiempos diferentes para que parezca natural */
-    .shape-1 { left: 10%; font-size: 2rem; animation-delay: 0s; color: #17a385; }      /* Mercadería */
-    .shape-2 { left: 85%; font-size: 3rem; animation-delay: 1.5s; color: #0d92c2; }    /* Cuidado/Niños */
-    .shape-3 { left: 45%; font-size: 1.5rem; animation-delay: 3s; color: #d97706; }    /* Estrellas */
-    .shape-4 { left: 70%; font-size: 2.5rem; animation-delay: 0.5s; color: #7c3aed; }  /* Familia */
-    .shape-5 { left: 25%; font-size: 2rem; animation-delay: 4.5s; color: #0879a8; }    /* Mercadería 2 */
+    .shape-1 { left: 10%; font-size: 2rem; animation-delay: 0s; color: #17a385; }
+    .shape-2 { left: 85%; font-size: 3rem; animation-delay: 1.5s; color: #0d92c2; }
+    .shape-3 { left: 45%; font-size: 1.5rem; animation-delay: 3s; color: #d97706; }
+    .shape-4 { left: 70%; font-size: 2.5rem; animation-delay: 0.5s; color: #7c3aed; }
+    .shape-5 { left: 25%; font-size: 2rem; animation-delay: 4.5s; color: #0879a8; }
+
+    /* Block Entry Animations */
+    @keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-block {
+        opacity: 0; /* Oculto al inicio */
+        animation: slideUpFade 0.6s ease-out forwards;
+    }
+
+    /* Retrasos para el efecto cascada */
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
 </style>
 
 {{-- HERO --}}
-{{-- Le agregamos position: relative y overflow: hidden al section para contener las figuras --}}
 <section style="position: relative; overflow: hidden; background: linear-gradient(135deg, #e6f5fb 0%, #e8f9f5 100%); border-bottom: 1px solid #d0eee7; padding: 2.5rem 0 2rem;">
-    
-    {{-- CONTENEDOR DE FIGURAS ANIMADAS --}}
     <div class="floating-container">
         <i class="bi bi-box-seam floating-shape shape-1"></i>
         <i class="bi bi-balloon-heart floating-shape shape-2"></i>
@@ -70,10 +88,9 @@
         <i class="bi bi-bag-heart floating-shape shape-5"></i>
     </div>
 
-    {{-- El div container ahora necesita position: relative y z-index para estar por encima de las figuras --}}
     <div class="container" style="position: relative; z-index: 1;">
         <div class="row align-items-center">
-            <div class="col-lg-8">
+            <div class="col-lg-8 animate-block">
                 <p style="display:inline-flex; align-items:center; gap:6px; background:white; border:1px solid #b3e0f5; border-radius:40px; padding:5px 14px; font-size:12px; font-weight:700; color:#0879a8; margin-bottom:1rem; box-shadow: 0 4px 10px rgba(8,121,168,0.05);">
                     <span style="width:7px; height:7px; border-radius:50%; background:#17a385; display:inline-block; flex-shrink:0;"></span>
                     {{ now()->locale('es')->isoFormat('dddd D [de] MMMM, YYYY') }}
@@ -90,7 +107,7 @@
             </div>
 
             @if(auth()->user()?->rol_id == 3)
-            <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="col-lg-4 mt-4 mt-lg-0 animate-block delay-1">
                 <a href="{{ route('personas.solicitudes') }}" style="text-decoration:none; display:block;">
                     <div style="background:white; border-radius:14px; padding:18px 20px; box-shadow:0 2px 12px rgba(245,158,11,0.12); border:1px solid #fde68a; display:flex; align-items:center; gap:14px; transition:transform 0.2s;"
                         onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
@@ -112,162 +129,196 @@
 <div class="container py-4">
 
     {{-- ── DESTINATARIOS ────────────────────────────── --}}
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem;">
-        <div style="width:4px; height:22px; background:linear-gradient(180deg,#0879a8,#0d92c2); border-radius:4px; flex-shrink:0;"></div>
-        <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0879a8; margin:0;">Gestión de Destinatarios</p>
-        <div style="flex:1; height:1px; background:linear-gradient(90deg,#b3e0f5,transparent);"></div>
-    </div>
-
-    <div class="row g-3 mb-4">
-
-        @if(auth()->user()?->rol_id != 1)
-        <div class="col-md-6">
-            <a href="{{ route('personas.create') }}" style="text-decoration:none; display:block; height:100%;">
-                <div style="background:white; border-radius:18px; padding:22px; border:1px solid #b3e0f5; border-top:3px solid #0d92c2; box-shadow:0 4px 20px rgba(13,146,194,0.07); transition:transform 0.25s,box-shadow 0.25s; height:100%;"
-                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(13,146,194,0.14)'"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(13,146,194,0.07)'">
-                    <div style="width:44px; height:44px; background:linear-gradient(135deg,#0d92c2,#1aaad8); border-radius:13px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; margin-bottom:10px; box-shadow:0 4px 10px rgba(13,146,194,0.25);">
-                        <i class="bi bi-person-plus-fill"></i>
-                    </div>
-                    <span style="background:#e6f5fb; color:#0879a8; border:1px solid #b3e0f5; border-radius:40px; padding:3px 11px; font-size:11px; font-weight:700; display:inline-block; margin-bottom:8px;">Registro</span>
-                    <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.1rem; color:#0f172a; margin-bottom:6px;">Nuevo Destinatario</h3>
-                    <p style="color:#536070; font-size:13px; font-weight:500; margin:0 0 14px; line-height:1.5;">Registrá un nuevo titular con sus datos personales, domicilio y grupo familiar.</p>
-                    <div style="display:flex; align-items:center; gap:6px; color:#0d92c2; font-weight:700; font-size:13px;">
-                        Iniciar registro <i class="bi bi-arrow-right-circle-fill"></i>
-                    </div>
-                </div>
-            </a>
-        </div>
-        @endif
-
-        <div class="{{ auth()->user()?->rol_id != 1 ? 'col-md-6' : 'col-md-6' }}">
-            <a href="{{ route('personas.index') }}" style="text-decoration:none; display:block; height:100%;">
-                <div style="background:white; border-radius:18px; padding:22px; border:1px solid #9fe1cb; border-top:3px solid #17a385; box-shadow:0 4px 20px rgba(23,163,133,0.07); transition:transform 0.25s,box-shadow 0.25s; height:100%;"
-                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(23,163,133,0.14)'"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(23,163,133,0.07)'">
-                    <div style="width:44px; height:44px; background:linear-gradient(135deg,#17a385,#2db896); border-radius:13px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; margin-bottom:10px; box-shadow:0 4px 10px rgba(23,163,133,0.25);">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <span style="background:#e8f9f5; color:#0e8a70; border:1px solid #9fe1cb; border-radius:40px; padding:3px 11px; font-size:11px; font-weight:700; display:inline-block; margin-bottom:8px;">Padrón</span>
-                    <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.1rem; color:#0f172a; margin-bottom:6px;">Ver Destinatarios</h3>
-                    <p style="color:#536070; font-size:13px; font-weight:500; margin:0 0 14px; line-height:1.5;">Consultá, buscá y gestioná todos los destinatarios registrados en el sistema.</p>
-                    <div style="display:flex; align-items:center; gap:6px; color:#17a385; font-weight:700; font-size:13px;">
-                        Ver listado <i class="bi bi-arrow-right-circle-fill"></i>
-                    </div>
-                </div>
-            </a>
+    <div class="animate-block delay-1">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem;">
+            <div style="width:4px; height:22px; background:linear-gradient(180deg,#0879a8,#0d92c2); border-radius:4px; flex-shrink:0;"></div>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0879a8; margin:0;">Gestión de Destinatarios</p>
+            <div style="flex:1; height:1px; background:linear-gradient(90deg,#b3e0f5,transparent);"></div>
         </div>
 
-        <div class="col-12">
-            <a href="{{ route('familias.index') }}" style="text-decoration:none; display:block;">
-                <div style="background:white; border-radius:18px; padding:22px; border:1px solid #ddd6fe; border-top:3px solid #7c3aed; box-shadow:0 4px 20px rgba(124,58,237,0.07); transition:transform 0.25s,box-shadow 0.25s;"
-                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 28px rgba(124,58,237,0.13)'"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(124,58,237,0.07)'">
-                    <div style="display:flex; align-items:center; gap:16px;">
-                        <div style="width:44px; height:44px; background:linear-gradient(135deg,#7c3aed,#8b5cf6); border-radius:13px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; flex-shrink:0; box-shadow:0 4px 10px rgba(124,58,237,0.25);">
-                            <i class="bi bi-diagram-3-fill"></i>
+        <div class="row g-3 mb-4">
+            @if(auth()->user()?->rol_id != 1)
+            <div class="col-md-6">
+                <a href="{{ route('personas.create') }}" style="text-decoration:none; display:block; height:100%;">
+                    <div style="background:white; border-radius:18px; padding:22px; border:1px solid #b3e0f5; border-top:3px solid #0d92c2; box-shadow:0 4px 20px rgba(13,146,194,0.07); transition:transform 0.25s,box-shadow 0.25s; height:100%;"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(13,146,194,0.14)'"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(13,146,194,0.07)'">
+                        <div style="width:44px; height:44px; background:linear-gradient(135deg,#0d92c2,#1aaad8); border-radius:13px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; margin-bottom:10px; box-shadow:0 4px 10px rgba(13,146,194,0.25);">
+                            <i class="bi bi-person-plus-fill"></i>
                         </div>
-                        <div style="flex:1; min-width:0;">
-                            <span style="background:#f3e8ff; color:#6d28d9; border:1px solid #d8b4fe; border-radius:40px; padding:3px 11px; font-size:11px; font-weight:700; display:inline-block; margin-bottom:5px;">Familias</span>
-                            <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.05rem; color:#0f172a; margin-bottom:3px;">Grupos Familiares</h3>
-                            <p style="color:#536070; font-size:13px; font-weight:500; margin:0; line-height:1.4;">Consultá grupos familiares, integrantes y códigos de referencia.</p>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:6px; color:#7c3aed; font-weight:700; font-size:13px; flex-shrink:0;">
-                            Ver grupos <i class="bi bi-arrow-right-circle-fill"></i>
+                        <span style="background:#e6f5fb; color:#0879a8; border:1px solid #b3e0f5; border-radius:40px; padding:3px 11px; font-size:11px; font-weight:700; display:inline-block; margin-bottom:8px;">Registro</span>
+                        <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.1rem; color:#0f172a; margin-bottom:6px;">Nuevo Destinatario</h3>
+                        <p style="color:#536070; font-size:13px; font-weight:500; margin:0 0 14px; line-height:1.5;">Registrá un nuevo titular con sus datos personales, domicilio y grupo familiar.</p>
+                        <div style="display:flex; align-items:center; gap:6px; color:#0d92c2; font-weight:700; font-size:13px;">
+                            Iniciar registro <i class="bi bi-arrow-right-circle-fill"></i>
                         </div>
                     </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
+            @endif
 
-    </div>
-
-    {{-- ── PROGRAMAS ─────────────────────────────────── --}}
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem;">
-        <div style="width:4px; height:22px; background:linear-gradient(180deg,#17a385,#5dc9a8); border-radius:4px; flex-shrink:0;"></div>
-        <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0e8a70; margin:0;">Programas de Acompañamiento</p>
-        <div style="flex:1; height:1px; background:linear-gradient(90deg,#9fe1cb,transparent);"></div>
-    </div>
-
-    <div class="row g-3 mb-4">
-        @foreach($programas as $p)
-        <div class="col-sm-6 col-lg-3">
-            <a href="{{ route('frontend.programas.show', $p->id) }}" style="text-decoration:none; display:block; height:100%;">
-                <div style="background:white; border-radius:16px; padding:18px 16px; border:1px solid #dbeafe; border-top:3px solid #0d92c2; box-shadow:0 2px 10px rgba(0,0,0,0.04); transition:transform 0.22s,box-shadow 0.22s; height:100%;"
-                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 22px rgba(0,0,0,0.09)'"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(0,0,0,0.04)'">
-                    <div style="width:38px; height:38px; background:#e6f5fb; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:18px; color:#0d92c2; margin-bottom:10px;">
-                        <i class="bi bi-folder-fill"></i>
+            <div class="{{ auth()->user()?->rol_id != 1 ? 'col-md-6' : 'col-md-6' }}">
+                <a href="{{ route('personas.index') }}" style="text-decoration:none; display:block; height:100%;">
+                    <div style="background:white; border-radius:18px; padding:22px; border:1px solid #9fe1cb; border-top:3px solid #17a385; box-shadow:0 4px 20px rgba(23,163,133,0.07); transition:transform 0.25s,box-shadow 0.25s; height:100%;"
+                        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 32px rgba(23,163,133,0.14)'"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(23,163,133,0.07)'">
+                        <div style="width:44px; height:44px; background:linear-gradient(135deg,#17a385,#2db896); border-radius:13px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; margin-bottom:10px; box-shadow:0 4px 10px rgba(23,163,133,0.25);">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <span style="background:#e8f9f5; color:#0e8a70; border:1px solid #9fe1cb; border-radius:40px; padding:3px 11px; font-size:11px; font-weight:700; display:inline-block; margin-bottom:8px;">Padrón</span>
+                        <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.1rem; color:#0f172a; margin-bottom:6px;">Ver Destinatarios</h3>
+                        <p style="color:#536070; font-size:13px; font-weight:500; margin:0 0 14px; line-height:1.5;">Consultá, buscá y gestioná todos los destinatarios registrados en el sistema.</p>
+                        <div style="display:flex; align-items:center; gap:6px; color:#17a385; font-weight:700; font-size:13px;">
+                            Ver listado <i class="bi bi-arrow-right-circle-fill"></i>
+                        </div>
                     </div>
-                    <span style="background:#e6f5fb; color:#0d92c2; border:1px solid #b3e0f5; border-radius:40px; padding:2px 9px; font-size:10.5px; font-weight:700; display:inline-block; margin-bottom:7px;">Programa</span>
-                    <h6 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px; color:#0f172a; margin:0 0 4px;">{{ $p->nombre }}</h6>
-                    <p style="font-size:12px; color:#536070; font-weight:500; margin:0; line-height:1.4;">Ver destinatarios asociados.</p>
-                </div>
-            </a>
+                </a>
+            </div>
+
+            <div class="col-12">
+                <a href="{{ route('familias.index') }}" style="text-decoration:none; display:block;">
+                    <div style="background:white; border-radius:18px; padding:22px; border:1px solid #ddd6fe; border-top:3px solid #7c3aed; box-shadow:0 4px 20px rgba(124,58,237,0.07); transition:transform 0.25s,box-shadow 0.25s;"
+                        onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 28px rgba(124,58,237,0.13)'"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(124,58,237,0.07)'">
+                        <div style="display:flex; align-items:center; gap:16px;">
+                            <div style="width:44px; height:44px; background:linear-gradient(135deg,#7c3aed,#8b5cf6); border-radius:13px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px; flex-shrink:0; box-shadow:0 4px 10px rgba(124,58,237,0.25);">
+                                <i class="bi bi-diagram-3-fill"></i>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <span style="background:#f3e8ff; color:#6d28d9; border:1px solid #d8b4fe; border-radius:40px; padding:3px 11px; font-size:11px; font-weight:700; display:inline-block; margin-bottom:5px;">Familias</span>
+                                <h3 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.05rem; color:#0f172a; margin-bottom:3px;">Grupos Familiares</h3>
+                                <p style="color:#536070; font-size:13px; font-weight:500; margin:0; line-height:1.4;">Consultá grupos familiares, integrantes y códigos de referencia.</p>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px; color:#7c3aed; font-weight:700; font-size:13px; flex-shrink:0;">
+                                Ver grupos <i class="bi bi-arrow-right-circle-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
-        @endforeach
+    </div>
+
+    {{-- ── PROGRAMAS ── --}}
+    <div class="animate-block delay-2">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem;">
+            <div style="width:4px; height:22px; background:linear-gradient(180deg,#17a385,#5dc9a8); border-radius:4px; flex-shrink:0;"></div>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0e8a70; margin:0;">Programas de Acompañamiento</p>
+            <div style="flex:1; height:1px; background:linear-gradient(90deg,#9fe1cb,transparent);"></div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            @foreach($programas as $p)
+                @php
+                    $nombreLower = trim(mb_strtolower($p->nombre));
+                    
+                    if (str_contains($nombreLower, 'envion') || str_contains($nombreLower, 'envión')) {
+                        $iconClass = 'bi-people-fill';
+                        $colorHex = '#0d92c2';
+                        $bgHex = '#e6f5fb';
+                        $borderHex = '#b3e0f5';
+                    } elseif (str_contains($nombreLower, 'udi')) {
+                        $iconClass = 'bi-backpack-fill';
+                        $colorHex = '#17a385';
+                        $bgHex = '#e8f9f5';
+                        $borderHex = '#9fe1cb';
+                    } elseif (str_contains($nombreLower, 'guarderia') || str_contains($nombreLower, 'guardería') || str_contains($nombreLower, 'infantil') || str_contains($nombreLower, 'niñ')) {
+                        $iconClass = 'bi-sun-fill';
+                        $colorHex = '#0d92c2'; 
+                        $bgHex = '#e6f5fb';
+                        $borderHex = '#b3e0f5';
+                    } elseif (str_contains($nombreLower, 'multiespacio') || str_contains($nombreLower, 'discapacidad')) {
+                        $iconClass = 'bi-heart-pulse-fill';
+                        $colorHex = '#7c3aed';
+                        $bgHex = '#f3e8ff';
+                        $borderHex = '#ddd6fe';
+                    } else {
+                        $iconClass = 'bi-folder-fill';
+                        $colorHex = '#536070';
+                        $bgHex = '#f1f5f9';
+                        $borderHex = '#cbd5e1';
+                    }
+                @endphp
+                <div class="col-sm-6 col-lg-3">
+                    <a href="{{ route('frontend.programas.show', $p->id) }}" style="text-decoration:none; display:block; height:100%;">
+                        <div style="background:white; border-radius:16px; padding:18px 16px; border:1px solid {{ $borderHex }}; border-top:3px solid {{ $colorHex }}; box-shadow:0 2px 10px rgba(0,0,0,0.04); transition:transform 0.22s,box-shadow 0.22s; height:100%;"
+                            onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 22px rgba(0,0,0,0.09)'"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(0,0,0,0.04)'">
+                            
+                            <div style="width:38px; height:38px; background:{{ $bgHex }}; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:18px; color:{{ $colorHex }}; margin-bottom:10px;">
+                                <i class="bi {{ $iconClass }}"></i>
+                            </div>
+                            
+                            <span style="background:{{ $bgHex }}; color:{{ $colorHex }}; border:1px solid {{ $borderHex }}; border-radius:40px; padding:2px 9px; font-size:10.5px; font-weight:700; display:inline-block; margin-bottom:7px;">Programa</span>
+                            <h6 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px; color:#0f172a; margin:0 0 4px;">{{ $p->nombre }}</h6>
+                            <p style="font-size:12px; color:#536070; font-weight:500; margin:0; line-height:1.4;">Ver destinatarios asociados.</p>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
     </div>
 
     {{-- ── OTROS SERVICIOS ──────────────────────────── --}}
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem;">
-        <div style="width:4px; height:22px; background:linear-gradient(180deg,#1aaad8,#4dbde8); border-radius:4px; flex-shrink:0;"></div>
-        <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0879a8; margin:0;">Otros Servicios</p>
-        <div style="flex:1; height:1px; background:linear-gradient(90deg,#b3e0f5,transparent);"></div>
-    </div>
-
-    <div class="row g-3">
-        @php
-            $user = auth()->user();
-            $routeMercaderia = '#';
-            if ($user) {
-
-                if ($user->rol_id == 6) {
-                    $routeMercaderia = route('recepcion.mercaderias.index');
-                } elseif (in_array($user->rol_id, [2,3])) {
-                    $routeMercaderia = route('panel.mercaderias.index');
-                }
-            }
-
-            $servicios = [
-                [
-                    'icon'    => 'bi-box-seam',
-                    'titulo'  => 'Entrega de Mercadería',
-                    'desc'    => 'Logística de insumos alimentarios del barrio.',
-                    'color'   => '#0d92c2',
-                    'colorBg' => '#e6f5fb',
-                    'colorBo' => '#b3e0f5',
-                    'route'   => $routeMercaderia
-                ],
-
-                [
-                    'icon'    => 'bi-journal-medical',
-                    'titulo'  => 'Asistencia de Sepelio',
-                    'desc'    => 'Servicio de contención y asistencia social.',
-                    'color'   => '#17a385',
-                    'colorBg' => '#e8f9f5',
-                    'colorBo' => '#9fe1cb',
-                    'route'   => route('recepcion.sepelios.index')
-                ],
-            ];
-            @endphp
-        @foreach($servicios as $s)
-        <div class="col-md-6">
-            <a href="{{ $s['route'] }}" style="text-decoration:none; display:block;">
-                <div style="background:white; border-radius:14px; padding:16px 18px; border:1px solid {{ $s['colorBo'] }}; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:transform 0.2s,box-shadow 0.2s;"
-                    onmouseover="this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
-                    onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
-                    <div style="width:44px; height:44px; background:{{ $s['colorBg'] }}; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:{{ $s['color'] }}; flex-shrink:0;">
-                        <i class="bi {{ $s['icon'] }}"></i>
-                    </div>
-                    <div style="flex:1; min-width:0;">
-                        <h6 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px; color:#0f172a; margin:0 0 2px;">{{ $s['titulo'] }}</h6>
-                        <p style="font-size:12px; color:#536070; font-weight:500; margin:0;">{{ $s['desc'] }}</p>
-                    </div>
-                    <i class="bi bi-chevron-right" style="color:#94a3b8; font-size:15px; flex-shrink:0;"></i>
-                </div>
-            </a>
+    <div class="animate-block delay-3">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.2rem;">
+            <div style="width:4px; height:22px; background:linear-gradient(180deg,#1aaad8,#4dbde8); border-radius:4px; flex-shrink:0;"></div>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:#0879a8; margin:0;">Otros Servicios</p>
+            <div style="flex:1; height:1px; background:linear-gradient(90deg,#b3e0f5,transparent);"></div>
         </div>
-        @endforeach
+
+        <div class="row g-3">
+            @php
+                $user = auth()->user();
+                $routeMercaderia = '#';
+                if ($user) {
+                    if ($user->rol_id == 6) {
+                        $routeMercaderia = route('recepcion.mercaderias.index');
+                    } elseif (in_array($user->rol_id, [2,3])) {
+                        $routeMercaderia = route('panel.mercaderias.index');
+                    }
+                }
+
+                $servicios = [
+                    [
+                        'icon'    => 'bi-box-seam',
+                        'titulo'  => 'Entrega de Mercadería',
+                        'desc'    => 'Logística de insumos alimentarios del barrio.',
+                        'color'   => '#0d92c2',
+                        'colorBg' => '#e6f5fb',
+                        'colorBo' => '#b3e0f5',
+                        'route'   => $routeMercaderia
+                    ],
+                    [
+                        'icon'    => 'bi-journal-medical',
+                        'titulo'  => 'Asistencia de Sepelio',
+                        'desc'    => 'Servicio de contención y asistencia social.',
+                        'color'   => '#17a385',
+                        'colorBg' => '#e8f9f5',
+                        'colorBo' => '#9fe1cb',
+                        'route'   => route('recepcion.sepelios.index')
+                    ],
+                ];
+            @endphp
+            @foreach($servicios as $s)
+            <div class="col-md-6">
+                <a href="{{ $s['route'] }}" style="text-decoration:none; display:block;">
+                    <div style="background:white; border-radius:14px; padding:16px 18px; border:1px solid {{ $s['colorBo'] }}; display:flex; align-items:center; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:transform 0.2s,box-shadow 0.2s;"
+                        onmouseover="this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'"
+                        onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+                        <div style="width:44px; height:44px; background:{{ $s['colorBg'] }}; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:{{ $s['color'] }}; flex-shrink:0;">
+                            <i class="bi {{ $s['icon'] }}"></i>
+                        </div>
+                        <div style="flex:1; min-width:0;">
+                            <h6 style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px; color:#0f172a; margin:0 0 2px;">{{ $s['titulo'] }}</h6>
+                            <p style="font-size:12px; color:#536070; font-weight:500; margin:0;">{{ $s['desc'] }}</p>
+                        </div>
+                        <i class="bi bi-chevron-right" style="color:#94a3b8; font-size:15px; flex-shrink:0;"></i>
+                    </div>
+                </a>
+            </div>
+            @endforeach
+        </div>
     </div>
 
 </div>

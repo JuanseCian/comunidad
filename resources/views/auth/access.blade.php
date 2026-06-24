@@ -46,7 +46,6 @@
         .auth-card {
             border: none;
             border-radius: 20px;
-            /* Se remueve el overflow: hidden para que el tooltip pueda salir */
             box-shadow: 0 24px 60px rgba(0, 0, 30, 0.25);
             background: #fff;
         }
@@ -64,7 +63,7 @@
             padding: 50px 32px;
             gap: 14px;
             text-align: center;
-            border-radius: 20px 0 0 20px; /* Bordes redondeados manuales */
+            border-radius: 20px 0 0 20px;
         }
         .panel-img .brand-icon {
             width: 64px;
@@ -103,7 +102,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            border-radius: 0 20px 20px 0; /* Bordes redondeados manuales */
+            border-radius: 0 20px 20px 0;
         }
 
         .form-title {
@@ -332,9 +331,73 @@
         footer a { color: #93c5fd; text-decoration: none; }
         footer a:hover { text-decoration: underline; }
 
+        /* ── ANIMACIÓN DE ACCESO (WELCOME OVERLAY) ──────────── */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f1b35 0%, #1a3a6e 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .welcome-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .welcome-wrapper {
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .welcome-overlay.active .welcome-wrapper {
+            transform: scale(1);
+        }
+
+        .welcome-logo {
+            width: 110px;
+            height: auto;
+            margin-bottom: 24px;
+            animation: floatLogo 2.5s ease-in-out infinite, pulseGlow 2.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.4));
+        }
+
+        .welcome-spinner {
+            width: 45px;
+            height: 45px;
+            border: 3.5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #0ea5e9;
+            border-radius: 50%;
+            margin: 0 auto;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 12px rgba(6, 182, 212, 0.3)); }
+            50% { filter: drop-shadow(0 0 25px rgba(14, 165, 233, 0.7)); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* ── RESPONSIVE ─────────────────────────────────────── */
         @media (max-width: 991px) {
-            /* En tablets o celulares, el tooltip pasa abajo en lugar de al costado */
             .pwd-rules {
                 position: relative;
                 top: auto;
@@ -358,6 +421,13 @@
 
 <body>
 
+<div class="welcome-overlay" id="welcomeOverlay">
+    <div class="welcome-wrapper">
+        <img src="{{ asset('assets/img/SN.png') }}" alt="Logo San Nicolás" class="welcome-logo">
+        <div class="welcome-spinner"></div>
+    </div>
+</div>
+
 @php
     $flip = request()->routeIs('register')
         || $errors->has('username')
@@ -369,7 +439,6 @@
     <div class="container scene">
         <div class="flip-card-inner {{ $flip ? 'is-flipped' : '' }}" id="cardInner" style="max-width: 900px; margin: 0 auto;">
 
-            
             <div class="flip-card-front">
                 <div class="auth-card">
                     <div class="row g-0">
@@ -405,7 +474,7 @@
                             <div class="form-title">Iniciar Sesión</div>
                             <div class="form-sub">Ingresá tus credenciales para continuar</div>
 
-                            <form method="POST" action="{{ route('login') }}">
+                            <form method="POST" action="{{ route('login') }}" id="loginForm">
                                 @csrf
 
                                 <div class="field">
@@ -458,7 +527,6 @@
                 </div>
             </div>
 
-           
             <div class="flip-card-back">
                 <div class="auth-card">
                     <div class="row g-0">
@@ -642,7 +710,6 @@
 </footer>
 
 <script>
-
 function flip(showRegister) {
     document.getElementById('cardInner').classList.toggle('is-flipped', showRegister);
 }
@@ -661,7 +728,6 @@ document.querySelectorAll('.eye-btn').forEach(btn => {
         icon.innerHTML = isText ? EYE_OPEN : EYE_SLASH;
     });
 });
-
 
 const regPasswordInput = document.getElementById('reg_password');
 const rulesBox = document.getElementById('pwd-rules-box');
@@ -700,7 +766,6 @@ function setRule(id, ok) {
     document.getElementById(id).classList.toggle('ok', ok);
 }
 
-
 function checkMatch() {
     const p   = document.getElementById('reg_password').value;
     const c   = document.getElementById('reg_password_confirmation').value;
@@ -716,6 +781,12 @@ function checkMatch() {
         msg.innerHTML   = '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Las contraseñas no coinciden';
     }
 }
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    if (this.checkValidity()) {
+        document.getElementById('welcomeOverlay').classList.add('active');
+    }
+});
 </script>
 
 </body>
