@@ -108,7 +108,7 @@
             </div>
 
             <div class="drawer-foot">
-                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                <form id="logoutForm" action="{{ route('logout') }}" method="POST" class="m-0">
                     @csrf
                     <button type="submit" class="btn-logout-drawer">
                         <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
@@ -336,6 +336,7 @@
         }
 
         window.addEventListener('load', hidePreloader);
+
         document.addEventListener('DOMContentLoaded', () => {
             const drawer = document.getElementById('sideDrawer');
             const overlay = document.getElementById('drawerOverlay');
@@ -344,6 +345,9 @@
             const closeBtn = document.getElementById('drawerClose');
             const btnSysInfo = document.getElementById('btnSysInfo');
             const sysInfoModal = new bootstrap.Modal(document.getElementById('sysInfoModal'));
+            
+            // 1. Capturamos el formulario de logout
+            const logoutForm = document.getElementById('logoutForm');
 
             const toggleDrawer = (forceState) => {
                 const isOpen = forceState !== undefined ? forceState : !drawer.classList.contains('open');
@@ -363,6 +367,22 @@
                     setTimeout(() => {
                         sysInfoModal.show();
                     }, 350);
+                });
+            }
+
+            // 2. Interceptamos el Submit para mostrar la animación de salida
+            if (logoutForm) {
+                logoutForm.addEventListener('submit', () => {
+                    const preloader = document.getElementById('pagePreloader');
+                    if (preloader) {
+                        const preloaderText = preloader.querySelector('.preloader-text');
+                        if (preloaderText) {
+                            preloaderText.textContent = 'Cerrando sesión...';
+                        }
+                        // Forzamos el display original y removemos la clase que lo oculta
+                        preloader.style.display = 'flex';
+                        preloader.classList.remove('hidden');
+                    }
                 });
             }
 

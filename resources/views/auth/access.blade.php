@@ -699,9 +699,9 @@
             </div>
             <div class="col-md-9 text-center text-md-end">
                 <p class="mb-0" style="font-size: 13px; line-height: 1.8;">
-                    <i class="fas fa-map-marker-alt"></i> Sistema Comunidad — Gestión social y administración<br>
-                    <a href="mailto:soporte@comunidad.com">
-                        <i class="fas fa-envelope"></i> soporte@comunidad.com
+                    <i class="fas fa-map-marker-alt"></i> Lazarte y Brown, San Nicolás de los Arroyos<br>
+                    <a href="mailto:sndesarrollohumano@gmail.com">
+                        <i class="fas fa-envelope"></i> sndesarrollohumano@gmail.com
                     </a>
                 </p>
             </div>

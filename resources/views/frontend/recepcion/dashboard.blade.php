@@ -263,7 +263,7 @@
 {{-- HEADER UNIFICADO --}}
 <div class="dashboard-header">
     <h2>Mesa de Entrada</h2>
-    <p>Módulo Unificado de Recepción y Articulación. Registro ágil de solicitudes ciudadanas y control eficiente de la distribución de insumos sociales.</p>
+    <p>Registro y gestión de ingresos, mercaderia, sepelios y bajo peso</p>
 </div>
 
 {{-- DISTRIBUCIÓN EN CUADRANTE (2 ARRIBA, 2 ABAJO) --}}

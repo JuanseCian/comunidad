@@ -567,7 +567,9 @@
 
         {{-- FOOTER --}}
         <footer>
-            Comunidad · Mesa de Entrada
+            <h6>Comunidad • Mesa de Entrada</h6>
+            <p>Secretaría de Desarrollo Humano • Secretaría de Innovación y Ciudad Inteligente</p>
+            <p>© {{ date('Y') }} Municipalidad de San Nicolás de los Arroyos</p>
         </footer>
 
     </main>
@@ -640,7 +642,7 @@
                         <!-- SECCIÓN DESARROLLADORES -->
                         <div class="info-section full-width">
                             <div class="info-section-title">
-                                <i class="bi bi-building"></i>Equipo de Ingeniería y Diseño
+                                <i class="bi bi-building"></i>Equipo de Desarrollo y Diseño
                             </div>
                             <div class="dev-cards-container">
                                 <div class="dev-card studio-card">
@@ -690,7 +692,6 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     {{-- LÓGICA DE INTERFAZ (Sidebar + Modal Trigger) --}}
@@ -711,7 +712,6 @@
             menuBtn.addEventListener('click', () => toggleMenu());
             overlay.addEventListener('click', () => toggleMenu(false));
 
-            // Al hacer clic en Info desde móvil, cierra el sidebar suavemente y levanta el modal
             btnSysInfo.addEventListener('click', () => {
                 toggleMenu(false);
                 setTimeout(() => {
@@ -723,7 +723,6 @@
 
     @stack('scripts')
 
-{{-- CONTENEDOR GLOBAL DE NOTIFICACIONES TOAST (MÁS VISIBLE) --}}
 <div class="toast-container position-fixed top-0 end-0 p-4" style="z-index: 1090;">
     
     @if(session('success') || session('status'))
@@ -784,7 +783,6 @@
 
 {{-- ESTILOS ULTRA-ILUMINADOS Y MODERNOS --}}
 <style>
-    /* ANIMACIÓN DE ENTRADA CON REBOTE ELÁSTICO */
     @keyframes toastBounceIn {
         0% { transform: translateX(120%) scale(0.9); opacity: 0; }
         65% { transform: translateX(-10px) scale(1.02); opacity: 1; }
@@ -811,12 +809,10 @@
         transition: all 0.3s ease;
     }
 
-    /* Forzamos nuestra animación cuando Bootstrap añade la clase show */
     .custom-toast.showing, .custom-toast.show {
         animation: toastBounceIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Fondo iluminado interno sutil */
     .toast-glow-bg {
         position: absolute;
         top: -50px;
@@ -839,7 +835,6 @@
         z-index: 1;
     }
 
-    /* Contenedor del ícono con pulso de atención */
     .toast-icon-wrapper {
         width: 44px;
         height: 44px;
@@ -866,7 +861,7 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-weight: 800;
         font-size: 0.98rem;
-        color: #0f172a; /* Neutral oscuro intenso */
+        color: #0f172a; 
         letter-spacing: -0.2px;
     }
 
@@ -899,9 +894,7 @@
         color: #334155;
     }
 
-    /* CONFIGURACIÓN DE ILUMINACIÓN POR TEMA (VARIABLES CSS DINÁMICAS) */
     
-    /* Éxito (Verde Esmeralda/Teal Eléctrico) */
     .toast-success {
         --toast-brand-color: #059669;
         --toast-icon-bg: #e6f4ea;
@@ -910,7 +903,6 @@
         --toast-glow-shadow: 0 15px 35px -5px rgba(16, 185, 129, 0.22), 0 5px 15px -3px rgba(16, 185, 129, 0.1), 0 0 0 1px rgba(16, 185, 129, 0.05);
     }
 
-    /* Error / Peligro (Rojo Neón) */
     .toast-danger {
         --toast-brand-color: #dc2626;
         --toast-icon-bg: #fce8e6;
@@ -919,7 +911,6 @@
         --toast-glow-shadow: 0 15px 35px -5px rgba(239, 68, 68, 0.22), 0 5px 15px -3px rgba(239, 68, 68, 0.1), 0 0 0 1px rgba(239, 68, 68, 0.05);
     }
 
-    /* Advertencia (Ámbar brillante) */
     .toast-warning {
         --toast-brand-color: #d97706;
         --toast-icon-bg: #fef3c7;
@@ -935,7 +926,7 @@
         const toastElement = document.getElementById('liveToast');
         if (toastElement) {
             const toast = new bootstrap.Toast(toastElement, {
-                delay: 5500 // Un poquito más de tiempo para que se luzca la animación
+                delay: 5500 
             });
             toast.show();
         }
