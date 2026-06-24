@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('css/front.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('assets/css/front.css') }}?v=2">
 </head>
 <body>
     <div class="page-preloader" id="pagePreloader">

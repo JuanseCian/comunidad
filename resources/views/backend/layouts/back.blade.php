@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Gestión - @yield('title')</title>
     
-    <link class="rounded-full" rel="icon" href="{{ asset('assets/img/sn.png') }}" type="image/png">
+    <link class="rounded-full" rel="icon" href="{{ asset('assets/img/SN.png') }}" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
@@ -165,7 +165,7 @@
     <div id="preloader" class="fixed inset-0 bg-slate-950 z-[99999] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 ease-out">
         <div class="relative flex items-center justify-center">
             <div class="w-20 h-20 rounded-full border-4 border-t-sky-400 border-r-teal-400 border-b-transparent border-l-transparent animate-spin"></div>
-            <img src="{{ asset('assets/img/sn.png') }}" alt="Cargando..." class="absolute h-10 w-auto object-contain animate-pulse">
+            <img src="{{ asset('assets/img/SN.png') }}" alt="Cargando..." class="absolute h-10 w-auto object-contain animate-pulse">
         </div>
         <span class="text-slate-400 text-[11px] font-bold tracking-widest uppercase mt-5 animate-pulse">Cargando Panel...</span>
     </div>
@@ -195,7 +195,7 @@
             {{-- BRANDING & LOGO --}}
             <div @click="sidebarOpen = !sidebarOpen" class="h-20 flex items-center px-5 flex-shrink-0 border-b border-slate-800/40 cursor-pointer hover:bg-slate-800/30 transition-colors duration-200 group/brand" title="Alternar menú">
                 <div class="flex items-center gap-3 w-full" :class="sidebarOpen ? 'justify-start' : 'md:mx-auto md:justify-center'">
-                    <img src="{{ asset('assets/img/sn.png') }}" alt="Muni SN" class="h-9 w-auto object-contain flex-shrink-0 transform transition-transform duration-300 group-hover/brand:scale-110">
+                    <img src="{{ asset('assets/img/SN.png') }}" alt="Muni SN" class="h-9 w-auto object-contain flex-shrink-0 transform transition-transform duration-300 group-hover/brand:scale-110">
                     <span x-show="sidebarOpen" 
                           x-transition:enter="transition ease-out duration-300 delay-100"
                           x-transition:enter-start="opacity-0 -translate-x-2"

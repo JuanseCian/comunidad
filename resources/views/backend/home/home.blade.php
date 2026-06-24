@@ -5,126 +5,187 @@
 
 @section('content')
 
-{{-- SECCIÓN DE BIENVENIDA CON ANIMACIÓN --}}
-<div class="mb-10 animate-fade-in-down">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+{{-- SECCIÓN DE BIENVENIDA AMPLIA Y LIMPIA --}}
+<div class="mb-12 transition-all duration-500 ease-in-out">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
-            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight sm:text-4xl">
-                Bienvenido de nuevo, <span class="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Admin</span> 👋
+            <h1 class="text-3xl font-bold text-slate-800 tracking-tight sm:text-4xl">
+                Bienvenido, <span class="text-sky-primary">Admin</span>
             </h1>
-            <p class="text-sm font-medium text-slate-500 mt-2 flex items-center gap-1.5">
-                <i data-lucide="sparkles" class="w-4 h-4 text-amber-500 animate-pulse"></i>
-                ¿Qué panel o parámetro querés gestionar hoy en la plataforma?
+            <p class="text-base font-medium text-slate-400 mt-2">
+                Seleccione el módulo o parámetro que desea gestionar en la plataforma.
             </p>
         </div>
         
-        {{-- Indicador de estado rápido --}}
-        <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 text-emerald-700 px-4 py-2 rounded-2xl text-xs font-semibold self-start md:self-center shadow-sm">
-            <span class="w-2 px-0 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+        <div class="inline-flex items-center gap-2.5 bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-full text-sm font-medium self-start sm:self-center shadow-sm">
+            <span class="w-2 h-2 bg-teal-primary rounded-full tracking-wide"></span>
             Sistema en Línea
         </div>
     </div>
 </div>
 
-<hr class="border-slate-100 mb-8">
+<hr class="border-slate-200/60 mb-10">
 
-{{-- GRILLA DE SECCIONES INTERACTIVAS --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+{{-- GRILLA AMPLIA CON COLLAPSE E INTERACCIONES FLUIDAS --}}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" x-data="{ activeSection: null }">
 
-    {{-- USUARIOS --}}
+    {{-- USUARIOS (ACCESO DIRECTO) --}}
     <a href="{{ route('usuarios.index') }}" 
-       class="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-indigo-300 transition-all duration-300 p-6 flex flex-col justify-between overflow-hidden">
-        <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-50/30 rounded-bl-full translate-x-6 -translate-y-6 group-hover:scale-110 transition-transform duration-300"></div>
-        
-        <div class="flex items-start gap-4 relative z-10">
-            <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-indigo-200 group-hover:shadow-lg">
-                <i data-lucide="users" class="w-5 h-5 text-indigo-600 group-hover:text-white transition-colors duration-300"></i>
+       class="group bg-white rounded-2xl border border-slate-200/80 p-7 flex flex-col justify-between hover:border-sky-primary hover:shadow-md transition-all duration-300 ease-out min-h-[140px]">
+        <div class="flex items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-sky-50 group-hover:text-sky-primary transition-all duration-300">
+                <i data-lucide="users" class="w-5 h-5"></i>
             </div>
             <div>
-                <p class="font-bold text-slate-800 text-base group-hover:text-indigo-600 transition-colors">Usuarios</p>
-                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Administrá, editá y controlá los roles y accesos de los usuarios generales del sistema.</p>
+                <h3 class="font-bold text-slate-800 text-lg group-hover:text-sky-primary transition-colors duration-200">Usuarios</h3>
+                <p class="text-sm text-slate-400 mt-1 leading-relaxed">Cuentas, permisos y accesos generales.</p>
             </div>
         </div>
-        <div class="mt-6 flex items-center justify-end text-xs font-semibold text-indigo-600 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 gap-1">
-            Gestionar <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <div class="flex items-center justify-end mt-4 text-sm font-semibold text-sky-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 gap-1.5">
+            Acceder <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </div>
     </a>
 
-    {{-- GEOGRAFÍA --}}
-    <a href="{{ route('provincias.index') }}" 
-       class="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-300 transition-all duration-300 p-6 flex flex-col justify-between overflow-hidden">
-        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50/30 rounded-bl-full translate-x-6 -translate-y-6 group-hover:scale-110 transition-transform duration-300"></div>
+    {{-- GEOGRAFÍA TERRITORIAL (COLLAPSE) --}}
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-7 hover:shadow-md transition-all duration-300 ease-out flex flex-col justify-start min-h-[140px]"
+         :class="activeSection === 'geografia' ? 'border-sky-primary shadow-sm' : ''">
+        <button @click="activeSection = (activeSection === 'geografia' ? null : 'geografia')" 
+                class="w-full flex items-start justify-between text-left group">
+            <div class="flex items-start gap-5">
+                <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 transition-all duration-300"
+                     :class="activeSection === 'geografia' ? 'bg-sky-50 text-sky-primary' : ''">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-lg transition-colors duration-200"
+                        :class="activeSection === 'geografia' ? 'text-sky-primary' : ''">Geografía Territorial</h3>
+                    <p class="text-sm text-slate-400 mt-1 leading-relaxed">Provincias, localidades y división de barrios.</p>
+                </div>
+            </div>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300 mt-1 flex-shrink-0"
+               :class="activeSection === 'geografia' ? 'rotate-180 text-sky-primary' : ''"></i>
+        </button>
         
-        <div class="flex items-start gap-4 relative z-10">
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-emerald-200 group-hover:shadow-lg">
-                <i data-lucide="map-pin" class="w-5 h-5 text-emerald-600 group-hover:text-white transition-colors duration-300"></i>
-            </div>
-            <div>
-                <p class="font-bold text-slate-800 text-base group-hover:text-emerald-600 transition-colors">Geografía Territorial</p>
-                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Configuración analítica de provincias, localidades, zonas específicas y barrios periféricos.</p>
+        <div x-show="activeSection === 'geografia'" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2">
+            <div class="grid grid-cols-2 gap-2.5 mt-6 pt-5 border-t border-slate-100">
+                <a href="{{ route('provincias.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Provincias</a>
+                <a href="{{ route('localidades.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Localidades</a>
+                <a href="{{ route('zonas-barrios.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Zonas</a>
+                <a href="{{ route('barrios.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Barrios</a>
             </div>
         </div>
-        <div class="mt-6 flex items-center justify-end text-xs font-semibold text-emerald-600 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 gap-1">
-            Gestionar <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </div>
-    </a>
+    </div>
 
-    {{-- SALUD Y COBERTURA --}}
-    <a href="{{ route('enfermedades.index') }}" 
-       class="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-rose-300 transition-all duration-300 p-6 flex flex-col justify-between overflow-hidden">
-        <div class="absolute top-0 right-0 w-24 h-24 bg-rose-50/30 rounded-bl-full translate-x-6 -translate-y-6 group-hover:scale-110 transition-transform duration-300"></div>
+    {{-- SALUD Y COBERTURA (COLLAPSE) --}}
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-7 hover:shadow-md transition-all duration-300 ease-out flex flex-col justify-start min-h-[140px]"
+         :class="activeSection === 'salud' ? 'border-sky-primary shadow-sm' : ''">
+        <button @click="activeSection = (activeSection === 'salud' ? null : 'salud')" 
+                class="w-full flex items-start justify-between text-left group">
+            <div class="flex items-start gap-5">
+                <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 transition-all duration-300"
+                     :class="activeSection === 'salud' ? 'bg-sky-50 text-sky-primary' : ''">
+                    <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-lg transition-colors duration-200"
+                        :class="activeSection === 'salud' ? 'text-sky-primary' : ''">Salud y Cobertura</h3>
+                    <p class="text-sm text-slate-400 mt-1 leading-relaxed">Registro de enfermedades y prestaciones.</p>
+                </div>
+            </div>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300 mt-1 flex-shrink-0"
+               :class="activeSection === 'salud' ? 'rotate-180 text-sky-primary' : ''"></i>
+        </button>
         
-        <div class="flex items-start gap-4 relative z-10">
-            <div class="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center flex-shrink-0 group-hover:bg-rose-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-rose-200 group-hover:shadow-lg">
-                <i data-lucide="heart-pulse" class="w-5 h-5 text-rose-500 group-hover:text-white transition-colors duration-300"></i>
-            </div>
-            <div>
-                <p class="font-bold text-slate-800 text-base group-hover:text-rose-600 transition-colors">Salud y Cobertura</p>
-                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Catálogo clínico: enfermedades crónicas, niveles de discapacidad y obras sociales disponibles.</p>
+        <div x-show="activeSection === 'salud'" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2">
+            <div class="flex flex-col gap-1 mt-6 pt-5 border-t border-slate-100">
+                <a href="{{ route('enfermedades.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Enfermedades</a>
+                <a href="{{ route('discapacidades.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Discapacidades</a>
+                <a href="{{ route('coberturas.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Cobertura Médica</a>
             </div>
         </div>
-        <div class="mt-6 flex items-center justify-end text-xs font-semibold text-rose-600 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 gap-1">
-            Gestionar <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </div>
-    </a>
+    </div>
 
-    {{-- SOCIAL Y EDUCACIÓN --}}
-    <a href="{{ route('niveles-estudio.index') }}" 
-       class="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-amber-300 transition-all duration-300 p-6 flex flex-col justify-between overflow-hidden">
-        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-50/30 rounded-bl-full translate-x-6 -translate-y-6 group-hover:scale-110 transition-transform duration-300"></div>
+    {{-- SOCIAL Y EDUCACIÓN (COLLAPSE) --}}
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-7 hover:shadow-md transition-all duration-300 ease-out flex flex-col justify-start min-h-[140px]"
+         :class="activeSection === 'social' ? 'border-sky-primary shadow-sm' : ''">
+        <button @click="activeSection = (activeSection === 'social' ? null : 'social')" 
+                class="w-full flex items-start justify-between text-left group">
+            <div class="flex items-start gap-5">
+                <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 transition-all duration-300"
+                     :class="activeSection === 'social' ? 'bg-sky-50 text-sky-primary' : ''">
+                    <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-lg transition-colors duration-200"
+                        :class="activeSection === 'social' ? 'text-sky-primary' : ''">Social y Educación</h3>
+                    <p class="text-sm text-slate-400 mt-1 leading-relaxed">Niveles académicos e indicadores civiles.</p>
+                </div>
+            </div>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300 mt-1 flex-shrink-0"
+               :class="activeSection === 'social' ? 'rotate-180 text-sky-primary' : ''"></i>
+        </button>
         
-        <div class="flex items-start gap-4 relative z-10">
-            <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-amber-200 group-hover:shadow-lg">
-                <i data-lucide="graduation-cap" class="w-5 h-5 text-amber-600 group-hover:text-white transition-colors duration-300"></i>
-            </div>
-            <div>
-                <p class="font-bold text-slate-800 text-base group-hover:text-amber-600 transition-colors">Social y Educación</p>
-                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Parámetros demográficos, niveles educativos alcanzados y estados civiles declarados.</p>
+        <div x-show="activeSection === 'social'" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2">
+            <div class="flex flex-col gap-1 mt-6 pt-5 border-t border-slate-100">
+                <a href="{{ route('niveles-estudio.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Niveles de Estudio</a>
+                <a href="{{ route('estados-civiles.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Estado Civil</a>
             </div>
         </div>
-        <div class="mt-6 flex items-center justify-end text-xs font-semibold text-amber-600 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 gap-1">
-            Gestionar <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </div>
-    </a>
+    </div>
 
-    {{-- LABORAL Y AYUDA --}}
-    <a href="{{ route('categorias.index') }}" 
-       class="group relative bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-sky-300 transition-all duration-300 p-6 flex flex-col justify-between overflow-hidden">
-        <div class="absolute top-0 right-0 w-24 h-24 bg-sky-50/30 rounded-bl-full translate-x-6 -translate-y-6 group-hover:scale-110 transition-transform duration-300"></div>
+    {{-- LABORAL Y AYUDA (COLLAPSE) --}}
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-7 hover:shadow-md transition-all duration-300 ease-out flex flex-col justify-start min-h-[140px]"
+         :class="activeSection === 'laboral' ? 'border-sky-primary shadow-sm' : ''">
+        <button @click="activeSection = (activeSection === 'laboral' ? null : 'laboral')" 
+                class="w-full flex items-start justify-between text-left group">
+            <div class="flex items-start gap-5">
+                <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 transition-all duration-300"
+                     :class="activeSection === 'laboral' ? 'bg-sky-50 text-sky-primary' : ''">
+                    <i data-lucide="briefcase" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-lg transition-colors duration-200"
+                        :class="activeSection === 'laboral' ? 'text-sky-primary' : ''">Laboral y Ayuda</h3>
+                    <p class="text-sm text-slate-400 mt-1 leading-relaxed">Situación de empleo y asistencia social.</p>
+                </div>
+            </div>
+            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-300 mt-1 flex-shrink-0"
+               :class="activeSection === 'laboral' ? 'rotate-180 text-sky-primary' : ''"></i>
+        </button>
         
-        <div class="flex items-start gap-4 relative z-10">
-            <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center flex-shrink-0 group-hover:bg-sky-500 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-sky-200 group-hover:shadow-lg">
-                <i data-lucide="briefcase" class="w-5 h-5 text-sky-600 group-hover:text-white transition-colors duration-300"></i>
-            </div>
-            <div>
-                <p class="font-bold text-slate-800 text-base group-hover:text-sky-600 transition-colors">Laboral y Ayuda Social</p>
-                <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Variables de ocupación, condiciones de inactividad, programas públicos y asignación de beneficios.</p>
+        <div x-show="activeSection === 'laboral'" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2">
+            <div class="grid grid-cols-2 gap-2.5 mt-6 pt-5 border-t border-slate-100">
+                <a href="{{ route('categorias.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Categorías</a>
+                <a href="{{ route('condiciones-inactividad.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Inactividad</a>
+                <a href="{{ route('programas-asistencia.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Programas</a>
+                <a href="{{ route('beneficios.index') }}" class="text-sm font-semibold text-slate-600 hover:text-sky-primary px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors duration-150">Beneficios</a>
             </div>
         </div>
-        <div class="mt-6 flex items-center justify-end text-xs font-semibold text-sky-600 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 gap-1">
-            Gestionar <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </div>
-    </a>
+    </div>
 
 </div>
 
