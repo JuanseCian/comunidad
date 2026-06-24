@@ -5,12 +5,11 @@
 
 @section('content')
 
-{{-- SECCIÓN DE BIENVENIDA AMPLIA Y LIMPIA --}}
 <div class="mb-12 transition-all duration-500 ease-in-out">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
             <h1 class="text-3xl font-bold text-slate-800 tracking-tight sm:text-4xl">
-                Bienvenido, <span class="text-sky-primary">Admin</span>
+                Bienvenido/a, <span class="text-sky-primary">{{ auth()->user()->nombre }}</span>
             </h1>
             <p class="text-base font-medium text-slate-400 mt-2">
                 Seleccione el módulo o parámetro que desea gestionar en la plataforma.
