@@ -398,6 +398,22 @@ document.addEventListener('DOMContentLoaded', function () {
         display: none !important;
     }
 
+    /* Ocultar panel lateral y elementos no deseados al imprimir */
+    .stats-sidebar,
+    .page-preloader,
+    .bi-top-header {
+        display: none !important;
+    }
+
+    /* Alinear el contenido principal al ancho completo */
+    .stats-wrapper {
+        margin-left: 0 !important;
+    }
+
+    .stats-content {
+        padding: 0 !important;
+    }
+
     body {
         background: white !important;
     }

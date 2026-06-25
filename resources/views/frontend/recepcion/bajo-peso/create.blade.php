@@ -215,11 +215,9 @@
                 </div>
             </div>
 
-            {{-- ── RESPONSABLE Y DOCUMENTACIÓN ── --}}
             <div class="col-lg-4">
                 <div class="row g-4">
                     
-                    {{-- RESPONSABLE --}}
                     <div class="col-12">
                         <label for="tutor_nombre" class="form-label fw-semibold">
                             <i class="bi bi-person"></i>
@@ -263,21 +261,21 @@
                     </div>
 
                     <div class="col-12">
-                        <label for="tutor_responsable" class="form-label fw-semibold">
+                        <label for="tutor_parentezco" class="form-label fw-semibold">
                             <i class="bi bi-person-check"></i>
                             Responsable
                         </label>
 
                         <input
                             type="text"
-                            name="tutor_responsable"
-                            id="tutor_responsable"
-                            class="form-control @error('tutor_responsable') is-invalid @enderror"
-                            value="{{ old('tutor_responsable') }}"
+                            name="tutor_parentezco"
+                            id="tutor_parentezco"
+                            class="form-control @error('tutor_parentezco') is-invalid @enderror"
+                            value="{{ old('tutor_parentezco') }}"
                             placeholder="Ej: Madre, Padre, Tutor Legal, Abuela"
                         >
 
-                        @error('tutor_responsable')
+                        @error('tutor_parentezco')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
