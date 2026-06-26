@@ -79,39 +79,34 @@ class TerritorialEstadisticaController extends Controller
         */
 
         $zonas = (clone $base)
-            ->select(
-                DB::raw("
-                    COALESCE(
-                        zona_barrio.nombre,
-                        'Sin zona'
-                    ) as zona
-                "),
-                DB::raw('COUNT(*) as total')
-            )
-            ->groupBy('zona')
-            ->orderByDesc('total')
-            ->get();
+        ->select(
+            DB::raw("
+                COALESCE(
+                    zona_barrio.nombre,
+                    'Sin zona'
+                ) as zona
+            "),
+            DB::raw('COUNT(*) as total')
+        )
+        ->groupBy('zona_barrio.nombre')
+        ->orderByDesc('total')
+        ->get();
 
-        /*
-        |--------------------------------------------------------------------------
-        | BARRIOS
-        |--------------------------------------------------------------------------
-        */
 
         $barrios = (clone $base)
-            ->select(
-                DB::raw("
-                    COALESCE(
-                        barrio.nombre,
-                        'Sin barrio'
-                    ) as barrio
-                "),
-                DB::raw('COUNT(*) as total')
-            )
-            ->groupBy('barrio')
-            ->orderByDesc('total')
-            ->limit(15)
-            ->get();
+        ->select(
+            DB::raw("
+                COALESCE(
+                    barrio.nombre,
+                    'Sin barrio'
+                ) as barrio
+            "),
+            DB::raw('COUNT(*) as total')
+        )
+        ->groupBy('barrio.nombre')
+        ->orderByDesc('total')
+        ->limit(15)
+        ->get();
 
         /*
         |--------------------------------------------------------------------------
