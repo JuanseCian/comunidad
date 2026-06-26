@@ -55,10 +55,27 @@ class SepelioEstadisticaController extends Controller
         */
 
         $barrios = DB::table('sepelios')
-            ->select(
-                DB::raw("COALESCE(barrio,'Sin barrio') as barrio"),
-                DB::raw('COUNT(*) as total')
-            );
+        ->leftJoin(
+            'domicilio',
+            'sepelios.domicilio_id',
+            '=',
+            'domicilio.id'
+        )
+        ->leftJoin(
+            'barrio',
+            'domicilio.barrio_id',
+            '=',
+            'barrio.id'
+        )
+        ->select(
+            DB::raw("
+                COALESCE(
+                    barrio.nombre,
+                    'Sin barrio'
+                ) as barrio
+            "),
+            DB::raw('COUNT(*) as total')
+        );
 
         if ($categoria) {
             $barrios->where('categoria_servicio', $categoria);
@@ -77,9 +94,16 @@ class SepelioEstadisticaController extends Controller
         }
 
         $barrios = $barrios
-            ->groupBy('barrio')
-            ->orderByDesc('total')
-            ->get();
+        ->groupBy(
+            DB::raw("
+                COALESCE(
+                    barrio.nombre,
+                    'Sin barrio'
+                )
+            ")
+        )
+        ->orderByDesc('total')
+        ->get();
 
         /*
         |--------------------------------------------------------------------------
