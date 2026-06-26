@@ -2089,19 +2089,59 @@
                 </div>
 
                 {{-- Adaptación --}}
-                <div style="padding:15px; background:var(--blue-lt); border-radius:12px; border:1px solid var(--blue-brd); margin-bottom:20px;">
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                        <input type="checkbox" name="en_adaptacion" id="check_adaptacion" value="1"
-                               style="width:18px; height:18px; cursor:pointer;">
-                        <label for="check_adaptacion" style="font-size:13px; font-weight:700; color:var(--blue-dk); cursor:pointer; margin:0;">¿Requiere periodo de adaptación?</label>
+                <button type="button"
+                        id="btnAdaptacion"
+                        class="sp-btn-ghost"
+                        style="width:100%; justify-content:center;">
+                    <i class="bi bi-clock-history"></i>
+                    Período de adaptación
+                </button>
+
+                <div id="panelAdaptacion"
+                    style="
+                        display:none;
+                        position:absolute;
+                        right:-320px;
+                        top:260px;
+                        width:280px;
+                        background:white;
+                        border:1px solid var(--blue-brd);
+                        border-radius:18px;
+                        padding:18px;
+                        box-shadow:0 18px 40px rgba(13,146,194,.18);
+                        z-index:9999;
+                    ">
+
+                    <h6 style="font-weight:800; margin-bottom:12px;">
+                        Período de adaptación
+                    </h6>
+
+                    <p style="font-size:12px; color:var(--slate);">
+                        ¿Desea ingresar a la persona en período de adaptación?
+                    </p>
+
+                    <input type="hidden" name="en_adaptacion" id="en_adaptacion_hidden" value="0">
+
+                    <div style="margin-bottom:12px;">
+                        <label>Fecha límite</label>
+                        <input type="date"
+                            name="fecha_limite_adaptacion"
+                            id="fechaAdaptacion"
+                            class="form-control">
                     </div>
-                    <div id="wrapper_fecha_adaptacion" style="display:none; animation:fadeUp .3s ease;">
-                        <label style="display:block; font-size:12px; font-weight:800; color:var(--slate); margin-bottom:6px; text-transform:uppercase;">Fecha límite de adaptación</label>
-                        <input type="date" name="fecha_limite_adaptacion" id="input_fecha_adaptacion"
-                               style="width:100%; padding:10px; border-radius:10px; border:1.5px solid var(--blue-brd); font-family:var(--sans);">
-                        <small style="display:block; margin-top:5px; color:var(--slate); font-size:11px; line-height:1.3;">
-                            <i class="bi bi-info-circle"></i> Al finalizar esta fecha, si no se cancela, la persona ingresará al programa automáticamente.
-                        </small>
+
+                    <div style="display:flex; gap:8px;">
+                        <button type="button"
+                                class="sp-btn-primary"
+                                onclick="aceptarAdaptacion()">
+                            Aceptar
+                        </button>
+
+                        <button type="button"
+                                class="sp-btn-ghost"
+                                onclick="cancelarAdaptacion()">
+                            Cancelar
+                        </button>
                     </div>
                 </div>
 
@@ -2436,6 +2476,27 @@ function toggleAdjuntos(id) {
         });
     });
 })();
+
+const btnAdaptacion = document.getElementById('btnAdaptacion');
+const panelAdaptacion = document.getElementById('panelAdaptacion');
+
+btnAdaptacion?.addEventListener('click', () => {
+    panelAdaptacion.style.display =
+        panelAdaptacion.style.display === 'block'
+            ? 'none'
+            : 'block';
+});
+
+function aceptarAdaptacion() {
+    document.getElementById('en_adaptacion_hidden').value = '1';
+    panelAdaptacion.style.display = 'none';
+}
+
+function cancelarAdaptacion() {
+    document.getElementById('en_adaptacion_hidden').value = '0';
+    document.getElementById('fechaAdaptacion').value = '';
+    panelAdaptacion.style.display = 'none';
+}
 </script>
 
 @endsection
