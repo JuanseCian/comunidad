@@ -56,8 +56,14 @@ class SepelioEstadisticaController extends Controller
 
         $barrios = DB::table('sepelios')
         ->leftJoin(
+            'personas',
+            'sepelios.persona_id',
+            '=',
+            'personas.id'
+        )
+        ->leftJoin(
             'domicilio',
-            'sepelios.domicilio_id',
+            'personas.domicilio_id',
             '=',
             'domicilio.id'
         )
@@ -71,7 +77,7 @@ class SepelioEstadisticaController extends Controller
             DB::raw("
                 COALESCE(
                     barrio.nombre,
-                    'Sin barrio'
+                    'Sin barrio asignado'
                 ) as barrio
             "),
             DB::raw('COUNT(*) as total')
@@ -98,7 +104,7 @@ class SepelioEstadisticaController extends Controller
             DB::raw("
                 COALESCE(
                     barrio.nombre,
-                    'Sin barrio'
+                    'Sin barrio asignado'
                 )
             ")
         )
