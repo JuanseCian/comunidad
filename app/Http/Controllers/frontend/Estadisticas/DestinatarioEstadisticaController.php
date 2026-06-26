@@ -170,36 +170,44 @@ class DestinatarioEstadisticaController extends Controller
         */
 
         $barrios = (clone $participantes)
-            ->join(
-                'personas',
-                'persona_programa.persona_id',
-                '=',
-                'personas.id'
-            )
-            ->join(
-                'domicilio',
-                'personas.domicilio_id',
-                '=',
-                'domicilio.id'
-            )
-            ->join(
-                'barrio',
-                'domicilio.barrio_id',
-                '=',
-                'barrio.id'
-            )
-            ->select(
-                'barrio.nombre',
-                DB::raw('COUNT(*) as total')
-            )
-            ->whereNotNull('domicilio.barrio_id')
-            ->groupBy(
-                'barrio.id',
-                'barrio.nombre'
-            )
-            ->orderByDesc('total')
-            ->limit(15)
-            ->get();
+        ->join(
+            'personas',
+            'persona_programa.persona_id',
+            '=',
+            'personas.id'
+        )
+        ->leftJoin(
+            'domicilio',
+            'personas.domicilio_id',
+            '=',
+            'domicilio.id'
+        )
+        ->leftJoin(
+            'barrio',
+            'domicilio.barrio_id',
+            '=',
+            'barrio.id'
+        )
+        ->select(
+            DB::raw("
+                COALESCE(
+                    barrio.nombre,
+                    'Sin barrio asignado'
+                ) as nombre
+            "),
+            DB::raw('COUNT(*) as total')
+        )
+        ->groupBy(
+            DB::raw("
+                COALESCE(
+                    barrio.nombre,
+                    'Sin barrio asignado'
+                )
+            ")
+        )
+        ->orderByDesc('total')
+        ->limit(15)
+        ->get();
 
         /*
         |--------------------------------------------------------------------------
