@@ -1,5 +1,4 @@
 <aside class="stats-sidebar d-flex flex-column py-3 pe-0 text-start" id="sidebar">
-    
     <div class="d-flex align-items-center px-3 mb-4 mt-1 gap-2 border-bottom pb-3" style="height: 50px; border-color: var(--bi-sidebar-border) !important;">
         <div class="d-flex align-items-center justify-content-center rounded-circle fw-bold flex-shrink-0 border" 
              style="width: 40px; height: 40px; font-size: 0.85rem; background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0369a1; border-color: #bae6fd !important;">
@@ -21,62 +20,28 @@
                 ['route' => 'estadisticas.destinatarios', 'icon' => 'bi-people', 'label' => 'Destinatarios'],
                 ['route' => 'estadisticas.beneficios', 'icon' => 'bi-award', 'label' => 'Beneficios'],
                 ['route' => 'estadisticas.atenciones', 'icon' => 'bi-heart-pulse', 'label' => 'Intervenciones'],
-                //Ruta de Familias oculta
-                //['route' => 'estadisticas.familias', 'icon' => 'bi-houses', 'label' => 'Familias'],
-                //Ruta de Barrios oculta
-                //['route' => 'estadisticas.territorial', 'icon' => 'bi-geo-alt', 'label' => 'Territorial'],
-
-                // SOLO RECEPCIÓN
+                ['route' => 'estadisticas.territorial', 'icon' => 'bi-geo-alt', 'label' => 'Territorial'],
                 ['route' => 'estadisticas.ingresos', 'icon' => 'bi-box-arrow-in-right', 'label' => 'Ingresos'],
                 ['route' => 'estadisticas.mercaderias', 'icon' => 'bi-box-seam', 'label' => 'Mercaderías'],
                 ['route' => 'estadisticas.sepelios', 'icon' => 'bi-heartbreak', 'label' => 'Sepelios'],
             ];
-
             $rolUsuario = auth()->user()->rol_id;
-
-            $modulosRecepcion = [
-                'Ingresos',
-                'Mercaderías',
-                'Sepelios'
-            ];
+            $modulosRecepcion = ['Ingresos', 'Mercaderías', 'Sepelios'];
         @endphp
 
         @foreach($menuItems as $item)
-
-            @php
-                $esModuloRecepcion = in_array($item['label'], $modulosRecepcion);
-            @endphp
-
-            {{-- MÓDULOS DE RECEPCIÓN --}}
-            @if($esModuloRecepcion && $rolUsuario == 6)
-
-                <a href="{{ route($item['route']) }}"
-                class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}"
-                title="{{ $item['label'] }}">
+            @php $esModuloRecepcion = in_array($item['label'], $modulosRecepcion); @endphp
+            @if(($esModuloRecepcion && $rolUsuario == 6) || (!$esModuloRecepcion && $rolUsuario != 4 && $rolUsuario != 6))
+                <a href="{{ route($item['route']) }}" class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}" title="{{ $item['label'] }}">
                     <i class="bi {{ $item['icon'] }} me-2"></i>
                     <span>{{ $item['label'] }}</span>
                 </a>
-
-            {{-- RESTO DE ESTADÍSTICAS --}}
-            @elseif(!$esModuloRecepcion && $rolUsuario != 4 && $rolUsuario != 6)
-
-                <a href="{{ route($item['route']) }}"
-                class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}"
-                title="{{ $item['label'] }}">
-                    <i class="bi {{ $item['icon'] }} me-2"></i>
-                    <span>{{ $item['label'] }}</span>
-                </a>
-
             @endif
-
         @endforeach
     </nav>
 
     <div class="pt-3 border-top px-3 d-flex flex-column gap-1" style="border-color: var(--bi-sidebar-border) !important;">
-        <a href="{{ route('home') }}" 
-           class="nav-link p-2 rounded-3 border-0 m-0 d-flex align-items-center btn-logout-custom"
-           style="background: rgba(239, 68, 68, 0.08); color: #f43f5e;"
-           title="Volver al Home">
+        <a href="{{ route('home') }}" class="nav-link p-2 rounded-3 border-0 m-0 d-flex align-items-center btn-logout-custom" style="background: rgba(239, 68, 68, 0.08); color: #f43f5e;">
             <i class="bi bi-box-arrow-left m-0 d-flex align-items-center justify-content-center" style="background: transparent; width:24px; height:24px; font-size:1rem;"></i>
             <span class="ms-2 small fw-semibold">Volver al Inicio</span>
         </a>

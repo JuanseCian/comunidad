@@ -136,7 +136,7 @@
                                 </div>
 
                                 <small class="text-muted">
-                                    {{ $item->tutor_responsable ?? '' }}
+                                    {{ $item->tutor_parentezco ?? '' }}
                                 </small>
 
                             </td>

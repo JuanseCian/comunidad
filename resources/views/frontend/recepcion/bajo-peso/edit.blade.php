@@ -112,7 +112,7 @@
                         </div>
                         <div class="mb-0">
                             <label class="form-label fw-semibold">Parentesco</label>
-                            <input type="text" name="tutor_responsable" class="form-control" value="{{ old('tutor_responsable', $bajoPeso->tutor_responsable) }}">
+                            <input type="text" name="tutor_parentezco" class="form-control" value="{{ old('tutor_parentezco', $bajoPeso->tutor_parentezco) }}">
                         </div>
                     </div>
                 </div>

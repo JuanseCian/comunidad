@@ -7,7 +7,6 @@
 
 <div class="container-fluid px-0">
 
-```
 {{-- FILTROS --}}
 <div class="card border-0 shadow-sm mb-4"
      style="border-radius:16px;background:rgba(var(--bs-body-bg-rgb),0.7);backdrop-filter:blur(10px);">
