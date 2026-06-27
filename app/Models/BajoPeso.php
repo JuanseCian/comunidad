@@ -1,314 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\frontend;
+namespace App\Models;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-use App\Models\BajoPeso;
-use App\Models\Familia;
-use App\Models\Persona;
-use Carbon\Carbon;
-
-class BajoPesoController extends Controller
+class BajoPeso extends Model
 {
-    public function index()
-    {
-        $beneficiarios = BajoPeso::with([
-            'familia',
-            'persona',
-            'entregas'
-        ])
-        ->latest()
-        ->paginate(20);
+    protected $fillable = [
+        'persona_id',
+        'familia_id',
+        'apellido_nombre',
+        'dni',
+        'fecha_nacimiento',
+        'edad',
+        'domicilio',
+        'diagnostico',
+        'tratamiento',
 
-        return view(
-            'frontend.recepcion.bajo-peso.index',
-            compact('beneficiarios')
-        );
+        'certificado_bajo_peso',
+        'informe_socioambiental',
+
+        'tutor_nombre',
+        'tutor_dni',
+        'tutor_parentesco',
+        'tutor_responsable',
+        
+        'activo',
+        'observaciones'
+    ];
+
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class);
     }
 
-    public function create()
+    public function familia()
     {
-        $personas = Persona::whereNotNull('fecha_nacimiento')
-            ->whereNotIn('id', function ($query) {
-                $query->select('persona_id')
-                    ->from('bajo_pesos')
-                    ->where('activo', 1);
-            })
-            ->get()
-            ->filter(function ($persona) {
-                return $persona->edad <= 6;
-            })
-            ->sortBy('apellido');
-
-        return view(
-            'frontend.recepcion.bajo-peso.create',
-            compact('personas')
-        );
+        return $this->belongsTo(Familia::class);
     }
 
-    public function datosPersona($id)
+    public function entregas()
     {
-        $persona = Persona::with('familia')
-            ->findOrFail($id);
-
-        return response()->json([
-            'id' => $persona->id,
-            'nombre' => $persona->nombre,
-            'apellido' => $persona->apellido,
-            'dni' => $persona->dni,
-            'edad' => $persona->edad,
-            'fecha_nacimiento' => optional($persona->fecha_nacimiento)
-                ->format('d/m/Y'),
-            'familia_id' => $persona->familia_id,
-            'familia_codigo' => optional($persona->familia)->codigo,
-        ]);
+        return $this->hasMany(BajoPesoEntrega::class);
     }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'persona_id' => 'required',
-
-            'tutor_nombre' => 'nullable|string|max:255',
-            'tutor_dni' => 'nullable|string|max:20',
-            'tutor_parentesco' => 'nullable|string|max:100',
-            
-            'certificado_bajo_peso' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
-            'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',    
-        ]);
-
-        $certificado = null;
-        $informe = null;
-
-        if ($request->hasFile('certificado_bajo_peso')) {
-
-            \Illuminate\Support\Facades\Storage::makeDirectory(
-                'bajo_peso/certificados'
-            );
-
-            $certificado = $request
-    ->file('certificado_bajo_peso')
-    ->store('bajo_peso/certificados', 'public');
-        }
-
-        if ($request->hasFile('informe_socioambiental')) {
-
-            \Illuminate\Support\Facades\Storage::makeDirectory(
-                'bajo_peso/socioambientales'
-            );
-
-            $informe = $request
-    ->file('informe_socioambiental')
-    ->store('bajo_peso/socioambientales', 'public');
-        }
-
-        $persona = Persona::findOrFail(
-            $request->persona_id
-        );
-
-        $beneficiariosActivos = BajoPeso::where('familia_id', $persona->familia_id)
-            ->where('activo', 1)
-            ->count();
-
-        if ($beneficiariosActivos >= 3) {
-            return back()
-                ->withErrors([
-                    'persona_id' =>
-                    'Este grupo familiar ya posee el máximo de 3 beneficiarios activos en Bajo Peso.'
-                ])
-                ->withInput();
-        }
-
-        $yaExiste = BajoPeso::where('persona_id', $persona->id)
-            ->where('activo', 1)
-            ->exists();
-
-        if ($yaExiste) {
-            return back()
-                ->withErrors([
-                    'persona_id' =>
-                    'La persona ya se encuentra registrada en el programa Bajo Peso.'
-                ])
-                ->withInput();
-        }
-
-        if ($persona->edad > 6) {
-
-            return back()
-                ->withErrors([
-                    'persona_id' =>
-                    'El beneficiario no puede superar los 6 años.'
-                ])
-                ->withInput();
-        }
-
-        BajoPeso::create([
-
-            'familia_id' => $persona->familia_id,
-            'persona_id' => $persona->id,
-
-            'diagnostico' => $request->diagnostico,
-            'tratamiento' => $request->tratamiento,
-
-            'certificado_bajo_peso' => $certificado,
-            'informe_socioambiental' => $informe,
-            
-            'tutor_nombre' => $request->tutor_nombre,
-            'tutor_dni' => $request->tutor_dni,
-            'tutor_parentesco' => $request->tutor_parentesco,
-
-            'observaciones' => $request->observaciones,
-        ]);
-
-        return redirect()
-            ->route('bajo-peso.index')
-            ->with('success', 'Beneficiario registrado correctamente.');
-    }
-
-    public function buscarMenores(Request $request)
-    {
-        $term = trim($request->texto ?? '');
-
-        if (!$term || strlen($term) < 2) {
-            return response()->json([]);
-        }
-
-        $personas = Persona::with('familia')
-            ->where(function ($query) use ($term) {
-
-                $query->whereRaw(
-                        'CAST(dni AS CHAR) LIKE ?',
-                        ["%{$term}%"]
-                    )
-                    ->orWhere('apellido', 'LIKE', "%{$term}%")
-                    ->orWhere('nombre', 'LIKE', "%{$term}%");
-            })
-
-            ->whereNotIn('id', function ($query) {
-                $query->select('persona_id')
-                    ->from('bajo_pesos')
-                    ->where('activo', 1);
-            })
-
-            ->orderBy('apellido')
-            ->orderBy('nombre')
-            ->limit(20)
-            ->get()
-
-            ->filter(function ($persona) {
-                return $persona->fecha_nacimiento
-                    && $persona->edad <= 6;
-            })
-
-            ->map(function ($persona) {
-
-                return [
-                    'id' => $persona->id,
-                    'nombre' => $persona->nombre,
-                    'apellido' => $persona->apellido,
-                    'dni' => $persona->dni,
-                    'fecha_nacimiento' => optional($persona->fecha_nacimiento)
-                        ? $persona->fecha_nacimiento->format('Y-m-d')
-                        : null,
-                    'edad' => $persona->edad,
-                    'familia_id' => $persona->familia_id,
-                    'familia_codigo' => optional($persona->familia)->codigo,
-                ];
-            })
-
-            ->take(8)
-            ->values();
-
-        return response()->json($personas);
-    }
-
-    public function show($id)
-    {
-        $beneficiario = BajoPeso::with([
-            'familia',
-            'persona',
-            'entregas'
-        ])->findOrFail($id);
-
-        return view(
-            'frontend.recepcion.bajo-peso.show',
-            compact('beneficiario')
-        );
-    }
-
-    public function edit($id)
-    {
-        $bajoPeso = BajoPeso::findOrFail($id);
-
-        return view(
-            'frontend.recepcion.bajo-peso.edit',
-            compact('bajoPeso')
-        );
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'certificado_bajo_peso'  => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
-            'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
-        ]);
-
-        $beneficiario = BajoPeso::findOrFail($id);
-
-        // Certificado: subir nuevo si viene, mantener el anterior si no
-        $certificado = $beneficiario->certificado_bajo_peso;
-
-        if ($request->hasFile('certificado_bajo_peso')) {
-
-            \Illuminate\Support\Facades\Storage::makeDirectory(
-                'bajo_peso/certificados'
-            );
-
-            $certificado = $request
-    ->file('certificado_bajo_peso')
-    ->store('bajo_peso/certificados', 'public');
-        }
-
-        // Informe: subir nuevo si viene, mantener el anterior si no
-        $informe = $beneficiario->informe_socioambiental;
-
-        if ($request->hasFile('informe_socioambiental')) {
-
-            \Illuminate\Support\Facades\Storage::makeDirectory(
-                'bajo_peso/socioambientales'
-            );
-
-            $informe = $request
-    ->file('informe_socioambiental')
-    ->store('bajo_peso/socioambientales', 'public');
-        }
-
-        $beneficiario->update([
-            'diagnostico'            => $request->diagnostico,
-            'tratamiento'            => $request->tratamiento,
-            'tutor_nombre'           => $request->tutor_nombre,
-            'tutor_dni'              => $request->tutor_dni,
-            'tutor_parentesco'       => $request->tutor_parentesco,
-            'observaciones'          => $request->observaciones,
-            'activo'                 => $request->activo,
-            'certificado_bajo_peso'  => $certificado,
-            'informe_socioambiental' => $informe,
-        ]);
-
-        return redirect()
-            ->route('bajo-peso.show', $id)
-            ->with('success', 'Registro actualizado.');
-    }
-
-    public function destroy($id)
-    {
-        BajoPeso::findOrFail($id)->delete();
-
-        return back()->with(
-            'success',
-            'Registro eliminado correctamente.'
-        );
-    }
-}
+}  

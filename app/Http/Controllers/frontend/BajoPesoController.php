@@ -73,7 +73,7 @@ class BajoPesoController extends Controller
 
             'tutor_nombre' => 'nullable|string|max:255',
             'tutor_dni' => 'nullable|string|max:20',
-            'tutor_parentezco' => 'nullable|string|max:255',
+            'tutor_parentesco' => 'nullable|string|max:100',
             
             'certificado_bajo_peso' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
             'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',    
@@ -108,60 +108,24 @@ class BajoPesoController extends Controller
             $request->persona_id
         );
 
-        $cantidadGrupo = BajoPeso::where('activo', 1)
-            ->where('familia_id', $persona->familia_id)
-            ->count();
-
-        if ($cantidadGrupo >= 3) {
-
-            return back()
-                ->withErrors([
-                    'persona_id' =>
-                    'Este grupo familiar ya posee 3 menores registrados en Bajo Peso.'
-                ])
-                ->withInput();
-        }
-
-        $beneficiariosActivos = BajoPeso::where(
-                'familia_id',
-                $persona->familia_id
-            )
+        $beneficiariosActivos = BajoPeso::where('familia_id', $persona->familia_id)
             ->where('activo', 1)
             ->count();
 
         if ($beneficiariosActivos >= 3) {
-
             return back()
                 ->withErrors([
                     'persona_id' =>
-                    'Este grupo familiar ya posee el máximo de 3 beneficiarios de Bajo Peso.'
+                    'Este grupo familiar ya posee el máximo de 3 beneficiarios activos en Bajo Peso.'
                 ])
                 ->withInput();
         }
 
-        $yaExiste = BajoPeso::where(
-                'persona_id',
-                $persona->id
-            )
+        $yaExiste = BajoPeso::where('persona_id', $persona->id)
             ->where('activo', 1)
             ->exists();
 
         if ($yaExiste) {
-
-            return back()
-                ->withErrors([
-                    'persona_id' =>
-                    'La persona ya se encuentra registrada en el programa.'
-                ])
-                ->withInput();
-        }
-        
-        $existe = BajoPeso::where('persona_id', $persona->id)
-            ->where('activo', 1)
-            ->exists();
-
-        if ($existe) {
-
             return back()
                 ->withErrors([
                     'persona_id' =>
@@ -180,27 +144,6 @@ class BajoPesoController extends Controller
                 ->withInput();
         }
 
-        if ($request->persona_id) {
-
-            $persona = Persona::findOrFail(
-                $request->persona_id
-            );
-
-        } else {
-
-            $familia = Familia::create([
-                'codigo' => Familia::generarCodigo()
-            ]);
-
-            $persona = Persona::create([
-                'familia_id' => $familia->id,
-                'nombre' => $request->nombre,
-                'apellido' => $request->apellido,
-                'dni' => $request->dni,
-                'fecha_nacimiento' => $request->fecha_nacimiento,
-                'estado' => 'aprobado'
-            ]);
-        }
         BajoPeso::create([
 
             'familia_id' => $persona->familia_id,
@@ -214,7 +157,7 @@ class BajoPesoController extends Controller
             
             'tutor_nombre' => $request->tutor_nombre,
             'tutor_dni' => $request->tutor_dni,
-            'tutor_parentezco' => $request->tutor_parentezco,
+            'tutor_parentesco' => $request->tutor_parentesco,
 
             'observaciones' => $request->observaciones,
         ]);
@@ -347,7 +290,7 @@ class BajoPesoController extends Controller
             'tratamiento'            => $request->tratamiento,
             'tutor_nombre'           => $request->tutor_nombre,
             'tutor_dni'              => $request->tutor_dni,
-            'tutor_parentezco'       => $request->tutor_parentezco,
+            'tutor_parentesco'       => $request->tutor_parentesco,
             'observaciones'          => $request->observaciones,
             'activo'                 => $request->activo,
             'certificado_bajo_peso'  => $certificado,
