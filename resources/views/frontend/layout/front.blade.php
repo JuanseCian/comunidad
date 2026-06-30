@@ -181,7 +181,11 @@
                 <div class="col-12 col-md-5 d-flex flex-column align-items-center align-items-md-end text-center text-md-end">
                     <div class="footer-info-item">
                         <i class="bi bi-geo-alt-fill"></i>
-                        <span>Lazarte y Brown, San Nicolás de los Arroyos</span>
+                        <a href="https://www.google.com/maps?q=-33.355467,-60.206702"
+                        target="_blank"
+                        class="text-decoration-none">
+                            Lazarte y Brown, San Nicolás de los Arroyos
+                        </a>
                     </div>
                     <div class="footer-info-item">
                         <i class="bi bi-envelope-fill"></i>
