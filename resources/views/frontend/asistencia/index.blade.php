@@ -200,6 +200,16 @@
 .asi-name { font-size: 13.5px; font-weight: 600; color: var(--neutral-800); }
 .asi-dni-mob { font-size: 11.5px; color: var(--neutral-400); margin-top: 1px; }
 
+/* Botón Historial Exclusivo para Móvil */
+.asi-hist-link-mob {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--sky-50); color: var(--sky-600);
+    border: 1px solid var(--sky-100); border-radius: 12px;
+    font-size: 10.5px; font-weight: 700; padding: 2px 8px;
+    text-decoration: none; transition: all 0.2s ease;
+}
+.asi-hist-link-mob:hover { background: var(--sky-100); color: var(--sky-700); }
+
 /* ── Chips ── */
 .asi-chip {
     display: inline-flex; align-items: center; gap: 4px;
@@ -238,7 +248,7 @@
 .asi-obs:focus { border-color: var(--teal-400); outline: none; box-shadow: 0 0 0 3px rgba(23,163,133,.1); }
 .asi-obs:disabled { background: var(--neutral-50); color: var(--neutral-400); border-color: var(--neutral-100); cursor: not-allowed; }
 
-/* ── Hist btn ── */
+/* ── Hist btn (Desktop) ── */
 .asi-hist-btn {
     width: 32px; height: 32px; border-radius: 9px;
     background: var(--sky-50); color: var(--sky-500);
@@ -436,7 +446,13 @@
                                             </div>
                                             <div>
                                                 <div class="asi-name">{{ $persona->apellido }}, {{ $persona->nombre }}</div>
-                                                <div class="asi-dni-mob d-md-none">DNI {{ $persona->dni ?? '—' }}</div>
+                                                <div class="asi-dni-mob d-md-none d-flex align-items-center gap-2 mt-1">
+                                                    <span>DNI {{ $persona->dni ?? '—' }}</span>
+                                                    {{-- Botón Historial en Móvil --}}
+                                                    <a href="{{ route('asistencia.historial', $persona->id) }}" class="asi-hist-link-mob" title="Ver historial">
+                                                        <i class="bi bi-clock-history" style="pointer-events:none"></i> Historial
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -503,8 +519,6 @@
     </form>
 </div>
 @endsection
-
-
 
 @push('scripts')
 <script>

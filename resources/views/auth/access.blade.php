@@ -398,24 +398,173 @@
 
         /* ── RESPONSIVE ─────────────────────────────────────── */
         @media (max-width: 991px) {
-            .pwd-rules {
-                position: relative;
-                top: auto;
-                left: auto;
-                transform: none;
-                width: 100%;
-                margin-top: 10px;
-                box-shadow: none;
-                margin-left: 0;
-            }
-            .pwd-rules::before {
-                display: none;
-            }
+
+        section{
+            padding:20px 12px;
         }
 
-        @media (max-width: 767px) {
-            .panel-form { padding: 32px 24px; border-radius: 20px; }
+        .scene{
+            width:100%;
         }
+
+        #cardInner{
+            max-width:100% !important;
+        }
+
+        .auth-card{
+            border-radius:18px;
+            overflow:hidden;
+        }
+
+        .panel-form{
+            padding:32px 24px;
+            border-radius:18px;
+        }
+
+        .pwd-rules{
+            position:relative;
+            top:auto;
+            left:auto;
+            transform:none;
+            width:100%;
+            margin-top:10px;
+            margin-left:0;
+            box-shadow:none;
+        }
+
+        .pwd-rules::before{
+            display:none;
+        }
+    }
+
+        @media (max-width: 767px) {
+
+        body{
+            overflow-x:hidden;
+        }
+
+        section{
+            padding:12px;
+            align-items:flex-start;
+        }
+
+        .container{
+            padding:0;
+        }
+
+        .auth-card{
+            border-radius:16px;
+        }
+
+        .panel-img{
+            display:flex !important;
+            border-radius:16px 16px 0 0;
+            min-height:180px;
+            padding:30px 20px;
+        }
+
+        .panel-img h2{
+            font-size:22px;
+        }
+
+        .panel-img p{
+            font-size:13px;
+        }
+
+        .panel-form{
+            padding:24px 18px;
+            border-radius:0 0 16px 16px;
+        }
+
+        .form-title{
+            font-size:20px;
+        }
+
+        .form-sub{
+            font-size:12px;
+            margin-bottom:20px;
+        }
+
+        .input-wrap input{
+            font-size:16px;
+            min-height:48px;
+        }
+
+        .btn-main{
+            min-height:50px;
+            font-size:15px;
+        }
+
+        /* Nombre y apellido uno debajo del otro */
+        .row.g-2 .col-6{
+            width:100%;
+            flex:0 0 100%;
+            max-width:100%;
+        }
+
+        /* Password y confirmar uno debajo del otro */
+        .row.g-2[style*="margin-top"] .col-6{
+            width:100%;
+            flex:0 0 100%;
+            max-width:100%;
+            margin-bottom:12px;
+        }
+
+        .match-msg{
+            margin-top:8px;
+        }
+
+        .switch-link{
+            font-size:12px;
+        }
+
+        footer{
+            text-align:center;
+        }
+
+        footer img{
+            width:110px !important;
+        }
+
+        footer p{
+            font-size:12px !important;
+        }
+    }
+
+    @media (max-width: 420px){
+
+        .panel-img{
+            min-height:150px;
+            padding:20px 15px;
+        }
+
+        .panel-img .brand-icon{
+            width:50px;
+            height:50px;
+        }
+
+        .panel-img h2{
+            font-size:18px;
+        }
+
+        .form-title{
+            font-size:18px;
+        }
+
+        .panel-form{
+            padding:20px 15px;
+        }
+
+        .input-wrap input{
+            padding-left:36px;
+            padding-right:36px;
+        }
+
+        .alert-danger-custom,
+        .alert-success-custom{
+            font-size:12px;
+        }
+    }
     </style>
 </head>
 
@@ -442,7 +591,7 @@
             <div class="flip-card-front">
                 <div class="auth-card">
                     <div class="row g-0">
-                        <div class="col-md-5 panel-img d-none d-md-flex">
+                        <div class="col-md-5 panel-img">
                             <div class="brand-icon">
                                 <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -530,7 +679,7 @@
             <div class="flip-card-back">
                 <div class="auth-card">
                     <div class="row g-0">
-                        <div class="col-md-5 panel-img d-none d-md-flex">
+                        <div class="col-md-5 panel-img">
                             <div class="brand-icon">
                                 <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8">
                                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
@@ -693,9 +842,9 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-3 text-center text-md-start mb-3 mb-md-0">
-                <img src="{{ asset('assets/img/municipalidad_logo.png') }}"
-                     alt="Logo Municipalidad"
-                     width="140">
+                <a href="https://www.sannicolasciudad.gob.ar/"><img src="{{ asset('assets/img/municipalidad_logo.png') }}"
+                alt="Logo Municipalidad"
+                width="140"></a>
             </div>
             <div class="col-md-9 text-center text-md-end">
                 <p class="mb-0" style="font-size: 13px; line-height: 1.8;">

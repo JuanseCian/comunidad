@@ -2375,12 +2375,27 @@ document.addEventListener('keydown', function (e) {
 });
 
 function toggleEdit(section) {
-    const views    = document.querySelectorAll('.view-' + section);
-    const edits    = document.querySelectorAll('.edit-' + section);
-    const isEditing = edits[0]?.style.display === 'inline-block';
+    const views = document.querySelectorAll('.view-' + section);
+    const edits = document.querySelectorAll('.edit-' + section);
+    
+    if (!edits.length) return;
 
-    views.forEach(e => e.style.display = isEditing ? 'inline'        : 'none');
-    edits.forEach(e => e.style.display = isEditing ? 'none'          : 'inline-block');
+    const isEditing = edits[0].style.display === 'inline-block';
+
+    views.forEach(e => e.style.display = isEditing ? 'inline' : 'none');
+    edits.forEach(e => e.style.display = isEditing ? 'none' : 'inline-block');
+
+    if (!isEditing) {
+        const card = edits[0].closest('.sp-card');
+        if (card && card.classList.contains('is-collapsed')) {
+            const body = card.querySelector('.sp-card-body');
+            const icon = card.querySelector('.sp-collapse-icon i');
+
+            card.classList.remove('is-collapsed');
+            if (body) body.classList.remove('collapsed');
+            if (icon) icon.className = 'bi bi-chevron-up';
+        }
+    }
 }
 
 function togglePrograma(id) {
@@ -2433,45 +2448,37 @@ function toggleAdjuntos(id) {
 // ── Cards colapsables ──────────────────────────────────────────────
 (function initCollapsibleCards() {
     document.querySelectorAll('.sp-card-header').forEach(function(header) {
-        // Excluir headers que contengan botones de edición o acciones importantes
         const card = header.closest('.sp-card');
         if (!card) return;
 
         const body = card.querySelector('.sp-card-body');
         if (!body) return;
 
-        // Agregar clase collapsible
         header.classList.add('sp-collapsible');
         body.classList.add('sp-collapsible-body');
 
-        // Agregar ícono chevron al final del header
-        const icon = document.createElement('i');
-        icon.className = 'bi bi-chevron-up sp-collapse-icon';
-        // Insertar el icono como wrapper
         const iconWrapper = document.createElement('span');
         iconWrapper.className = 'sp-collapse-icon';
-        iconWrapper.innerHTML = '<i class="bi bi-chevron-up"></i>';
+        iconWrapper.innerHTML = '<i class="bi bi-chevron-down"></i>';
         header.appendChild(iconWrapper);
 
         // Estado inicial: colapsado
-        let collapsed = true;
         body.classList.add('collapsed');
-        iconWrapper.querySelector('i').className = 'bi bi-chevron-down';
         card.classList.add('is-collapsed');
 
         header.addEventListener('click', function(e) {
-            // No colapsar si se hizo clic en el botón Editar u otro botón/link de acción
             if (e.target.closest('.sp-card-action, button, a, input, select')) return;
 
-            collapsed = !collapsed;
-            if (collapsed) {
-                body.classList.add('collapsed');
-                iconWrapper.querySelector('i').className = 'bi bi-chevron-down';
-                card.classList.add('is-collapsed');
-            } else {
+            const isNowCollapsed = card.classList.contains('is-collapsed');
+
+            if (isNowCollapsed) {
                 body.classList.remove('collapsed');
                 iconWrapper.querySelector('i').className = 'bi bi-chevron-up';
                 card.classList.remove('is-collapsed');
+            } else {
+                body.classList.add('collapsed');
+                iconWrapper.querySelector('i').className = 'bi bi-chevron-down';
+                card.classList.add('is-collapsed');
             }
         });
     });
