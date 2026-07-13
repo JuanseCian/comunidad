@@ -134,6 +134,24 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="col-md-6">
+                    <label style="font-size:11px; font-weight:700; color:#536070; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:5px;">
+                        Nivel de estudio
+                    </label>
+
+                    <select name="nivel_estudio_id"
+                            class="{{ $errors->has('nivel_estudio_id') ? 'is-invalid' : '' }}"
+                            style="width:100%; height:40px; padding:0 30px 0 12px; border:1px solid #c8c4bb; border-radius:10px; font-size:14px; font-family:inherit; outline:none; color:#0f172a; background:white;">
+                        <option value="">— Seleccionar —</option>
+
+                        @foreach($catalogos['niveles_estudio'] as $nivel)
+                            <option value="{{ $nivel->id }}"
+                                {{ old('nivel_estudio_id') == $nivel->id ? 'selected' : '' }}>
+                                {{ $nivel->nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
                 {{-- CONVIVIENTE --}}
                 <div class="col-12">

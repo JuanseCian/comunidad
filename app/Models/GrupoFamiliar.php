@@ -71,6 +71,7 @@ class GrupoFamiliar extends Model
 		'sexo_id' => 'int',
 		'fecha_nacimiento' => 'datetime',
 		'estado_civil_id' => 'int',
+		'nivel_estudio_id' => 'int',
 		'discapacidad_permanente' => 'bool',
 		'discapacidad_id' => 'int',
 		'discapacidad_tratamiento' => 'bool',
@@ -100,6 +101,7 @@ class GrupoFamiliar extends Model
 		'fecha_nacimiento',
 		'relacion_titular',
 		'estado_civil_id',
+		'nivel_estudio_id',
 		'discapacidad_permanente',
 		'discapacidad_id',
 		'discapacidad_tratamiento',
@@ -177,6 +179,11 @@ class GrupoFamiliar extends Model
 	public function situacion_ocupacional()
 	{
 		return $this->belongsTo(SituacionOcupacional::class);
+	}
+	
+	public function nivelEstudio()
+	{
+		return $this->belongsTo(NivelesEstudio::class, 'nivel_estudio_id');
 	}
 
 	/**
