@@ -13,6 +13,7 @@ class Mercaderia extends Model
         'familia_id',
         'user_id',
         'dni',
+        'direccion',
         'apellido',
         'nombre',
         'fecha_entrega',
@@ -42,6 +43,10 @@ class Mercaderia extends Model
             'user_id'
         );
     }
-
+    
+    public function domicilio()
+    {
+        return $this->belongsTo(Domicilio::class);
+    }
     
 }

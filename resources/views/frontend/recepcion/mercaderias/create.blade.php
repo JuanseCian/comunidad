@@ -53,14 +53,26 @@
                 {{-- SECCIÓN 2: DATOS DE LA ENTREGA --}}
                 <label class="form-label fw-bold text-secondary mb-3">2. Datos del retiro</label>
                 
-                <div class="col-md-6">
-                    <label class="form-label small text-muted mb-1">DNI</label>
-                    <input type="text"
-                        name="dni"
-                        id="dniInput"
-                        class="form-control"
-                        value="{{ old('dni') }}"
-                        placeholder="Ingrese DNI">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-2">DNI</label>
+                        <input type="text"
+                            name="dni"
+                            id="dniInput"
+                            class="form-control"
+                            value="{{ old('dni') }}"
+                            placeholder="Ingrese DNI">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-1">Dirección</label>
+                        <input type="text"
+                            name="direccion"
+                            id="direccionInput"
+                            class="form-control"
+                            value="{{ old('direccion') }}"
+                            placeholder="Ingrese dirección">
+                    </div>
                 </div>
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -110,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         apellido: document.getElementById('apellidoInput'),
         nombre: document.getElementById('nombreInput'),
         dni: document.getElementById('dniInput'),
+        direccion: document.getElementById('direccionInput'),
         personaId: document.getElementById('personaId'),
         resultados: document.getElementById('resultadosBusqueda'),
         aviso: document.getElementById('avisoFamilia')
@@ -165,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btn.onclick = () => {
                         elements.personaId.value = p.id;
                         elements.dni.value = p.dni ?? '';
+                        elements.direccion.value = p.direccion ?? '';
                         elements.buscador.value = `${p.apellido}, ${p.nombre}`;
                         elements.apellido.value = p.apellido;
                         elements.nombre.value = p.nombre;

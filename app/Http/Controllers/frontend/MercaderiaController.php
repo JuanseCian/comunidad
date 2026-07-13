@@ -128,6 +128,7 @@ class MercaderiaController extends Controller
             'apellido'      => 'required',
             'nombre'        => 'required',
             'fecha_entrega' => 'required|date',
+            'direccion' => 'nullable|string|max:255',
         ]);
 
         $familiaId = null;
@@ -174,6 +175,7 @@ class MercaderiaController extends Controller
             'familia_id'    => $familiaId,
             'user_id'       => auth()->id(),
             'dni'           => $request->dni,
+            'direccion'     => $request->direccion,
             'apellido'      => $request->apellido,
             'nombre'        => $request->nombre,
             'fecha_entrega' => $request->fecha_entrega,
@@ -193,7 +195,7 @@ class MercaderiaController extends Controller
             return response()->json([]);
         }
 
-        $personas = Persona::query()
+        $personas = Persona::with('domicilio')
             ->where(function ($query) use ($term) {
 
                 if (is_numeric($term)) {
@@ -268,6 +270,12 @@ class MercaderiaController extends Controller
                 'nombre'            => $persona->nombre,
                 'apellido'          => $persona->apellido,
                 'dni'               => $persona->dni,
+                'direccion'         => $persona->domicilio
+                    ? trim(
+                        ($persona->domicilio->calle ?? '') . ' ' .
+                        ($persona->domicilio->altura ?? '')
+                    )
+                    : null,
                 'familia_id'        => $persona->familia_id,
                 'familia_ya_retiro' => $familiaYaRetiro,
                 'dias_desde_retiro' => $diasDesdeRetiro,

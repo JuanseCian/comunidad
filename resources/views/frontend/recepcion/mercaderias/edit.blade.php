@@ -35,16 +35,27 @@
                 {{-- SECCIÓN: DATOS DE LA ENTREGA --}}
                 <label class="form-label fw-bold text-secondary mb-3">Datos del retiro</label>
                 
-                <div class="row g-3">
+                <div class="row">
                     <div class="col-md-6">
-                        <label class="form-label small text-muted mb-1">DNI</label>
+                        <label class="form-label small text-muted mb-2">DNI</label>
                         <input type="text"
                             name="dni"
                             id="dniInput"
                             class="form-control"
-                            value="{{ old('dni', $mercaderia->dni) }}"
+                            value="{{ old('dni') }}"
                             placeholder="Ingrese DNI">
                     </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted mb-1">Dirección</label>
+                        <input type="text"
+                            name="direccion"
+                            id="direccionInput"
+                            class="form-control"
+                            value="{{ old('direccion', $mercaderia->direccion) }}"
+                            placeholder="Ingrese dirección">
+                    </div>
+                </div>
 
                     <div class="col-md-6"></div> {{-- Espaciador --}}
 
