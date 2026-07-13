@@ -147,6 +147,7 @@
                             <th width="180">Habilitado desde</th>
                             <th width="150">Estado</th>
                             <th class="pe-4">Registrado por</th>
+                            <th width="120" class="text-center pe-4">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -228,10 +229,27 @@
                                         {{ $m->usuario->username ?? 'Usuario' }}
                                     </span>
                                 </td>
+                                <td class="text-center pe-4">
+                                    <div class="btn-group btn-group-sm">
+
+                                        <a href="{{ route('recepcion.mercaderias.show', $m) }}"
+                                        class="btn btn-outline-primary"
+                                        title="Ver detalle">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        <a href="{{ route('recepcion.mercaderias.edit', $m) }}"
+                                        class="btn btn-outline-warning"
+                                        title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-5">
+                                <td colspan="8" class="text-center py-5">
                                     <div class="d-flex flex-column align-items-center py-3">
                                         <i class="bi bi-box-seam text-muted mb-3" style="font-size:3rem;"></i>
                                         <h5 class="fw-semibold text-secondary mb-1">No hay entregas registradas</h5>
