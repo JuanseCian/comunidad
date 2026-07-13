@@ -130,7 +130,6 @@ class MercaderiaController extends Controller
             'fecha_entrega' => 'required|date',
         ]);
 
-        // Resolver familia_id desde la persona vinculada (si existe)
         $familiaId = null;
 
         if ($request->persona_id) {
@@ -140,7 +139,6 @@ class MercaderiaController extends Controller
             }
         }
 
-        // Verificar si la familia retiró en los últimos 30 días
         if ($familiaId) {
             $fechaEntrega = \Carbon\Carbon::parse($request->fecha_entrega);
 
