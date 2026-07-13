@@ -70,4 +70,23 @@ class Sede extends Model
 	{
 		return $this->hasMany(User::class);
 	}
+	public function programa()
+    {
+        return $this->belongsTo(ProgramaAsistencia::class, 'programa_id');
+    }
+	 public function scopeGenerales($query)
+    {
+        return $query->whereNull('programa_id');
+    }
+ 
+    /**
+     * Sedes generales + las exclusivas del programa indicado.
+     */
+    public function scopeParaPrograma($query, $programaId)
+    {
+        return $query->where(function ($q) use ($programaId) {
+            $q->whereNull('programa_id')
+              ->orWhere('programa_id', $programaId);
+        });
+    }
 }

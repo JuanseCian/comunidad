@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 22-06-2026 a las 15:45:02
+-- Tiempo de generación: 08-07-2026 a las 13:32:37
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -577,7 +577,8 @@ CREATE TABLE `familias` (
 
 INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
 (58, 'JKW847IRU', '2026-06-16 17:49:11', '2026-06-16 17:49:11'),
-(59, 'TND173RRW', '2026-06-17 16:15:53', '2026-06-17 16:15:53');
+(59, 'TND173RRW', '2026-06-17 16:15:53', '2026-06-17 16:15:53'),
+(60, 'ISI406WHX', '2026-07-07 21:35:39', '2026-07-07 21:35:39');
 
 -- --------------------------------------------------------
 
@@ -644,6 +645,13 @@ CREATE TABLE `grupo_familiar` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `deleted_by` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `grupo_familiar`
+--
+
+INSERT INTO `grupo_familiar` (`id`, `persona_id`, `familia_id`, `nombre`, `direccion`, `documento_id`, `numero_documento`, `sexo_id`, `fecha_nacimiento`, `relacion_titular`, `estado_civil_id`, `discapacidad_permanente`, `discapacidad_id`, `discapacidad_tratamiento`, `caratula`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `esquema_vacunacion`, `cobertura_id`, `situacion_ocupacional_id`, `condicion_inactividad_id`, `categoria_ocupacional_id`, `ingresos`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
+(15, 78, 59, 'asdasdasd', NULL, NULL, '1231', NULL, NULL, NULL, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, '2026-06-30 19:16:40', '2026-06-30 19:16:40', 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1122,7 +1130,8 @@ CREATE TABLE `personas` (
 --
 
 INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `cud_numero`, `cud_vencimiento`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`, `estado`, `creado_por_id`) VALUES
-(78, 59, 'hernan', 'vilchez', NULL, NULL, 1, '41145735', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-06-17 16:15:53', '2026-06-17 16:15:53', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
+(78, 59, 'hernan', 'vilchez', NULL, NULL, 1, '41145735', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-06-17 16:15:53', '2026-06-17 16:15:53', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL),
+(79, 60, 'hernan', 'vilchez', NULL, '2019-03-12', 1, '41145733', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-07-07 21:35:39', '2026-07-07 21:35:39', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
 
 -- --------------------------------------------------------
 
@@ -1427,6 +1436,7 @@ INSERT INTO `rol_permiso` (`rol_id`, `permiso_id`) VALUES
 CREATE TABLE `sedes` (
   `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(150) NOT NULL,
+  `programa_id` bigint UNSIGNED DEFAULT NULL,
   `direccion` varchar(255) DEFAULT NULL,
   `barrio_id` bigint UNSIGNED DEFAULT NULL,
   `telefono` varchar(50) DEFAULT NULL,
@@ -1441,10 +1451,14 @@ CREATE TABLE `sedes` (
 -- Volcado de datos para la tabla `sedes`
 --
 
-INSERT INTO `sedes` (`id`, `nombre`, `direccion`, `barrio_id`, `telefono`, `email`, `activa`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'NORTE', 'Moreno y Chiclana', 13, NULL, NULL, 1, '2026-05-11 11:33:01', '2026-05-11 11:33:08', NULL),
-(2, 'SUR', 'Brown y Hernandarias', 68, NULL, NULL, 1, '2026-05-11 11:33:01', '2026-05-11 11:33:12', NULL),
-(3, 'OESTE', 'De Botet y Pedro Lista', 44, NULL, NULL, 1, '2026-05-11 11:33:01', '2026-05-11 11:33:15', NULL);
+INSERT INTO `sedes` (`id`, `nombre`, `programa_id`, `direccion`, `barrio_id`, `telefono`, `email`, `activa`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'NORTE', NULL, 'Moreno y Chiclana', 13, NULL, NULL, 1, '2026-05-11 11:33:01', '2026-05-11 11:33:08', NULL),
+(2, 'SUR', NULL, 'Brown y Hernandarias', 68, NULL, NULL, 1, '2026-05-11 11:33:01', '2026-05-11 11:33:12', NULL),
+(3, 'OESTE', NULL, 'De Botet y Pedro Lista', 44, NULL, NULL, 1, '2026-05-11 11:33:01', '2026-05-11 11:33:15', NULL),
+(7, 'Sede Sur (Raul Hormazabal)', 2, NULL, NULL, NULL, NULL, 1, '2026-07-08 02:55:50', '2026-07-08 02:55:50', NULL),
+(8, 'Sede Oeste (Tito Clerici)', 2, NULL, NULL, NULL, NULL, 1, '2026-07-08 02:55:50', '2026-07-08 02:55:50', NULL),
+(9, 'Sede Norte (Hogar ExGranja)', 2, NULL, NULL, NULL, NULL, 1, '2026-07-08 02:55:50', '2026-07-08 02:55:50', NULL),
+(10, 'Cavalli Udi Ntra Sra de Fatima', 2, NULL, NULL, NULL, NULL, 1, '2026-07-08 02:55:50', '2026-07-08 02:55:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -1584,7 +1598,8 @@ INSERT INTO `users` (`id`, `username`, `nombre`, `apellido`, `email`, `password`
 (12, 'tecnico', 'tecnico', 'tecnico', 'tecnico@gmail.com', '$2y$12$tebvZbPrFy.1/aat0fRjDeD/BJg3bU6GQu98Z7irjK4uDw2CcX5TW', 1, NULL, NULL, '2026-05-10 02:13:55', '2026-05-10 02:13:55'),
 (13, 'Recepcion', 'recepcion', 'recepcion', 'recepcion@gmail.com', '$2y$12$3rRXAzT.P4RiOxlfh.3jTeFsTDObocwlx3x3KRC1TuOBl5.i8jQrW', 6, NULL, NULL, '2026-05-14 16:37:22', '2026-05-20 16:19:22'),
 (14, 'brunomassoco', 'Bruno', 'Massocco', 'b@gmail.com', '$2y$12$LIHF/iNmKruKppV5vLHptOhNrfHwsSQ0boc5ebYvrQWqdSeGyDZZG', 2, NULL, NULL, '2026-05-20 16:14:54', '2026-05-20 16:18:58'),
-(15, 'juanse', 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', '$2y$12$XD3v1UgTYt7pKV31QIKJEurulLq885megUP71wh2MQrLaEkSG74hW', 1, NULL, 'JMVKqS63sbobU3ix9DY5OOFjehP3el66Aifp8uSrr0QfwfOSlGXHep8JYBU8', '2026-05-26 15:42:01', '2026-05-26 15:48:21');
+(15, 'juanse', 'Juan Segundo', 'Cian', 'juansegundocian@gmail.com', '$2y$12$XD3v1UgTYt7pKV31QIKJEurulLq885megUP71wh2MQrLaEkSG74hW', 1, NULL, 'JMVKqS63sbobU3ix9DY5OOFjehP3el66Aifp8uSrr0QfwfOSlGXHep8JYBU8', '2026-05-26 15:42:01', '2026-05-26 15:48:21'),
+(17, 'Magnust', 'a', 'a', 'hernanvilchezdoc@gmail.com', '$2y$12$85dx2t/OXeRistOfCoqVS.N0s8W7t/FuQ3sR8U7xLkk6pNPNNYTqi', 1, NULL, NULL, '2026-06-24 05:33:45', '2026-06-24 05:34:05');
 
 -- --------------------------------------------------------
 
@@ -2368,7 +2383,8 @@ ALTER TABLE `rol_permiso`
 --
 ALTER TABLE `sedes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_sedes_barrio` (`barrio_id`);
+  ADD KEY `idx_sedes_barrio` (`barrio_id`),
+  ADD KEY `idx_sedes_programa` (`programa_id`);
 
 --
 -- Indices de la tabla `sepelios`
@@ -2541,7 +2557,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT de la tabla `familias`
 --
 ALTER TABLE `familias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de la tabla `genero_percibido`
@@ -2553,7 +2569,7 @@ ALTER TABLE `genero_percibido`
 -- AUTO_INCREMENT de la tabla `grupo_familiar`
 --
 ALTER TABLE `grupo_familiar`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `ingresos`
@@ -2607,7 +2623,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_beneficio`
@@ -2667,7 +2683,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `sedes`
 --
 ALTER TABLE `sedes`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `sepelios`
@@ -2697,7 +2713,7 @@ ALTER TABLE `tipo_documento`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `zona_barrio`
@@ -2920,7 +2936,8 @@ ALTER TABLE `rol_permiso`
 -- Filtros para la tabla `sedes`
 --
 ALTER TABLE `sedes`
-  ADD CONSTRAINT `fk_sedes_barrio` FOREIGN KEY (`barrio_id`) REFERENCES `barrio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_sedes_barrio` FOREIGN KEY (`barrio_id`) REFERENCES `barrio` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_sedes_programa` FOREIGN KEY (`programa_id`) REFERENCES `programas_asistencia` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `sepelios`

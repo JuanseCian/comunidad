@@ -2045,7 +2045,7 @@
                                 ($p->nombre == 'UDI'          && $edad >= 6  && $edad <= 11) ||
                                 ($p->nombre == 'Envion'       && $edad >= 12) ||
                                 ($p->nombre == 'Multiespacio' && $edad >= 12))
-                                <option value="{{ $p->id }}" data-programa="{{ $p->nombre }}">{{ $p->nombre }}</option>
+                                <option value="{{ $p->id }}" data-programa="{{ $p->nombre }}" data-programa-id="{{ $p->id }}">{{ $p->nombre }}</option>
                             @endif
                         @endforeach
                     </select>
@@ -2059,7 +2059,7 @@
                             style="width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border); font-size:13.5px; color:var(--ink); background:white;">
                         <option value="" selected disabled>Seleccionar sede...</option>
                         @foreach($sedes as $sede)
-                            <option value="{{ $sede->id }}">{{ $sede->nombre }}</option>
+                            <option value="{{ $sede->id }}" data-programa-id="{{ $sede->programa_id ?? '' }}">{{ $sede->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -2304,12 +2304,36 @@ document.addEventListener('DOMContentLoaded', function () {
     const programasActivos    = @json($programasActivos);
 
     function toggleSede() {
-        const texto = programaSelectModal?.options[programaSelectModal.selectedIndex]?.text?.trim();
+        const opcionPrograma = programaSelectModal?.options[programaSelectModal.selectedIndex];
+        const texto          = opcionPrograma?.text?.trim();
+        const programaId     = opcionPrograma?.dataset?.programaId || '';
+
         if (texto === 'Multiespacio') {
             sedeWrapper.style.display = 'none';
             sedeSelect.value = '';
-        } else {
-            sedeWrapper.style.display = 'block';
+            return;
+        }
+
+        sedeWrapper.style.display = 'block';
+
+        // UDI: mostrar solo sus sedes exclusivas. Otros programas: solo las sedes generales.
+        [...sedeSelect.options].forEach(function (o) {
+            if (!o.value) return; // placeholder "Seleccionar sede..."
+            const sedeProgramaId = o.dataset.programaId || '';
+
+            if (texto === 'UDI') {
+                // Programa exclusivo: mostrar únicamente las sedes de UDI
+                o.hidden = sedeProgramaId !== programaId;
+            } else {
+                // Cualquier otro programa: mostrar únicamente sedes generales
+                o.hidden = sedeProgramaId !== '';
+            }
+        });
+
+        // Si la sede elegida quedó oculta por el cambio de programa, resetear
+        const seleccionActual = sedeSelect.options[sedeSelect.selectedIndex];
+        if (seleccionActual && seleccionActual.hidden) {
+            sedeSelect.value = '';
         }
     }
 
