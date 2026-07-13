@@ -30,7 +30,7 @@
                 @csrf
                 
                 <input type="hidden" name="persona_id" id="personaId">
-                <input type="hidden" name="dni" id="dniHidden">
+                
 
                 {{-- SECCIÓN 1: BUSCADOR (Destacado) --}}
                 <div class="bg-light p-3 rounded-3 mb-4 position-relative border">
@@ -53,6 +53,15 @@
                 {{-- SECCIÓN 2: DATOS DE LA ENTREGA --}}
                 <label class="form-label fw-bold text-secondary mb-3">2. Datos del retiro</label>
                 
+                <div class="col-md-6">
+                    <label class="form-label small text-muted mb-1">DNI</label>
+                    <input type="text"
+                        name="dni"
+                        id="dniInput"
+                        class="form-control"
+                        value="{{ old('dni') }}"
+                        placeholder="Ingrese DNI">
+                </div>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label small text-muted mb-1">Apellido</label>
@@ -100,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         buscador: document.getElementById('buscadorPersona'),
         apellido: document.getElementById('apellidoInput'),
         nombre: document.getElementById('nombreInput'),
-        dni: document.getElementById('dniHidden'),
+        dni: document.getElementById('dniInput'),
         personaId: document.getElementById('personaId'),
         resultados: document.getElementById('resultadosBusqueda'),
         aviso: document.getElementById('avisoFamilia')
@@ -127,8 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             elements.resultados.innerHTML = '';
 
+            
             if (data.length > 0) {
                 elements.resultados.classList.remove('d-none');
+
+                elements.personaId.value = '';
+
+                elements.apellido.value = '';
+                elements.nombre.value = '';
 
                 data.forEach(p => {
                     const btn = document.createElement('button');
