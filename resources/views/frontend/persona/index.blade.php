@@ -198,6 +198,11 @@
                                 @if($p->sexo) <span class="opacity-50">·</span> <span>{{ $p->sexo->nombre }}</span> @endif
                                 @if($p->trabaja) <span class="opacity-50">·</span> <span class="text-success fw-semibold">Trabaja</span> @endif
                             </div>
+                            @if($p->creadoPor)
+                                <div class="text-muted" style="font-size: 11px;">
+                                    <i class="bi bi-person-badge"></i> Cargado por {{ $p->creadoPor->nombre }} {{ $p->creadoPor->apellido }}
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -248,6 +253,14 @@
                         <a href="{{ route('personas.grupo-familiar.create', $p) }}" class="btn btn-sm btn-action btn-outline-success" title="Agregar familiar">
                             <i class="bi bi-person-plus"></i>
                         </a>
+                        <form action="{{ route('personas.destroy', $p) }}" method="POST" class="d-inline"
+                              onsubmit="return confirm('¿Estás seguro de que querés eliminar a {{ $p->nombre }} {{ $p->apellido }}? Esta acción no se puede deshacer.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-action btn-outline-danger" title="Eliminar persona">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             @endforeach
@@ -299,7 +312,7 @@
     .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
     .cursor-pointer { cursor: pointer; }
     
-    .list-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 80px; gap: 10px; }
+    .list-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 115px; gap: 10px; }
     .row-grid { transition: background 0.15s ease; background-color: white; }
     .row-grid:hover { background-color: #f8fafc; }
     
