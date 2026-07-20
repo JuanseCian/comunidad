@@ -32,6 +32,16 @@
                 </div>
 
                 <div class="col-md-6">
+                    <label class="form-label small text-muted mb-1">Dirección</label>
+                    <input type="text"
+                        name="direccion"
+                        id="direccionInput"
+                        class="form-control"
+                        value="{{ old('direccion', $mercaderia->direccion) }}"
+                        placeholder="Ingrese dirección" disabled>
+                </div>
+
+                <div class="col-md-6">
                     @if($mercaderia->persona_id)
                         <label class="form-label small text-muted mb-1">ID de Persona Vinculada</label>
                         <div>

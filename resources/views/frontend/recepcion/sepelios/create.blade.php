@@ -35,10 +35,10 @@
                 <input type="hidden" name="dni" id="dniHidden">
 
                 {{-- BUSCADOR --}}
-                <div class="bg-light p-3 rounded-3 mb-4 position-relative border">
+                <div class="bg-light p-3 rounded-3 mb-4 position-relative border border-light-subtle">
                     <label class="form-label fw-bold text-primary">1. Buscar solicitante</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
                         <input type="text" id="buscadorPersona" class="form-control form-control-lg border-start-0 ps-0" placeholder="Ingresá DNI, nombre o apellido..." autocomplete="off">
                     </div>
                     <div id="resultadosBusqueda" class="list-group shadow position-absolute w-100 mt-1 d-none" style="z-index:1050; max-height:250px; overflow-y:auto;"></div>
@@ -48,21 +48,21 @@
                 <label class="form-label fw-bold text-secondary mb-3">2. Datos del solicitante</label>
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
-                        <label class="form-label small text-muted">Apellido</label>
+                        <label class="form-label small text-muted">Apellido <span class="text-danger">*</span></label>
                         <input type="text" name="apellido" id="apellidoInput" class="form-control" required value="{{ old('apellido') }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label small text-muted">Nombre</label>
+                        <label class="form-label small text-muted">Nombre <span class="text-danger">*</span></label>
                         <input type="text" name="nombre" id="nombreInput" class="form-control" required value="{{ old('nombre') }}">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label small text-muted">DNI</label>
-                        <input type="text" id="dniVisible" class="form-control" readonly>
+                        <input type="text" id="dniVisible" class="form-control " >
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small text-muted">Carácter</label>
+                        <label class="form-label small text-muted">Carácter / Vínculo</label>
                         <select name="caracter" class="form-select">
-                            <option value="">Seleccionar</option>
+                            <option value="">Seleccionar...</option>
                             <option value="Familiar" {{ old('caracter') == 'Familiar' ? 'selected' : '' }}>Familiar</option>
                             <option value="Responsable" {{ old('caracter') == 'Responsable' ? 'selected' : '' }}>Responsable</option>
                             <option value="Tutor" {{ old('caracter') == 'Tutor' ? 'selected' : '' }}>Tutor</option>
@@ -79,7 +79,7 @@
                 <label class="form-label fw-bold text-secondary mb-3">3. Datos del fallecido</label>
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label small text-muted">Nombre y Apellido</label>
+                        <label class="form-label small text-muted">Nombre y Apellido <span class="text-danger">*</span></label>
                         <input type="text" name="fallecido_nombre" class="form-control" required value="{{ old('fallecido_nombre') }}">
                     </div>
                     <div class="col-md-3">
@@ -93,29 +93,19 @@
                 </div>
 
                 {{-- DATOS DEL SERVICIO --}}
-                <label class="form-label fw-bold text-secondary mb-3">4. Datos del servicio</label>
+                <label class="form-label fw-bold text-secondary mb-3">4. Detalles del servicio</label>
                 <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <label class="form-label small text-muted">Origen de Cobertura</label>
+                    <div class="col-md-3">
+                        <label class="form-label small text-muted">Origen de Cobertura <span class="text-danger">*</span></label>
                         <select name="tipo_sepelio" class="form-select" required>
                             <option value="municipal" {{ old('tipo_sepelio') == 'municipal' ? 'selected' : '' }}>Municipal</option>
                             <option value="particular" {{ old('tipo_sepelio') == 'particular' ? 'selected' : '' }}>Particular</option>
                         </select>
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label small text-muted">Servicio solicitado</label>
-                        <select id="tipoServicioAux" name="categoria_servicio_aux" class="form-select" required>
-                            <option value="">Seleccionar...</option>
-                            <option value="sepelio" {{ old('categoria_servicio_aux') == 'sepelio' ? 'selected' : '' }}>Sepelio</option>
-                            <option value="cremacion" {{ old('categoria_servicio_aux') == 'cremacion' ? 'selected' : '' }}>Cremación</option>
-                        </select>
-                    </div>
-
-                    {{-- Se muestra dinámicamente si el selector auxiliar es 'sepelio' --}}
-                    <div id="bloqueSepelio" class="col-md-4" style="display: none;">
-                        <label class="form-label small text-muted">Variante de Sepelio</label>
-                        <select name="categoria_servicio" id="categoriaServicio" class="form-select">
+                    <div class="col-md-3">
+                        <label class="form-label small text-muted">Categoría <span class="text-danger">*</span></label>
+                        <select name="categoria_servicio" id="categoriaServicio" class="form-select" required>
                             <option value="">Seleccionar...</option>
                             <option value="angelito" {{ old('categoria_servicio') == 'angelito' ? 'selected' : '' }}>Angelito (Bebé)</option>
                             <option value="normal" {{ old('categoria_servicio') == 'normal' ? 'selected' : '' }}>Normal</option>
@@ -124,36 +114,47 @@
                         </select>
                     </div>
 
-                    <div id="bloqueMantenimiento" class="col-md-4 d-flex align-items-center pt-4" style="display: none;">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="mantenimiento" name="mantenimiento" value="1" {{ old('mantenimiento') ? 'checked' : '' }}>
-                            <label class="form-check-label fw-medium text-dark" for="mantenimiento">Incluye mantenimiento</label>
-                        </div>
+                    <div class="col-md-3">
+                        <label class="form-label small text-muted">Costo ($)</label>
+                        <input type="number" step="0.01" name="costo" class="form-control" placeholder="0.00" value="{{ old('costo') }}">
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label small text-muted">Costo</label>
-                        <input type="number" step="0.01" name="costo" class="form-control" value="{{ old('costo') }}">
-                    </div>
-
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label small text-muted">Fecha solicitud</label>
                         <input type="date" name="fecha_solicitud" class="form-control" value="{{ old('fecha_solicitud') ?? date('Y-m-d') }}">
+                    </div>
+
+                    {{-- Opciones Adicionales / Switches --}}
+                    <div class="col-md-12 mt-3">
+                        <div class="d-flex flex-wrap gap-4 p-3 bg-light rounded-3 border border-light-subtle">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" name="es_cremacion" id="switchCremacion" value="1" {{ old('es_cremacion') ? 'checked' : '' }}>
+                                <label class="form-check-label fw-medium text-dark" for="switchCremacion">
+                                    Incluye Cremación
+                                </label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" name="mantenimiento" id="switchMantenimiento" value="1" {{ old('mantenimiento') ? 'checked' : '' }}>
+                                <label class="form-check-label fw-medium text-dark" for="switchMantenimiento">
+                                    Aplica Mantenimiento
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 {{-- OBSERVACIONES --}}
                 <label class="form-label fw-bold text-secondary mb-3">5. Observaciones</label>
                 <div class="mb-4">
-                    <textarea name="observaciones" rows="4" class="form-control" placeholder="Observaciones adicionales...">{{ old('observaciones') }}</textarea>
+                    <textarea name="observaciones" rows="3" class="form-control" placeholder="Detalles adicionales o notas importantes...">{{ old('observaciones') }}</textarea>
                 </div>
 
-                <hr>
+                <hr class="border-light-subtle my-4">
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('recepcion.sepelios.index') }}" class="btn btn-light border px-4">Cancelar</a>
-                    <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-check2-circle me-1"></i> Registrar Sepelio
+                    <a href="{{ route('recepcion.sepelios.index') }}" class="btn btn-light border px-4 shadow-sm">Cancelar</a>
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                        <i class="bi bi-check2-circle me-1"></i> Guardar Sepelio
                     </button>
                 </div>
             </form>
@@ -193,11 +194,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.forEach(p => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.className = 'list-group-item list-group-item-action';
+                    btn.className = 'list-group-item list-group-item-action border-0 border-bottom';
                     btn.innerHTML = `
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between align-items-center">
                             <span><strong>${p.apellido}</strong>, ${p.nombre}</span>
-                            <span class="text-muted small">DNI: ${p.dni ?? 'S/D'}</span>
+                            <span class="badge bg-light text-secondary border">DNI: ${p.dni ?? 'S/D'}</span>
                         </div>`;
                     btn.onclick = () => {
                         elements.personaId.value = p.id;
@@ -219,33 +220,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Cerrar buscador al hacer clic afuera
     document.addEventListener('click', (e) => {
         if (!elements.resultados.contains(e.target) && e.target !== elements.buscador) {
             elements.resultados.classList.add('d-none');
         }
     });
-
-    // Control de UI dinámica condicional
-    const tipoServicioAux = document.getElementById('tipoServicioAux');
-    const bloqueSepelio = document.getElementById('bloqueSepelio');
-    const bloqueMantenimiento = document.getElementById('bloqueMantenimiento');
-    const categoriaServicio = document.getElementById('categoriaServicio');
-    const mantenimiento = document.getElementById('mantenimiento');
-
-    function actualizarFormulario() {
-        if (tipoServicioAux.value === 'sepelio') {
-            bloqueSepelio.style.display = 'block';
-            bloqueMantenimiento.style.display = 'block';
-        } else {
-            bloqueSepelio.style.display = 'none';
-            bloqueMantenimiento.style.display = 'none';
-            if (categoriaServicio) categoriaServicio.value = '';
-            if (mantenimiento) mantenimiento.checked = false;
-        }
-    }
-
-    tipoServicioAux.addEventListener('change', actualizarFormulario);
-    actualizarFormulario();
 });
 </script>
 @endpush

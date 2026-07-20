@@ -22,7 +22,7 @@ class SepelioController extends Controller
                     ->orWhere('fallecido_dni', 'like', "%{$search}%");
             })
             ->latest()
-            ->paginate(15); // Paginación limpia para evitar sobrecarga
+            ->paginate(15);
 
         return view('frontend.recepcion.sepelios.index', compact('sepelios'));
     }
@@ -43,27 +43,30 @@ class SepelioController extends Controller
             }
         }
 
-        // Validación dinámica inteligente
+        // Validación estricta y limpia
         $request->validate([
             'apellido'           => 'required|string|max:100',
             'nombre'             => 'required|string|max:100',
             'fallecido_nombre'   => 'required|string|max:150',
             'tipo_sepelio'       => 'required|in:municipal,particular',
-            // Solo es requerida la categoría si NO es cremación
-            'categoria_servicio' => $request->categoria_servicio_aux === 'cremacion' ? 'nullable' : 'required|in:angelito,normal,vaca,extra_vaca',
+            'categoria_servicio' => 'required|in:angelito,normal,vaca,extra_vaca',
             'fecha_solicitud'    => 'nullable|date',
             'fecha_fallecimiento'=> 'nullable|date',
             'costo'              => 'nullable|numeric|min:0',
         ]);
 
-        // Si se eligió Cremación en el selector auxiliar, mapeamos la base de datos correctamente
-        $categoriaFinal = $request->categoria_servicio_aux === 'cremacion' ? 'cremacion' : $request->categoria_servicio;
+        // Lógica de cremación: Lo inyectamos en las observaciones para no romper el ENUM de la BD
+        $observacionesFinales = $request->observaciones;
+        if ($request->boolean('es_cremacion')) {
+            $prefijo = "[SERVICIO CON CREMACIÓN] ";
+            $observacionesFinales = $observacionesFinales ? $prefijo . $observacionesFinales : $prefijo;
+        }
 
         Sepelio::create([
             'persona_id'           => $request->persona_id,
             'familia_id'           => $familiaId,
             'user_id'              => auth()->id(),
-            'dni'                  => $request->dni, // Se captura del input hidden
+            'dni'                  => $request->dni,
             'apellido'             => $request->apellido,
             'nombre'               => $request->nombre,
             'telefono_responsable' => $request->telefono_responsable,
@@ -74,12 +77,13 @@ class SepelioController extends Controller
             'domicilio'            => $request->domicilio,
             'barrio'               => $request->barrio,
             'caracter'             => $request->caracter,
-            'tipo_sepelio'         => $request->tipo_sepelio, 
-            'categoria_servicio'   => $categoriaFinal,
-            'mantenimiento'        => $request->categoria_servicio_aux === 'cremacion' ? 0 : $request->boolean('mantenimiento'),
+            'tipo_sepelio'         => $request->tipo_sepelio,
+            'categoria_servicio'   => $request->categoria_servicio,
+            // Si es cremación, el mantenimiento va en 0 automáticamente
+            'mantenimiento'        => $request->boolean('es_cremacion') ? 0 : $request->boolean('mantenimiento'),
             'fecha_solicitud'      => $request->fecha_solicitud ?? now()->format('Y-m-d'),
             'costo'                => $request->costo,
-            'observaciones'        => $request->observaciones,
+            'observaciones'        => $observacionesFinales,
         ]);
 
         return redirect()
