@@ -10,6 +10,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/personas/solicitudes', [PersonaController::class, 'solicitudesPendientes'])->name('personas.solicitudes');
         Route::patch('/personas/{id}/aprobar', [PersonaController::class, 'aprobarPersona'])->name('personas.aprobar');
         Route::delete('/personas/{id}/rechazar', [PersonaController::class, 'rechazarPersona'])->name('personas.rechazar');
+        Route::delete('/personas/{id}', [PersonaController::class, 'destroy'])->name('personas.destroy');
     });
 
     Route::middleware([CheckRole::class . ':2,3'])->group(function () {

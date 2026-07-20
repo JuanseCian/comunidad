@@ -16,6 +16,7 @@ class Persona extends Model
         'correo',
         'fecha_nacimiento',
         'documento_id',
+        'creado_por_id',
         'dni',
         'estado',
         'cuil',
@@ -140,7 +141,10 @@ class Persona extends Model
     {
         return $this->belongsTo(Discapacidad::class);
     }
-
+    public function creadoPor()
+{
+    return $this->belongsTo(\App\Models\User::class, 'creado_por_id');
+}
     public function programas()
     {
         return $this->belongsToMany(
