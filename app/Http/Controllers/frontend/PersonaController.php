@@ -336,7 +336,7 @@ class PersonaController extends Controller
             'localidades'      => Localidad::orderBy('nombre')->get(),
             'barrios'          => Barrio::orderBy('nombre')->get(),
             'beneficios'       => Beneficio::orderBy('nombre')->get(),
-            'sedes'            => Sede::where('activa', 1)->orderBy('nombre')->get(['id', 'nombre']),
+            'sedes'            => Sede::where('activa', 1)->orderBy('nombre')->get(['id', 'nombre', 'programa_id']),
             'situaciones_ocup' => SituacionOcupacional::orderBy('nombre')->get(),
             'categorias_ocup'  => CategoriaOcupacional::orderBy('nombre')->get(),
             'discapacidades' => Discapacidad::orderBy('nombre')->get(),

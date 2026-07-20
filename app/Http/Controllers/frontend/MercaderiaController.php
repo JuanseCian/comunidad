@@ -130,7 +130,6 @@ class MercaderiaController extends Controller
             'fecha_entrega' => 'required|date',
         ]);
 
-        // Resolver familia_id desde la persona vinculada (si existe)
         $familiaId = null;
 
         if ($request->persona_id) {
@@ -140,7 +139,6 @@ class MercaderiaController extends Controller
             }
         }
 
-        // Verificar si la familia retiró en los últimos 30 días
         if ($familiaId) {
             $fechaEntrega = \Carbon\Carbon::parse($request->fecha_entrega);
 
@@ -191,51 +189,90 @@ class MercaderiaController extends Controller
     {
         $term = trim($request->texto);
 
-        if (!$term || strlen($term) < 2) {
+        if (empty($term) || strlen($term) < 2) {
             return response()->json([]);
         }
 
         $personas = Persona::query()
             ->where(function ($query) use ($term) {
-                $query->whereRaw('CAST(dni AS CHAR) LIKE ?', ["%{$term}%"])
-                      ->orWhere('apellido', 'LIKE', "%{$term}%")
-                      ->orWhere('nombre', 'LIKE', "%{$term}%");
-            })
-            ->whereNull('deleted_at')
-            ->select(['id', 'nombre', 'apellido', 'dni', 'familia_id'])
-            ->limit(8)
-            ->get()
-            ->map(function ($persona) {
-                // Indicar si la familia retiró en los últimos 30 días
-                $familiaYaRetiro = false;
-                $diasDesdeRetiro = null;
 
-                if ($persona->familia_id) {
-                    $ultimoRetiro = Mercaderia::where('familia_id', $persona->familia_id)
-                        ->orderByDesc('fecha_entrega')
-                        ->value('fecha_entrega');
-
-                    if ($ultimoRetiro) {
-                        $dias = \Carbon\Carbon::parse($ultimoRetiro)
-                            ->diffInDays(now(), false);
-
-                        if ($dias < 30) {
-                            $familiaYaRetiro = true;
-                            $diasDesdeRetiro = (int) $dias;
-                        }
-                    }
+                if (is_numeric($term)) {
+                    $query->where('dni', $term)
+                        ->orWhere('dni', 'LIKE', "{$term}%");
                 }
 
-                return [
-                    'id'                => $persona->id,
-                    'nombre'            => $persona->nombre,
-                    'apellido'          => $persona->apellido,
-                    'dni'               => $persona->dni,
-                    'familia_id'        => $persona->familia_id,
-                    'familia_ya_retiro' => $familiaYaRetiro,
-                    'dias_desde_retiro' => $diasDesdeRetiro,
-                ];
-            });
+                $query->orWhere('apellido', 'LIKE', "%{$term}%")
+
+                    ->orWhere('nombre', 'LIKE', "%{$term}%")
+
+                    ->orWhereRaw(
+                        "CONCAT(apellido,' ',nombre) LIKE ?",
+                        ["%{$term}%"]
+                    )
+
+                    ->orWhereRaw(
+                        "CONCAT(nombre,' ',apellido) LIKE ?",
+                        ["%{$term}%"]
+                    );
+            })
+
+            ->when(is_numeric($term), function ($query) use ($term) {
+                $query->orderByRaw("
+                    CASE
+                        WHEN dni = ? THEN 0
+                        WHEN dni LIKE ? THEN 1
+                        ELSE 2
+                    END
+                ", [$term, "{$term}%"]);
+            })
+
+            ->orderBy('apellido')
+            ->orderBy('nombre')
+
+            ->select([
+                'id',
+                'nombre',
+                'apellido',
+                'dni',
+                'familia_id'
+            ])
+
+            ->limit(10)
+            ->get();
+
+        $personas = $personas->map(function ($persona) {
+
+            $familiaYaRetiro = false;
+            $diasDesdeRetiro = null;
+
+            if ($persona->familia_id) {
+
+                $ultimoRetiro = Mercaderia::where('familia_id', $persona->familia_id)
+                    ->orderByDesc('fecha_entrega')
+                    ->value('fecha_entrega');
+
+                if ($ultimoRetiro) {
+
+                    $dias = \Carbon\Carbon::parse($ultimoRetiro)
+                        ->diffInDays(now(), false);
+
+                    if ($dias < 30) {
+                        $familiaYaRetiro = true;
+                        $diasDesdeRetiro = (int) $dias;
+                    }
+                }
+            }
+
+            return [
+                'id'                => $persona->id,
+                'nombre'            => $persona->nombre,
+                'apellido'          => $persona->apellido,
+                'dni'               => $persona->dni,
+                'familia_id'        => $persona->familia_id,
+                'familia_ya_retiro' => $familiaYaRetiro,
+                'dias_desde_retiro' => $diasDesdeRetiro,
+            ];
+        });
 
         return response()->json($personas);
     }
@@ -265,5 +302,84 @@ class MercaderiaController extends Controller
             'frontend.recepcion.mercaderias.index',
             compact('mercaderias', 'readonly')
         );
+    }
+
+    public function show($id)
+    {
+        $mercaderia = Mercaderia::with(['persona', 'familia', 'usuario'])->findOrFail($id);
+
+        return view('frontend.recepcion.mercaderias.show', compact('mercaderia'));
+    }
+
+    public function edit($id)
+    {
+        $mercaderia = Mercaderia::findOrFail($id);
+
+        return view('frontend.recepcion.mercaderias.edit', compact('mercaderia'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $mercaderia = Mercaderia::findOrFail($id);
+
+        $request->validate([
+            'apellido'      => 'required',
+            'nombre'        => 'required',
+            'fecha_entrega' => 'required|date',
+        ]);
+
+        $familiaId = null;
+
+        if ($request->persona_id) {
+            $persona = Persona::find($request->persona_id);
+            if ($persona && $persona->familia_id) {
+                $familiaId = $persona->familia_id;
+            }
+        }
+
+        if ($familiaId) {
+            $fechaEntrega = \Carbon\Carbon::parse($request->fecha_entrega);
+
+            $ultimoRetiro = Mercaderia::where('familia_id', $familiaId)
+                ->where('id', '!=', $id) 
+                ->orderByDesc('fecha_entrega')
+                ->value('fecha_entrega');
+
+            if ($ultimoRetiro) {
+                $diasTranscurridos = \Carbon\Carbon::parse($ultimoRetiro)
+                    ->diffInDays($fechaEntrega, false);
+
+                if ($diasTranscurridos < 30) {
+                    $diasRestantes = 30 - (int) $diasTranscurridos;
+                    $proximaFecha  = \Carbon\Carbon::parse($ultimoRetiro)
+                        ->addDays(30)
+                        ->locale('es')
+                        ->isoFormat('D [de] MMMM [de] YYYY');
+
+                    return back()
+                        ->withInput()
+                        ->with(
+                            'error',
+                            "Esta familia retiró mercadería hace {$diasTranscurridos} día(s). " .
+                            "Podrá retirar nuevamente el {$proximaFecha} " .
+                            "({$diasRestantes} día(s) restante(s))."
+                        );
+                }
+            }
+        }
+
+        $mercaderia->update([
+            'persona_id'    => $request->persona_id ?: null,
+            'familia_id'    => $familiaId,
+            'dni'           => $request->dni,
+            'apellido'      => $request->apellido,
+            'nombre'        => $request->nombre,
+            'fecha_entrega' => $request->fecha_entrega,
+            'observaciones' => $request->observaciones,
+        ]);
+
+        return redirect()
+            ->route('recepcion.mercaderias.index')
+            ->with('success', 'Entrega actualizada correctamente.');
     }
 }

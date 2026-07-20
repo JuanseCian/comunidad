@@ -16,13 +16,14 @@ use App\Models\CondicionInactividad;
 use App\Models\CategoriaOcupacional;
 use App\Models\NucleoConviviente;
 use App\Models\PersonaNucleo;
+use App\Models\NivelesEstudio;
 use Illuminate\Http\Request;
 
 
 class GrupoFamiliarController extends Controller
 {
 
-    // ── Catálogos compartidos ────────────────────────────────────────
+    
     private function catalogos(): array
     {
         return [
@@ -35,10 +36,10 @@ class GrupoFamiliarController extends Controller
             'situaciones_ocupacional' => SituacionOcupacional::orderBy('nombre')->get(),
             'condiciones_inactividad' => CondicionInactividad::orderBy('nombre')->get(),
             'categorias_ocupacional'  => CategoriaOcupacional::orderBy('nombre')->get(),
+            'niveles_estudio'         => NivelesEstudio::orderBy('nombre')->get(),
         ];
     }
 
-    // ── Reglas de validación compartidas ────────────────────────────
     private function rules(): array
     {
         return [
@@ -64,11 +65,11 @@ class GrupoFamiliarController extends Controller
             'categoria_ocupacional_id'  => 'nullable|exists:categoria_ocupacional,id',
             'ingresos'                  => 'nullable|numeric|min:0',
             'direccion'                 => 'nullable|string|max:200',
+            'nivel_estudio_id' => 'nullable|exists:niveles_estudio,id',
         ];
     }
 
 
-    // ── CREATE ───────────────────────────────────────────────────────
     public function create(Persona $persona)
     {
         return view('frontend.grupofamiliar.create', [
@@ -78,7 +79,7 @@ class GrupoFamiliarController extends Controller
     }
 
 
-    // ── STORE ────────────────────────────────────────────────────────
+    
     public function store(Request $request, Persona $persona)
     {
         $rules             = $this->rules();
@@ -99,9 +100,6 @@ class GrupoFamiliarController extends Controller
 
         $integrante = GrupoFamiliar::create($validated);
 
-        // Si el integrante convive con el titular, vincularlo al núcleo conviviente
-        // de ESA persona específica (no de cualquier titular de la familia).
-        // Si no existe, se crea uno nuevo asociado al domicilio del titular.
         if ($esConviviente && $persona->familia_id) {
             $nucleo = NucleoConviviente::firstOrCreate(
                 [
@@ -120,7 +118,6 @@ class GrupoFamiliarController extends Controller
                 'grupo_familiar_id' => $integrante->id,
             ]);
 
-            // Vincular también a la persona titular al mismo núcleo
             PersonaNucleo::firstOrCreate([
                 'nucleo_id'  => $nucleo->id,
                 'persona_id' => $persona->id,
@@ -133,10 +130,8 @@ class GrupoFamiliarController extends Controller
     }
 
 
-    // ── EDIT ─────────────────────────────────────────────────────────
     public function edit(GrupoFamiliar $grupoFamiliar)
     {
-        // Cargar la persona titular para el breadcrumb y el botón "Cancelar"
         $persona = Persona::findOrFail($grupoFamiliar->persona_id);
 
         return view('frontend.grupofamiliar.edit', [
@@ -147,7 +142,6 @@ class GrupoFamiliarController extends Controller
     }
 
 
-    // ── UPDATE ───────────────────────────────────────────────────────
     public function update(Request $request, GrupoFamiliar $grupoFamiliar)
     {
         $validated = $request->validate($this->rules());
