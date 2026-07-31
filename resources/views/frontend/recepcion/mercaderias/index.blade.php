@@ -251,25 +251,15 @@
             </div>
         </div>
 
-        {{-- PIE DE TABLA / PAGINACIÓN --}}
+        {{-- PIE DE TABLA CON PAGINACIÓN --}}
         @if(method_exists($mercaderias, 'links') && $mercaderias->total() > 0)
-            <div class="card-footer bg-white border-top border-light py-3 px-4">
-                <div class="row align-items-center gy-3">
-                    <div class="col-12 col-md-6 text-center text-md-start">
-                        <span class="text-muted small">
-                            Mostrando del 
-                            <span class="fw-semibold text-dark">{{ $mercaderias->firstItem() }}</span> 
-                            al 
-                            <span class="fw-semibold text-dark">{{ $mercaderias->lastItem() }}</span> 
-                            de 
-                            <span class="fw-semibold text-dark">{{ $mercaderias->total() }}</span> 
-                            entregas
-                        </span>
+            <div class="card-footer bg-white border-top py-3 px-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <div class="text-muted small text-center text-md-start">
+                        Mostrando <strong>{{ $mercaderias->firstItem() }}</strong> a <strong>{{ $mercaderias->lastItem() }}</strong> de <strong>{{ $mercaderias->total() }}</strong> entregas
                     </div>
-                    <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
-                        <div class="pagination-wrapper">
-                            {{ $mercaderias->withQueryString()->links() }}
-                        </div>
+                    <div class="pagination-container">
+                        {{ $mercaderias->withQueryString()->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
             </div>
@@ -279,14 +269,37 @@
 </div>
 
 <style>
-    .pagination-wrapper .pagination {
-        margin-bottom: 0;
+    /* Estilos limpios para la paginación Bootstrap */
+    .pagination-container .pagination {
+        margin-bottom: 0 !important;
+        gap: 3px;
+    }
+    .pagination-container .page-item .page-link {
+        border-radius: 6px !important;
+        font-size: 0.85rem;
+        padding: 0.35rem 0.75rem;
+        color: #4b5563;
+        border: 1px solid #dee2e6;
+        box-shadow: none !important;
+    }
+    .pagination-container .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #fff;
+    }
+    .pagination-container .page-item.disabled .page-link {
+        background-color: #f8f9fa;
+        color: #adb5bd;
+    }
+
+    /* Ocultamos el bloque de texto duplicado nativo que inserta el template de Bootstrap de Laravel */
+    .pagination-container nav > div:first-child {
+        display: none !important;
     }
 </style>
 
 @endsection
 
-{{-- SCRIPT OPCIONAL PARA AUTO-ENVIAR AL CAMBIAR LOS SELECTS --}}
 @section('scripts')
 <script>
     document.querySelectorAll('.select-filter').forEach(select => {
