@@ -132,12 +132,39 @@
                 </table>
             </div>
         </div>
+
+        {{-- PIE DE TABLA / PAGINACIÓN --}}
+        @if($sepelios->total() > 0)
+            <div class="card-footer bg-white border-top border-light py-3 px-4">
+                <div class="row align-items-center gy-3">
+                    <div class="col-12 col-md-6 text-center text-md-start">
+                        <span class="text-muted small">
+                            Mostrando del 
+                            <span class="fw-semibold text-dark">{{ $sepelios->firstItem() }}</span> 
+                            al 
+                            <span class="fw-semibold text-dark">{{ $sepelios->lastItem() }}</span> 
+                            de 
+                            <span class="fw-semibold text-dark">{{ $sepelios->total() }}</span> 
+                            registros
+                        </span>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
+                        <div class="pagination-wrapper">
+                            {{ $sepelios->withQueryString()->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
-    {{-- PAGINACIÓN --}}
-    <div class="mt-3">
-        {{ $sepelios->appends(request()->query())->links() }}
-    </div>
 </div>
+
+<style>
+    /* Estilo para quitar márgenes innecesarios en la paginación Bootstrap de Laravel */
+    .pagination-wrapper .pagination {
+        margin-bottom: 0;
+    }
+</style>
 
 @endsection

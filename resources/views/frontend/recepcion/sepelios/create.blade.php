@@ -57,7 +57,7 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label small text-muted">DNI</label>
-                        <input type="text" id="dniVisible" class="form-control" >
+                        <input type="text" id="dniVisible" class="form-control " >
                     </div>
                     <div class="col-md-6">
                         <label class="form-label small text-muted">Carácter / Vínculo</label>

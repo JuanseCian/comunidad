@@ -71,8 +71,8 @@
                         </div>
                     </div>
 
-                    {{-- Selects de Filtros Avanzados (Se envían al cambiar o al dar Buscar) --}}
-                    <div class="col-md-4">
+                    {{-- Selects de Filtros Avanzados --}}
+                    <div class="col-md-3">
                         <label class="form-label text-secondary small fw-medium">Período</label>
                         <select name="tipo_filtro" class="form-select select-filter">
                             <option value="">Todos</option>
@@ -82,7 +82,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label text-secondary small fw-medium">Mes</label>
                         <select name="mes" class="form-select select-filter">
                             <option value="">Seleccionar mes...</option>
@@ -94,7 +94,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label text-secondary small fw-medium">Año</label>
                         <select name="anio" class="form-select select-filter">
                             @for($i = now()->year; $i >= 2023; $i--)
@@ -104,32 +104,19 @@
                             @endfor
                         </select>
                     </div>
-                    <div class="col-md-2 d-flex gap-2">
 
-                        <button type="submit"
-                                class="btn btn-primary w-100">
+                    <div class="col-md-3 d-flex gap-2 align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-funnel-fill me-1"></i>
                             Aplicar
                         </button>
 
-                        <a href="{{ route(empty($readonly)
-                                    ? 'recepcion.mercaderias.index'
-                                    : 'panel.mercaderias.index') }}"
-                        class="btn btn-outline-secondary">
+                        <a href="{{ $actionRoute }}" class="btn btn-outline-secondary" title="Reiniciar filtros">
                             <i class="bi bi-arrow-clockwise"></i>
                         </a>
-
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
-
-    {{-- RECUENTO TOTAL --}}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="text-secondary small">
-            <strong>Total entregas encontradas:</strong> 
-            <span class="badge bg-info text-dark px-2 py-1 fs-6 ms-1">{{ $mercaderias->total() ?? $mercaderias->count() }}</span>
         </div>
     </div>
 
@@ -152,7 +139,6 @@
                     </thead>
                     <tbody>
                         @forelse($mercaderias as $m)
-                            {{-- NOTA: Lo ideal es pasar estas variables calculadas desde el Controlador --}}
                             @php
                                 $fechaEntrega = \Carbon\Carbon::parse($m->fecha_entrega);
                                 $habilitadoDesde = $fechaEntrega->copy()->addMonthNoOverflow()->startOfMonth();
@@ -229,21 +215,21 @@
                                         {{ $m->usuario->username ?? 'Usuario' }}
                                     </span>
                                 </td>
+
+                                {{-- ACCIONES --}}
                                 <td class="text-center pe-4">
                                     <div class="btn-group btn-group-sm">
-
                                         <a href="{{ route('recepcion.mercaderias.show', $m) }}"
-                                        class="btn btn-outline-primary"
-                                        title="Ver detalle">
+                                           class="btn btn-outline-primary"
+                                           title="Ver detalle">
                                             <i class="bi bi-eye"></i>
                                         </a>
 
                                         <a href="{{ route('recepcion.mercaderias.edit', $m) }}"
-                                        class="btn btn-outline-warning"
-                                        title="Editar">
+                                           class="btn btn-outline-warning"
+                                           title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-
                                     </div>
                                 </td>
                             </tr>
@@ -263,17 +249,40 @@
                     </tbody>
                 </table>
             </div>
-            
-            {{-- PAGINACIÓN (Si se usa paginate() en el controlador) --}}
-            @if(method_exists($mercaderias, 'links'))
-                <div class="card-footer bg-white border-0 py-3 structure-pagination">
-                    {{ $mercaderias->appends(request()->query())->links() }}
-                </div>
-            @endif
         </div>
+
+        {{-- PIE DE TABLA / PAGINACIÓN --}}
+        @if(method_exists($mercaderias, 'links') && $mercaderias->total() > 0)
+            <div class="card-footer bg-white border-top border-light py-3 px-4">
+                <div class="row align-items-center gy-3">
+                    <div class="col-12 col-md-6 text-center text-md-start">
+                        <span class="text-muted small">
+                            Mostrando del 
+                            <span class="fw-semibold text-dark">{{ $mercaderias->firstItem() }}</span> 
+                            al 
+                            <span class="fw-semibold text-dark">{{ $mercaderias->lastItem() }}</span> 
+                            de 
+                            <span class="fw-semibold text-dark">{{ $mercaderias->total() }}</span> 
+                            entregas
+                        </span>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
+                        <div class="pagination-wrapper">
+                            {{ $mercaderias->withQueryString()->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
 </div>
+
+<style>
+    .pagination-wrapper .pagination {
+        margin-bottom: 0;
+    }
+</style>
 
 @endsection
 
