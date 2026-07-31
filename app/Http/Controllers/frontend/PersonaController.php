@@ -41,6 +41,7 @@ class PersonaController extends Controller
             'grupoFamiliar',
             'familia',
             'nucleosConvivientes.miembrosGrupoFamiliar',
+            'creadoPor',
         ])->where('estado', 'aprobado');
 
         if ($request->filled('q')) {
@@ -177,6 +178,7 @@ class PersonaController extends Controller
             'embarazo'                 => $tieneEmbarazo,
             'control_embarazo'         => $tieneEmbarazo ? $request->boolean('control_embarazo') : null,
             'cobertura_id'             => $request->cobertura_id,
+            'creado_por_id'            => Auth::id(),
         ]);
 
         if ($tieneDiscapacidad) {
@@ -693,6 +695,10 @@ class PersonaController extends Controller
 
     public function destroy($id)
     {
+        if (auth()->user()->rol_id != 3) {
+            abort(403, 'No tenés permisos para eliminar personas.');
+        }
+
         $persona = Persona::findOrFail($id);
         $familia = $persona->familia_id ? Familia::find($persona->familia_id) : null;
 
