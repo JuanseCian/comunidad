@@ -22,6 +22,11 @@
                 <span>Imprimir listado</span>
             </a>
             @if(empty($readonly))
+                <a href="{{ route('recepcion.organizaciones.index') }}"
+                   class="btn btn-outline-secondary d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-building"></i>
+                    <span>Organizaciones</span>
+                </a>
                 <a href="{{ route('recepcion.mercaderias.create') }}"
                    class="btn btn-success d-inline-flex align-items-center gap-2 shadow-sm fw-semibold">
                     <i class="bi bi-plus-circle-fill"></i>

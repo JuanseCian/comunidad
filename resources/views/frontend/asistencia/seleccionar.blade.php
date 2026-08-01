@@ -4,28 +4,28 @@
 
 @section('content')
     <style>
-    .card {
-        backdrop-filter: blur(10px);
-    }
+        .card {
+            backdrop-filter: blur(10px);
+        }
 
-    .form-select {
-        border: 1px solid #e5e7eb;
-        min-height: 54px;
-    }
+        .form-select {
+            border: 1px solid #e5e7eb;
+            min-height: 54px;
+        }
 
-    .form-select:focus {
-        border-color: var(--bs-primary);
-        box-shadow: 0 0 0 .15rem rgba(var(--bs-primary-rgb), .15);
-    }
+        .form-select:focus {
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 .15rem rgba(var(--bs-primary-rgb), .15);
+        }
 
-    .btn-primary {
-        transition: .2s ease;
-    }
+        .btn-primary {
+            transition: .2s ease;
+        }
 
-    .btn-primary:hover {
-        transform: translateY(-1px);
-    }
-</style>
+        .btn-primary:hover {
+            transform: translateY(-1px);
+        }
+    </style>
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-7 col-lg-5">
@@ -142,7 +142,7 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
     const form           = document.getElementById('asistenciaForm');
     const programaSelect = document.getElementById('programaSelect');
     const sedeWrapper    = document.getElementById('sedeWrapper');
@@ -200,6 +200,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Ejecución inicial por si vuelve atrás en el navegador con datos cacheados
     actualizarSede();
-});
+    });
 </script>
 @endpush

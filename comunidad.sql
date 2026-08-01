@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 08-07-2026 a las 13:32:37
+-- Tiempo de generación: 01-08-2026 a las 00:21:08
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -577,8 +577,8 @@ CREATE TABLE `familias` (
 
 INSERT INTO `familias` (`id`, `codigo`, `created_at`, `updated_at`) VALUES
 (58, 'JKW847IRU', '2026-06-16 17:49:11', '2026-06-16 17:49:11'),
-(59, 'TND173RRW', '2026-06-17 16:15:53', '2026-06-17 16:15:53'),
-(60, 'ISI406WHX', '2026-07-07 21:35:39', '2026-07-07 21:35:39');
+(60, 'ISI406WHX', '2026-07-07 21:35:39', '2026-07-07 21:35:39'),
+(62, 'PUN531A40', '2026-07-21 02:24:21', '2026-07-21 02:24:21');
 
 -- --------------------------------------------------------
 
@@ -645,13 +645,6 @@ CREATE TABLE `grupo_familiar` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `deleted_by` bigint UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `grupo_familiar`
---
-
-INSERT INTO `grupo_familiar` (`id`, `persona_id`, `familia_id`, `nombre`, `direccion`, `documento_id`, `numero_documento`, `sexo_id`, `fecha_nacimiento`, `relacion_titular`, `estado_civil_id`, `discapacidad_permanente`, `discapacidad_id`, `discapacidad_tratamiento`, `caratula`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `esquema_vacunacion`, `cobertura_id`, `situacion_ocupacional_id`, `condicion_inactividad_id`, `categoria_ocupacional_id`, `ingresos`, `created_at`, `updated_at`, `created_by`, `updated_by`, `deleted_at`, `deleted_by`) VALUES
-(15, 78, 59, 'asdasdasd', NULL, NULL, '1231', NULL, NULL, NULL, NULL, 0, NULL, 0, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, '2026-06-30 19:16:40', '2026-06-30 19:16:40', 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -919,12 +912,14 @@ CREATE TABLE `mercaderias` (
   `id` bigint UNSIGNED NOT NULL,
   `persona_id` bigint UNSIGNED DEFAULT NULL,
   `familia_id` bigint UNSIGNED DEFAULT NULL,
+  `organizacion_id` bigint UNSIGNED DEFAULT NULL,
   `nucleo_conviviente_id` bigint UNSIGNED DEFAULT NULL COMMENT 'Núcleo conviviente que retiró el paquete',
   `user_id` bigint UNSIGNED DEFAULT NULL,
   `dni` varchar(50) DEFAULT NULL,
   `apellido` varchar(255) NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `fecha_entrega` date NOT NULL,
+  `cantidad` int UNSIGNED NOT NULL DEFAULT '1',
   `observaciones` text,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -936,13 +931,13 @@ CREATE TABLE `mercaderias` (
 -- Volcado de datos para la tabla `mercaderias`
 --
 
-INSERT INTO `mercaderias` (`id`, `persona_id`, `familia_id`, `nucleo_conviviente_id`, `user_id`, `dni`, `apellido`, `nombre`, `fecha_entrega`, `observaciones`, `created_at`, `updated_at`) VALUES
-(6, NULL, NULL, NULL, 13, '41899221', 'Abal', 'Daniela', '2026-05-19', 'a', '2026-05-19 17:10:35', '2026-05-19 17:10:35'),
-(7, NULL, NULL, NULL, 13, '45032239', 'cian', 'Juan Segundo', '2026-05-26', NULL, '2026-05-26 18:53:54', '2026-05-26 18:53:54'),
-(8, NULL, NULL, NULL, 13, '74792', 'pipi', 'pipu', '2026-05-29', NULL, '2026-05-29 18:35:42', '2026-05-29 18:35:42'),
-(9, NULL, NULL, NULL, 13, '43056618', 'mosquera', 'Alejo', '2026-07-15', NULL, '2026-06-02 16:30:33', '2026-06-02 16:30:33'),
-(10, NULL, NULL, NULL, 13, NULL, 'SDEWDAA', 'A DADA', '2026-07-09', NULL, '2026-06-02 16:30:57', '2026-06-02 16:30:57'),
-(11, NULL, NULL, NULL, 13, '2173980`', 'Vilchez', 'Hernan', '2026-06-02', NULL, '2026-06-02 16:51:36', '2026-06-02 16:51:36');
+INSERT INTO `mercaderias` (`id`, `persona_id`, `familia_id`, `organizacion_id`, `nucleo_conviviente_id`, `user_id`, `dni`, `apellido`, `nombre`, `fecha_entrega`, `cantidad`, `observaciones`, `created_at`, `updated_at`) VALUES
+(6, NULL, NULL, NULL, NULL, 13, '41899221', 'Abal', 'Daniela', '2026-05-19', 1, 'a', '2026-05-19 17:10:35', '2026-05-19 17:10:35'),
+(7, NULL, NULL, NULL, NULL, 13, '45032239', 'cian', 'Juan Segundo', '2026-05-26', 1, NULL, '2026-05-26 18:53:54', '2026-05-26 18:53:54'),
+(8, NULL, NULL, NULL, NULL, 13, '74792', 'pipi', 'pipu', '2026-05-29', 1, NULL, '2026-05-29 18:35:42', '2026-05-29 18:35:42'),
+(9, NULL, NULL, NULL, NULL, 13, '43056618', 'mosquera', 'Alejo', '2026-07-15', 1, NULL, '2026-06-02 16:30:33', '2026-06-02 16:30:33'),
+(10, NULL, NULL, NULL, NULL, 13, NULL, 'SDEWDAA', 'A DADA', '2026-07-09', 1, NULL, '2026-06-02 16:30:57', '2026-06-02 16:30:57'),
+(11, NULL, NULL, NULL, NULL, 13, '2173980`', 'Vilchez', 'Hernan', '2026-06-02', 1, NULL, '2026-06-02 16:51:36', '2026-06-02 16:51:36');
 
 -- --------------------------------------------------------
 
@@ -1005,6 +1000,25 @@ CREATE TABLE `nucleos_convivientes` (
   `updated_by` bigint UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `organizaciones`
+--
+
+CREATE TABLE `organizaciones` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `cuit_dni` varchar(20) DEFAULT NULL,
+  `responsable` varchar(150) DEFAULT NULL,
+  `telefono` varchar(50) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `cupo_mensual` int UNSIGNED DEFAULT NULL COMMENT 'Límite de bolsones por mes. NULL = sin límite',
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -1130,8 +1144,8 @@ CREATE TABLE `personas` (
 --
 
 INSERT INTO `personas` (`id`, `familia_id`, `nombre`, `apellido`, `correo`, `fecha_nacimiento`, `documento_id`, `dni`, `cuil`, `sexo_id`, `genero_percibido_id`, `domicilio_id`, `provincia_id`, `localidad_id`, `barrio_id`, `telefono`, `nivel_estudio_id`, `trabaja`, `grupo_sanguineo`, `created_at`, `updated_at`, `sede_origen_id`, `estado_civil_id`, `discapacidad_id`, `discapacidad_permanente`, `discapacidad_tratamiento`, `caratula`, `cud_numero`, `cud_vencimiento`, `enfermedad_id`, `enfermedad_tratamiento`, `embarazo`, `control_embarazo`, `cobertura_id`, `estado`, `creado_por_id`) VALUES
-(78, 59, 'hernan', 'vilchez', NULL, NULL, 1, '41145735', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-06-17 16:15:53', '2026-06-17 16:15:53', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL),
-(79, 60, 'hernan', 'vilchez', NULL, '2019-03-12', 1, '41145733', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-07-07 21:35:39', '2026-07-07 21:35:39', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL);
+(79, 60, 'hernan', 'vilchez', NULL, '2019-03-12', 1, '41145733', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-07-07 21:35:39', '2026-07-07 21:35:39', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', NULL),
+(81, 62, 'dssd', 'vilchez', NULL, NULL, NULL, '123123', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2026-07-21 02:24:21', '2026-07-21 02:24:21', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 'aprobado', 1);
 
 -- --------------------------------------------------------
 
@@ -1189,13 +1203,6 @@ CREATE TABLE `persona_programa` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `persona_programa`
---
-
-INSERT INTO `persona_programa` (`id`, `persona_id`, `programa_id`, `sede_id`, `fecha_inicio`, `fecha_fin`, `activo`, `rol`, `en_adaptacion`, `fecha_limite_adaptacion`, `observaciones`, `registrado_por`, `created_at`, `updated_at`) VALUES
-(74, 78, 4, 1, '2026-06-17', NULL, 1, 'destinatario', 0, NULL, NULL, NULL, '2026-06-17 16:16:01', '2026-06-17 16:16:01');
 
 -- --------------------------------------------------------
 
@@ -1621,8 +1628,8 @@ CREATE TABLE `vw_atenciones_mensuales` (
 --
 CREATE TABLE `vw_atenciones_por_usuario` (
 `id` bigint unsigned
-,`total` bigint
 ,`username` varchar(255)
+,`total` bigint
 );
 
 -- --------------------------------------------------------
@@ -1667,11 +1674,11 @@ CREATE TABLE `vw_beneficios_totales` (
 -- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vw_dashboard_general` (
-`total_atenciones` bigint
-,`total_beneficios` bigint
+`total_personas` bigint
 ,`total_familias` bigint
 ,`total_ingresos` bigint
-,`total_personas` bigint
+,`total_atenciones` bigint
+,`total_beneficios` bigint
 );
 
 -- --------------------------------------------------------
@@ -1715,8 +1722,8 @@ CREATE TABLE `vw_destinatarios_por_barrio` (
 --
 CREATE TABLE `vw_destinatarios_por_zona` (
 `id` bigint unsigned
-,`total` bigint
 ,`zona` varchar(50)
+,`total` bigint
 );
 
 -- --------------------------------------------------------
@@ -1771,8 +1778,8 @@ CREATE TABLE `vw_ingresos_por_derivacion` (
 --
 CREATE TABLE `vw_ingresos_por_usuario` (
 `id` bigint unsigned
-,`total_ingresos` bigint
 ,`username` varchar(255)
+,`total_ingresos` bigint
 );
 
 -- --------------------------------------------------------
@@ -1815,8 +1822,8 @@ CREATE TABLE `vw_tipos_atenciones` (
 -- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vw_zonas_mas_activas` (
-`total` bigint
-,`zona` varchar(50)
+`zona` varchar(50)
+,`total` bigint
 );
 
 -- --------------------------------------------------------
@@ -2229,7 +2236,8 @@ ALTER TABLE `mercaderias`
   ADD KEY `mercaderias_familia_id_foreign` (`familia_id`),
   ADD KEY `mercaderias_user_id_foreign` (`user_id`),
   ADD KEY `idx_mercaderia_nucleo` (`nucleo_conviviente_id`),
-  ADD KEY `idx_mercaderia_periodo` (`anio_entrega`,`mes_entrega`);
+  ADD KEY `idx_mercaderia_periodo` (`anio_entrega`,`mes_entrega`),
+  ADD KEY `idx_mercaderias_organizacion_fecha` (`organizacion_id`,`fecha_entrega`);
 
 --
 -- Indices de la tabla `migrations`
@@ -2252,6 +2260,12 @@ ALTER TABLE `nucleos_convivientes`
   ADD KEY `idx_nucleo_domicilio` (`domicilio_id`),
   ADD KEY `fk_nucleo_created_by` (`created_by`),
   ADD KEY `fk_nucleo_updated_by` (`updated_by`);
+
+--
+-- Indices de la tabla `organizaciones`
+--
+ALTER TABLE `organizaciones`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `password_reset_tokens`
@@ -2557,7 +2571,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT de la tabla `familias`
 --
 ALTER TABLE `familias`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT de la tabla `genero_percibido`
@@ -2608,6 +2622,12 @@ ALTER TABLE `nucleos_convivientes`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT de la tabla `organizaciones`
+--
+ALTER TABLE `organizaciones`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `permisos`
 --
 ALTER TABLE `permisos`
@@ -2623,7 +2643,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT de la tabla `personas`
 --
 ALTER TABLE `personas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT de la tabla `persona_beneficio`
@@ -2842,6 +2862,7 @@ ALTER TABLE `localidad`
 ALTER TABLE `mercaderias`
   ADD CONSTRAINT `fk_mercaderia_nucleo` FOREIGN KEY (`nucleo_conviviente_id`) REFERENCES `nucleos_convivientes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `mercaderias_familia_id_foreign` FOREIGN KEY (`familia_id`) REFERENCES `familias` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `mercaderias_organizacion_id_foreign` FOREIGN KEY (`organizacion_id`) REFERENCES `organizaciones` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `mercaderias_persona_id_foreign` FOREIGN KEY (`persona_id`) REFERENCES `personas` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `mercaderias_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 

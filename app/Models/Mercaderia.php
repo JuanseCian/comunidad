@@ -48,5 +48,9 @@ class Mercaderia extends Model
     {
         return $this->belongsTo(Domicilio::class);
     }
+    public function organizacion()
+    {
+    return $this->belongsTo(Organizacion::class);
+    }
     
 }

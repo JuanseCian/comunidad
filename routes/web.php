@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\backend\UserController;
 use App\Http\Controllers\frontend\AtencionController;
+use App\Http\Controllers\frontend\MercaderiaController;
+use App\Http\Controllers\frontend\OrganizacionController;
 use App\Http\Controllers\frontend\AsistenciaController;
 use App\Models\Atencion;
 use App\Models\Persona;
@@ -58,7 +60,22 @@ Route::prefix('admin')
 
     });
 
+// Mercaderías
+Route::get('mercaderias/buscar-personas', [MercaderiaController::class, 'buscarPersonas'])
+    ->name('recepcion.mercaderias.buscar-personas');
+Route::get('mercaderias/buscar-organizaciones', [MercaderiaController::class, 'buscarOrganizaciones'])
+    ->name('recepcion.mercaderias.buscar-organizaciones');
+Route::get('mercaderias/imprimir', [MercaderiaController::class, 'imprimir'])
+    ->name('recepcion.mercaderias.imprimir');
+Route::resource('mercaderias', MercaderiaController::class)
+    ->names('recepcion.mercaderias');
 
+// Organizaciones
+Route::get('organizaciones/buscar', [OrganizacionController::class, 'buscar'])
+    ->name('recepcion.organizaciones.buscar');
+Route::resource('organizaciones', OrganizacionController::class)
+    ->names('recepcion.organizaciones')
+    ->except(['show']);
 require __DIR__.'/auth.php';
 
 require __DIR__.'/roles.php';
