@@ -18,6 +18,17 @@ Route::prefix('recepcion')
             [IngresoController::class, 'buscarPersonas']
         )->name('ingresos.buscar-personas');
 
+        Route::get(
+            '/ingresos/{ingreso}/edit',
+            [IngresoController::class, 'edit']
+        )->name('ingresos.edit');
+
+
+        Route::put(
+            '/ingresos/{ingreso}',
+            [IngresoController::class, 'update']
+        )->name('ingresos.update');
+
         Route::resource('ingresos', IngresoController::class);
 
     });

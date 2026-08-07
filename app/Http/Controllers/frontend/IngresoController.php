@@ -74,10 +74,109 @@ class IngresoController extends Controller
             ->with('success', 'Ingreso registrado correctamente.');
     }
 
-    /**
-     * Búsqueda de personas para autocomplete (persona principal y menor).
-     * Ruta: recepcion.ingresos.buscar-personas
-     */
+    public function edit(Ingreso $ingreso)
+    {
+        $ingreso->load([
+            'persona',
+            'menor',
+            'derivacion',
+            'usuario',
+        ]);
+
+        $derivaciones = Derivacion::orderBy('nombre')->get();
+
+        return view(
+            'frontend.recepcion.ingresos.edit',
+            compact('ingreso', 'derivaciones')
+        );
+    }
+    public function update(Request $request, Ingreso $ingreso)
+    {
+        $datos = $request->validate([
+            'persona_id' => [
+                'nullable',
+                'exists:personas,id'
+            ],
+            'dni' => [
+                'nullable',
+                'string',
+                'max:30'
+            ],
+            'apellido' => [
+                'required',
+                'string',
+                'max:150'
+            ],
+            'nombre' => [
+                'required',
+                'string',
+                'max:150'
+            ],
+            'fecha_ingreso' => [
+                'required',
+                'date'
+            ],
+            'hora_ingreso' => [
+                'required'
+            ],
+            'derivacion_id' => [
+                'nullable',
+                'exists:derivaciones,id'
+            ],
+            'menor_persona_id' => [
+                'nullable',
+                'exists:personas,id'
+            ],
+            'menor_dni' => [
+                'nullable',
+                'string',
+                'max:30'
+            ],
+            'menor_apellido' => [
+                'nullable',
+                'string',
+                'max:150'
+            ],
+            'menor_nombre' => [
+                'nullable',
+                'string',
+                'max:150'
+            ],
+
+            'observaciones' => [
+                'nullable',
+                'string'
+            ],
+        ]);
+        $ingreso->update([
+            'persona_id' => $datos['persona_id'] ?? null,
+            'dni' => $datos['dni'] ?? null,
+            'apellido' => $datos['apellido'],
+            'nombre' => $datos['nombre'],
+            'fecha_ingreso' => $datos['fecha_ingreso'],
+            'hora_ingreso' => $datos['hora_ingreso'],
+            'derivacion_id' => $datos['derivacion_id'] ?? null,
+            'menor_persona_id' =>
+                $datos['menor_persona_id'] ?? null,
+            'menor_dni' =>
+                $datos['menor_dni'] ?? null,
+            'menor_apellido' =>
+                $datos['menor_apellido'] ?? null,
+            'menor_nombre' =>
+                $datos['menor_nombre'] ?? null,
+            'observaciones' =>
+                $datos['observaciones'] ?? null,
+        ]);
+
+
+        return redirect()
+            ->route('recepcion.ingresos.index')
+            ->with(
+                'success',
+                'El ingreso fue actualizado correctamente.'
+            );
+    }
+
     public function buscarPersonas(Request $request)
     {
         $term = trim($request->texto);
