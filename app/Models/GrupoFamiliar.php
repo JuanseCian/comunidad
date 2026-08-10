@@ -87,7 +87,8 @@ class GrupoFamiliar extends Model
 		'ingresos' => 'float',
 		'created_by' => 'int',
 		'updated_by' => 'int',
-		'deleted_by' => 'int'
+		'deleted_by' => 'int',
+		'nivel_estudio_id'=> 'int'
 	];
 
 	protected $fillable = [

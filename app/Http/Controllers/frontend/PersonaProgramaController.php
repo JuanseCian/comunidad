@@ -100,7 +100,17 @@ class PersonaProgramaController extends Controller
 
         return back()->with('success', 'Programa actualizado');
     }
+public function destroy($id)
+{
+// para permitir a algunos roles   if (auth()->user()->rol_id != 3) {
+//    abort(403, 'No tenés permisos para desasignar programas.');
 
+    $pp = PersonaPrograma::findOrFail($id);
+
+    $pp->delete();
+
+    return back()->with('success', 'Programa desasignado correctamente');
+}
     public function asignarPrograma(Request $request)
     {
         $data = $request->validate([

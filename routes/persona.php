@@ -28,6 +28,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/persona-programa', [PersonaProgramaController::class, 'store'])->name('persona-programa.store');
         Route::put('/persona-programa/{id}', [PersonaProgramaController::class, 'update'])->name('persona-programa.update');
         Route::post('/personas/{id}/cambiar-programa', [PersonaController::class, 'cambiarPrograma'])->name('personas.cambiarPrograma');
+        Route::delete('/persona-programa/{id}', [PersonaProgramaController::class, 'destroy'])
+    ->name('persona-programa.destroy');
     });
 
     Route::middleware([CheckRole::class . ':1,2,3'])->group(function () {
