@@ -35,6 +35,7 @@
                             <th width="130">Fecha</th>
                             <th width="100">Hora</th>
                             <th>Registrado por</th>
+                            <th width="100">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,7 +129,14 @@
                                     </span>
                                 </td>
 
-                                
+                                {{-- ACCIONES --}}
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('recepcion.ingresos.edit', $i) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
