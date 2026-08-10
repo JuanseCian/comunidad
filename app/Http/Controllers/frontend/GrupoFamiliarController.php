@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\GrupoFamiliar;
 use App\Models\Persona;
 use App\Models\Sexo;
+use App\Models\Sede;
 use App\Models\TipoDocumento;
 use App\Models\EstadoCivil;
 use App\Models\Discapacidad;
@@ -37,6 +38,7 @@ class GrupoFamiliarController extends Controller
             'condiciones_inactividad' => CondicionInactividad::orderBy('nombre')->get(),
             'categorias_ocupacional'  => CategoriaOcupacional::orderBy('nombre')->get(),
             'niveles_estudio'         => NivelesEstudio::orderBy('nombre')->get(),
+            
         ];
     }
 

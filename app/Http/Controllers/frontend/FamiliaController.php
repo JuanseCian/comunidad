@@ -21,10 +21,10 @@ class FamiliaController extends Controller
             ->withCount('personas')
             ->orderBy('codigo')
             ->paginate(20);
-
+        $sedes = \App\Models\Sede::orderBy('nombre')->get();
         return view(
             'frontend.familias.index',
-            compact('familias')
+            compact('familias','sedes')
         );
     }
         

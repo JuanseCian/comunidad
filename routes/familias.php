@@ -12,3 +12,7 @@ Route::prefix('familias')
             ->name('show');
 
     }); 
+    use App\Http\Controllers\frontend\PersonaProgramaController;
+
+Route::post('/persona-programa', [PersonaProgramaController::class, 'store'])
+    ->name('persona-programa.store');
