@@ -837,6 +837,25 @@
 
                                         <button class="sp-btn-primary" style="margin-top:12px;">Guardar</button>
                                     </form>
+
+                                    <form method="POST"
+                                          action="{{ route('persona-programa.destroy', $pp->id) }}"
+                                          onsubmit="return confirm('¿Desasignar el programa {{ $pp->programa->nombre }}?')"
+                                          style="margin-top:10px;">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                style="border:none; background:#fee2e2; color:#b91c1c;
+                                                       padding:8px 14px; border-radius:10px; font-size:13px;
+                                                       font-weight:600; cursor:pointer; display:inline-flex;
+                                                       align-items:center; gap:6px;">
+                                            <i class="bi bi-trash"></i>
+                                            Borrar programa
+                                        </button>
+                                    </form>
+
                                 </div>
 
                             </div>
@@ -2371,7 +2390,7 @@ document.addEventListener('DOMContentLoaded', function () {
             validarProgramaSeleccionado();
         });
         toggleSede();
-        validarProgramaSeleccionado();
+        validarProgramaSeleccionado(); 
     }
 
     const checkAdaptacion = document.getElementById('check_adaptacion');
