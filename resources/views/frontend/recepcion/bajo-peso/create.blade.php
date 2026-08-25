@@ -80,14 +80,14 @@
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                        <h6 class="card-title text-uppercase text-muted fw-bold mb-0">1. Datos del Beneficiario (Menor)</h6>
+                        <h6 class="card-title text-uppercase text-muted fw-bold mb-0">1. Datos del Beneficiario</h6>
                     </div>
                     <div class="card-body" style="overflow: visible;">
                         
                         <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
                             <i class="bi bi-info-circle-fill me-2 fs-5"></i>
                             <div>
-                                Busque un menor ya registrado. Si no existe, complete los datos manualmente y el sistema lo creará de forma automática.
+                                Busque una persona ya registrada. Si no existe, complete los datos manualmente y el sistema lo creará de forma automática.
                             </div>
                         </div>
 

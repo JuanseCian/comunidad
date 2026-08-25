@@ -6,7 +6,7 @@ Route::prefix('recepcion')
     ->name('recepcion.')
     ->group(function () {
         
-        // Búsqueda de menores para autocomplete
+        // Búsqueda de personas para autocomplete
         Route::get(
             'bajo-peso/buscar-personas',
             [BajoPesoController::class, 'buscarMenores']

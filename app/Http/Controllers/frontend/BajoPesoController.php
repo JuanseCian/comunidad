@@ -37,9 +37,6 @@ class BajoPesoController extends Controller
                     ->where('activo', 1);
             })
             ->get()
-            ->filter(function ($persona) {
-                return $persona->edad <= 6;
-            })
             ->sortBy('apellido');
 
         return view(
@@ -134,16 +131,6 @@ class BajoPesoController extends Controller
                 ->withInput();
         }
 
-        if ($persona->edad > 6) {
-
-            return back()
-                ->withErrors([
-                    'persona_id' =>
-                    'El beneficiario no puede superar los 6 años.'
-                ])
-                ->withInput();
-        }
-
         BajoPeso::create([
 
             'familia_id' => $persona->familia_id,
@@ -198,8 +185,7 @@ class BajoPesoController extends Controller
             ->get()
 
             ->filter(function ($persona) {
-                return $persona->fecha_nacimiento
-                    && $persona->edad <= 6;
+                return $persona->fecha_nacimiento;
             })
 
             ->map(function ($persona) {
