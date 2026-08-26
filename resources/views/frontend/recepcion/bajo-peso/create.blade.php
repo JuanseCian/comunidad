@@ -48,7 +48,7 @@
                 Registro de beneficiarios y control del programa Bajo Peso.
             </p>
         </div>
-        <a href="{{ route('bajo-peso.index') }}" class="btn btn-outline-secondary">
+        <a href="{{ route('recepcion.bajo-peso.index') }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i> Volver al listado
         </a>
     </div>
@@ -67,7 +67,7 @@
         </div>
     @endif
 
-    <form action="{{ route('bajo-peso.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+    <form action="{{ route('recepcion.bajo-peso.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
         @csrf
 
         {{-- Campos Ocultos de Relaciones --}}
@@ -376,7 +376,7 @@
             {{-- ACCIONES DE BOTONES --}}
             <div class="col-12">
                 <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('bajo-peso.index') }}" class="btn btn-secondary px-4">
+                    <a href="{{ route('recepcion.bajo-peso.index') }}" class="btn btn-secondary px-4">
                         Cancelar
                     </a>
                     <button type="submit" class="btn btn-warning px-4 text-dark fw-semibold">

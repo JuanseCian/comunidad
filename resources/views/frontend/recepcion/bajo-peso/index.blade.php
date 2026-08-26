@@ -20,7 +20,7 @@
             </p>
         </div>
 
-        <a href="{{ route('bajo-peso.create') }}"
+        <a href="{{ route('recepcion.bajo-peso.create') }}"
            class="btn btn-warning shadow-sm">
 
             <i class="bi bi-plus-circle me-1"></i>
@@ -179,14 +179,14 @@
 
                                 <div class="d-flex justify-content-end gap-1">
 
-                                    <a href="{{ route('bajo-peso.show', $item->id) }}"
+                                    <a href="{{ route('recepcion.bajo-peso.show', $item->id) }}"
                                        class="btn btn-sm btn-outline-primary"
                                        title="Ver">
 
                                         <i class="bi bi-eye"></i>
                                     </a>
 
-                                    <a href="{{ route('bajo-peso.edit', $item->id) }}"
+                                    <a href="{{ route('recepcion.bajo-peso.edit', $item->id) }}"
                                        class="btn btn-sm btn-outline-warning"
                                        title="Editar">
 

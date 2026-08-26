@@ -16,10 +16,10 @@
             </p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('bajo-peso.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('recepcion.bajo-peso.index') }}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Volver
             </a>
-            <a href="{{ route('bajo-peso.edit', $beneficiario->id) }}" class="btn btn-warning text-dark fw-semibold">
+            <a href="{{ route('recepcion.bajo-peso.edit', $beneficiario->id) }}" class="btn btn-warning text-dark fw-semibold">
                 <i class="bi bi-pencil-square me-1"></i> Editar Ficha
             </a>
         </div>

@@ -1364,7 +1364,7 @@
     
                                     <div class="mt-3">
     
-                                        <a href="{{ route('bajo-peso.show', $persona->bajoPesoActivo->id) }}"
+                                        <a href="{{ route('recepcion.bajo-peso.show', $persona->bajoPesoActivo->id) }}"
                                         class="btn btn-sm btn-danger">
     
                                             <i class="bi bi-eye"></i>

@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Models\BajoPeso;
-use App\Models\Familia;
 use App\Models\Persona;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class BajoPesoController extends Controller
 {
@@ -17,10 +14,10 @@ class BajoPesoController extends Controller
         $beneficiarios = BajoPeso::with([
             'familia',
             'persona',
-            'entregas'
+            'entregas',
         ])
-        ->latest()
-        ->paginate(20);
+            ->latest()
+            ->paginate(20);
 
         return view(
             'frontend.recepcion.bajo-peso.index',
@@ -71,9 +68,9 @@ class BajoPesoController extends Controller
             'tutor_nombre' => 'nullable|string|max:255',
             'tutor_dni' => 'nullable|string|max:20',
             'tutor_parentesco' => 'nullable|string|max:100',
-            
+
             'certificado_bajo_peso' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
-            'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',    
+            'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 
         $certificado = null;
@@ -86,8 +83,8 @@ class BajoPesoController extends Controller
             );
 
             $certificado = $request
-    ->file('certificado_bajo_peso')
-    ->store('bajo_peso/certificados', 'public');
+                ->file('certificado_bajo_peso')
+                ->store('bajo_peso/certificados', 'public');
         }
 
         if ($request->hasFile('informe_socioambiental')) {
@@ -97,8 +94,8 @@ class BajoPesoController extends Controller
             );
 
             $informe = $request
-    ->file('informe_socioambiental')
-    ->store('bajo_peso/socioambientales', 'public');
+                ->file('informe_socioambiental')
+                ->store('bajo_peso/socioambientales', 'public');
         }
 
         $persona = Persona::findOrFail(
@@ -112,8 +109,7 @@ class BajoPesoController extends Controller
         if ($beneficiariosActivos >= 3) {
             return back()
                 ->withErrors([
-                    'persona_id' =>
-                    'Este grupo familiar ya posee el máximo de 3 beneficiarios activos en Bajo Peso.'
+                    'persona_id' => 'Este grupo familiar ya posee el máximo de 3 beneficiarios activos en Bajo Peso.',
                 ])
                 ->withInput();
         }
@@ -125,8 +121,7 @@ class BajoPesoController extends Controller
         if ($yaExiste) {
             return back()
                 ->withErrors([
-                    'persona_id' =>
-                    'La persona ya se encuentra registrada en el programa Bajo Peso.'
+                    'persona_id' => 'La persona ya se encuentra registrada en el programa Bajo Peso.',
                 ])
                 ->withInput();
         }
@@ -141,7 +136,7 @@ class BajoPesoController extends Controller
 
             'certificado_bajo_peso' => $certificado,
             'informe_socioambiental' => $informe,
-            
+
             'tutor_nombre' => $request->tutor_nombre,
             'tutor_dni' => $request->tutor_dni,
             'tutor_parentesco' => $request->tutor_parentesco,
@@ -150,7 +145,7 @@ class BajoPesoController extends Controller
         ]);
 
         return redirect()
-            ->route('bajo-peso.index')
+            ->route('recepcion.bajo-peso.index')
             ->with('success', 'Beneficiario registrado correctamente.');
     }
 
@@ -158,7 +153,7 @@ class BajoPesoController extends Controller
     {
         $term = trim($request->texto ?? '');
 
-        if (!$term || strlen($term) < 2) {
+        if (! $term || strlen($term) < 2) {
             return response()->json([]);
         }
 
@@ -166,9 +161,9 @@ class BajoPesoController extends Controller
             ->where(function ($query) use ($term) {
 
                 $query->whereRaw(
-                        'CAST(dni AS CHAR) LIKE ?',
-                        ["%{$term}%"]
-                    )
+                    'CAST(dni AS CHAR) LIKE ?',
+                    ["%{$term}%"]
+                )
                     ->orWhere('apellido', 'LIKE', "%{$term}%")
                     ->orWhere('nombre', 'LIKE', "%{$term}%");
             })
@@ -215,7 +210,7 @@ class BajoPesoController extends Controller
         $beneficiario = BajoPeso::with([
             'familia',
             'persona',
-            'entregas'
+            'entregas',
         ])->findOrFail($id);
 
         return view(
@@ -237,7 +232,7 @@ class BajoPesoController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'certificado_bajo_peso'  => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
+            'certificado_bajo_peso' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
             'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 
@@ -253,8 +248,8 @@ class BajoPesoController extends Controller
             );
 
             $certificado = $request
-    ->file('certificado_bajo_peso')
-    ->store('bajo_peso/certificados', 'public');
+                ->file('certificado_bajo_peso')
+                ->store('bajo_peso/certificados', 'public');
         }
 
         // Informe: subir nuevo si viene, mantener el anterior si no
@@ -267,24 +262,24 @@ class BajoPesoController extends Controller
             );
 
             $informe = $request
-    ->file('informe_socioambiental')
-    ->store('bajo_peso/socioambientales', 'public');
+                ->file('informe_socioambiental')
+                ->store('bajo_peso/socioambientales', 'public');
         }
 
         $beneficiario->update([
-            'diagnostico'            => $request->diagnostico,
-            'tratamiento'            => $request->tratamiento,
-            'tutor_nombre'           => $request->tutor_nombre,
-            'tutor_dni'              => $request->tutor_dni,
-            'tutor_parentesco'       => $request->tutor_parentesco,
-            'observaciones'          => $request->observaciones,
-            'activo'                 => $request->activo,
-            'certificado_bajo_peso'  => $certificado,
+            'diagnostico' => $request->diagnostico,
+            'tratamiento' => $request->tratamiento,
+            'tutor_nombre' => $request->tutor_nombre,
+            'tutor_dni' => $request->tutor_dni,
+            'tutor_parentesco' => $request->tutor_parentesco,
+            'observaciones' => $request->observaciones,
+            'activo' => $request->activo,
+            'certificado_bajo_peso' => $certificado,
             'informe_socioambiental' => $informe,
         ]);
 
         return redirect()
-            ->route('bajo-peso.show', $id)
+            ->route('recepcion.bajo-peso.show', $id)
             ->with('success', 'Registro actualizado.');
     }
 

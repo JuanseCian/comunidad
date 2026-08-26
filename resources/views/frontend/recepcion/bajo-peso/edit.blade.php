@@ -16,7 +16,7 @@
                 Modifique los datos médicos o la información del tutor.
             </p>
         </div>
-        <a href="{{ route('bajo-peso.show', $bajoPeso->id) }}" class="btn btn-outline-secondary">
+        <a href="{{ route('recepcion.bajo-peso.show', $bajoPeso->id) }}" class="btn btn-outline-secondary">
             <i class="bi bi-x-circle me-1"></i> Cancelar
         </a>
     </div>
@@ -35,7 +35,7 @@
         </div>
     @endif
 
-    <form action="{{ route('bajo-peso.update', $bajoPeso->id) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
+    <form action="{{ route('recepcion.bajo-peso.update', $bajoPeso->id) }}" method="POST" enctype="multipart/form-data" autocomplete="off">
         @csrf
         @method('PUT')
 

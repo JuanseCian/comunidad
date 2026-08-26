@@ -399,7 +399,7 @@
 
             <div class="action-row">
                 {{-- NUEVO BENEFICIARIO --}}
-                <a href="{{ route('bajo-peso.create') }}" class="action-btn">
+                <a href="{{ route('recepcion.bajo-peso.create') }}" class="action-btn">
                     <div class="action-btn-content">
                         <div class="action-icon">
                             <i class="bi bi-person-plus-fill"></i>
@@ -413,7 +413,7 @@
                 </a>
 
                 {{-- HISTORIAL Y ENTREGAS --}}
-                <a href="{{ route('bajo-peso.index') }}" class="action-btn">
+                <a href="{{ route('recepcion.bajo-peso.index') }}" class="action-btn">
                     <div class="action-btn-content">
                         <div class="action-icon">
                             <i class="bi bi-clipboard2-pulse-fill"></i>
@@ -431,4 +431,4 @@
 
 </div>
 
-@endsection     
+@endsection
