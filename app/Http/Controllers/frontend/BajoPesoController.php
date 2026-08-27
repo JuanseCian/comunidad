@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\BajoPeso;
 use App\Models\Persona;
 use Illuminate\Http\Request;
-
+use App\Models\Familia;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 class BajoPesoController extends Controller
 {
     public function index()
@@ -63,7 +65,19 @@ class BajoPesoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            // Puede venir una persona existente o quedar vacío para crear una nueva
             'persona_id' => 'nullable|exists:personas,id',
+
+            'dni' => [
+                'nullable',
+                'string',
+                'max:20',
+                Rule::unique('personas', 'dni')->ignore($request->persona_id),
+            ],
+
+            'apellido' => 'required_without:persona_id|nullable|string|max:255',
+            'nombre' => 'required_without:persona_id|nullable|string|max:255',
+            'fecha_nacimiento' => 'required_without:persona_id|nullable|date',
 
             'tutor_nombre' => 'nullable|string|max:255',
             'tutor_dni' => 'nullable|string|max:20',
@@ -72,35 +86,88 @@ class BajoPesoController extends Controller
             'certificado_bajo_peso' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
             'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
         ], [
-            'persona_id.required' => 'Debe seleccionar una persona.',
             'persona_id.exists' => 'La persona seleccionada no existe.',
+
+            'apellido.required_without' =>
+                'Debe seleccionar una persona existente o completar el apellido.',
+
+            'nombre.required_without' =>
+                'Debe seleccionar una persona existente o completar el nombre.',
+
+            'fecha_nacimiento.required_without' =>
+                'Debe seleccionar una persona existente o completar la fecha de nacimiento.',
+
+            'dni.unique' =>
+                'Ya existe una persona registrada con ese DNI.',
         ]);
 
-        $persona = Persona::find($request->persona_id);
+        
+        if ($request->filled('persona_id')) {
 
-        $beneficiariosActivos = BajoPeso::where('familia_id', $persona->familia_id)
+            $persona = Persona::find($request->persona_id);
+
+            if (!$persona) {
+                return back()
+                    ->withErrors([
+                        'persona_id' => 'No se encontró la persona seleccionada.',
+                    ])
+                    ->withInput();
+            }
+
+        } else {
+
+            
+
+            $familia = Familia::create([
+                'codigo' => 'FAM-' . now()->format('YmdHis'),
+            ]);
+
+            $persona = Persona::create([
+                'familia_id' => $familia->id,
+                'dni' => $request->dni,
+                'apellido' => $request->apellido,
+                'nombre' => $request->nombre,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+            ]);
+        }
+
+
+        $beneficiariosActivos = BajoPeso::where(
+            'familia_id',
+            $persona->familia_id
+        )
             ->where('activo', 1)
             ->count();
 
         if ($beneficiariosActivos >= 3) {
+
             return back()
                 ->withErrors([
-                    'persona_id' => 'Este grupo familiar ya posee el máximo de 3 beneficiarios activos en Bajo Peso.',
+                    'persona_id' =>
+                        'Este grupo familiar ya posee el máximo de 3 beneficiarios activos en Bajo Peso.',
                 ])
                 ->withInput();
         }
 
-        $yaExiste = BajoPeso::where('persona_id', $persona->id)
+        
+
+        $yaExiste = BajoPeso::where(
+            'persona_id',
+            $persona->id
+        )
             ->where('activo', 1)
             ->exists();
 
         if ($yaExiste) {
+
             return back()
                 ->withErrors([
-                    'persona_id' => 'La persona ya se encuentra registrada en el programa Bajo Peso.',
+                    'persona_id' =>
+                        'La persona ya se encuentra registrada en el programa Bajo Peso.',
                 ])
                 ->withInput();
         }
+
 
         $certificado = null;
         $informe = null;
@@ -109,17 +176,22 @@ class BajoPesoController extends Controller
 
             $certificado = $request
                 ->file('certificado_bajo_peso')
-                ->store('bajo_peso/certificados', 'public');
+                ->store(
+                    'bajo_peso/certificados',
+                    'public'
+                );
         }
 
         if ($request->hasFile('informe_socioambiental')) {
 
             $informe = $request
                 ->file('informe_socioambiental')
-                ->store('bajo_peso/socioambientales', 'public');
+                ->store(
+                    'bajo_peso/socioambientales',
+                    'public'
+                );
         }
 
-        
         BajoPeso::create([
             'familia_id' => $persona->familia_id,
             'persona_id' => $persona->id,
@@ -141,7 +213,10 @@ class BajoPesoController extends Controller
 
         return redirect()
             ->route('recepcion.bajo-peso.index')
-            ->with('success', 'Beneficiario registrado correctamente.');
+            ->with(
+                'success',
+                'Beneficiario registrado correctamente.'
+            );
     }
 
     public function buscarMenores(Request $request)

@@ -261,21 +261,21 @@
                     </div>
 
                     <div class="col-12">
-                        <label for="tutor_parentezco" class="form-label fw-semibold">
+                        <label for="tutor_parentesco" class="form-label fw-semibold">
                             <i class="bi bi-person-check"></i>
                             Responsable
                         </label>
 
                         <input
                             type="text"
-                            name="tutor_parentezco"
-                            id="tutor_parentezco"
-                            class="form-control @error('tutor_parentezco') is-invalid @enderror"
-                            value="{{ old('tutor_parentezco') }}"
+                            name="tutor_parentesco"
+                            id="tutor_parentesco"
+                            class="form-control @error('tutor_parentesco') is-invalid @enderror"
+                            value="{{ old('tutor_parentesco') }}"
                             placeholder="Ej: Madre, Padre, Tutor Legal, Abuela"
                         >
 
-                        @error('tutor_parentezco')
+                        @error('tutor_parentesco')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
