@@ -63,7 +63,7 @@ class BajoPesoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'persona_id' => 'nullable',
+            'persona_id' => 'required|exists:personas,id',
 
             'tutor_nombre' => 'nullable|string|max:255',
             'tutor_dni' => 'nullable|string|max:20',
@@ -71,36 +71,12 @@ class BajoPesoController extends Controller
 
             'certificado_bajo_peso' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
             'informe_socioambiental' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
+        ], [
+            'persona_id.required' => 'Debe seleccionar una persona.',
+            'persona_id.exists' => 'La persona seleccionada no existe.',
         ]);
 
-        $certificado = null;
-        $informe = null;
-
-        if ($request->hasFile('certificado_bajo_peso')) {
-
-            \Illuminate\Support\Facades\Storage::makeDirectory(
-                'bajo_peso/certificados'
-            );
-
-            $certificado = $request
-                ->file('certificado_bajo_peso')
-                ->store('bajo_peso/certificados', 'public');
-        }
-
-        if ($request->hasFile('informe_socioambiental')) {
-
-            \Illuminate\Support\Facades\Storage::makeDirectory(
-                'bajo_peso/socioambientales'
-            );
-
-            $informe = $request
-                ->file('informe_socioambiental')
-                ->store('bajo_peso/socioambientales', 'public');
-        }
-
-        $persona = Persona::findOrFail(
-            $request->persona_id
-        );
+        $persona = Persona::find($request->persona_id);
 
         $beneficiariosActivos = BajoPeso::where('familia_id', $persona->familia_id)
             ->where('activo', 1)
@@ -126,8 +102,25 @@ class BajoPesoController extends Controller
                 ->withInput();
         }
 
-        BajoPeso::create([
+        $certificado = null;
+        $informe = null;
 
+        if ($request->hasFile('certificado_bajo_peso')) {
+
+            $certificado = $request
+                ->file('certificado_bajo_peso')
+                ->store('bajo_peso/certificados', 'public');
+        }
+
+        if ($request->hasFile('informe_socioambiental')) {
+
+            $informe = $request
+                ->file('informe_socioambiental')
+                ->store('bajo_peso/socioambientales', 'public');
+        }
+
+        
+        BajoPeso::create([
             'familia_id' => $persona->familia_id,
             'persona_id' => $persona->id,
 
@@ -142,6 +135,8 @@ class BajoPesoController extends Controller
             'tutor_parentesco' => $request->tutor_parentesco,
 
             'observaciones' => $request->observaciones,
+
+            'activo' => 1,
         ]);
 
         return redirect()
