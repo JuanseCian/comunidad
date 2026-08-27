@@ -63,7 +63,7 @@ class BajoPesoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'persona_id' => 'required|exists:personas,id',
+            'persona_id' => 'nullable|exists:personas,id',
 
             'tutor_nombre' => 'nullable|string|max:255',
             'tutor_dni' => 'nullable|string|max:20',
