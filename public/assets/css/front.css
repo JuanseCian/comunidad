@@ -575,7 +575,7 @@ footer {
             }
         }
 
-        .preloader-text {
+.preloader-text {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 700;
             font-size: 13px;
@@ -583,3 +583,115 @@ footer {
             letter-spacing: 0.8px;
             text-transform: uppercase;
         }
+
+/* ==========================================
+   PREVISUALIZACIÓN DEL MANUAL DE USUARIO
+========================================== */
+.user-manual-modal-content {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+.user-manual-header {
+    align-items: center;
+    background: var(--grad-nav);
+    border: none;
+    color: white;
+    gap: 16px;
+    padding: 18px 22px;
+}
+.user-manual-header .modal-title {
+    flex: 1;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+}
+.user-manual-actions {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+}
+.user-manual-actions .btn-close {
+    filter: invert(1) brightness(200%);
+    margin-left: 4px;
+    opacity: .85;
+}
+.user-manual-body {
+    background: #eef2f5;
+    padding: 14px;
+}
+.user-manual-preview {
+    background: white;
+    border: 1px solid var(--neutral-200);
+    border-radius: 10px;
+    display: block;
+    height: min(72vh, 820px);
+    width: 100%;
+}
+.user-manual-empty {
+    align-items: center;
+    background: white;
+    border: 1px dashed var(--neutral-200);
+    border-radius: 12px;
+    color: var(--neutral-600);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 360px;
+    padding: 32px;
+    text-align: center;
+}
+.user-manual-empty-icon {
+    align-items: center;
+    background: var(--sky-50);
+    border-radius: 16px;
+    color: var(--sky-600);
+    display: flex;
+    font-size: 30px;
+    height: 64px;
+    justify-content: center;
+    margin-bottom: 16px;
+    width: 64px;
+}
+.user-manual-empty h6 {
+    color: var(--neutral-800);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+.user-manual-empty p {
+    font-size: 13px;
+    margin: 0;
+    max-width: 480px;
+}
+.user-manual-empty code {
+    color: var(--teal-700);
+    font-weight: 700;
+}
+
+@media (max-width: 575px) {
+    .user-manual-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        padding: 16px;
+    }
+    .user-manual-header .modal-title {
+        min-width: 180px;
+    }
+    .user-manual-actions {
+        flex: 1;
+        justify-content: flex-end;
+    }
+    .user-manual-actions .btn-sm {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+    .user-manual-body {
+        padding: 8px;
+    }
+    .user-manual-preview {
+        height: 68vh;
+    }
+}

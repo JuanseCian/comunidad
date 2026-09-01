@@ -467,6 +467,110 @@
             .topbar { padding: 14px 16px; border-radius: var(--radius-lg); }
             .topbar-badge { display: none; }
         }
+
+        /* PREVISUALIZACIÓN DEL MANUAL DE USUARIO */
+        .user-manual-modal-content {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .user-manual-header {
+            align-items: center;
+            background: var(--grad-nav);
+            border: none;
+            color: white;
+            display: flex;
+            gap: 16px;
+            padding: 18px 22px;
+        }
+        .user-manual-header .modal-title {
+            flex: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+        }
+        .user-manual-actions {
+            align-items: center;
+            display: flex;
+            gap: 8px;
+        }
+        .user-manual-actions .btn-close {
+            filter: invert(1) brightness(200%);
+            margin-left: 4px;
+            opacity: .85;
+        }
+        .user-manual-body {
+            background: #eef2f5;
+            padding: 14px;
+        }
+        .user-manual-preview {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 10px;
+            display: block;
+            height: min(72vh, 820px);
+            width: 100%;
+        }
+        .user-manual-empty {
+            align-items: center;
+            background: white;
+            border: 1px dashed var(--neutral-200);
+            border-radius: 12px;
+            color: var(--neutral-600);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 360px;
+            padding: 32px;
+            text-align: center;
+        }
+        .user-manual-empty-icon {
+            align-items: center;
+            background: var(--sky-50);
+            border-radius: 16px;
+            color: var(--sky-600);
+            display: flex;
+            font-size: 30px;
+            height: 64px;
+            justify-content: center;
+            margin-bottom: 16px;
+            width: 64px;
+        }
+        .user-manual-empty h6 {
+            color: var(--neutral-800);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .user-manual-empty p {
+            font-size: 13px;
+            margin: 0;
+            max-width: 480px;
+        }
+        .user-manual-empty code {
+            color: var(--teal-700);
+            font-weight: 700;
+        }
+        @media (max-width: 575px) {
+            .user-manual-header {
+                align-items: flex-start;
+                flex-wrap: wrap;
+                padding: 16px;
+            }
+            .user-manual-header .modal-title { min-width: 180px; }
+            .user-manual-actions {
+                flex: 1;
+                justify-content: flex-end;
+            }
+            .user-manual-actions .btn-sm {
+                font-size: 11px;
+                padding: 6px 8px;
+            }
+            .user-manual-body { padding: 8px; }
+            .user-manual-preview { height: 68vh; }
+        }
     </style>
 </head>
 
@@ -524,6 +628,11 @@
 
         {{-- FOOTER DEL SIDEBAR --}}
         <div class="sidebar-footer">
+            {{-- MANUAL DE USUARIO --}}
+            <button class="info-btn" id="btnUserManual" type="button" aria-controls="userManualModal">
+                <i class="bi bi-book-half"></i> Manual de usuario
+            </button>
+
             {{-- INFO DEL SISTEMA --}}
             <button class="info-btn" id="btnSysInfo">
                 <i class="bi bi-info-circle"></i> Info del Sistema
@@ -692,6 +801,45 @@
         </div>
     </div>
 
+    @php($manualExists = file_exists(public_path('manuales/manual-usuario.pdf')))
+    <div class="modal fade" id="userManualModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content user-manual-modal-content">
+                <div class="modal-header user-manual-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-book-half me-2"></i>Manual de usuario
+                    </h5>
+                    <div class="user-manual-actions">
+                        @if($manualExists)
+                            <a href="{{ asset('manuales/manual-usuario.pdf') }}" target="_blank" rel="noopener" class="btn btn-light btn-sm">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Abrir
+                            </a>
+                            <a href="{{ asset('manuales/manual-usuario.pdf') }}" download class="btn btn-light btn-sm">
+                                <i class="bi bi-download me-1"></i> Descargar
+                            </a>
+                        @endif
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                </div>
+                <div class="modal-body user-manual-body">
+                    @if($manualExists)
+                        <iframe
+                            src="{{ asset('manuales/manual-usuario.pdf') }}#toolbar=1&navpanes=0"
+                            title="Previsualización del manual de usuario"
+                            class="user-manual-preview">
+                        </iframe>
+                    @else
+                        <div class="user-manual-empty">
+                            <div class="user-manual-empty-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                            <h6>El manual todavía no está disponible</h6>
+                            <p>Subí el archivo PDF en <code>public/manuales/manual-usuario.pdf</code> y volverá a aparecer aquí automáticamente.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     {{-- LÓGICA DE INTERFAZ (Sidebar + Modal Trigger) --}}
@@ -702,6 +850,9 @@
             const overlay = document.getElementById('sidebarOverlay');
             const btnSysInfo = document.getElementById('btnSysInfo');
             const sysInfoModal = new bootstrap.Modal(document.getElementById('sysInfoModal'));
+            const btnUserManual = document.getElementById('btnUserManual');
+            const userManualModalElement = document.getElementById('userManualModal');
+            const userManualModal = userManualModalElement ? new bootstrap.Modal(userManualModalElement) : null;
 
             function toggleMenu(forceState) {
                 const show = forceState !== undefined ? forceState : !sidebar.classList.contains('show');
@@ -718,6 +869,15 @@
                     sysInfoModal.show();
                 }, 300);
             });
+
+            if (btnUserManual && userManualModal) {
+                btnUserManual.addEventListener('click', () => {
+                    toggleMenu(false);
+                    setTimeout(() => {
+                        userManualModal.show();
+                    }, 300);
+                });
+            }
         });
     </script>
 

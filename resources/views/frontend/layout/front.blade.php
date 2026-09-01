@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/front.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('assets/css/front.css') }}?v=3">
 </head>
 <body>
     <div class="page-preloader" id="pagePreloader">
@@ -56,6 +56,13 @@
                 <a class="drawer-item" href="{{ route('profile.edit') ?? '#' }}">
                     <span class="drawer-item-icon icon-teal"><i class="bi bi-person-fill"></i></span> Gestionar Perfil
                 </a>
+
+                <div class="drawer-divider"></div>
+
+                <div class="drawer-section-label">Ayuda</div>
+                <button type="button" class="drawer-item" id="btnUserManual" aria-controls="userManualModal">
+                    <span class="drawer-item-icon icon-sky"><i class="bi bi-book-half"></i></span> Manual de usuario
+                </button>
 
                 <div class="drawer-divider"></div>
 
@@ -319,6 +326,45 @@
         </div>
     </div>
 
+    @php($manualExists = file_exists(public_path('manuales/manual-usuario.pdf')))
+    <div class="modal fade" id="userManualModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content user-manual-modal-content">
+                <div class="modal-header user-manual-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-book-half me-2"></i>Manual de usuario
+                    </h5>
+                    <div class="user-manual-actions">
+                        @if($manualExists)
+                            <a href="{{ asset('manuales/manual-usuario.pdf') }}" target="_blank" rel="noopener" class="btn btn-light btn-sm">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Abrir
+                            </a>
+                            <a href="{{ asset('manuales/manual-usuario.pdf') }}" download class="btn btn-light btn-sm">
+                                <i class="bi bi-download me-1"></i> Descargar
+                            </a>
+                        @endif
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                </div>
+                <div class="modal-body user-manual-body">
+                    @if($manualExists)
+                        <iframe
+                            src="{{ asset('manuales/manual-usuario.pdf') }}#toolbar=1&navpanes=0"
+                            title="Previsualización del manual de usuario"
+                            class="user-manual-preview">
+                        </iframe>
+                    @else
+                        <div class="user-manual-empty">
+                            <div class="user-manual-empty-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                            <h6>El manual todavía no está disponible</h6>
+                            <p>Subí el archivo PDF en <code>public/manuales/manual-usuario.pdf</code> y volverá a aparecer aquí automáticamente.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const hidePreloader = () => {
@@ -349,6 +395,9 @@
             const closeBtn = document.getElementById('drawerClose');
             const btnSysInfo = document.getElementById('btnSysInfo');
             const sysInfoModal = new bootstrap.Modal(document.getElementById('sysInfoModal'));
+            const btnUserManual = document.getElementById('btnUserManual');
+            const userManualModalElement = document.getElementById('userManualModal');
+            const userManualModal = userManualModalElement ? new bootstrap.Modal(userManualModalElement) : null;
             
             // 1. Capturamos el formulario de logout
             const logoutForm = document.getElementById('logoutForm');
@@ -370,6 +419,15 @@
                     toggleDrawer(false); 
                     setTimeout(() => {
                         sysInfoModal.show();
+                    }, 350);
+                });
+            }
+
+            if (btnUserManual && userManualModal) {
+                btnUserManual.addEventListener('click', () => {
+                    toggleDrawer(false);
+                    setTimeout(() => {
+                        userManualModal.show();
                     }, 350);
                 });
             }
