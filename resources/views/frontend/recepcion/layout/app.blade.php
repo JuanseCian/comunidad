@@ -811,10 +811,10 @@
                     </h5>
                     <div class="user-manual-actions">
                         @if($manualExists)
-                            <a href="{{ asset('manuales/manual-usuario.pdf') }}" target="_blank" rel="noopener" class="btn btn-light btn-sm">
+                            <a href="{{ route('manual.usuario') }}" target="_blank" rel="noopener" class="btn btn-light btn-sm">
                                 <i class="bi bi-box-arrow-up-right me-1"></i> Abrir
                             </a>
-                            <a href="{{ asset('manuales/manual-usuario.pdf') }}" download class="btn btn-light btn-sm">
+                            <a href="{{ route('manual.usuario') }}" download class="btn btn-light btn-sm">
                                 <i class="bi bi-download me-1"></i> Descargar
                             </a>
                         @endif
@@ -824,7 +824,7 @@
                 <div class="modal-body user-manual-body">
                     @if($manualExists)
                         <iframe
-                            src="{{ asset('manuales/manual-usuario.pdf') }}#toolbar=1&navpanes=0"
+                            src="{{ route('manual.usuario') }}#toolbar=1&navpanes=0"
                             title="Previsualización del manual de usuario"
                             class="user-manual-preview">
                         </iframe>
