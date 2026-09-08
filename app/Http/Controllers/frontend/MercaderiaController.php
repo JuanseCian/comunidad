@@ -8,17 +8,13 @@ use Illuminate\Http\Request;
 use App\Models\Mercaderia;
 use App\Models\Persona;
 use App\Models\Organizacion;
+use Illuminate\Database\Eloquent\Builder;
 
 class MercaderiaController extends Controller
 {
 
     public function index(Request $request)
     {
-        $search = $request->search;
-        $tipoFiltro = $request->tipo_filtro;
-        $mes = $request->mes;
-        $anio = $request->anio;
-
         $query = Mercaderia::with([
             'persona',
             'familia',
@@ -26,61 +22,21 @@ class MercaderiaController extends Controller
             'usuario'
         ]);
 
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nombre', 'like', "%{$search}%")
-                ->orWhere('apellido', 'like', "%{$search}%")
-                ->orWhere('dni', 'like', "%{$search}%");
-            });
-        }
-
-        // FILTRO POR MES
-        if ($tipoFiltro === 'mes') {
-
-            $query->whereMonth(
-                'fecha_entrega',
-                $mes ?: now()->month
-            );
-
-            $query->whereYear(
-                'fecha_entrega',
-                $anio ?: now()->year
-            );
-        }
-
-        // FILTRO POR SEMANA
-        if ($tipoFiltro === 'semana') {
-
-            $inicioSemana = now()->startOfWeek();
-            $finSemana = now()->endOfWeek();
-
-            $query->whereBetween(
-                'fecha_entrega',
-                [$inicioSemana, $finSemana]
-            );
-        }
-
-        // FILTRO POR AÑO
-        if ($tipoFiltro === 'anio') {
-
-            $query->whereYear(
-                'fecha_entrega',
-                $anio ?: now()->year
-            );
-        }
+        $this->applyFilters($query, $request);
 
         $mercaderias = $query
             ->orderByDesc('fecha_entrega')
+            ->orderByDesc('id')
             ->paginate(15);
 
         return view(
             'frontend.recepcion.mercaderias.index',
-            compact(
-                'mercaderias',
-                'tipoFiltro',
-                'mes',
-                'anio'
-            )
+            [
+                'mercaderias' => $mercaderias,
+                'tipoFiltro' => $request->input('tipo_filtro'),
+                'mes' => $request->input('mes'),
+                'anio' => $request->input('anio'),
+            ]
         );
     }
 
@@ -88,35 +44,51 @@ class MercaderiaController extends Controller
     {
         $query = Mercaderia::with(['organizacion']);
 
-        if ($request->tipo_filtro == 'mes') {
-
-            $query->whereMonth(
-                'fecha_entrega',
-                $request->mes
-            );
-
-            $query->whereYear(
-                'fecha_entrega',
-                $request->anio
-            );
-        }
-
-        if ($request->tipo_filtro == 'anio') {
-
-            $query->whereYear(
-                'fecha_entrega',
-                $request->anio
-            );
-        }
+        $this->applyFilters($query, $request);
 
         $mercaderias = $query
-            ->orderBy('apellido')
+            ->orderByDesc('fecha_entrega')
+            ->orderByDesc('id')
             ->get();
 
         return view(
             'frontend.recepcion.mercaderias.imprimir',
             compact('mercaderias')
         );
+    }
+
+    private function applyFilters(Builder $query, Request $request): Builder
+    {
+        $search = trim((string) $request->input('search'));
+        $tipoFiltro = $request->input('tipo_filtro');
+        $mes = (int) $request->input('mes');
+        $anio = (int) $request->input('anio');
+
+        if ($search !== '') {
+            $query->where(function (Builder $q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                    ->orWhere('apellido', 'like', "%{$search}%")
+                    ->orWhere('dni', 'like', "%{$search}%");
+            });
+        }
+
+        if ($tipoFiltro === 'mes' && $mes >= 1 && $mes <= 12) {
+            $query->whereMonth('fecha_entrega', $mes)
+                ->whereYear('fecha_entrega', $anio ?: now()->year);
+        }
+
+        if ($tipoFiltro === 'semana') {
+            $query->whereBetween('fecha_entrega', [
+                now()->startOfWeek()->startOfDay(),
+                now()->endOfWeek()->endOfDay(),
+            ]);
+        }
+
+        if ($tipoFiltro === 'anio') {
+            $query->whereYear('fecha_entrega', $anio ?: now()->year);
+        }
+
+        return $query;
     }
 
     public function create()
@@ -383,26 +355,24 @@ class MercaderiaController extends Controller
     {
         $query = Mercaderia::with(['familia', 'organizacion', 'usuario']);
 
-        if ($request->filled('search')) {
-
-            $search = $request->search;
-
-            $query->where(function ($q) use ($search) {
-                $q->where('nombre', 'like', "%{$search}%")
-                ->orWhere('apellido', 'like', "%{$search}%")
-                ->orWhere('dni', 'like', "%{$search}%");
-            });
-        }
+        $this->applyFilters($query, $request);
 
         $mercaderias = $query
-            ->latest()
+            ->orderByDesc('fecha_entrega')
+            ->orderByDesc('id')
             ->paginate(20);
 
         $readonly = true;
 
         return view(
             'frontend.recepcion.mercaderias.index',
-            compact('mercaderias', 'readonly')
+            [
+                'mercaderias' => $mercaderias,
+                'readonly' => $readonly,
+                'tipoFiltro' => $request->input('tipo_filtro'),
+                'mes' => $request->input('mes'),
+                'anio' => $request->input('anio'),
+            ]
         );
     }
 

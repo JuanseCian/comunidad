@@ -15,7 +15,7 @@
             </p>
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <a href="{{ route('recepcion.mercaderias.imprimir', request()->all()) }}"
+            <a href="{{ route('recepcion.mercaderias.imprimir', request()->only(['search', 'tipo_filtro', 'mes', 'anio'])) }}"
                target="_blank"
                class="btn btn-outline-primary d-inline-flex align-items-center gap-2">
                 <i class="bi bi-printer"></i>
@@ -52,82 +52,102 @@
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
             <form method="GET" action="{{ $actionRoute }}" id="filter-form">
-                <div class="row g-3">
+                @php
+                    $tipoFiltroActual = $tipoFiltro ?? request('tipo_filtro');
+                    $mesActual = $mes ?? request('mes');
+                    $anioActual = $anio ?? request('anio');
+                    $hayFiltros = request()->filled('search') || in_array($tipoFiltroActual, ['mes', 'semana', 'anio'], true);
+                @endphp
+                <div class="row g-3 align-items-end">
                     {{-- Buscador Principal --}}
-                    <div class="col-md-12">
-                        <label class="form-label fw-semibold text-secondary small mb-2">Buscar beneficiario</label>
+                    <div class="col-12">
+                        <label for="search" class="form-label fw-semibold text-secondary small mb-2">Buscar por persona o DNI</label>
                         <div class="input-group shadow-sm">
                             <span class="input-group-text bg-white border-end-0 text-muted">
                                 <i class="bi bi-search"></i>
                             </span>
                             <input type="text"
                                    name="search"
+                                   id="search"
                                    class="form-control border-start-0 ps-0"
-                                   placeholder="Escribí el nombre, apellido o DNI de la persona..."
+                                   placeholder="Nombre, apellido o DNI..."
                                    value="{{ request('search') }}">
-                            @if(request('search') || request('tipo_filtro') || request('mes') || request('anio'))
-                                <a href="{{ $actionRoute }}"
-                                   class="btn btn-outline-secondary border-start-0 d-inline-flex align-items-center"
-                                   title="Limpiar filtros">
-                                    <i class="bi bi-x-lg"></i>
-                                </a>
-                            @endif
-                            <button class="btn btn-primary px-4 fw-semibold" type="submit">Buscar</button>
                         </div>
                     </div>
 
-                    {{-- Selects de Filtros Avanzados --}}
-                    <div class="col-md-3">
-                        <label class="form-label text-secondary small fw-medium">Período</label>
-                        <select name="tipo_filtro" class="form-select select-filter">
-                            <option value="">Todos</option>
-                            <option value="mes" {{ request('tipo_filtro') == 'mes' ? 'selected' : '' }}>Mes</option>
-                            <option value="semana" {{ request('tipo_filtro') == 'semana' ? 'selected' : '' }}>Semana actual</option>
-                            <option value="anio" {{ request('tipo_filtro') == 'anio' ? 'selected' : '' }}>Año</option>
+                    {{-- Filtros de fecha --}}
+                    <div class="col-lg-4">
+                        <label for="tipo_filtro" class="form-label text-secondary small fw-semibold">Filtrar por período</label>
+                        <select name="tipo_filtro" id="tipo_filtro" class="form-select">
+                            <option value="">Todas las fechas</option>
+                            <option value="mes" {{ $tipoFiltroActual === 'mes' ? 'selected' : '' }}>Un mes específico</option>
+                            <option value="semana" {{ $tipoFiltroActual === 'semana' ? 'selected' : '' }}>Semana actual</option>
+                            <option value="anio" {{ $tipoFiltroActual === 'anio' ? 'selected' : '' }}>Un año específico</option>
                         </select>
                     </div>
 
-                    <div class="col-md-3">
-                        <label class="form-label text-secondary small fw-medium">Mes</label>
-                        <select name="mes" class="form-select select-filter">
-                            <option value="">Seleccionar mes...</option>
+                    <div class="col-lg-3 period-field" data-periods="mes">
+                        <label for="mes" class="form-label text-secondary small fw-semibold">Mes</label>
+                        <select name="mes" id="mes" class="form-select">
+                            <option value="">Elegí un mes</option>
                             @for($i=1; $i<=12; $i++)
-                                <option value="{{ $i }}" {{ request('mes') == $i ? 'selected' : '' }}>
+                                <option value="{{ $i }}" {{ $mesActual == $i ? 'selected' : '' }}>
                                     {{ Str::ucfirst(\Carbon\Carbon::create()->month($i)->locale('es')->monthName) }}
                                 </option>
                             @endfor
                         </select>
                     </div>
 
-                    <div class="col-md-3">
-                        <label class="form-label text-secondary small fw-medium">Año</label>
-                        <select name="anio" class="form-select select-filter">
+                    <div class="col-lg-3 period-field" data-periods="mes,anio">
+                        <label for="anio" class="form-label text-secondary small fw-semibold">Año</label>
+                        <select name="anio" id="anio" class="form-select">
+                            <option value="">Elegí un año</option>
                             @for($i = now()->year; $i >= 2023; $i--)
-                                <option value="{{ $i }}" {{ request('anio', now()->year) == $i ? 'selected' : '' }}>
+                                <option value="{{ $i }}" {{ ($anioActual ?: now()->year) == $i ? 'selected' : '' }}>
                                     {{ $i }}
                                 </option>
                             @endfor
                         </select>
                     </div>
 
-                    <div class="col-md-3 d-flex gap-2 align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">
+                    <div class="col-lg-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1 fw-semibold">
                             <i class="bi bi-funnel-fill me-1"></i>
-                            Aplicar
+                            Aplicar filtros
                         </button>
-
-                        <a href="{{ $actionRoute }}" class="btn btn-outline-secondary" title="Reiniciar filtros">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </a>
                     </div>
                 </div>
             </form>
+            @if($hayFiltros)
+                <div class="d-flex flex-wrap align-items-center gap-2 mt-3 pt-3 border-top">
+                    <span class="small text-muted fw-semibold">Filtros activos:</span>
+                    @if(request('search'))
+                        <span class="badge rounded-pill bg-light text-dark border">Búsqueda: {{ request('search') }}</span>
+                    @endif
+                    @if($tipoFiltroActual === 'mes' && $mesActual)
+                        <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle">
+                            {{ Str::ucfirst(\Carbon\Carbon::create()->month($mesActual)->locale('es')->monthName) }} {{ $anioActual ?: now()->year }}
+                        </span>
+                    @elseif($tipoFiltroActual === 'anio')
+                        <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle">Año {{ $anioActual ?: now()->year }}</span>
+                    @elseif($tipoFiltroActual === 'semana')
+                        <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle">Semana actual</span>
+                    @endif
+                    <a href="{{ $actionRoute }}" class="small text-decoration-none ms-1">Limpiar filtros</a>
+                </div>
+            @endif
         </div>
     </div>
 
     {{-- TABLA --}}
     <div class="card border-0 shadow-sm">
         <div class="card-body p-0">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 px-4 py-3 border-bottom">
+                <span class="small text-muted">Ordenado por fecha de entrega, más recientes primero</span>
+                @if($mercaderias->total() > 0)
+                    <span class="badge bg-light text-secondary border">{{ $mercaderias->total() }} {{ $mercaderias->total() === 1 ? 'entrega' : 'entregas' }}</span>
+                @endif
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-uppercase fs-7 text-muted border-bottom">
@@ -305,12 +325,29 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
-    document.querySelectorAll('.select-filter').forEach(select => {
-        select.addEventListener('change', () => {
-            document.getElementById('filter-form').submit();
-        });
+    document.addEventListener('DOMContentLoaded', () => {
+        const periodSelect = document.getElementById('tipo_filtro');
+        const monthSelect = document.getElementById('mes');
+        const yearSelect = document.getElementById('anio');
+
+        function updatePeriodFields() {
+            const period = periodSelect.value;
+
+            document.querySelectorAll('.period-field').forEach(field => {
+                const visible = field.dataset.periods.split(',').includes(period);
+                field.classList.toggle('d-none', !visible);
+            });
+
+            monthSelect.disabled = period !== 'mes';
+            yearSelect.disabled = !['mes', 'anio'].includes(period);
+            monthSelect.required = period === 'mes';
+            yearSelect.required = ['mes', 'anio'].includes(period);
+        }
+
+        periodSelect.addEventListener('change', updatePeriodFields);
+        updatePeriodFields();
     });
 </script>
-@endsection
+@endpush

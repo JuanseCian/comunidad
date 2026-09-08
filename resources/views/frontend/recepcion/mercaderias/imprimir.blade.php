@@ -165,13 +165,28 @@
         </div>
         <div class="header-meta-cell">
             Fecha de Impresión: {{ now()->format('d/m/Y') }}<br>
-            Filtros aplicados: {{ request('search') ? 'Búsqueda ("'.request('search').'")' : 'Todos' }}
+            @php
+                $filtros = [];
+                if (request('search')) {
+                    $filtros[] = 'Búsqueda: "'.request('search').'"';
+                }
+                if (request('tipo_filtro') === 'mes' && request('mes')) {
+                    $nombreMes = \Carbon\Carbon::create()->month(request('mes'))->locale('es')->monthName;
+                    $filtros[] = 'Período: '.ucfirst($nombreMes).' '.(request('anio') ?: now()->year);
+                } elseif (request('tipo_filtro') === 'anio') {
+                    $filtros[] = 'Período: año '.(request('anio') ?: now()->year);
+                } elseif (request('tipo_filtro') === 'semana') {
+                    $filtros[] = 'Período: semana actual';
+                }
+            @endphp
+            Filtros aplicados: {{ $filtros ? implode(' | ', $filtros) : 'Todos los registros' }}<br>
+            Orden: fecha de entrega, más recientes primero
         </div>
     </div>
 
     {{-- RECUENTO DE ASISTENCIAS --}}
     <div class="summary-box">
-        <strong>Total de Registros Emitidos:</strong> {{ $mercaderias->count() }} entregas.
+        <strong>Total de Registros Emitidos:</strong> {{ $mercaderias->count() }} {{ $mercaderias->count() === 1 ? 'entrega' : 'entregas' }}.
     </div>
 
     {{-- TABLA DE DATOS --}}
