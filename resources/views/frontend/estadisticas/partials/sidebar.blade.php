@@ -24,9 +24,10 @@
                 ['route' => 'estadisticas.ingresos', 'icon' => 'bi-box-arrow-in-right', 'label' => 'Ingresos'],
                 ['route' => 'estadisticas.mercaderias', 'icon' => 'bi-box-seam', 'label' => 'Mercaderías'],
                 ['route' => 'estadisticas.sepelios', 'icon' => 'bi-heartbreak', 'label' => 'Sepelios'],
+                ['route' => 'estadisticas.abrigo.index', 'icon' => 'bi-house-heart', 'label' => 'Colchones y Frazadas'],
             ];
             $rolUsuario = auth()->user()->rol_id;
-            $modulosRecepcion = ['Ingresos', 'Mercaderías', 'Sepelios'];
+            $modulosRecepcion = ['Ingresos', 'Mercaderías', 'Sepelios', 'Colchones y Frazadas'];
         @endphp
 
         @foreach($menuItems as $item)

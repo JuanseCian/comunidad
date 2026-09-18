@@ -614,13 +614,16 @@
                 <a href="{{ route('recepcion.mercaderias.index') }}" class="{{ request()->routeIs('recepcion.mercaderias.*') ? 'active' : '' }}">
                     <i class="bi bi-box-seam"></i> Mercadería
                 </a>
+                <a href="{{ route('recepcion.abrigo.index') }}" class="{{ request()->routeIs('recepcion.abrigo.*') ? 'active' : '' }}">
+                    <i class="bi bi-house-heart"></i> Colchones y frazadas
+                </a>
                 <a href="{{ route('recepcion.sepelios.index') }}" class="{{ request()->routeIs('recepcion.sepelios.*') ? 'active' : '' }}">
                     <i class="bi bi-heartbreak"></i> Sepelios
                 </a>
                 <a href="{{ route('recepcion.bajo-peso.index') }}" class="{{ request()->routeIs('recepcion.bajo-peso.*') ? 'active' : '' }}">
                     <i class="bi bi-people-fill"></i> Bajo peso
                 </a>
-                <a href="{{ route('estadisticas.dashboard') }}" class="{{ request()->routeIs('frontend.estadisticas.*') ? 'active' : '' }}">
+                <a href="{{ route('estadisticas.abrigo.index') }}" class="{{ request()->routeIs('estadisticas.abrigo.*') ? 'active' : '' }}">
                     <i class="bi bi-bar-chart-line-fill"></i> Estadísticas
                 </a>
             </div>

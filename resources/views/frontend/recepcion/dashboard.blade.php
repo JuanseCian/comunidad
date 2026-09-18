@@ -263,7 +263,7 @@
 {{-- HEADER UNIFICADO --}}
 <div class="dashboard-header">
     <h2>Mesa de Entrada</h2>
-    <p>Registro y gestión de ingresos, mercaderia, sepelios y bajo peso</p>
+    <p>Registro y gestión de ingresos, mercadería, abrigo, sepelios y bajo peso</p>
 </div>
 
 {{-- DISTRIBUCIÓN EN CUADRANTE (2 ARRIBA, 2 ABAJO) --}}
@@ -349,7 +349,40 @@
         </div>
     </div>
 
-    {{-- BLOQUE 3: SERVICIOS DE SEPELIO --}}
+    {{-- BLOQUE 3: ENTREGA DE ABRIGO --}}
+    <div class="col-md-6">
+        <div class="section-card theme-sky">
+            <div class="section-title">
+                <i class="bi bi-house-heart-fill"></i>
+                <h4>Colchones y Frazadas</h4>
+            </div>
+
+            <div class="action-row">
+                <a href="{{ route('recepcion.abrigo.create') }}" class="action-btn">
+                    <div class="action-btn-content">
+                        <div class="action-icon"><i class="bi bi-plus-circle-fill"></i></div>
+                        <div class="action-text">
+                            <h5>Registrar Entrega</h5>
+                            <p>Cargar colchones y/o frazadas entregados a una persona o familia.</p>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right action-arrow"></i>
+                </a>
+                <a href="{{ route('estadisticas.abrigo.index') }}" class="action-btn">
+                    <div class="action-btn-content">
+                        <div class="action-icon"><i class="bi bi-bar-chart-fill"></i></div>
+                        <div class="action-text">
+                            <h5>Estadísticas de Abrigo</h5>
+                            <p>Consultar unidades distribuidas y evolución mensual.</p>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-right action-arrow"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- BLOQUE 4: SERVICIOS DE SEPELIO --}}
     <div class="col-md-6">
         <div class="section-card theme-purple">
             <div class="section-title">
@@ -389,7 +422,7 @@
         </div>
     </div>
 
-    {{-- BLOQUE 4: PROGRAMA BAJO PESO --}}
+    {{-- BLOQUE 5: PROGRAMA BAJO PESO --}}
     <div class="col-md-6">
         <div class="section-card theme-warning">
             <div class="section-title">

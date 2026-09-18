@@ -130,3 +130,4 @@ require __DIR__.'/recepcion.php';
 require __DIR__.'/mercaderia.php';
 require __DIR__.'/sepelios.php';
 require __DIR__.'/bajopeso.php';
+require __DIR__.'/abrigo.php';

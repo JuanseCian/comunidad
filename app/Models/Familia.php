@@ -64,4 +64,9 @@ class Familia extends Model
     {
         return $this->hasMany(Sepelio::class);
     }
+
+    public function entregasAbrigo()
+    {
+        return $this->hasMany(EntregaAbrigo::class, 'familia_id');
+    }
 }
