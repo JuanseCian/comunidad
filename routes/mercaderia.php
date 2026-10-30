@@ -34,3 +34,13 @@ Route::get(
     '/mercaderias/imprimir',
     [MercaderiaController::class, 'imprimir']
 )->name('recepcion.mercaderias.imprimir');
+
+Route::get(
+    '/mercaderias/pdf',
+    [MercaderiaController::class, 'exportPdf']
+)->name('recepcion.mercaderias.pdf');
+
+Route::get(
+    '/mercaderias/excel',
+    [MercaderiaController::class, 'exportExcel']
+)->name('recepcion.mercaderias.excel');

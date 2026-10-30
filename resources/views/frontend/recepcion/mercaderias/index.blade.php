@@ -21,6 +21,16 @@
                 <i class="bi bi-printer"></i>
                 <span>Imprimir listado</span>
             </a>
+            <a href="{{ route('recepcion.mercaderias.pdf', request()->only(['search', 'tipo_filtro', 'mes', 'anio'])) }}"
+               class="btn btn-outline-danger d-inline-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-pdf"></i>
+                <span>Descargar PDF</span>
+            </a>
+            <a href="{{ route('recepcion.mercaderias.excel', request()->only(['search', 'tipo_filtro', 'mes', 'anio'])) }}"
+               class="btn btn-outline-success d-inline-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-excel"></i>
+                <span>Descargar Excel</span>
+            </a>
             @if(empty($readonly))
                 <a href="{{ route('recepcion.organizaciones.index') }}"
                    class="btn btn-outline-secondary d-inline-flex align-items-center gap-2">

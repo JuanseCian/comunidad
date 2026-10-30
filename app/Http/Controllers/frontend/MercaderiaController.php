@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 use App\Models\Mercaderia;
 use App\Models\Persona;
 use App\Models\Organizacion;
+use App\Exports\MercaderiasExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MercaderiaController extends Controller
 {
@@ -42,19 +45,47 @@ class MercaderiaController extends Controller
 
     public function imprimir(Request $request)
     {
-        $query = Mercaderia::with(['organizacion']);
-
-        $this->applyFilters($query, $request);
-
-        $mercaderias = $query
-            ->orderByDesc('fecha_entrega')
-            ->orderByDesc('id')
-            ->get();
+        $mercaderias = $this->filteredMercaderias($request);
 
         return view(
             'frontend.recepcion.mercaderias.imprimir',
             compact('mercaderias')
         );
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $mercaderias = $this->filteredMercaderias($request);
+
+        return Pdf::loadView(
+            'frontend.recepcion.mercaderias.imprimir',
+            compact('mercaderias')
+        )->setPaper('a4', 'portrait')->download('mercaderias.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        return Excel::download(
+            new MercaderiasExport(
+                $request->input('search'),
+                $request->input('tipo_filtro'),
+                $request->input('mes'),
+                $request->input('anio')
+            ),
+            'mercaderias.xlsx'
+        );
+    }
+
+    private function filteredMercaderias(Request $request)
+    {
+        $query = Mercaderia::with(['organizacion']);
+
+        $this->applyFilters($query, $request);
+
+        return $query
+            ->orderByDesc('fecha_entrega')
+            ->orderByDesc('id')
+            ->get();
     }
 
     private function applyFilters(Builder $query, Request $request): Builder
